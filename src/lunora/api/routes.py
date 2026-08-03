@@ -3,16 +3,19 @@ import secrets
 import uuid
 from datetime import datetime, timezone
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, HTTPException, Query
 from sqlalchemy import select
 
 from lunora.api.schemas import (
     AskRequest,
     AskResponse,
     ChartResponse,
+    GeoResult,
     OnboardRequest,
     OnboardResponse,
 )
+from lunora.calc.geocode import geocode_city
+from lunora.calc.timezone import timezone_for
 from lunora.calc.engine import calculate
 from lunora.calc.serialize import chart_to_dict
 from lunora.calc.types import BirthData, BirthTimePrecision
@@ -186,3 +189,14 @@ async def ask(req: AskRequest):
             answer=answer,
             category=category.value,
         )
+
+
+@router.get("/geocode", response_model=list[GeoResult])
+async def geocode(q: str = Query(min_length=2, max_length=200)):
+    results = await geocode_city(q)
+    out = []
+    for r in results:
+        tz = timezone_for(r["lat"], r["lon"])
+        if tz:
+            out.append(GeoResult(name=r["name"], lat=r["lat"], lon=r["lon"], timezone=tz))
+    return out

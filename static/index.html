@@ -178,16 +178,13 @@ input:focus { border-color: var(--accent); }
   </select>
 
   <label>Город рождения</label>
-  <input id="inp-city" placeholder="Москва">
-
-  <label>Широта</label>
-  <input id="inp-lat" type="number" step="0.0001" placeholder="55.7558">
-
-  <label>Долгота</label>
-  <input id="inp-lon" type="number" step="0.0001" placeholder="37.6173">
-
-  <label>Часовой пояс</label>
-  <input id="inp-tz" placeholder="Europe/Moscow" value="Europe/Moscow">
+  <div style="position:relative">
+    <input id="inp-city" placeholder="Начните вводить город..." autocomplete="off">
+    <div id="city-dropdown" style="display:none;position:absolute;left:0;right:0;top:100%;background:var(--surface);border:1px solid var(--border);border-radius:0 0 8px 8px;z-index:10;max-height:200px;overflow-y:auto"></div>
+  </div>
+  <input id="inp-lat" type="hidden">
+  <input id="inp-lon" type="hidden">
+  <input id="inp-tz" type="hidden">
 
   <button class="btn" id="btn-onboard">Построить карту</button>
 </div>
@@ -235,6 +232,43 @@ function show(id) {
 if (userId) {
   loadChart();
 }
+
+// City autocomplete
+let geoTimer = null;
+const cityInput = document.getElementById('inp-city');
+const dropdown = document.getElementById('city-dropdown');
+
+cityInput.addEventListener('input', () => {
+  clearTimeout(geoTimer);
+  const q = cityInput.value.trim();
+  if (q.length < 2) { dropdown.style.display = 'none'; return; }
+  geoTimer = setTimeout(async () => {
+    try {
+      const res = await fetch(API + '/api/geocode?q=' + encodeURIComponent(q));
+      const items = await res.json();
+      if (!items.length) { dropdown.style.display = 'none'; return; }
+      dropdown.innerHTML = items.map((it, i) =>
+        `<div style="padding:10px 12px;cursor:pointer;font-size:13px;color:var(--text);border-bottom:1px solid var(--border)" data-i="${i}">${it.name}</div>`
+      ).join('');
+      dropdown.style.display = 'block';
+      dropdown.querySelectorAll('div').forEach((el, i) => {
+        el.addEventListener('click', () => {
+          const item = items[i];
+          cityInput.value = item.name;
+          document.getElementById('inp-lat').value = item.lat;
+          document.getElementById('inp-lon').value = item.lon;
+          document.getElementById('inp-tz').value = item.timezone;
+          dropdown.style.display = 'none';
+        });
+      });
+    } catch { dropdown.style.display = 'none'; }
+  }, 400);
+});
+
+document.addEventListener('click', e => {
+  if (!e.target.closest('#inp-city') && !e.target.closest('#city-dropdown'))
+    dropdown.style.display = 'none';
+});
 
 document.getElementById('btn-onboard').addEventListener('click', async () => {
   const btn = document.getElementById('btn-onboard');

@@ -39,3 +39,10 @@ class ChartResponse(BaseModel):
     chinese: dict
     numerology: dict
     summary: dict
+
+
+class GeoResult(BaseModel):
+    name: str
+    lat: float
+    lon: float
+    timezone: str

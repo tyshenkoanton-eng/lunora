@@ -16,7 +16,12 @@ dependencies = [
     "pydantic-settings>=2.7",
     "pyswisseph>=2.10",
     "cnlunar>=0.2",
+    "httpx>=0.28",
+    "timezonefinder>=6.5",
 ]
+
+[project.scripts]
+lunora-forecast = "lunora.forecast.cli:main"
 
 [project.optional-dependencies]
 dev = [
