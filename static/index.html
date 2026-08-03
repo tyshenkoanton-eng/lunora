@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Lunora</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<style>
+:root {
+  --bg: #0e0e1a;
+  --surface: #191930;
+  --text: #e8e8f0;
+  --text2: #9999b0;
+  --accent: #7c5cbf;
+  --accent2: #c084fc;
+  --border: #2a2a45;
+  --radius: 12px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  padding: 16px;
+  padding-bottom: 100px;
+}
+.logo { text-align: center; margin: 24px 0 8px; font-size: 32px; }
+.subtitle { text-align: center; color: var(--text2); font-size: 14px; margin-bottom: 24px; }
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.card h3 { font-size: 15px; margin-bottom: 8px; }
+.card p { font-size: 13px; color: var(--text2); line-height: 1.5; }
+
+label { display: block; font-size: 13px; color: var(--text2); margin-bottom: 4px; margin-top: 12px; }
+input, select {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  color: var(--text);
+  font-size: 15px;
+  outline: none;
+}
+input:focus { border-color: var(--accent); }
+
+.btn {
+  display: block;
+  width: 100%;
+  padding: 14px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 20px;
+}
+.btn:disabled { opacity: 0.5; }
+
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+.msg {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 16px;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+}
+.msg.user {
+  align-self: flex-end;
+  background: var(--accent);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+.msg.assistant {
+  align-self: flex-start;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-bottom-left-radius: 4px;
+}
+
+.input-row {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--bg);
+  border-top: 1px solid var(--border);
+}
+.input-row input { flex: 1; }
+.input-row button {
+  padding: 10px 16px;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+}
+.tab {
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  border: 1px solid var(--border);
+  background: transparent;
+  color: var(--text2);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+.spinner {
+  display: inline-block;
+  width: 18px; height: 18px;
+  border: 2px solid var(--border);
+  border-top-color: var(--accent2);
+  border-radius: 50%;
+  animation: spin 0.6s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+</style>
+</head>
+<body>
+
+<div class="logo">🔮</div>
+<p class="subtitle">Многосистемный астрологический оракул</p>
+
+<!-- ONBOARD SCREEN -->
+<div id="screen-onboard" class="screen active">
+  <div class="card">
+    <h3>Добро пожаловать в Lunora</h3>
+    <p>Введите данные рождения для построения натальной карты по 4 системам: западной, ведической, китайской и нумерологии.</p>
+  </div>
+
+  <label>Ваше имя</label>
+  <input id="inp-name" placeholder="Имя">
+
+  <label>Дата рождения</label>
+  <input id="inp-date" type="date">
+
+  <label>Время рождения</label>
+  <input id="inp-time" type="time">
+
+  <label>Точность времени</label>
+  <select id="inp-precision">
+    <option value="exact">Точное</option>
+    <option value="approximate_30">±30 минут</option>
+    <option value="approximate_60">±1 час</option>
+    <option value="approximate">Примерно</option>
+    <option value="unknown" selected>Не знаю</option>
+  </select>
+
+  <label>Город рождения</label>
+  <input id="inp-city" placeholder="Москва">
+
+  <label>Широта</label>
+  <input id="inp-lat" type="number" step="0.0001" placeholder="55.7558">
+
+  <label>Долгота</label>
+  <input id="inp-lon" type="number" step="0.0001" placeholder="37.6173">
+
+  <label>Часовой пояс</label>
+  <input id="inp-tz" placeholder="Europe/Moscow" value="Europe/Moscow">
+
+  <button class="btn" id="btn-onboard">Построить карту</button>
+</div>
+
+<!-- CHART SCREEN -->
+<div id="screen-chart" class="screen">
+  <div class="tabs">
+    <button class="tab active" data-tab="western">🔮 Западная</button>
+    <button class="tab" data-tab="vedic">🪷 Ведическая</button>
+    <button class="tab" data-tab="chinese">🐉 Китайская</button>
+    <button class="tab" data-tab="numerology">🔢 Нумерология</button>
+  </div>
+  <div id="chart-content" class="card">
+    <p>Загрузка...</p>
+  </div>
+  <button class="btn" id="btn-chat">Задать вопрос оракулу</button>
+</div>
+
+<!-- CHAT SCREEN -->
+<div id="screen-chat" class="screen">
+  <div class="chat-messages" id="chat-messages"></div>
+  <div class="input-row">
+    <input id="chat-input" placeholder="Спросите о вашей карте...">
+    <button id="btn-send">→</button>
+  </div>
+</div>
+
+<script>
+const API = '';
+let userId = localStorage.getItem('lunora_user_id');
+let chartData = null;
+let threadId = null;
+const tg = window.Telegram?.WebApp;
+
+if (tg) {
+  tg.ready();
+  tg.expand();
+}
+
+function show(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+}
+
+if (userId) {
+  loadChart();
+}
+
+document.getElementById('btn-onboard').addEventListener('click', async () => {
+  const btn = document.getElementById('btn-onboard');
+  btn.disabled = true;
+  btn.textContent = 'Строим карту...';
+
+  const body = {
+    telegram_id: tg?.initDataUnsafe?.user?.id || Date.now(),
+    name: document.getElementById('inp-name').value,
+    birth_date: document.getElementById('inp-date').value,
+    birth_time: document.getElementById('inp-time').value || null,
+    birth_time_precision: document.getElementById('inp-precision').value,
+    birth_city: document.getElementById('inp-city').value,
+    birth_lat: parseFloat(document.getElementById('inp-lat').value),
+    birth_lon: parseFloat(document.getElementById('inp-lon').value),
+    timezone: document.getElementById('inp-tz').value,
+    init_data: tg?.initData || '',
+  };
+
+  try {
+    const res = await fetch(API + '/api/onboard', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Error');
+    userId = data.user_id;
+    localStorage.setItem('lunora_user_id', userId);
+    chartData = data.chart;
+    renderChart('western');
+    show('chart');
+  } catch (e) {
+    alert('Ошибка: ' + e.message);
+    btn.disabled = false;
+    btn.textContent = 'Построить карту';
+  }
+});
+
+async function loadChart() {
+  try {
+    const res = await fetch(API + '/api/chart/' + userId);
+    const data = await res.json();
+    if (!res.ok) { show('onboard'); return; }
+    chartData = data;
+    renderChart('western');
+    show('chart');
+  } catch {
+    show('onboard');
+  }
+}
+
+function renderChart(system) {
+  const content = document.getElementById('chart-content');
+  const data = chartData[system];
+  if (!data) { content.innerHTML = '<p>Нет данных</p>'; return; }
+  content.innerHTML = '<pre style="font-size:12px;overflow-x:auto;color:var(--text2)">' +
+    JSON.stringify(data, null, 2) + '</pre>';
+}
+
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    renderChart(tab.dataset.tab);
+  });
+});
+
+document.getElementById('btn-chat').addEventListener('click', () => show('chat'));
+
+document.getElementById('btn-send').addEventListener('click', sendMessage);
+document.getElementById('chat-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') sendMessage();
+});
+
+async function sendMessage() {
+  const input = document.getElementById('chat-input');
+  const q = input.value.trim();
+  if (!q) return;
+  input.value = '';
+
+  appendMsg('user', q);
+  const loader = appendMsg('assistant', '');
+  loader.innerHTML = '<span class="spinner"></span>';
+
+  try {
+    const res = await fetch(API + '/api/ask', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({ user_id: userId, thread_id: threadId, question: q }),
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Error');
+    threadId = data.thread_id;
+    loader.textContent = data.answer;
+  } catch (e) {
+    loader.textContent = 'Ошибка: ' + e.message;
+  }
+}
+
+function appendMsg(role, text) {
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  div.textContent = text;
+  document.getElementById('chat-messages').appendChild(div);
+  div.scrollIntoView({ behavior: 'smooth' });
+  return div;
+}
+</script>
+</body>
+</html>

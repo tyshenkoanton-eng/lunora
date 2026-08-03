@@ -1,9 +1,12 @@
 from contextlib import asynccontextmanager
+from pathlib import Path
 
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 
 from lunora.bot.setup import bot, dp
 from lunora.config import settings
+from lunora.api.routes import router
 from lunora.db import engine
 
 
@@ -21,8 +24,14 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(title="Lunora", version="0.1.0", lifespan=lifespan)
+app.include_router(router)
 
 
 @app.get("/health")
 async def health():
     return {"status": "ok"}
+
+
+_static = Path(__file__).resolve().parent.parent.parent.parent / "static"
+if _static.is_dir():
+    app.mount("/", StaticFiles(directory=str(_static), html=True), name="static")

@@ -11,6 +11,10 @@ class Settings(BaseSettings):
     webhook_base_url: str = ""
     telegram_proxy: str = ""
 
+    llm_api_key: str = ""
+    llm_base_url: str = "https://openrouter.ai/api/v1"
+    llm_model: str = "openai/gpt-4o-mini"
+
     debug: bool = False
 
 
