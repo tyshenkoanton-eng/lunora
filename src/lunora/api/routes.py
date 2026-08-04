@@ -86,6 +86,7 @@ async def onboard(req: OnboardRequest):
             summary={},
         )
         session.add(chart)
+        await session.flush()
 
         input_str = f"{req.birth_date}|{req.birth_time}|{req.birth_lat}|{req.birth_lon}"
         run = CalculationRun(
