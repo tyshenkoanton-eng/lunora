@@ -6,13 +6,10 @@ from aiogram.types import Update
 from fastapi import Request
 
 from lunora.api.app import app
-from lunora.bot.handlers import router
 from lunora.bot.setup import bot, dp
 from lunora.config import settings
 
 logging.basicConfig(level=logging.DEBUG if settings.debug else logging.INFO)
-
-dp.include_router(router)
 
 
 @app.post("/webhook")

@@ -10,3 +10,6 @@ if settings.telegram_proxy:
 _DUMMY_TOKEN = "0000000000:AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAaaa"
 bot = Bot(token=settings.bot_token or _DUMMY_TOKEN, session=session)
 dp = Dispatcher()
+
+from lunora.bot.handlers import router  # noqa: E402
+dp.include_router(router)
