@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     redis_url: str = "redis://localhost:6379/0"
 
     webhook_base_url: str = ""
+    webapp_url: str = ""
     telegram_proxy: str = ""
 
     llm_api_key: str = ""

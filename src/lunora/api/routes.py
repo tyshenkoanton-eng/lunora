@@ -54,7 +54,7 @@ async def onboard(req: OnboardRequest):
             birth_lon=req.birth_lon,
             timezone=req.timezone,
             referral_code=secrets.token_urlsafe(12),
-            consent_given_at=datetime.now(timezone.utc),
+            consent_given_at=datetime.utcnow(),
         )
         session.add(user)
         await session.flush()

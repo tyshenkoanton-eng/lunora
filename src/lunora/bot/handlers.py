@@ -11,7 +11,7 @@ router = Router()
 @router.message(CommandStart())
 async def cmd_start(message: Message):
     builder = InlineKeyboardBuilder()
-    webapp_url = settings.webhook_base_url or "https://lunora.app"
+    webapp_url = settings.webapp_url or settings.webhook_base_url or "https://lun-ra.ru"
     builder.button(text="🔮 Открыть Lunora", web_app=WebAppInfo(url=webapp_url))
 
     await message.answer(
