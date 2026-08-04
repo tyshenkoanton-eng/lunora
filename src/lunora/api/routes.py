@@ -48,7 +48,7 @@ async def onboard(req: OnboardRequest):
             name=req.name,
             birth_date=req.birth_date,
             birth_time=req.birth_time,
-            birth_time_precision=req.birth_time_precision,
+            birth_time_precision=req.birth_time_precision.lower(),
             birth_city=req.birth_city,
             birth_lat=req.birth_lat,
             birth_lon=req.birth_lon,
