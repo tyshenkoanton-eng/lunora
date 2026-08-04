@@ -1,8 +1,8 @@
 services:
   api:
     build: .
-    ports:
-      - "8000:8000"
+    expose:
+      - "8000"
     env_file: .env
     environment:
       LUNORA_DATABASE_URL: postgresql+asyncpg://lunora:lunora@postgres:5432/lunora
