@@ -24,7 +24,9 @@ from lunora.interpret.portrait import (
 )
 from lunora.calc.engine import calculate
 from lunora.calc.serialize import chart_to_dict
-from lunora.calc.types import BirthData, BirthTimePrecision
+from lunora.calc.types import BirthData
+from lunora.calc.types import BirthTimePrecision as CalcPrecision
+from lunora.models.user import BirthTimePrecision
 from lunora.db import async_session
 from lunora.llm.client import generate_response
 from lunora.models.chart import CalculationRun, NatalChart
@@ -48,7 +50,7 @@ async def onboard(req: OnboardRequest):
             name=req.name,
             birth_date=req.birth_date,
             birth_time=req.birth_time,
-            birth_time_precision=req.birth_time_precision.lower(),
+            birth_time_precision=BirthTimePrecision(req.birth_time_precision.lower()),
             birth_city=req.birth_city,
             birth_lat=req.birth_lat,
             birth_lon=req.birth_lon,
@@ -62,7 +64,7 @@ async def onboard(req: OnboardRequest):
         birth = BirthData(
             birth_date=req.birth_date,
             birth_time=req.birth_time,
-            precision=BirthTimePrecision(req.birth_time_precision),
+            precision=CalcPrecision(req.birth_time_precision.lower()),
             lat=req.birth_lat,
             lon=req.birth_lon,
             timezone=req.timezone,

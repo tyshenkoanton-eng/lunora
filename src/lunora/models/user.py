@@ -24,7 +24,8 @@ class User(Base, UUIDPrimaryKey, TimestampMixin):
     birth_date: Mapped[date] = mapped_column(Date)
     birth_time: Mapped[time | None] = mapped_column(Time, nullable=True)
     birth_time_precision: Mapped[BirthTimePrecision] = mapped_column(
-        Enum(BirthTimePrecision), default=BirthTimePrecision.UNKNOWN
+        Enum(BirthTimePrecision, values_callable=lambda e: [m.value for m in e]),
+        default=BirthTimePrecision.UNKNOWN
     )
     birth_city: Mapped[str] = mapped_column(String(200))
     birth_lat: Mapped[float]
