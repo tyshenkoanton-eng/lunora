@@ -418,7 +418,10 @@ select { -webkit-appearance: none; appearance: none; }
     <input id="inp-date" type="date">
 
     <label>Время рождения</label>
-    <input id="inp-time" type="time">
+    <div style="display:flex;gap:8px;">
+      <select id="inp-hour" style="flex:1"><option value="">Час</option></select>
+      <select id="inp-minute" style="flex:1"><option value="">Мин</option></select>
+    </div>
 
     <label>Точность времени</label>
     <select id="inp-precision">
@@ -573,6 +576,14 @@ function toggleSection(name) {
 
 if (userId) { loadChart(); }
 
+// Populate time selects
+(function() {
+  const h = document.getElementById('inp-hour');
+  const m = document.getElementById('inp-minute');
+  for (let i = 0; i < 24; i++) h.innerHTML += `<option value="${i}">${String(i).padStart(2,'0')}</option>`;
+  for (let i = 0; i < 60; i += 5) m.innerHTML += `<option value="${i}">${String(i).padStart(2,'0')}</option>`;
+})();
+
 // City autocomplete
 let geoTimer = null;
 const cityInput = document.getElementById('inp-city');
@@ -620,7 +631,8 @@ document.getElementById('btn-onboard').addEventListener('click', async () => {
     telegram_id: tg?.initDataUnsafe?.user?.id || Date.now(),
     name: document.getElementById('inp-name').value,
     birth_date: document.getElementById('inp-date').value,
-    birth_time: document.getElementById('inp-time').value || null,
+    birth_time: document.getElementById('inp-hour').value !== '' ?
+      (String(document.getElementById('inp-hour').value).padStart(2,'0') + ':' + String(document.getElementById('inp-minute').value || '0').padStart(2,'0')) : null,
     birth_time_precision: document.getElementById('inp-precision').value,
     birth_city: document.getElementById('inp-city').value,
     birth_lat: parseFloat(document.getElementById('inp-lat').value),
