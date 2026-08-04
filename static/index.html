@@ -415,7 +415,11 @@ select { -webkit-appearance: none; appearance: none; }
     <input id="inp-name" placeholder="Как к тебе обращаться">
 
     <label>Дата рождения</label>
-    <input id="inp-date" type="date">
+    <div style="display:flex;gap:8px;">
+      <select id="inp-day" style="flex:1"><option value="">День</option></select>
+      <select id="inp-month" style="flex:1"><option value="">Месяц</option></select>
+      <select id="inp-year" style="flex:1"><option value="">Год</option></select>
+    </div>
 
     <label>Время рождения</label>
     <div style="display:flex;gap:8px;">
@@ -576,8 +580,17 @@ function toggleSection(name) {
 
 if (userId) { loadChart(); }
 
-// Populate time selects
+// Populate date & time selects
 (function() {
+  const months = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+  const d = document.getElementById('inp-day');
+  const mo = document.getElementById('inp-month');
+  const y = document.getElementById('inp-year');
+  for (let i = 1; i <= 31; i++) d.innerHTML += `<option value="${i}">${i}</option>`;
+  months.forEach((name, i) => mo.innerHTML += `<option value="${i+1}">${name}</option>`);
+  const cur = new Date().getFullYear();
+  for (let i = cur; i >= 1930; i--) y.innerHTML += `<option value="${i}">${i}</option>`;
+
   const h = document.getElementById('inp-hour');
   const m = document.getElementById('inp-minute');
   for (let i = 0; i < 24; i++) h.innerHTML += `<option value="${i}">${String(i).padStart(2,'0')}</option>`;
@@ -630,7 +643,7 @@ document.getElementById('btn-onboard').addEventListener('click', async () => {
   const body = {
     telegram_id: tg?.initDataUnsafe?.user?.id || Date.now(),
     name: document.getElementById('inp-name').value,
-    birth_date: document.getElementById('inp-date').value,
+    birth_date: document.getElementById('inp-year').value + '-' + String(document.getElementById('inp-month').value).padStart(2,'0') + '-' + String(document.getElementById('inp-day').value).padStart(2,'0'),
     birth_time: document.getElementById('inp-hour').value !== '' ?
       (String(document.getElementById('inp-hour').value).padStart(2,'0') + ':' + String(document.getElementById('inp-minute').value || '0').padStart(2,'0')) : null,
     birth_time_precision: document.getElementById('inp-precision').value,
