@@ -2,212 +2,525 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Lunora</title>
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
 <style>
+@import url('data:text/css,');
 :root {
-  --bg: #0e0e1a;
-  --surface: #191930;
-  --text: #e8e8f0;
-  --text2: #9999b0;
-  --accent: #7c5cbf;
-  --accent2: #c084fc;
-  --border: #2a2a45;
-  --radius: 12px;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --bg: #0c0c14;
+  --bg2: #12121e;
+  --surface: #1a1a2e;
+  --surface2: #222240;
+  --gold: #c9a84c;
+  --gold-light: #e8d48b;
+  --gold-dim: #8a7235;
+  --text: #e8e4dc;
+  --text2: #9e9a90;
+  --text3: #6b675f;
+  --danger: #c44;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
 * { margin: 0; padding: 0; box-sizing: border-box; }
+html { font-size: 16px; }
 body {
+  font-family: var(--font);
   background: var(--bg);
   color: var(--text);
   min-height: 100vh;
-  padding: 16px;
-  padding-bottom: 100px;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased;
 }
-.logo { text-align: center; margin: 24px 0 8px; font-size: 32px; }
-.subtitle { text-align: center; color: var(--text2); font-size: 14px; margin-bottom: 24px; }
 
-.screen { display: none; }
-.screen.active { display: block; }
+/* === BACKGROUND STARS === */
+.stars {
+  position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none; z-index: 0; overflow: hidden;
+}
+.star {
+  position: absolute;
+  width: 2px; height: 2px;
+  background: var(--gold-dim);
+  border-radius: 50%;
+  animation: twinkle 3s ease-in-out infinite alternate;
+}
+@keyframes twinkle {
+  0% { opacity: 0.2; transform: scale(1); }
+  100% { opacity: 0.8; transform: scale(1.5); }
+}
 
-.card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 16px;
+/* === SCREENS === */
+.screen { display: none; position: relative; z-index: 1; }
+.screen.active { display: flex; flex-direction: column; min-height: 100vh; }
+.screen-pad { padding: 20px 20px 100px; }
+
+/* === WELCOME SCREEN === */
+.welcome {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; text-align: center; padding: 40px 24px;
+}
+.welcome-symbol {
+  width: 140px; height: 140px; margin-bottom: 32px;
+  position: relative;
+}
+.welcome-ring {
+  width: 140px; height: 140px;
+  border: 1px solid var(--gold-dim);
+  border-radius: 50%;
+  position: absolute;
+  animation: spin-slow 40s linear infinite;
+}
+.welcome-ring-inner {
+  width: 100px; height: 100px;
+  border: 1px solid var(--gold);
+  border-radius: 50%;
+  position: absolute;
+  top: 20px; left: 20px;
+  animation: spin-slow 30s linear infinite reverse;
+}
+.welcome-moon {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 36px;
+  filter: drop-shadow(0 0 12px rgba(201, 168, 76, 0.4));
+}
+@keyframes spin-slow { to { transform: rotate(360deg); } }
+
+.welcome h1 {
+  font-size: 28px; font-weight: 300; letter-spacing: 6px;
+  text-transform: uppercase; color: var(--gold-light);
   margin-bottom: 12px;
 }
-.card h3 { font-size: 15px; margin-bottom: 8px; }
-.card p { font-size: 13px; color: var(--text2); line-height: 1.5; }
-
-label { display: block; font-size: 13px; color: var(--text2); margin-bottom: 4px; margin-top: 12px; }
-input, select {
-  width: 100%;
-  padding: 10px 12px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  color: var(--text);
-  font-size: 15px;
-  outline: none;
+.welcome p {
+  font-size: 14px; color: var(--text2); line-height: 1.6;
+  max-width: 280px; margin-bottom: 40px;
 }
-input:focus { border-color: var(--accent); }
+.zodiac-strip {
+  display: flex; gap: 12px; font-size: 18px; color: var(--gold-dim);
+  margin-bottom: 40px; flex-wrap: wrap; justify-content: center;
+}
 
+/* === BUTTONS === */
 .btn {
-  display: block;
-  width: 100%;
-  padding: 14px;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: var(--radius);
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  margin-top: 20px;
+  display: block; width: 100%; padding: 16px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+  color: var(--bg); border: none; border-radius: var(--radius);
+  font-size: 15px; font-weight: 600; letter-spacing: 1px;
+  text-transform: uppercase; cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: var(--font);
 }
-.btn:disabled { opacity: 0.5; }
+.btn:active { transform: scale(0.98); }
+.btn:disabled { opacity: 0.4; transform: none; }
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--gold-dim);
+  color: var(--gold);
+}
 
+/* === FORM ELEMENTS === */
+label {
+  display: block; font-size: 12px; letter-spacing: 1px;
+  text-transform: uppercase; color: var(--gold-dim);
+  margin-bottom: 6px; margin-top: 20px;
+}
+input, select {
+  width: 100%; padding: 14px 16px;
+  background: var(--surface);
+  border: 1px solid var(--surface2);
+  border-radius: var(--radius-sm);
+  color: var(--text); font-size: 15px;
+  font-family: var(--font);
+  outline: none;
+  transition: border-color 0.2s;
+}
+input:focus, select:focus { border-color: var(--gold-dim); }
+input::placeholder { color: var(--text3); }
+select { -webkit-appearance: none; appearance: none; }
+
+/* === ONBOARD === */
+.onboard-header {
+  text-align: center; margin-bottom: 8px; padding-top: 20px;
+}
+.onboard-header h2 {
+  font-size: 20px; font-weight: 400; color: var(--gold-light);
+  letter-spacing: 2px; text-transform: uppercase;
+}
+.onboard-header p {
+  font-size: 13px; color: var(--text2); margin-top: 8px; line-height: 1.5;
+}
+
+/* === DROPDOWN === */
+.city-dropdown {
+  position: absolute; left: 0; right: 0; top: 100%;
+  background: var(--surface); border: 1px solid var(--surface2);
+  border-radius: 0 0 var(--radius-sm) var(--radius-sm);
+  z-index: 10; max-height: 200px; overflow-y: auto;
+  display: none;
+}
+.city-option {
+  padding: 12px 16px; cursor: pointer; font-size: 14px;
+  color: var(--text); border-bottom: 1px solid var(--surface2);
+  transition: background 0.2s;
+}
+.city-option:active { background: var(--surface2); }
+
+/* === CHART SCREEN === */
+.portrait-section {
+  padding: 24px 20px;
+  background: linear-gradient(180deg, var(--bg2) 0%, var(--bg) 100%);
+}
+.portrait-header {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 20px;
+}
+.portrait-avatar {
+  width: 48px; height: 48px; border-radius: 50%;
+  border: 1px solid var(--gold-dim);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px;
+  background: var(--surface);
+}
+.portrait-name {
+  font-size: 18px; font-weight: 400; color: var(--gold-light);
+}
+.portrait-sub { font-size: 12px; color: var(--text2); margin-top: 2px; }
+
+.portrait-text {
+  font-size: 14px; line-height: 1.8; color: var(--text);
+  white-space: pre-wrap;
+}
+.portrait-text p { margin-bottom: 16px; }
+.portrait-loading {
+  text-align: center; padding: 40px 0; color: var(--text2);
+}
+
+/* === PLANET CARDS === */
+.section-divider {
+  display: flex; align-items: center; gap: 12px;
+  padding: 20px 20px 12px; cursor: pointer;
+}
+.section-divider .line {
+  flex: 1; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold-dim), transparent);
+}
+.section-divider span {
+  font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+  color: var(--gold-dim); white-space: nowrap;
+}
+.section-divider .arrow {
+  transition: transform 0.3s;
+  color: var(--gold-dim); font-size: 10px;
+}
+.section-divider.open .arrow { transform: rotate(180deg); }
+
+.planet-cards { padding: 0 20px 20px; }
+.planet-cards.collapsed { display: none; }
+
+.planet-card {
+  background: var(--surface);
+  border: 1px solid var(--surface2);
+  border-radius: var(--radius);
+  padding: 16px; margin-bottom: 10px;
+  transition: all 0.3s ease;
+  animation: card-in 0.4s ease both;
+}
+@keyframes card-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.planet-card-header {
+  display: flex; align-items: center; gap: 10px; margin-bottom: 8px;
+}
+.planet-card-symbol {
+  font-size: 20px; width: 32px; text-align: center;
+}
+.planet-card-title {
+  font-size: 14px; font-weight: 500; color: var(--gold-light);
+}
+.planet-card-meta {
+  font-size: 11px; color: var(--text3); margin-top: 1px;
+}
+.planet-card-text {
+  font-size: 13px; line-height: 1.7; color: var(--text2);
+}
+
+/* === TECHNICAL DATA === */
+.tech-data {
+  padding: 0 20px 20px;
+}
+.tech-data.collapsed { display: none; }
+.tech-table {
+  width: 100%; font-size: 12px; border-collapse: collapse;
+}
+.tech-table th {
+  text-align: left; padding: 8px 12px;
+  color: var(--gold-dim); font-weight: 400; letter-spacing: 1px;
+  text-transform: uppercase; border-bottom: 1px solid var(--surface2);
+}
+.tech-table td {
+  padding: 8px 12px; color: var(--text2);
+  border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+.tech-table tr:last-child td { border-bottom: none; }
+
+/* === TABS === */
+.tabs {
+  display: flex; gap: 4px; padding: 0 20px;
+  overflow-x: auto; margin-bottom: 16px;
+  -webkit-overflow-scrolling: touch;
+}
+.tabs::-webkit-scrollbar { display: none; }
+.tab {
+  padding: 10px 16px; border-radius: 24px;
+  font-size: 12px; letter-spacing: 0.5px;
+  border: 1px solid var(--surface2); background: transparent;
+  color: var(--text2); cursor: pointer; white-space: nowrap;
+  transition: all 0.2s; font-family: var(--font);
+}
+.tab.active {
+  background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+  color: var(--bg); border-color: var(--gold);
+}
+
+/* === CHAT === */
 .chat-messages {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-bottom: 12px;
+  display: flex; flex-direction: column; gap: 10px;
+  padding: 20px; flex: 1;
 }
 .msg {
-  max-width: 85%;
-  padding: 10px 14px;
-  border-radius: 16px;
-  font-size: 14px;
-  line-height: 1.5;
-  white-space: pre-wrap;
+  max-width: 85%; padding: 12px 16px;
+  border-radius: 18px; font-size: 14px; line-height: 1.6;
+  white-space: pre-wrap; animation: msg-in 0.3s ease;
+}
+@keyframes msg-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 .msg.user {
   align-self: flex-end;
-  background: var(--accent);
-  color: #fff;
-  border-bottom-right-radius: 4px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+  color: var(--bg); border-bottom-right-radius: 4px;
 }
 .msg.assistant {
   align-self: flex-start;
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid var(--surface2);
   border-bottom-left-radius: 4px;
+  color: var(--text);
 }
 
 .input-row {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  gap: 8px;
-  padding: 12px 16px;
-  background: var(--bg);
-  border-top: 1px solid var(--border);
+  position: fixed; bottom: 0; left: 0; right: 0;
+  display: flex; gap: 8px; padding: 12px 16px;
+  background: var(--bg); border-top: 1px solid var(--surface2);
+  z-index: 10;
 }
 .input-row input { flex: 1; }
 .input-row button {
-  padding: 10px 16px;
-  background: var(--accent);
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  cursor: pointer;
+  padding: 14px 18px;
+  background: linear-gradient(135deg, var(--gold), var(--gold-dim));
+  color: var(--bg); border: none; border-radius: var(--radius-sm);
+  font-size: 16px; cursor: pointer; font-family: var(--font);
 }
 
-.tabs {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 16px;
-  overflow-x: auto;
+/* === BOTTOM NAV === */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  display: flex; justify-content: space-around;
+  padding: 12px 0 20px;
+  background: var(--bg2);
+  border-top: 1px solid var(--surface2);
+  z-index: 10;
 }
-.tab {
-  padding: 8px 14px;
-  border-radius: 20px;
-  font-size: 13px;
-  border: 1px solid var(--border);
-  background: transparent;
-  color: var(--text2);
-  cursor: pointer;
-  white-space: nowrap;
+.nav-item {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 4px; font-size: 10px; color: var(--text3);
+  cursor: pointer; letter-spacing: 0.5px; text-transform: uppercase;
+  background: none; border: none; font-family: var(--font);
+  transition: color 0.2s;
 }
-.tab.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+.nav-item.active { color: var(--gold); }
+.nav-icon { font-size: 20px; }
 
+/* === SPINNER === */
 .spinner {
-  display: inline-block;
-  width: 18px; height: 18px;
-  border: 2px solid var(--border);
-  border-top-color: var(--accent2);
+  display: inline-block; width: 20px; height: 20px;
+  border: 2px solid var(--surface2);
+  border-top-color: var(--gold);
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+
+/* === LOADING SHIMMER === */
+.shimmer {
+  background: linear-gradient(90deg, var(--surface) 25%, var(--surface2) 50%, var(--surface) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+  border-radius: 8px;
+  height: 16px; margin-bottom: 10px;
+}
+.shimmer:nth-child(2) { width: 80%; }
+.shimmer:nth-child(3) { width: 60%; }
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* === FADE ANIMATIONS === */
+.fade-in { animation: fadeIn 0.5s ease both; }
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
 </style>
 </head>
 <body>
 
-<div class="logo">🔮</div>
-<p class="subtitle">Многосистемный астрологический оракул</p>
+<!-- STARS BACKGROUND -->
+<div class="stars" id="stars"></div>
 
-<!-- ONBOARD SCREEN -->
-<div id="screen-onboard" class="screen active">
-  <div class="card">
-    <h3>Добро пожаловать в Lunora</h3>
-    <p>Введите данные рождения для построения натальной карты по 4 системам: западной, ведической, китайской и нумерологии.</p>
+<!-- ====== WELCOME SCREEN ====== -->
+<div id="screen-welcome" class="screen active">
+  <div class="welcome">
+    <div class="welcome-symbol">
+      <div class="welcome-ring"></div>
+      <div class="welcome-ring-inner"></div>
+      <div class="welcome-moon">☽</div>
+    </div>
+    <h1>Lunora</h1>
+    <p>Твой персональный астрологический портрет через призму четырёх древних систем</p>
+    <div class="zodiac-strip">
+      <span>♈</span><span>♉</span><span>♊</span><span>♋</span>
+      <span>♌</span><span>♍</span><span>♎</span><span>♏</span>
+      <span>♐</span><span>♑</span><span>♒</span><span>♓</span>
+    </div>
+    <button class="btn" onclick="show('onboard')">Узнать себя</button>
   </div>
-
-  <label>Ваше имя</label>
-  <input id="inp-name" placeholder="Имя">
-
-  <label>Дата рождения</label>
-  <input id="inp-date" type="date">
-
-  <label>Время рождения</label>
-  <input id="inp-time" type="time">
-
-  <label>Точность времени</label>
-  <select id="inp-precision">
-    <option value="exact">Точное</option>
-    <option value="approximate_30">±30 минут</option>
-    <option value="approximate_60">±1 час</option>
-    <option value="approximate">Примерно</option>
-    <option value="unknown" selected>Не знаю</option>
-  </select>
-
-  <label>Город рождения</label>
-  <div style="position:relative">
-    <input id="inp-city" placeholder="Начните вводить город..." autocomplete="off">
-    <div id="city-dropdown" style="display:none;position:absolute;left:0;right:0;top:100%;background:var(--surface);border:1px solid var(--border);border-radius:0 0 8px 8px;z-index:10;max-height:200px;overflow-y:auto"></div>
-  </div>
-  <input id="inp-lat" type="hidden">
-  <input id="inp-lon" type="hidden">
-  <input id="inp-tz" type="hidden">
-
-  <button class="btn" id="btn-onboard">Построить карту</button>
 </div>
 
-<!-- CHART SCREEN -->
+<!-- ====== ONBOARD SCREEN ====== -->
+<div id="screen-onboard" class="screen">
+  <div class="screen-pad">
+    <div class="onboard-header">
+      <h2>Данные рождения</h2>
+      <p>Чем точнее данные, тем глубже портрет</p>
+    </div>
+
+    <label>Твоё имя</label>
+    <input id="inp-name" placeholder="Как к тебе обращаться">
+
+    <label>Дата рождения</label>
+    <input id="inp-date" type="date">
+
+    <label>Время рождения</label>
+    <input id="inp-time" type="time">
+
+    <label>Точность времени</label>
+    <select id="inp-precision">
+      <option value="exact">Точное</option>
+      <option value="approximate_30">±30 минут</option>
+      <option value="approximate_60">±1 час</option>
+      <option value="approximate">Примерно</option>
+      <option value="unknown" selected>Не знаю</option>
+    </select>
+
+    <label>Город рождения</label>
+    <div style="position:relative">
+      <input id="inp-city" placeholder="Начни вводить город..." autocomplete="off">
+      <div id="city-dropdown" class="city-dropdown"></div>
+    </div>
+    <input id="inp-lat" type="hidden">
+    <input id="inp-lon" type="hidden">
+    <input id="inp-tz" type="hidden">
+
+    <button class="btn" id="btn-onboard" style="margin-top: 28px;">Построить карту</button>
+  </div>
+</div>
+
+<!-- ====== CHART / PORTRAIT SCREEN ====== -->
 <div id="screen-chart" class="screen">
-  <div class="tabs">
-    <button class="tab active" data-tab="western">🔮 Западная</button>
-    <button class="tab" data-tab="vedic">🪷 Ведическая</button>
-    <button class="tab" data-tab="chinese">🐉 Китайская</button>
-    <button class="tab" data-tab="numerology">🔢 Нумерология</button>
+  <!-- Portrait -->
+  <div class="portrait-section">
+    <div class="portrait-header">
+      <div class="portrait-avatar" id="portrait-sign">☽</div>
+      <div>
+        <div class="portrait-name" id="portrait-name">Загрузка...</div>
+        <div class="portrait-sub" id="portrait-sub"></div>
+      </div>
+    </div>
+    <div class="portrait-text" id="portrait-text">
+      <div class="shimmer"></div>
+      <div class="shimmer"></div>
+      <div class="shimmer"></div>
+    </div>
   </div>
-  <div id="chart-content" class="card">
-    <p>Загрузка...</p>
+
+  <!-- Interpretations -->
+  <div class="section-divider" id="toggle-interp" onclick="toggleSection('interp')">
+    <div class="line"></div>
+    <span>Интерпретации</span>
+    <span class="arrow">▼</span>
+    <div class="line"></div>
   </div>
-  <button class="btn" id="btn-chat">Задать вопрос оракулу</button>
+  <div class="planet-cards collapsed" id="section-interp"></div>
+
+  <!-- Technical data -->
+  <div class="section-divider" id="toggle-tech" onclick="toggleSection('tech')">
+    <div class="line"></div>
+    <span>Расчётные данные</span>
+    <span class="arrow">▼</span>
+    <div class="line"></div>
+  </div>
+  <div class="tech-data collapsed" id="section-tech"></div>
+
+  <!-- Bottom nav -->
+  <div class="bottom-nav">
+    <button class="nav-item active" onclick="showChartTab('portrait')">
+      <span class="nav-icon">☽</span>Портрет
+    </button>
+    <button class="nav-item" onclick="showChartTab('systems')">
+      <span class="nav-icon">◎</span>Системы
+    </button>
+    <button class="nav-item" onclick="show('chat')">
+      <span class="nav-icon">✦</span>Оракул
+    </button>
+  </div>
 </div>
 
-<!-- CHAT SCREEN -->
+<!-- ====== SYSTEMS SCREEN ====== -->
+<div id="screen-systems" class="screen">
+  <div class="screen-pad" style="padding-bottom: 80px;">
+    <div class="tabs">
+      <button class="tab active" data-tab="western">♈ Западная</button>
+      <button class="tab" data-tab="vedic">☸ Ведическая</button>
+      <button class="tab" data-tab="chinese">☯ Китайская</button>
+      <button class="tab" data-tab="numerology">✡ Нумерология</button>
+    </div>
+    <div id="system-content" class="planet-cards"></div>
+  </div>
+  <div class="bottom-nav">
+    <button class="nav-item" onclick="showChartTab('portrait')">
+      <span class="nav-icon">☽</span>Портрет
+    </button>
+    <button class="nav-item active" onclick="showChartTab('systems')">
+      <span class="nav-icon">◎</span>Системы
+    </button>
+    <button class="nav-item" onclick="show('chat')">
+      <span class="nav-icon">✦</span>Оракул
+    </button>
+  </div>
+</div>
+
+<!-- ====== CHAT SCREEN ====== -->
 <div id="screen-chat" class="screen">
-  <div class="chat-messages" id="chat-messages"></div>
+  <div class="chat-messages" id="chat-messages" style="padding-bottom: 80px;"></div>
   <div class="input-row">
-    <input id="chat-input" placeholder="Спросите о вашей карте...">
+    <input id="chat-input" placeholder="Спроси о своей карте...">
     <button id="btn-send">→</button>
   </div>
 </div>
@@ -216,22 +529,49 @@ input:focus { border-color: var(--accent); }
 const API = '';
 let userId = localStorage.getItem('lunora_user_id');
 let chartData = null;
+let portraitData = null;
 let threadId = null;
 const tg = window.Telegram?.WebApp;
 
-if (tg) {
-  tg.ready();
-  tg.expand();
-}
+if (tg) { tg.ready(); tg.expand(); }
+
+// Generate stars
+(function() {
+  const c = document.getElementById('stars');
+  for (let i = 0; i < 60; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    s.style.left = Math.random() * 100 + '%';
+    s.style.top = Math.random() * 100 + '%';
+    s.style.animationDelay = (Math.random() * 3) + 's';
+    s.style.animationDuration = (2 + Math.random() * 3) + 's';
+    if (Math.random() > 0.7) {
+      s.style.width = '3px'; s.style.height = '3px';
+    }
+    c.appendChild(s);
+  }
+})();
 
 function show(id) {
   document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('screen-' + id).classList.add('active');
+  const el = document.getElementById('screen-' + id);
+  if (el) { el.classList.add('active'); }
 }
 
-if (userId) {
-  loadChart();
+function showChartTab(tab) {
+  if (tab === 'portrait') show('chart');
+  else if (tab === 'systems') show('systems');
+  else if (tab === 'chat') show('chat');
 }
+
+function toggleSection(name) {
+  const section = document.getElementById('section-' + name);
+  const toggle = document.getElementById('toggle-' + name);
+  section.classList.toggle('collapsed');
+  toggle.classList.toggle('open');
+}
+
+if (userId) { loadChart(); }
 
 // City autocomplete
 let geoTimer = null;
@@ -248,10 +588,10 @@ cityInput.addEventListener('input', () => {
       const items = await res.json();
       if (!items.length) { dropdown.style.display = 'none'; return; }
       dropdown.innerHTML = items.map((it, i) =>
-        `<div style="padding:10px 12px;cursor:pointer;font-size:13px;color:var(--text);border-bottom:1px solid var(--border)" data-i="${i}">${it.name}</div>`
+        `<div class="city-option" data-i="${i}">${it.name}</div>`
       ).join('');
       dropdown.style.display = 'block';
-      dropdown.querySelectorAll('div').forEach((el, i) => {
+      dropdown.querySelectorAll('.city-option').forEach((el, i) => {
         el.addEventListener('click', () => {
           const item = items[i];
           cityInput.value = item.name;
@@ -270,6 +610,7 @@ document.addEventListener('click', e => {
     dropdown.style.display = 'none';
 });
 
+// Onboard
 document.getElementById('btn-onboard').addEventListener('click', async () => {
   const btn = document.getElementById('btn-onboard');
   btn.disabled = true;
@@ -299,8 +640,11 @@ document.getElementById('btn-onboard').addEventListener('click', async () => {
     userId = data.user_id;
     localStorage.setItem('lunora_user_id', userId);
     chartData = data.chart;
-    renderChart('western');
+    renderPortrait();
+    renderTechData();
+    renderSystem('western');
     show('chart');
+    loadPortraitText();
   } catch (e) {
     alert('Ошибка: ' + e.message);
     btn.disabled = false;
@@ -312,20 +656,120 @@ async function loadChart() {
   try {
     const res = await fetch(API + '/api/chart/' + userId);
     const data = await res.json();
-    if (!res.ok) { show('onboard'); return; }
+    if (!res.ok) { show('welcome'); return; }
     chartData = data;
-    renderChart('western');
+    renderPortrait();
+    renderTechData();
+    renderSystem('western');
     show('chart');
-  } catch {
-    show('onboard');
+    loadPortraitText();
+  } catch { show('welcome'); }
+}
+
+function renderPortrait() {
+  const name = document.getElementById('inp-name')?.value || 'Звёздный странник';
+  document.getElementById('portrait-name').textContent = name;
+
+  if (chartData?.western?.planets) {
+    const sun = chartData.western.planets.find(p => p.name === 'Sun');
+    if (sun) {
+      const signs = {
+        'Aries':'♈ Овен','Taurus':'♉ Телец','Gemini':'♊ Близнецы',
+        'Cancer':'♋ Рак','Leo':'♌ Лев','Virgo':'♍ Дева',
+        'Libra':'♎ Весы','Scorpio':'♏ Скорпион','Sagittarius':'♐ Стрелец',
+        'Capricorn':'♑ Козерог','Aquarius':'♒ Водолей','Pisces':'♓ Рыбы'
+      };
+      const symbols = {
+        'Aries':'♈','Taurus':'♉','Gemini':'♊','Cancer':'♋',
+        'Leo':'♌','Virgo':'♍','Libra':'♎','Scorpio':'♏',
+        'Sagittarius':'♐','Capricorn':'♑','Aquarius':'♒','Pisces':'♓'
+      };
+      document.getElementById('portrait-sub').textContent = 'Солнце в ' + (signs[sun.sign] || sun.sign);
+      document.getElementById('portrait-sign').textContent = symbols[sun.sign] || '☽';
+    }
   }
 }
 
-function renderChart(system) {
-  const content = document.getElementById('chart-content');
-  const data = chartData[system];
-  if (!data) { content.innerHTML = '<p>Нет данных</p>'; return; }
-  content.innerHTML = '<pre style="font-size:12px;overflow-x:auto;color:var(--text2)">' +
+async function loadPortraitText() {
+  if (!userId) return;
+  try {
+    const res = await fetch(API + '/api/portrait/' + userId);
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.detail || 'Error');
+    portraitData = data;
+
+    // Render portrait text
+    const textEl = document.getElementById('portrait-text');
+    const paragraphs = data.portrait.split('\n\n').filter(Boolean);
+    textEl.innerHTML = paragraphs.map(p => `<p class="fade-in">${p}</p>`).join('');
+
+    // Render interpretation cards
+    if (data.blocks && data.blocks.length) {
+      const container = document.getElementById('section-interp');
+      container.innerHTML = data.blocks.map((b, i) => `
+        <div class="planet-card" style="animation-delay: ${i * 0.08}s">
+          <div class="planet-card-header">
+            <div class="planet-card-symbol">${b.symbol}</div>
+            <div>
+              <div class="planet-card-title">${b.planet_ru} в ${b.sign_ru}</div>
+              <div class="planet-card-meta">${b.degree}°${b.house ? ' · ' + b.house + ' дом' : ''}</div>
+            </div>
+          </div>
+          <div class="planet-card-text">${b.text}</div>
+        </div>
+      `).join('');
+    }
+  } catch (e) {
+    document.getElementById('portrait-text').innerHTML =
+      `<p style="color:var(--text2)">Портрет временно недоступен</p>`;
+  }
+}
+
+function renderTechData() {
+  if (!chartData) return;
+  const container = document.getElementById('section-tech');
+  let html = '';
+
+  if (chartData.western?.planets) {
+    html += '<table class="tech-table"><tr><th>Планета</th><th>Знак</th><th>Градус</th><th>Дом</th></tr>';
+    const labels = {
+      'Sun':'Солнце','Moon':'Луна','Mercury':'Меркурий','Venus':'Венера',
+      'Mars':'Марс','Jupiter':'Юпитер','Saturn':'Сатурн',
+      'Uranus':'Уран','Neptune':'Нептун','Pluto':'Плутон'
+    };
+    const signLabels = {
+      'Aries':'Овен','Taurus':'Телец','Gemini':'Близнецы','Cancer':'Рак',
+      'Leo':'Лев','Virgo':'Дева','Libra':'Весы','Scorpio':'Скорпион',
+      'Sagittarius':'Стрелец','Capricorn':'Козерог','Aquarius':'Водолей','Pisces':'Рыбы'
+    };
+    for (const p of chartData.western.planets) {
+      html += `<tr>
+        <td>${labels[p.name] || p.name}</td>
+        <td>${signLabels[p.sign] || p.sign}</td>
+        <td>${p.degree_in_sign.toFixed(1)}°</td>
+        <td>${p.house || '—'}</td>
+      </tr>`;
+    }
+    html += '</table>';
+  }
+
+  if (chartData.western?.aspects?.length) {
+    html += '<div style="margin-top: 16px;"><table class="tech-table"><tr><th>Аспект</th><th>Тип</th><th>Орб</th></tr>';
+    const sorted = [...chartData.western.aspects].sort((a,b) => a.orb - b.orb).slice(0, 8);
+    for (const a of sorted) {
+      html += `<tr><td>${a.planet1} — ${a.planet2}</td><td>${a.aspect_type}</td><td>${a.orb.toFixed(1)}°</td></tr>`;
+    }
+    html += '</table></div>';
+  }
+
+  container.innerHTML = html;
+}
+
+function renderSystem(system) {
+  const content = document.getElementById('system-content');
+  const data = chartData?.[system];
+  if (!data) { content.innerHTML = '<p style="color:var(--text2);padding:20px;">Нет данных</p>'; return; }
+  content.innerHTML = '<pre style="font-size:12px;overflow-x:auto;color:var(--text2);padding:8px;line-height:1.6">' +
     JSON.stringify(data, null, 2) + '</pre>';
 }
 
@@ -333,12 +777,11 @@ document.querySelectorAll('.tab').forEach(tab => {
   tab.addEventListener('click', () => {
     document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
     tab.classList.add('active');
-    renderChart(tab.dataset.tab);
+    renderSystem(tab.dataset.tab);
   });
 });
 
-document.getElementById('btn-chat').addEventListener('click', () => show('chat'));
-
+// Chat
 document.getElementById('btn-send').addEventListener('click', sendMessage);
 document.getElementById('chat-input').addEventListener('keydown', e => {
   if (e.key === 'Enter') sendMessage();

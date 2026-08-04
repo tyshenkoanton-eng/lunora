@@ -46,3 +46,19 @@ class GeoResult(BaseModel):
     lat: float
     lon: float
     timezone: str
+
+
+class InterpretationBlock(BaseModel):
+    planet: str
+    planet_ru: str
+    sign: str
+    sign_ru: str
+    symbol: str
+    house: int | None = None
+    degree: float
+    text: str
+
+
+class PortraitResponse(BaseModel):
+    blocks: list[InterpretationBlock]
+    portrait: str

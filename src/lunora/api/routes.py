@@ -13,9 +13,15 @@ from lunora.api.schemas import (
     GeoResult,
     OnboardRequest,
     OnboardResponse,
+    PortraitResponse,
 )
 from lunora.calc.geocode import geocode_city
 from lunora.calc.timezone import timezone_for
+from lunora.interpret.portrait import (
+    PORTRAIT_SYSTEM_PROMPT,
+    build_interpretation_blocks,
+    build_portrait_prompt,
+)
 from lunora.calc.engine import calculate
 from lunora.calc.serialize import chart_to_dict
 from lunora.calc.types import BirthData, BirthTimePrecision
@@ -189,6 +195,40 @@ async def ask(req: AskRequest):
             answer=answer,
             category=category.value,
         )
+
+
+@router.get("/portrait/{user_id}", response_model=PortraitResponse)
+async def get_portrait(user_id: uuid.UUID):
+    async with async_session() as session:
+        chart_row = await session.execute(
+            select(NatalChart)
+            .where(NatalChart.user_id == user_id)
+            .order_by(NatalChart.created_at.desc())
+            .limit(1)
+        )
+        chart = chart_row.scalar_one_or_none()
+        if not chart:
+            raise HTTPException(404, "Chart not found")
+
+        chart_data = {
+            "western": chart.western,
+            "vedic": chart.vedic,
+            "chinese": chart.chinese,
+            "numerology": chart.numerology,
+        }
+        blocks = build_interpretation_blocks(chart_data)
+
+        if not blocks:
+            return PortraitResponse(blocks=[], portrait="Недостаточно данных для построения портрета.")
+
+        prompt = build_portrait_prompt(blocks, chart_data)
+        from lunora.llm.client import _call_llm
+        messages = [
+            {"role": "system", "content": PORTRAIT_SYSTEM_PROMPT},
+            {"role": "user", "content": prompt},
+        ]
+        portrait = await _call_llm(messages)
+        return PortraitResponse(blocks=blocks, portrait=portrait)
 
 
 @router.get("/geocode", response_model=list[GeoResult])
