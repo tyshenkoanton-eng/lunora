@@ -1,0 +1,381 @@
+<title>Лунора — карта экранов и зависимостей</title>
+
+<style>
+  :root {
+    --paper: #faf9f6;
+    --card: #ffffff;
+    --ink: #1a1917;
+    --ink-soft: #56534d;
+    --ink-faint: #8c877e;
+    --rule: #e2ded6;
+    --rule-soft: #eeebe4;
+    --amber: #8a5a1f;
+    --amber-bg: #f8f1e4;
+    --moss: #4a6b45;
+    --moss-bg: #eef2ec;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #15140f;
+      --card: #1c1b16;
+      --ink: #e9e6dd;
+      --ink-soft: #a8a296;
+      --ink-faint: #767065;
+      --rule: #34312a;
+      --rule-soft: #262319;
+      --amber: #d6a86a;
+      --amber-bg: #2a2318;
+      --moss: #92b088;
+      --moss-bg: #1e2419;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #15140f;
+    --card: #1c1b16;
+    --ink: #e9e6dd;
+    --ink-soft: #a8a296;
+    --ink-faint: #767065;
+    --rule: #34312a;
+    --rule-soft: #262319;
+    --amber: #d6a86a;
+    --amber-bg: #2a2318;
+    --moss: #92b088;
+    --moss-bg: #1e2419;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font: 400 15px/1.65 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin: 0;
+    padding: 40px 20px 90px;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1020px; margin: 0 auto; display: flex; flex-direction: column; gap: 40px; }
+
+  header { display: flex; flex-direction: column; gap: 10px; border-bottom: 1px solid var(--rule); padding-bottom: 24px; }
+  .eyebrow { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-faint); font-weight: 700; margin: 0; }
+  h1 { font-size: clamp(26px, 4vw, 36px); font-weight: 660; letter-spacing: -.025em; margin: 0; text-wrap: balance; line-height: 1.15; }
+  .lede { font-size: 16px; color: var(--ink-soft); margin: 0; max-width: 62ch; line-height: 1.6; }
+
+  section { display: flex; flex-direction: column; gap: 16px; }
+  h2 { font-size: 20px; font-weight: 640; letter-spacing: -.018em; margin: 0; text-wrap: balance; }
+  h3 { font-size: 13px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); margin: 0; }
+  p { margin: 0; max-width: 68ch; color: var(--ink-soft); }
+  p strong, li strong { color: var(--ink); font-weight: 620; }
+
+  figure { margin: 0; display: flex; flex-direction: column; gap: 12px; }
+  .figbox { overflow-x: auto; border: 1px solid var(--rule); border-radius: 12px; background: var(--card); padding: 20px 18px; }
+  svg { display: block; max-width: 100%; height: auto; min-width: 620px; margin: 0 auto; }
+  figcaption { font-size: 13px; color: var(--ink-soft); line-height: 1.55; max-width: 68ch; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  .tbox { overflow-x: auto; }
+  th { text-align: left; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); font-weight: 700; padding: 0 12px 8px 0; border-bottom: 1px solid var(--rule); white-space: nowrap; }
+  td { padding: 9px 12px 9px 0; border-bottom: 1px solid var(--rule-soft); vertical-align: top; color: var(--ink-soft); }
+  td:first-child { color: var(--ink); font-weight: 560; }
+  td b { color: var(--ink); font-weight: 640; }
+  .num { font-variant-numeric: tabular-nums; text-align: right; padding-right: 18px; }
+
+  .pill { display: inline-block; font-size: 11px; font-weight: 660; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+  .pill.gap { background: var(--amber-bg); color: var(--amber); }
+  .pill.ok { background: var(--moss-bg); color: var(--moss); }
+
+  .callout { border-left: 3px solid var(--amber); background: var(--amber-bg); padding: 14px 16px; border-radius: 0 10px 10px 0; display: flex; flex-direction: column; gap: 8px; }
+  .callout p { color: var(--ink); max-width: 66ch; }
+  .callout h3 { color: var(--amber); }
+
+  ul { margin: 0; padding-left: 20px; display: flex; flex-direction: column; gap: 7px; color: var(--ink-soft); max-width: 68ch; }
+  code { font: 500 12.5px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; background: var(--rule-soft); padding: 1px 5px; border-radius: 4px; color: var(--ink); }
+
+  @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+
+<div class="wrap">
+
+<header>
+  <p class="eyebrow">Лунора · G7 · 15 августа 2026</p>
+  <h1>Карта экранов и зависимостей</h1>
+  <p class="lede">Шестьдесят шесть экранов прототипа, их связи и три структурных вывода, которые видны только на схеме. Служебный документ — для того, кто будет это строить.</p>
+</header>
+
+<section>
+  <h2>Глубина навигации</h2>
+  <p>В G6 записано правило: <strong>от главной до любого экрана не более двух тапов.</strong> Схема показывает, где оно держится, а где нет.</p>
+
+  <figure>
+    <div class="figbox">
+      <svg viewBox="0 0 900 400" role="img" aria-label="Дерево навигации: три вкладки укладываются в два тапа, ветка нумерологии уходит на пять уровней">
+        <defs>
+          <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+          </marker>
+          <marker id="ara" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0 0 L10 5 L0 10 z" fill="var(--amber)"/>
+          </marker>
+        </defs>
+
+        <!-- шкала уровней -->
+        <g font-size="10" fill="currentColor" opacity=".45" text-anchor="middle">
+          <text x="80" y="20">тап 0</text>
+          <text x="255" y="20">тап 1</text>
+          <text x="430" y="20">тап 2</text>
+          <text x="605" y="20">тап 3</text>
+          <text x="780" y="20">тап 4</text>
+        </g>
+        <line x1="517" y1="30" x2="517" y2="385" stroke="var(--amber)" stroke-width="1" stroke-dasharray="3 4"/>
+        <text x="524" y="42" font-size="10" fill="var(--amber)" font-weight="700">граница правила G6</text>
+
+        <g stroke="currentColor" fill="none" marker-end="url(#ar)" opacity=".55">
+          <path d="M136 60 L196 60"/>
+          <path d="M136 105 L196 105"/>
+          <path d="M136 150 L196 150"/>
+          <path d="M136 240 L196 218"/>
+          <path d="M136 240 L196 262"/>
+          <path d="M311 60 L371 60"/>
+          <path d="M311 218 L371 218"/>
+          <path d="M311 262 L371 262"/>
+        </g>
+        <g stroke="var(--amber)" fill="none" marker-end="url(#ara)" stroke-width="1.6">
+          <path d="M486 262 L546 262"/>
+          <path d="M661 262 L721 262"/>
+        </g>
+
+        <g font-size="11.5" text-anchor="middle">
+          <!-- корни -->
+          <g fill="currentColor">
+            <rect x="24" y="44" width="112" height="32" rx="7" fill="none" stroke="currentColor"/>
+            <text x="80" y="64">Сегодня</text>
+            <rect x="24" y="89" width="112" height="32" rx="7" fill="none" stroke="currentColor"/>
+            <text x="80" y="109">Чат</text>
+            <rect x="24" y="134" width="112" height="32" rx="7" fill="none" stroke="currentColor"/>
+            <text x="80" y="154">Разборы</text>
+            <rect x="24" y="224" width="112" height="32" rx="7" fill="none" stroke="currentColor"/>
+            <text x="80" y="244">Профиль</text>
+          </g>
+          <!-- уровень 1 -->
+          <g fill="currentColor">
+            <rect x="199" y="44" width="112" height="32" rx="7" fill="none" stroke="currentColor" opacity=".7"/>
+            <text x="255" y="64">Слот</text>
+            <rect x="199" y="89" width="112" height="32" rx="7" fill="none" stroke="currentColor" opacity=".7"/>
+            <text x="255" y="109">Ветка · пейвол</text>
+            <rect x="199" y="134" width="112" height="32" rx="7" fill="none" stroke="currentColor" opacity=".7"/>
+            <text x="255" y="154">Продукт · документ</text>
+            <rect x="199" y="202" width="112" height="32" rx="7" fill="none" stroke="currentColor" opacity=".7"/>
+            <text x="255" y="222">Тема</text>
+            <rect x="199" y="246" width="112" height="32" rx="7" fill="none" stroke="currentColor" opacity=".7"/>
+            <text x="255" y="266">Школа</text>
+          </g>
+          <!-- уровень 2 -->
+          <g fill="currentColor">
+            <rect x="374" y="44" width="112" height="32" rx="7" fill="none" stroke="currentColor" opacity=".55"/>
+            <text x="430" y="64">Кого добавить</text>
+            <rect x="374" y="202" width="112" height="32" rx="7" fill="none" stroke="currentColor" opacity=".55"/>
+            <text x="430" y="222">Разбор школы</text>
+            <rect x="374" y="246" width="112" height="32" rx="7" fill="none" stroke="var(--amber)" stroke-width="1.4"/>
+            <text x="430" y="266" fill="var(--amber)">Квадрат</text>
+          </g>
+          <!-- уровень 3-4 -->
+          <g>
+            <rect x="549" y="246" width="112" height="32" rx="7" fill="none" stroke="var(--amber)" stroke-width="1.4"/>
+            <text x="605" y="266" fill="var(--amber)">Клетка</text>
+            <rect x="724" y="246" width="112" height="32" rx="7" fill="none" stroke="var(--amber)" stroke-width="1.4"/>
+            <text x="780" y="266" fill="var(--amber)">Линия</text>
+          </g>
+        </g>
+
+        <g font-size="11" fill="currentColor" opacity=".6">
+          <text x="24" y="330">Три вкладки из четырёх укладываются в правило.</text>
+          <text x="24" y="350" fill="var(--amber)" opacity="1" font-weight="600">Профиль → Школа → Квадрат → Клетка → Линия — четыре тапа вместо двух.</text>
+          <text x="24" y="372">Семнадцать экранов нумерологии лежат за границей правила.</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption>Каждая стрелка — один тап. Янтарным отмечена ветка, вышедшая за границу правила из G6: девять экранов клеток и восемь экранов линий доступны только с третьего и четвёртого тапа.</figcaption>
+  </figure>
+
+  <div class="callout">
+    <h3>Правило либо чинится, либо отменяется</h3>
+    <p>Вариантов два, и оба честные. <strong>Поднять квадрат на уровень выше</strong> — сделать вход в нумерологию прямо из профиля, минуя список школ. Либо <strong>признать, что правило было написано для карты из двенадцати экранов</strong>, а сейчас их шестьдесят шесть, и заменить его на «не более двух тапов до любого <em>раздела</em>, глубже — свободно».</p>
+    <p>Второе честнее. Клетка квадрата — не раздел, а подробность подробности; требовать до неё два тапа значит выносить девять клеток на главную.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Один конвейер на восемь продуктов</h2>
+  <p>Продуктовые экраны не дублируются. Восемь продуктов проходят через шесть общих экранов, различаясь только данными конфигурации.</p>
+
+  <figure>
+    <div class="figbox">
+      <svg viewBox="0 0 900 300" role="img" aria-label="Восемь продуктов сходятся в один конвейер из шести экранов и расходятся в восемь документов">
+        <defs>
+          <marker id="ar2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M0 0 L10 5 L0 10 z" fill="currentColor"/>
+          </marker>
+        </defs>
+
+        <g font-size="11" fill="currentColor" text-anchor="end">
+          <text x="126" y="40">Совместимость</text>
+          <text x="126" y="64">Ребёнок</text>
+          <text x="126" y="88">Выбор имени</text>
+          <text x="126" y="112">Смена фамилии</text>
+          <text x="126" y="136">Карта на год</text>
+          <text x="126" y="160">PDF карты</text>
+          <text x="126" y="184">Дата · выбираю</text>
+          <text x="126" y="208">Дата · назначена</text>
+        </g>
+        <g stroke="currentColor" fill="none" opacity=".4">
+          <path d="M136 36 C 175 36, 175 122, 205 122"/>
+          <path d="M136 60 C 175 60, 175 122, 205 122"/>
+          <path d="M136 84 C 175 84, 175 122, 205 122"/>
+          <path d="M136 108 C 175 108, 175 122, 205 122"/>
+          <path d="M136 132 C 175 132, 175 122, 205 122"/>
+          <path d="M136 156 C 175 156, 175 122, 205 122"/>
+          <path d="M136 180 C 175 180, 175 122, 205 122"/>
+          <path d="M136 204 C 175 204, 175 122, 205 122"/>
+        </g>
+
+        <g font-size="10.5" text-anchor="middle" fill="currentColor">
+          <rect x="205" y="104" width="86" height="36" rx="7" fill="none" stroke="currentColor"/>
+          <text x="248" y="120">Витрина</text><text x="248" y="133" opacity=".55">что внутри</text>
+          <rect x="303" y="104" width="86" height="36" rx="7" fill="none" stroke="currentColor"/>
+          <text x="346" y="120">Данные</text><text x="346" y="133" opacity=".55">0–5 полей</text>
+          <rect x="401" y="104" width="86" height="36" rx="7" fill="none" stroke="currentColor"/>
+          <text x="444" y="120">Глубина</text><text x="444" y="133" opacity=".55">и условия</text>
+          <rect x="499" y="104" width="86" height="36" rx="7" fill="none" stroke="currentColor"/>
+          <text x="542" y="120">Оплата</text><text x="542" y="133" opacity=".55">холд</text>
+          <rect x="597" y="104" width="86" height="36" rx="7" fill="none" stroke="currentColor"/>
+          <text x="640" y="120">Сборка</text><text x="640" y="133" opacity=".55">этапы</text>
+          <rect x="695" y="104" width="86" height="36" rx="7" fill="none" stroke="currentColor" stroke-width="1.6"/>
+          <text x="738" y="120">Документ</text><text x="738" y="133" opacity=".55">списание</text>
+        </g>
+        <g stroke="currentColor" fill="none" marker-end="url(#ar2)">
+          <path d="M291 122 L299 122"/><path d="M389 122 L397 122"/>
+          <path d="M487 122 L495 122"/><path d="M585 122 L593 122"/>
+          <path d="M683 122 L691 122"/>
+        </g>
+        <g stroke="currentColor" fill="none" opacity=".4">
+          <path d="M781 122 C 812 122, 812 60, 842 60"/>
+          <path d="M781 122 C 812 122, 812 122, 842 122"/>
+          <path d="M781 122 C 812 122, 812 184, 842 184"/>
+        </g>
+        <g font-size="11" fill="currentColor">
+          <text x="848" y="64">8</text>
+          <text x="848" y="126">до&#8203;ку&#8203;мен&#8203;тов</text>
+        </g>
+
+        <g font-size="11" fill="currentColor" opacity=".6">
+          <text x="24" y="248">Различие продуктов живёт в конфигурации, а не в экранах: набор полей, глубина, шаги сборки, структура документа.</text>
+          <text x="24" y="268">Девятый продукт стоит примерно шести строк данных и ни одного нового экрана.</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption>Восемь входов и восемь выходов на шести общих экранах. Оплата ставит холд, списание происходит на выдаче документа — момент списания и момент оказания услуги совпадают физически.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>Состояния — перпендикулярный слой</h2>
+  <p>Пять состояний не принадлежат экранам, а применяются к любому из них. Три ситуации выпадают из этой схемы и живут отдельными экранами.</p>
+
+  <figure>
+    <div class="figbox">
+      <svg viewBox="0 0 900 250" role="img" aria-label="Пять состояний применяются ко всем экранам, три критические ситуации существуют отдельно">
+        <g font-size="11" fill="currentColor" text-anchor="middle">
+          <rect x="24" y="40" width="620" height="66" rx="9" fill="none" stroke="currentColor" opacity=".5"/>
+          <text x="334" y="66" font-size="12" font-weight="600">66 экранов</text>
+          <text x="334" y="88" opacity=".6">каждый принимает любое из пяти состояний</text>
+        </g>
+        <g stroke="currentColor" fill="none" opacity=".35">
+          <path d="M104 106 L104 148"/><path d="M220 106 L220 148"/>
+          <path d="M334 106 L334 148"/><path d="M448 106 L448 148"/>
+          <path d="M564 106 L564 148"/>
+        </g>
+        <g font-size="10.5" text-anchor="middle" fill="currentColor">
+          <rect x="54" y="148" width="100" height="30" rx="7" fill="none" stroke="currentColor"/><text x="104" y="167">Норма</text>
+          <rect x="170" y="148" width="100" height="30" rx="7" fill="none" stroke="currentColor"/><text x="220" y="167">Загрузка</text>
+          <rect x="284" y="148" width="100" height="30" rx="7" fill="none" stroke="currentColor"/><text x="334" y="167">Пусто · 5</text>
+          <rect x="398" y="148" width="100" height="30" rx="7" fill="none" stroke="currentColor"/><text x="448" y="167">Ошибка · 4</text>
+          <rect x="514" y="148" width="100" height="30" rx="7" fill="none" stroke="currentColor"/><text x="564" y="167">Офлайн</text>
+        </g>
+
+        <g font-size="10.5" text-anchor="middle">
+          <rect x="676" y="30" width="200" height="86" rx="9" fill="none" stroke="var(--amber)" stroke-dasharray="4 4"/>
+          <text x="776" y="52" fill="var(--amber)" font-size="11" font-weight="600">Вне схемы · 3</text>
+          <text x="776" y="72" fill="var(--amber)" opacity=".85">Платёж без подтверждения</text>
+          <text x="776" y="88" fill="var(--amber)" opacity=".85">Двойная оплата</text>
+          <text x="776" y="104" fill="var(--amber)" opacity=".85">Неполные данные</text>
+        </g>
+
+        <g font-size="11" fill="currentColor" opacity=".6">
+          <text x="24" y="212">«Пусто» возможно на пяти экранах: остальные строятся из карты, а карта посчитана при регистрации.</text>
+          <text x="24" y="232">У ошибки четыре текста — по тому, чей это сбой: банк, наш расчёт, текст раздела, сервер.</text>
+        </g>
+      </svg>
+    </div>
+    <figcaption>Слева — состояния как режим отображения любого экрана. Справа — три ситуации, которые режимом не являются: у них своя логика и свои тексты, поэтому они существуют как отдельные экраны.</figcaption>
+  </figure>
+</section>
+
+<section>
+  <h2>Распределение экранов</h2>
+  <p>Числа показывают перекос, который не виден внутри прототипа.</p>
+
+  <div class="tbox">
+    <table>
+      <thead><tr><th>Контур</th><th class="num">Экранов</th><th>Что внутри</th><th>Платно</th></tr></thead>
+      <tbody>
+        <tr><td>Профиль</td><td class="num"><b>40</b></td><td>Восемь тем, четыре школы, семнадцать экранов нумерологии, настройки, удаление</td><td>бесплатно</td></tr>
+        <tr><td>Разборы</td><td class="num"><b>17</b></td><td>Витрина, конвейер, документы, подарки, сбои оплаты</td><td>платно</td></tr>
+        <tr><td>Показ</td><td class="num"><b>4</b></td><td>Служебные экраны демонстрации</td><td>—</td></tr>
+        <tr><td>Чат</td><td class="num"><b>3</b></td><td>Список веток, ветка, пейвол</td><td>смешанно</td></tr>
+        <tr><td>Сегодня</td><td class="num"><b>2</b></td><td>Лента, покупка слота</td><td>смешанно</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="callout">
+    <h3>Бесплатный контур больше платного вдвое</h3>
+    <p>Сорок экранов раздаются даром, семнадцать продаются. Это <strong>сознательное следствие модели</strong>: бесплатный разбор — единственный способ показать глубину до денег, а в нише, где главный барьер это недоверие, показать приходится много.</p>
+    <p>Но перекос стоит держать в голове при вёрстке и при тестировании. Сорок экранов — это сорок мест, где может сломаться то, за что никто не платил.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Чего в прототипе нет</h2>
+  <p>Проверено сверкой с картой экранов из G6.</p>
+
+  <div class="tbox">
+    <table>
+      <thead><tr><th>Что</th><th>Где должно быть</th><th>Статус</th></tr></thead>
+      <tbody>
+        <tr><td>Онбординг · 6 экранов</td><td>вход в приложение</td><td><span class="pill ok">есть отдельно</span> <code>01-onboarding.html</code></td></tr>
+        <tr><td>Форма добавления человека</td><td>Сегодня → слот, Разборы → совместимость</td><td><span class="pill gap">нет</span></td></tr>
+        <tr><td>Утренняя лента как сообщение бота</td><td>вне Mini App</td><td><span class="pill gap">нет</span></td></tr>
+        <tr><td>Доставка документа в бот</td><td>вне Mini App</td><td><span class="pill gap">нет</span></td></tr>
+        <tr><td>Команды бота · <code>/paysupport</code>, <code>/delete</code>, <code>/help</code></td><td>вне Mini App</td><td><span class="pill gap">нет</span></td></tr>
+        <tr><td>Настройка времени ленты</td><td>Настройки → Уведомления</td><td><span class="pill gap">заглушка</span></td></tr>
+        <tr><td>Пять тем из восьми</td><td>Профиль → Темы</td><td><span class="pill gap">не открываются</span></td></tr>
+        <tr><td>Разделы западной, ведической, Ба-Цзы</td><td>Профиль → Школы</td><td><span class="pill gap">частично</span></td></tr>
+        <tr><td>Чертёж Ба-Цзы</td><td>Школы → Ба-Цзы</td><td><span class="pill gap">нет</span></td></tr>
+        <tr><td>Интерактив на колесе и раши-чарте</td><td>Школы → западная, ведическая</td><td><span class="pill gap">нет</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <p>Первые пять — <strong>вне Mini App</strong>. Бот в прототипе не отрисован вообще, а через него проходит утренняя лента, доставка документов и обязательные по правилам Telegram команды поддержки. Это отдельный набор макетов, и он в G7 не начат.</p>
+</section>
+
+<section>
+  <h2>Что схема считает готовым</h2>
+  <ul>
+    <li><strong>Связность.</strong> Ни одной ссылки в несуществующий экран. Проверяется автоматически при каждой сборке.</li>
+    <li><strong>Продуктовый конвейер.</strong> Все восемь продуктов проходят полный путь от витрины до документа.</li>
+    <li><strong>Структура документов.</strong> У каждого продукта своя, а не общая заглушка.</li>
+    <li><strong>Состояния.</strong> Пять режимов на всех экранах плюс три отдельных.</li>
+    <li><strong>Нумерология.</strong> Единственная школа, доведённая до расчёта: пятнадцать чисел, квадрат, линии, оба контура.</li>
+  </ul>
+  <p>Не готово: три остальные школы на уровне расчёта, бот целиком, визуальная концепция, макет PDF, тексты везде.</p>
+</section>
+
+</div>

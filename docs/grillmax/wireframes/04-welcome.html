@@ -1,0 +1,219 @@
+<title>Лунора — G7 · Welcome-страница по приглашению</title>
+
+<style>
+  :root {
+    --paper: #f4f5f7; --card: #ffffff; --ink: #1b1f26; --ink-soft: #565d69;
+    --ink-faint: #8b929d; --rule: #d8dce2; --rule-soft: #e8eaee;
+    --wire-fill: #e9ebef; --wire-fill-2: #dcdfe5; --wire-line: #c3c8d0;
+    --note: #2f5d8a; --note-bg: #e8f0f7; --warn: #8a5a1f; --warn-bg: #f7efe2; --warn-line: #e2cfae;
+    --good: #3d6b4a; --luna: #4a4d8a; --luna-bg: #eeeef7; --luna-line: #b9bbdb;
+    --frame-shadow: 0 1px 2px rgba(27,31,38,.06), 0 8px 24px rgba(27,31,38,.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #14171c; --card: #1b1f26; --ink: #e8eaee; --ink-soft: #a4abb6;
+      --ink-faint: #737b87; --rule: #2c323b; --rule-soft: #232830;
+      --wire-fill: #262b33; --wire-fill-2: #2f353f; --wire-line: #3d444f;
+      --note: #7fb0da; --note-bg: #1c2732; --warn: #d6a86a; --warn-bg: #2a2318; --warn-line: #4a3c26;
+      --good: #7fb694; --luna: #a8aae0; --luna-bg: #1f2133; --luna-line: #3f4270;
+      --frame-shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #14171c; --card: #1b1f26; --ink: #e8eaee; --ink-soft: #a4abb6;
+    --ink-faint: #737b87; --rule: #2c323b; --rule-soft: #232830;
+    --wire-fill: #262b33; --wire-fill-2: #2f353f; --wire-line: #3d444f;
+    --note: #7fb0da; --note-bg: #1c2732; --warn: #d6a86a; --warn-bg: #2a2318; --warn-line: #4a3c26;
+    --good: #7fb694; --luna: #a8aae0; --luna-bg: #1f2133; --luna-line: #3f4270;
+    --frame-shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font: 400 16px/1.6 ui-sans-serif, -apple-system, "Segoe UI", Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 44px 24px 90px; }
+
+  header.doc { border-bottom: 1px solid var(--rule); padding-bottom: 26px; margin-bottom: 30px; }
+  .eyebrow { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-faint); font-weight: 600; margin: 0 0 12px; }
+  h1 { font-size: clamp(24px, 4vw, 34px); line-height: 1.15; margin: 0 0 12px; font-weight: 650; letter-spacing: -.02em; text-wrap: balance; }
+  .lede { font-size: 16px; color: var(--ink-soft); max-width: 66ch; margin: 0 0 16px; }
+  .vtag { display: inline-block; font-size: 12px; font-weight: 650; color: var(--note); background: var(--note-bg); padding: 4px 10px; border-radius: 999px; }
+
+  .stage { display: flex; gap: 34px; align-items: flex-start; flex-wrap: wrap; }
+  .col-a { flex: 0 0 auto; }
+  .col-b { flex: 1 1 400px; min-width: 300px; }
+
+  /* ---------- страница в браузере ---------- */
+  .browser {
+    width: 380px; border: 1px solid var(--rule); border-radius: 14px; overflow: hidden;
+    box-shadow: var(--frame-shadow); background: var(--card);
+  }
+  .bbar { display: flex; align-items: center; gap: 8px; padding: 9px 12px; background: var(--wire-fill); border-bottom: 1px solid var(--rule-soft); }
+  .bdot { width: 9px; height: 9px; border-radius: 999px; background: var(--wire-line); }
+  .burl { flex: 1; background: var(--card); border: 1px solid var(--rule); border-radius: 999px; padding: 5px 12px; font-size: 11.5px; color: var(--ink-soft); text-align: center; }
+  .page { padding: 30px 24px 34px; }
+
+  .logo { text-align: center; margin-bottom: 26px; }
+  .logo svg { width: 78px; height: 78px; }
+  .logo b { display: block; font-size: 19px; font-weight: 650; letter-spacing: -.01em; margin-top: 12px; }
+
+  .page h2 { font-size: 25px; line-height: 1.2; font-weight: 650; letter-spacing: -.02em; text-align: center; margin: 0 0 12px; text-wrap: balance; }
+  .sub { font-size: 14.5px; line-height: 1.55; color: var(--ink-soft); text-align: center; margin: 0 0 20px; }
+
+  .bonus { text-align: center; border: 1px solid var(--luna-line); background: var(--luna-bg); border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; }
+  .bonus b { display: block; font-size: 16px; font-weight: 650; color: var(--luna); letter-spacing: -.01em; }
+  .bonus span { display: block; font-size: 12.5px; color: var(--ink-soft); margin-top: 5px; line-height: 1.5; }
+
+  .free { font-size: 12.5px; color: var(--ink-faint); text-align: center; margin: 0 0 22px; }
+
+  .feats { display: flex; flex-direction: column; gap: 8px; margin-bottom: 26px; }
+  .feat { display: grid; grid-template-columns: 40px 1fr; gap: 12px; align-items: center; border: 1px solid var(--rule); border-radius: 11px; padding: 12px 13px; }
+  .feat i { width: 40px; height: 40px; border-radius: 10px; background: var(--wire-fill); display: grid; place-items: center; font-style: normal; font-size: 17px; color: var(--ink-soft); }
+  .feat b { display: block; font-size: 13.5px; font-weight: 620; }
+  .feat span { display: block; font-size: 12px; color: var(--ink-soft); line-height: 1.45; margin-top: 2px; }
+
+  .chq { font-size: 15px; font-weight: 640; text-align: center; margin: 0 0 14px; }
+  .chans { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .chan { border: 1px solid var(--rule); border-radius: 12px; padding: 16px 10px 13px; text-align: center; cursor: pointer; background: var(--card); }
+  .chan:hover { background: var(--wire-fill); }
+  .chan .cic { width: 46px; height: 46px; border-radius: 999px; margin: 0 auto 9px; display: grid; place-items: center; font-size: 19px; border: 1px solid var(--rule); color: var(--ink-soft); }
+  .chan b { font-size: 13.5px; font-weight: 620; }
+  .chan.soon { opacity: .5; }
+  .chan.soon em { display: block; font-style: normal; font-size: 10.5px; color: var(--ink-faint); margin-top: 3px; }
+
+  .legal { font-size: 10.5px; color: var(--ink-faint); line-height: 1.5; text-align: center; margin: 22px 0 0; }
+  .legal u { color: var(--note); text-decoration: none; border-bottom: 1px solid currentColor; }
+
+  /* ---------- заметки ---------- */
+  .col-b h2 { font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-faint); font-weight: 700; margin: 0 0 14px; }
+  .note { border-left: 2px solid var(--rule); padding: 2px 0 2px 14px; margin-bottom: 22px; }
+  .note h3 { font-size: 14px; font-weight: 620; margin: 0 0 6px; }
+  .note p { font-size: 13.5px; line-height: 1.6; color: var(--ink-soft); margin: 0 0 8px; max-width: 62ch; }
+  .note p:last-child { margin-bottom: 0; }
+  .note.q { border-left-color: var(--warn); }
+  .note.q h3 { color: var(--warn); }
+  .note b { color: var(--ink); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 10px 0 0; }
+  th { text-align: left; font-size: 10.5px; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-faint); font-weight: 700; padding: 0 10px 7px 0; border-bottom: 1px solid var(--rule); }
+  td { padding: 8px 10px 8px 0; border-bottom: 1px solid var(--rule-soft); color: var(--ink-soft); vertical-align: top; }
+  td:first-child { color: var(--ink); font-weight: 560; white-space: nowrap; }
+
+  @media (max-width: 860px) { .browser { width: 100%; max-width: 380px; } }
+</style>
+
+<div class="wrap">
+  <header class="doc">
+    <p class="eyebrow">Лунора · G7 · Реферальная программа</p>
+    <h1>Welcome-страница по приглашению</h1>
+    <p class="lede">Открывается по ссылке <code>lunora.ru/r/&lt;token&gt;</code> — вне приложения, в браузере. Единственная её задача: объяснить, куда человек попал, и передать его в удобный канал, не потеряв привязку приглашения.</p>
+    <span class="vtag">v1 · проволочный уровень, визуальная концепция не принята</span>
+  </header>
+
+  <div class="stage">
+    <div class="col-a">
+      <div class="browser">
+        <div class="bbar">
+          <div class="bdot"></div><div class="bdot"></div><div class="bdot"></div>
+          <div class="burl">lunora.ru/r/A4F21C</div>
+        </div>
+        <div class="page">
+          <div class="logo">
+            <svg viewBox="0 0 80 80" fill="none">
+              <circle cx="40" cy="40" r="30" stroke="var(--wire-line)" stroke-width="1.6"/>
+              <circle cx="40" cy="40" r="19" stroke="var(--wire-line)" stroke-width="1.6"/>
+              <path d="M40 10 L40 70 M10 40 L70 40" stroke="var(--wire-line)" stroke-width="1.2"/>
+              <circle cx="40" cy="40" r="5" fill="var(--wire-line)"/>
+            </svg>
+            <b>Лунора</b>
+          </div>
+
+          <h2>Вас пригласили в Лунору</h2>
+          <p class="sub">Натальная карта по четырём школам сразу: западная астрология, ведическая, Ба-Цзы и нумерология.</p>
+
+          <div class="bonus">
+            <b>Час свободного разговора в подарок</b>
+            <span>Получите его сразу после того, как введёте данные и увидите свою карту. Покупать ничего не нужно.</span>
+          </div>
+          <p class="free">Сам разбор бесплатный и полный — мы ничего не придерживаем</p>
+
+          <div class="feats">
+            <div class="feat"><i>◐</i><div><b>Четыре школы, а не одна</b><span>Где они сходятся — это сильный довод. Где расходятся — тоже содержание</span></div></div>
+            <div class="feat"><i>◍</i><div><b>По вашей карте, а не по знаку</b><span>Считаем по дате, времени и месту рождения</span></div></div>
+            <div class="feat"><i>◌</i><div><b>Можно спрашивать</b><span>Лунора отвечает, опираясь на вашу карту</span></div></div>
+          </div>
+
+          <p class="chq">Как вам удобнее продолжить?</p>
+          <div class="chans">
+            <div class="chan"><div class="cic">◈</div><b>Telegram</b></div>
+            <div class="chan"><div class="cic">◇</div><b>MAX</b></div>
+          </div>
+          <div class="chans" style="margin-top:10px">
+            <div class="chan soon" style="grid-column:1 / -1"><div class="cic">◎</div><b>В браузере</b><em>появится позже</em></div>
+          </div>
+
+          <p class="legal">Продолжая, вы принимаете <u>пользовательское соглашение</u>. Данные рождения обрабатываются только для расчёта — <u>политика</u>.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-b">
+      <h2>Что и почему</h2>
+
+      <div class="note">
+        <h3>Имя пригласившего не показываем</h3>
+        <p>Человек и так знает, кто прислал ссылку или показал код. Если ссылку переслали дальше — имя первого приглашающего вводит в заблуждение, а заодно раскрывается посторонним.</p>
+        <p>В макете VPN то же самое: «Вас пригласили», без имени.</p>
+      </div>
+
+      <div class="note">
+        <h3>Бонус назван до преимуществ</h3>
+        <p>Человек пришёл по чужой ссылке и ещё не знает, что мы такое. Сначала — что он получит и что это ничего не стоит, потом — чем мы отличаемся.</p>
+      </div>
+
+      <div class="note q">
+        <h3>⚠️ Условие бонуса — не покупка</h3>
+        <p>У VPN написано «+14 дней после первой покупки». У нас условие мягче: <b>ввести данные и получить карту</b>.</p>
+        <p>Это принципиально: обещание, требующее покупки, на входе отпугивает. Обещание, требующее заполнить форму, наоборот подталкивает её заполнить — а это ровно то действие, которое нам нужно.</p>
+      </div>
+
+      <div class="note">
+        <h3>Три преимущества, а не список функций</h3>
+        <p>Каждое отвечает на вопрос «чем вы лучше того, что я уже видел»: четыре школы против одной, расчёт по карте против гороскопа по знаку, возможность спросить.</p>
+      </div>
+
+      <div class="note q">
+        <h3>⚠️ Привязка приглашения переживает выбор канала</h3>
+        <p>Токен из ссылки должен дожить до создания профиля в любом из каналов. Если человек выберет MAX, а профиль создаст через час — приглашение всё равно засчитывается.</p>
+        <p>Это требование к бэкенду, а не к странице.</p>
+      </div>
+
+      <div class="note">
+        <h3>Страница — часть продукта, а не лендинг</h3>
+        <p>Здесь нет продажи, нет цен, нет призывов купить. Только объяснение и передача в канал. Всё остальное человек увидит внутри.</p>
+      </div>
+
+      <h2 style="margin-top:30px">Отличия от макета VPN</h2>
+      <table>
+        <tr><th>Что</th><th>У VPN</th><th>У нас</th></tr>
+        <tr><td>Условие бонуса</td><td>после первой покупки</td><td><b>после расчёта карты</b></td></tr>
+        <tr><td>Бонус</td><td>+14 дней доступа</td><td>час разговора</td></tr>
+        <tr><td>Пробный период</td><td>отдельной строкой</td><td>не нужен — разбор и так бесплатный</td></tr>
+        <tr><td>Каналы</td><td>MAX · Telegram · Web</td><td>Telegram · MAX, веб позже</td></tr>
+        <tr><td>Порядок каналов</td><td>MAX первым</td><td><b>Telegram первым</b> — основной канал запуска</td></tr>
+      </table>
+
+      <h2 style="margin-top:30px">Открытое</h2>
+      <div class="note q">
+        <h3>Десктопный вид</h3>
+        <p>Ссылку откроют и с компьютера — например, если её прислали в рабочий чат. Кнопки мессенджеров там ведут в десктопные приложения или в веб-версии. Отдельная раскладка не нарисована.</p>
+      </div>
+      <div class="note q">
+        <h3>Человек уже пользуется Лунорой</h3>
+        <p>Открыл чужую ссылку, будучи нашим пользователем. Сейчас сценарий не описан: приглашение засчитываться не должно, но и глухой отказ показывать неправильно.</p>
+      </div>
+    </div>
+  </div>
+</div>

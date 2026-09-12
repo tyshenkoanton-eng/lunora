@@ -9,3 +9,7 @@ build/
 .DS_Store
 .ruff_cache/
 .pytest_cache/
+
+# исследования лежат на Яндекс.Диске — 61 МБ мелких файлов в репозитории ни к чему
+research/
+.claude/skills/

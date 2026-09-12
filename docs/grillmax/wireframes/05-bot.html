@@ -1,0 +1,383 @@
+<title>Лунора — бот</title>
+<style>
+  :root {
+    --paper: #f4f5f7; --card: #ffffff; --ink: #1b1f26; --ink-soft: #565d69;
+    --ink-faint: #8b929d; --rule: #d8dce2; --rule-soft: #e8eaee;
+    --wire-fill: #e9ebef; --wire-fill-2: #dcdfe5; --wire-line: #c3c8d0;
+    --note: #2f5d8a; --note-bg: #e8f0f7; --warn: #8a5a1f; --warn-bg: #f7efe2; --warn-line: #e2cfae;
+    --good: #3d6b4a; --bad: #a33b3b;
+    --frame-shadow: 0 1px 2px rgba(27,31,38,.06), 0 8px 24px rgba(27,31,38,.05);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #14171c; --card: #1b1f26; --ink: #e8eaee; --ink-soft: #a4abb6;
+      --ink-faint: #737b87; --rule: #2c323b; --rule-soft: #232830;
+      --wire-fill: #262b33; --wire-fill-2: #2f353f; --wire-line: #3d444f;
+      --note: #7fb0da; --note-bg: #1c2732; --warn: #d6a86a; --warn-bg: #2a2318; --warn-line: #4a3c26;
+      --good: #7fb694; --bad: #e08b8b;
+      --frame-shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #14171c; --card: #1b1f26; --ink: #e8eaee; --ink-soft: #a4abb6;
+    --ink-faint: #737b87; --rule: #2c323b; --rule-soft: #232830;
+    --wire-fill: #262b33; --wire-fill-2: #2f353f; --wire-line: #3d444f;
+    --note: #7fb0da; --note-bg: #1c2732; --warn: #d6a86a; --warn-bg: #2a2318; --warn-line: #4a3c26;
+    --good: #7fb694; --bad: #e08b8b;
+    --frame-shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
+  }
+
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+         font: 15px/1.6 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+         -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 28px 20px 80px; }
+
+  /* шапка */
+  .hero { border: 1px solid var(--rule); border-radius: 16px; padding: 26px 28px;
+          background: var(--card); box-shadow: var(--frame-shadow); margin-bottom: 26px; }
+  .kicker { font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase;
+            color: var(--ink-faint); font-weight: 640; }
+  .hero h1 { font-size: 27px; line-height: 1.18; letter-spacing: -.02em; margin: 9px 0 10px; font-weight: 680; }
+  .hero p { font-size: 13.5px; color: var(--ink-soft); line-height: 1.65; margin: 0; max-width: 68ch; }
+  .hero .band { margin-top: 15px; font-size: 11.5px; color: var(--ink-soft);
+                background: var(--wire-fill); border-radius: 8px; padding: 9px 12px; }
+
+  .cols { display: grid; grid-template-columns: 360px 1fr; gap: 26px; align-items: start; }
+  @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
+
+  /* телефон */
+  .phone { border: 1px solid var(--rule); border-radius: 20px; background: var(--card);
+           box-shadow: var(--frame-shadow); overflow: hidden; position: sticky; top: 20px; }
+  .tg-bar { display: flex; align-items: center; gap: 9px; padding: 11px 13px;
+            border-bottom: 1px solid var(--rule-soft); background: var(--wire-fill); }
+  .tg-bar .ava { width: 30px; height: 30px; border-radius: 50%; flex: none;
+                 background: var(--wire-fill-2); border: 1px solid var(--rule);
+                 display: grid; place-items: center; font-size: 13px; }
+  .tg-bar .who b { display: block; font-size: 13px; font-weight: 640; line-height: 1.2; }
+  .tg-bar .who span { display: block; font-size: 10.5px; color: var(--ink-faint); }
+  .scode { margin-left: auto; font: 600 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
+           letter-spacing: .04em; color: var(--ink-soft); background: var(--wire-fill-2);
+           border: 1px solid var(--rule); border-radius: 5px; padding: 4px 6px 3px;
+           cursor: pointer; flex: none; user-select: none; }
+  .scode:hover { color: var(--ink); border-color: var(--ink-faint); }
+  .scode.copied { color: var(--good); border-color: var(--good); }
+
+  .stream { height: 560px; overflow-y: auto; padding: 14px 13px 18px;
+            display: flex; flex-direction: column; gap: 9px; }
+  .daymark { align-self: center; font-size: 10.5px; color: var(--ink-faint);
+             background: var(--wire-fill); border-radius: 20px; padding: 3px 11px; margin: 6px 0 2px; }
+
+  .msg { max-width: 88%; align-self: flex-start; background: var(--wire-fill);
+         border-radius: 13px 13px 13px 4px; padding: 10px 12px; font-size: 13px; line-height: 1.55; }
+  .msg.me { align-self: flex-end; background: var(--wire-fill-2);
+            border-radius: 13px 13px 4px 13px; }
+  .msg b { font-weight: 640; }
+  .msg .t { display: block; font-size: 10px; color: var(--ink-faint); margin-top: 5px; text-align: right; }
+  .msg .lead { display: block; font-weight: 640; margin-bottom: 4px; }
+  .msg em { font-style: normal; color: var(--ink-soft); }
+
+  /* кнопки под сообщением — inline keyboard */
+  .kb { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; }
+  .kb i { font-style: normal; text-align: center; font-size: 12.5px; font-weight: 560;
+          background: var(--card); border: 1px solid var(--rule); border-radius: 8px;
+          padding: 8px 10px; cursor: default; }
+  .kb i.main { border-color: var(--wire-line); font-weight: 620; }
+  .kb.row { flex-direction: row; }
+  .kb.row i { flex: 1; }
+
+  /* карточка-документ */
+  .filecard { display: grid; grid-template-columns: 30px 1fr; gap: 10px; align-items: center;
+              background: var(--card); border: 1px solid var(--rule); border-radius: 9px;
+              padding: 9px 11px; margin-top: 7px; }
+  .filecard u { text-decoration: none; font-size: 16px; color: var(--ink-faint); text-align: center; }
+  .filecard b { display: block; font-size: 12.5px; font-weight: 620; }
+  .filecard span { display: block; font-size: 10.5px; color: var(--ink-faint); }
+
+  /* композер */
+  .composer { display: flex; gap: 8px; align-items: center; padding: 9px 13px;
+              border-top: 1px solid var(--rule-soft); background: var(--wire-fill); }
+  .composer .f { flex: 1; font-size: 12.5px; color: var(--ink-faint); }
+  .composer .s { width: 26px; height: 26px; border-radius: 50%; background: var(--wire-fill-2);
+                 display: grid; place-items: center; font-size: 12px; color: var(--ink-soft); }
+
+  /* правая колонка */
+  h2.sec { font-size: 10.5px; letter-spacing: .13em; text-transform: uppercase;
+           color: var(--ink-faint); font-weight: 640; margin: 22px 0 9px; }
+  h2.sec:first-child { margin-top: 0; }
+  .jump { display: flex; flex-wrap: wrap; gap: 6px; }
+  .jump b { font-size: 11.5px; font-weight: 560; background: var(--card);
+            border: 1px solid var(--rule); border-radius: 20px; padding: 5px 11px; cursor: pointer; }
+  .jump b:hover { border-color: var(--ink-faint); }
+  .jump b.on { background: var(--warn-bg); border-color: var(--warn-line); color: var(--warn); font-weight: 640; }
+  .jump b u { text-decoration: none; font: 600 10px ui-monospace, Menlo, monospace;
+              color: var(--ink-faint); margin-right: 5px; }
+  .jump b.on u { color: var(--warn); }
+
+  .note { border: 1px solid var(--rule); border-radius: 11px; padding: 14px 16px;
+          background: var(--card); margin-bottom: 10px; }
+  .note h3 { font-size: 13.5px; font-weight: 640; margin: 0 0 6px; letter-spacing: -.005em; }
+  .note p { font-size: 12.5px; color: var(--ink-soft); line-height: 1.62; margin: 0 0 8px; }
+  .note p:last-child { margin-bottom: 0; }
+  .note .src { font-size: 11px; color: var(--ink-faint); }
+  .note.warn { background: var(--warn-bg); border-color: var(--warn-line); }
+  .note.warn h3, .note.warn p { color: var(--warn); }
+
+  table { width: 100%; border-collapse: collapse; font-size: 12.5px; margin: 4px 0 0; }
+  th, td { text-align: left; padding: 7px 9px; border-bottom: 1px solid var(--rule-soft); vertical-align: top; }
+  th { font-size: 10.5px; letter-spacing: .06em; text-transform: uppercase;
+       color: var(--ink-faint); font-weight: 640; }
+  td.num { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .tblwrap { overflow-x: auto; border: 1px solid var(--rule); border-radius: 11px;
+             background: var(--card); padding: 4px 6px 2px; }
+</style>
+
+<div class="wrap">
+  <div class="hero">
+    <div class="kicker">Лунора · G7 — макеты бота</div>
+    <h1>Что человек видит до приложения и между заходами</h1>
+    <p>Бот — единственный канал, по которому человек возвращается сам. Здесь собраны все сообщения, которые он получает: приветствие, доставка расчёта, утренняя лента, уведомления о покупках и рефералах, реакция на его собственные сообщения. Тексты — те, что пойдут в продукт.</p>
+    <div class="band">Решения опираются на <b>research/bot-communication.md</b>. Тон: поддерживающий, но прямой. Частота: семь дней в неделю, дальше — по поведению.</div>
+  </div>
+
+  <div class="cols">
+    <div class="phone">
+      <div class="tg-bar">
+        <div class="ava">◔</div>
+        <div class="who"><b>Лунора</b><span>бот</span></div>
+        <span class="scode" id="scode" title="Нажмите, чтобы скопировать адрес">Б-01</span>
+      </div>
+      <div class="stream" id="stream"></div>
+      <div class="composer"><div class="f">Сообщение…</div><div class="s">↑</div></div>
+    </div>
+
+    <div>
+      <h2 class="sec">Сценарии</h2>
+      <div class="jump" id="jump"></div>
+      <h2 class="sec">Что здесь решается</h2>
+      <div id="notes"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ============ СЦЕНАРИИ ============
+   Каждый — кусок переписки. Порядок соответствует пути человека. */
+
+const msg = (t, time, kb) => ({ t, time, kb });
+const me  = (t, time) => ({ t, time, me: 1 });
+
+const B = {
+
+'Б-01': ['Первый вход', 'Приветствие после нажатия ЗАПУСТИТЬ', [
+  msg('Здравствуйте, я Лунора — ваш личный астролог.', '9:14'),
+  msg('Я помогу вам узнать себя лучше с помощью четырёх школ:\n\n• западной астрологии\n• ведической астрологии\n• китайской системы Ба-Цзы\n• нумерологии\n\nЭто как посмотреть на себя под четырьмя разными углами: то, что незаметно с одного, очевидно с другого.', '9:14'),
+  msg('Нужны только дата, время и место рождения.\n\nДля вас это бесплатно.', '9:14', ['Построить карту']),
+], [
+  ['⚠️ Без нажатия «ЗАПУСТИТЬ» бота нет',
+   'Пока человек не нажал кнопку в карточке, бот не имеет права ему писать. Значит не работают ни утренняя лента, ни доставка готовых разборов — весь канал возврата держится на этом одном нажатии.'],
+  ['Одно действие, ноль выбора',
+   'Первое сообщение не продаёт и не перечисляет возможности. Одна кнопка — построить карту. Всё остальное человек увидит внутри.'],
+  ['Почему три сообщения, а не одно',
+   'Разбитый текст читается как речь, а не как оферта. Три коротких блока проходят глазами за пару секунд; тот же объём одним куском выглядит стеной.'],
+]],
+
+'Б-02': ['Вход по приглашению', 'Первое сообщение, если пришёл по ссылке друга', [
+  msg('Здравствуйте.', '9:14'),
+  msg('<span class="lead">Вас пригласили — и вам достался час свободного разговора со мной.</span>Он появится, как только я посчитаю вашу карту. Покупать ничего не нужно.', '9:14'),
+  msg('Я считаю по четырём школам сразу и показываю, где они сходятся, а где спорят. Нужны дата, время и место рождения.', '9:14', ['Построить карту']),
+], [
+  ['Подарок назван сразу, но не первым',
+   'Первое сообщение — приветствие. Подарок вторым: если открыть им, человек читает нас как акцию, а не как продукт.'],
+  ['Кто пригласил — не показываем',
+   'Решение принято при проработке рефералки: приглашённый не видит, кто его привёл. Ему это не нужно, а приглашающему может быть неловко.'],
+]],
+
+'Б-03': ['Карта готова', 'Доставка расчёта, если человек закрыл приложение', [
+  msg('Карта посчитана.', '9:21'),
+  msg('<span class="lead">Четыре школы, восемь тем.</span>Три из четырёх сошлись на одном: вы дольше других держите то, что уже не работает. Но каждая объясняет это по-своему.', '9:21', ['Посмотреть карту']),
+], [
+  ['Доставка обязательна',
+   'Расчёт занимает до минуты, и человек за это время может закрыть приложение. Мы обещали «пришлём, когда будет готово» — вот это сообщение.'],
+  ['Тизер вместо оглавления',
+   'Не «готовы 8 разделов», а один настоящий вывод из расчёта. Он и есть причина открыть.'],
+]],
+
+'Б-04': ['Утренняя лента', 'Обычный день, первая неделя', [
+  msg('<span class="lead">Сегодня Луна в вашем седьмом доме — а он про партнёрство.</span>Три школы из четырёх говорят одно: день, когда лучше слушать, чем предлагать.', '8:30', ['Открыть день']),
+], [
+  ['Тизер конкретный, а не интригующий',
+   'Исследование показывает: расплывчатый крючок работает хуже конкретного. «Узнайте, что вас ждёт» отпугивает так же, как полностью раскрытый текст. Формула: посчитанный факт плюс недостающая часть.'],
+  ['Кнопка обязательна в каждом сообщении',
+   'Бот не может знать, прочитано ли сообщение — в Telegram нет отметок о прочтении для ботов. Единственная измеримая величина — нажатие. Без кнопки мы не узнаем ничего.'],
+  ['Полный день — в приложении',
+   'В боте только крючок. Так делает Co-Star: дневное уведомление заметно короче, чем контент внутри.'],
+]],
+
+'Б-05': ['Важный день', 'Когда расчёт даёт что-то редкое', [
+  msg('<span class="lead">Сегодня редкий день — и он про вас.</span>Транзитный Сатурн встал на ваш управитель асцендента. Такое бывает раз в 29 лет, и обычно это про то, что человек перестаёт откладывать.', '8:30', ['Открыть день']),
+], [
+  ['Не каждый день одинаков',
+   'Если все ленты звучат ровно, человек перестаёт их открывать. Редкое событие должно и подаваться как редкое — иначе зачем мы считаем карту.'],
+  ['Усталость приходит от однообразия раньше, чем от частоты',
+   'Duolingo разносит повторы формулировок специально: их система выбирает напоминание из большого набора. У нас должно быть правило разнообразия, а не один шаблон на все дни.'],
+]],
+
+'Б-06': ['Вопрос о ритме', 'День восьмой, только если человек заходил редко', [
+  msg('Неделю я пишу вам каждое утро.', '8:30'),
+  msg('Хочу спросить прямо: такой ритм вам подходит? Если писать реже — скажите, я подстроюсь. Пропущенные дни никуда не денутся, они останутся в приложении.', '8:30',
+      ['Каждый день — хорошо', 'Через день', 'Раз в неделю', 'Пауза на неделю']),
+], [
+  ['Спрашиваем адресно, а не у всех',
+   'Вопрос уходит только тем, кто заходил 5 раз из 7 или реже. Тем, кто открывал каждый день, не пишем ничего: спрашивая «удобно ли вам так часто», мы сами сообщаем, что бывает реже — и человек, который не задумывался, задумается.'],
+  ['«Пауза» вместо «отписаться»',
+   'Выбор частоты снижает отписки на 20–30 %. Из тех, кто уже нажал «отписаться», 35 % вместо этого меняют настройки. Пауза удерживает лучше, чем уход.'],
+  ['Частота — причина отписок номер один',
+   'Не содержание и не тон. Поэтому вопрос именно о ритме.'],
+]],
+
+'Б-07': ['Ответ на вопрос', 'Человек выбрал реже', [
+  me('Через день', '9:02'),
+  msg('Хорошо, теперь через день.', '9:02'),
+  msg('Поменять можно в любой момент — в настройках или просто напишите мне.', '9:02', ['Настроить время']),
+], [
+  ['Подтверждение без уговоров',
+   'Никаких «а может всё-таки каждый день». Человек ответил — мы согласились. Попытка переубедить в этот момент стоит доверия дороже, чем частота.'],
+  ['Второй путь к настройке',
+   'Написать боту словами — тоже способ. Многие не пойдут в настройки, но напишут «пиши реже».'],
+]],
+
+'Б-08': ['Разбор готов', 'Купленный документ и PDF', [
+  msg('<span class="lead">Совместимость с Дмитрием готова.</span>Главное, что вышло: вы оба выдерживаете подолгу — и оба не говорите, когда тяжело.', '14:22', ['Открыть разбор']),
+  msg('Файл, если хотите сохранить или распечатать.', '14:22'),
+], [
+  ['PDF приходит файлом в бот',
+   'Внутри Mini App скачивание работает ненадёжно. Файл доставляется сообщением — это единственный способ, которым человек точно его получит.'],
+  ['Вывод в тизере, а не «ваш документ готов»',
+   'Разбор человек уже оплатил — продавать нечего. Но одна настоящая строка из него заставляет открыть сейчас, а не «потом».'],
+]],
+
+'Б-09': ['Оплата', 'Уход на страницу банка и возврат', [
+  msg('Открываю оплату. Вернётесь сюда сами — я подожду.', '14:19', ['Оплатить 990 ₽']),
+  msg('<span class="lead">Оплата прошла.</span>Собираю разбор, обычно меньше минуты. Можно закрыть — пришлю, когда будет готово.', '14:21'),
+], [
+  ['Разрыв в самом чувствительном месте',
+   'Мы сознательно отказались от Telegram Stars ради маржи — значит человек уходит на страницу банка. Между «нажал» и «вернулся» он вне нашего продукта, и это самое опасное место всего пути.'],
+  ['Подтверждение приходит в бот, а не только в приложение',
+   'Человек мог не вернуться в Mini App после банка. Сообщение в боте — гарантия, что он узнает об успехе.'],
+]],
+
+'Б-10': ['Оплата не прошла', 'Сбой и что делаем', [
+  msg('<span class="lead">Деньги у вас не списаны.</span>Оплата была зарезервирована, но резерв снят — банк вернёт сумму в течение нескольких минут.', '14:22'),
+  msg('Заказ LN-8412-DK · 990 ₽ · 12 августа, 14:22\n\nМы уже знаем о сбое. Обычно со второй попытки проходит.', '14:22', ['Попробовать ещё раз', 'Написать нам']),
+], [
+  ['Первая строка — про деньги',
+   'Человек в этот момент думает об одном: списали или нет. Всё остальное — после ответа на этот вопрос.'],
+  ['Номер заказа сразу',
+   'Чтобы не пришлось его искать, если решит написать.'],
+]],
+
+'Б-11': ['Час за друга', 'Реферальное начисление', [
+  msg('<span class="lead">Мария получила свою карту — вам начислен час разговора.</span>Он ждёт сколько угодно, отсчёт пойдёт только когда начнёте.', '19:40', ['Начать час', 'Позвать ещё']),
+], [
+  ['Без уведомления рефералка не работает',
+   'Человек отправил ссылку и забыл. Если он не узнает о начислении, механика мертва — а мы за неё уже заплатили.'],
+  ['Вторая кнопка — момент, когда позвать ещё легче всего',
+   'Человек только что получил подтверждение, что механика настоящая. Это лучшая точка для второго приглашения.'],
+]],
+
+'Б-12': ['Человек пишет сам', 'Текст боту вместо приложения', [
+  me('привет', '21:07'),
+  msg('Здравствуйте. Ваши вопросы я читаю в приложении — там я вижу вашу карту и отвечаю по ней, а не общими словами.', '21:07', ['Открыть чат']),
+  me('а можно просто тут спросить', '21:08'),
+  msg('Здесь я вас не узнаю — вижу только текст. В приложении под рукой ваша карта целиком, и ответ получается про вас, а не про знак зодиака.', '21:08', ['Открыть чат']),
+], [
+  ['Половина людей напишет боту напрямую',
+   'Это первое, что делают с ботом. Молчание или «не понимаю команду» здесь стоит дороже всего остального в этом файле.'],
+  ['Объясняем причину, а не запрещаем',
+   'Не «так нельзя», а почему в приложении лучше именно для него. Второй раз объясняем иначе — если повторить дословно, читается как автоответчик.'],
+]],
+
+'Б-13': ['Команды', 'Помощь и отписка', [
+  me('/help', '11:30'),
+  msg('<span class="lead">Что я умею</span>Считаю карту по четырём школам, присылаю утренний разбор дня, отвечаю на вопросы по вашей карте.\n\n/den — разбор сегодня\n/tihe — писать реже\n/stop — не писать совсем\n/start — открыть приложение', '11:30', ['Открыть приложение']),
+  me('/stop', '11:31'),
+  msg('Хорошо, больше не пишу.\n\nВсё, что вы прочитали о себе, остаётся в приложении — оно не закрывается. Вернуться можно в любой момент.', '11:31', ['Писать раз в неделю', 'Открыть приложение']),
+], [
+  ['Отписка обязательна',
+   'И по правилам канала, и по цифрам: отписки выше 2 % — сигнал, что что-то не так. Скрытая отписка превращается в блокировку бота, а это уже необратимо.'],
+  ['Даже на «стоп» предлагаем середину',
+   'Одна кнопка «раз в неделю» рядом с подтверждением — та самая механика, что снижает отписки на четверть.'],
+  ['Не отговариваем',
+   'Сообщение подтверждает отписку в первой строке. Уговоры в этот момент — способ получить блокировку вместо тихого ухода.'],
+]],
+
+'Б-14': ['Долгое молчание', 'Человек не заходил месяц', [
+  msg('Не писала вам месяц.', '10:15'),
+  msg('За это время у вас сменился период — тот, что шёл с весны, закончился в июле. Карта уже пересчитана, смотреть ничего не нужно.', '10:15', ['Посмотреть, что изменилось']),
+], [
+  ['Возврат медленный',
+   'Три четверти вернувшихся возвращаются в течение трёх месяцев; средний разрыв между сообщением и следующим прочтением — 57 дней. Значит выключать человека после недели рано, а писать ежедневно — верный способ получить блокировку.'],
+  ['Повод, а не напоминание',
+   'Не «вы давно не заходили» — это упрёк. А настоящее событие в его карте, которое произошло без него.'],
+  ['Одно сообщение, не серия',
+   'Возвратные последовательности начинают мягко и разносят на дни. Для нас — одно сообщение и месяц тишины, если не ответил.'],
+]],
+
+};
+
+/* ============ рендер ============ */
+const stream = document.getElementById('stream');
+const jump = document.getElementById('jump');
+const notes = document.getElementById('notes');
+let cur = 'Б-01';
+
+function draw(code) {
+  cur = code;
+  const [name, sub, msgs, ns] = B[code];
+  stream.innerHTML = `<div class="daymark">${sub}</div>` + msgs.map(m => {
+    const kb = m.kb ? `<div class="kb${m.kb.length === 2 && m.kb.join('').length < 26 ? ' row' : ''}">`
+      + m.kb.map((b, i) => `<i class="${i === 0 ? 'main' : ''}">${b}</i>`).join('') + '</div>' : '';
+    const file = code === 'Б-08' && !m.kb && !m.me
+      ? '<div class="filecard"><u>⤓</u><div><b>Лунора · Совместимость.pdf</b><span>18 страниц · 1,4 МБ</span></div></div>' : '';
+    return `<div class="msg${m.me ? ' me' : ''}">${m.t.replace(/\n/g, '<br>')}${file}${kb}<span class="t">${m.time}</span></div>`;
+  }).join('');
+  notes.innerHTML = ns.map(([h, p]) => `<div class="note"><h3>${h}</h3><p>${p}</p></div>`).join('');
+  document.getElementById('scode').textContent = code;
+  document.querySelectorAll('#jump b').forEach(b => b.classList.toggle('on', b.dataset.c === code));
+  stream.scrollTop = 0;
+}
+
+jump.innerHTML = Object.entries(B).map(([c, [name]]) =>
+  `<b data-c="${c}"><u>${c}</u>${name}</b>`).join('');
+jump.addEventListener('click', e => {
+  const b = e.target.closest('b[data-c]');
+  if (b) draw(b.dataset.c);
+});
+
+/* копирование адреса — с проверкой, без ложного «скопировано» */
+function copyText(txt) {
+  const ta = document.createElement('textarea');
+  ta.value = txt; ta.setAttribute('readonly', '');
+  ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none';
+  document.body.appendChild(ta); ta.select(); ta.setSelectionRange(0, ta.value.length);
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+  ta.remove();
+  return ok;
+}
+document.getElementById('scode').addEventListener('click', () => {
+  const el = document.getElementById('scode');
+  const txt = cur + ' · ' + B[cur][0];
+  const was = el.textContent;
+  const done = () => {
+    el.textContent = 'скопировано'; el.classList.add('copied');
+    setTimeout(() => { el.textContent = was; el.classList.remove('copied'); }, 1100);
+  };
+  if (navigator.clipboard?.writeText) {
+    navigator.clipboard.writeText(txt).then(done, () => { if (copyText(txt)) done(); });
+  } else if (copyText(txt)) { done(); }
+});
+
+draw('Б-01');
+</script>
