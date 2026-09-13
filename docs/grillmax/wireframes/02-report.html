@@ -2968,7 +2968,7 @@ S.obName = `<div class="pad">
 
   ${obBar(16)}
 
-  <div class="w-btn" data-go="obPlace" style="margin-top:18px">Дальше</div>
+  <div class="w-btn off" id="obNameGo" data-go="obPlace" style="margin-top:18px">Дальше</div>
 </div>`;
 
 S.obPlace = `<div class="pad">
@@ -2989,7 +2989,7 @@ S.obPlace = `<div class="pad">
 
   ${obBar(18)}
 
-  <div class="w-btn" data-go="obDate" style="margin-top:18px">Дальше</div>
+  <div class="w-btn off" id="obPlaceGo" data-go="obDate" style="margin-top:18px">Дальше</div>
   <div class="w-btn ghost" data-go="obName" style="margin-top:8px">Назад</div>
 </div>`;
 
@@ -3013,7 +3013,8 @@ S.obDate = `<div class="pad">
 
   ${obBar(18)}
 
-  <div class="w-btn" data-go="obConsent" style="margin-top:18px">Дальше</div>
+  <div class="w-btn off" id="obDateGo" data-go="obConsent" style="margin-top:18px">Дальше</div>
+  <p class="obhint" id="obDateWhy" style="margin:8px 0 0;text-align:center">Заполните дату — без неё карту не построить</p>
   <div class="w-btn ghost" data-go="obPlace" style="margin-top:8px">Назад</div>
 </div>`;
 
@@ -5012,16 +5013,15 @@ S.pdfSell = `<div class="pad">
     <span class="pdflink" data-pdfdemo="1">Посмотреть пример документа</span>
   </div>
 
-  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:14px">Около сорока страниц. Собирается по вашим данным на момент скачивания — если позже уточните время рождения, файл можно пересобрать бесплатно.</p>
+  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:14px">Около сорока страниц. Документ собирается по вашим данным в момент скачивания, а если вы позже уточните время рождения — пересоберём заново и бесплатно.</p>
 
   <div class="sec-label">Что внутри</div>
   <div class="body-text whatin">
-    <p><b>Восемь тематических разделов</b>Характер, отношения, работа, предназначение, деньги, энергия, семья, таланты. В каждой теме трактовка и то, что говорит о ней каждая школа.</p>
+    <p><b>Одиннадцать тем о вас</b>Характер, мышление, отношения, работа, деньги, семья, таланты, энергия, предназначение, трудные времена и периоды жизни. В каждой — наш свод и то, что говорит о ней каждая школа.</p>
     <p><b>Разбор по четырём школам</b>Четыре полных разбора в своих понятиях: планеты и дома, накшатры и периоды, столпы и стихии, числа даты и имени.</p>
-    <p><b>Четыре чертежа на развороте</b>Западное колесо, ведическая раши-чарта, столпы Ба-Цзы и квадрат Пифагора рядом друг с другом. В приложении они разнесены по школам, и сравнить их глазом нельзя.</p>
-    <p><b>Таблицы положений</b>Приложением в конце: все позиции, градусы, накшатры, столпы и числа, по которым сделан разбор.</p>
+    <p><b>Четыре чертежа вашей карты</b>Колесо западной карты, ведический квадрат, столпы Ба-Цзы и квадрат Пифагора — рядом друг с другом, на одной странице.</p>
+    <p><b>Таблицы положений и настройки расчёта</b>Все позиции, градусы, накшатры, столпы и числа, по которым сделан разбор, вместе с эфемеридами, системой домов, айанамшей и часовым поясом.</p>
     <p><b>Словарь терминов</b>Четыре школы говорят разными словами, и почти каждое требует пояснения хотя бы раз.</p>
-    <p><b>Страница расчёта</b>Эфемериды, система домов, айанамша, часовой пояс. Чтобы разбор можно было проверить у любого астролога.</p>
   </div>
 
   <div class="w-btn" data-prod="pdf" style="margin-top:18px">Скачать PDF · 149 ₽</div>
@@ -8538,6 +8538,21 @@ function obPaint() {
     r.classList.toggle('has', on); r.classList.toggle('add', !on);
     r.querySelector('b').textContent = (on ? '' : '+') + DW[k] + '%';
   });
+  /* дальше не пускаем, пока не введено обязательное: без имени, места и даты карты нет */
+  const gate = [
+    ['obNameGo',  !!OB.name],
+    ['obPlaceGo', !!OB.city],
+    ['obDateGo',  obDateFull()],   /* время не обязательно: без него разбор просто беднее */
+  ];
+  gate.forEach(([id, ok]) => {
+    const b = document.getElementById(id);
+    if (b) b.classList.toggle('off', !ok);
+  });
+  const why = document.getElementById('obDateWhy');
+  if (why) {
+    why.style.display = obDateFull() ? 'none' : '';
+    why.textContent = 'Заполните дату — без неё карту не построить';
+  }
 }
 
 /* после каждой отрисовки экрана онбординга поля заполняются из состояния */
