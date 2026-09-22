@@ -465,11 +465,15 @@
   /* тезисы — цитата с кавычками, точки по центру под ней */
   /* высота под самый длинный тезис: иначе при смене всё, что ниже, дёргается */
   .pclaims { position: relative; margin: 16px 0 0; text-align: center; }
-  .pcstage { position: relative; min-height: 68px; }
-  .p-claim { position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
+  /* тезисы листаются пальцем вбок; точки под ними показывают, где человек находится */
+  .pcstage { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; min-height: 68px;
+             scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .pcstage::-webkit-scrollbar { display: none; }
+  .pcstage { cursor: grab; }
+  .pcstage:active { cursor: grabbing; }
+  .p-claim { flex: 0 0 100%; scroll-snap-align: center; display: flex; align-items: center; justify-content: center;
              font-size: 15px; line-height: 1.5; font-weight: 500; color: var(--ink);
-             margin: 0; letter-spacing: -.01em; text-wrap: balance; }
-  .p-claim.on { display: flex; animation: pcin .45s ease; }
+             margin: 0; padding: 0 2px; letter-spacing: -.01em; text-wrap: balance; }
   /* кавычки прижаты к тексту: с обычным пробелом ёлочки читаются как стрелки */
   .p-claim::before { content: '«'; margin-right: -.06em; }
   .p-claim::after { content: '»'; margin-left: -.06em; }
@@ -1232,7 +1236,7 @@
   .pdots i.on { background: var(--note); }
   .whatin p { margin: 0 0 14px; }
   .whatin p:last-child { margin-bottom: 0; }
-  .whatin b { display: block; color: var(--ink); font-weight: 620; margin-bottom: 3px; }
+  .whatin b { display: block; color: var(--ink); font-size: 15px; font-weight: 640; letter-spacing: -.01em; margin-bottom: 5px; }
   /* страница платёжного оператора — заглушка чужого интерфейса */
   .paygate { border: 1px solid var(--rule); border-radius: 12px; padding: 16px 15px; background: var(--card); }
   .pg-head { text-align: center; padding-bottom: 14px; border-bottom: 1px solid var(--rule-soft); }
@@ -1720,6 +1724,12 @@
         <h2>Покупка PDF</h2>
         <div class="stswitch" id="pdfsw">
           <b class="on" data-pdf="">Не куплен</b><b data-pdf="bought">Куплен</b><b data-pdf="stale">Данные изменились</b>
+        </div>
+      </div>
+      <div class="swgrp" id="grp-data">
+        <h2>Данные профиля</h2>
+        <div class="stswitch" id="datasw">
+          <b class="on" data-full="0">Неполные</b><b data-full="1">Все на месте</b>
         </div>
       </div>
       <div class="swgrp" id="grp-fsc">
@@ -2918,13 +2928,13 @@ function buildProfile() { return `<div class="pad">
       <span style="font-size:19px;color:var(--ink-soft);cursor:pointer;width:44px;height:44px;display:grid;place-items:center;margin:-10px 0 0 0;flex:0 0 auto" data-go="settings">⚙</span>
     </div>
     <div class="pclaims" id="pclaims">
-      <div class="pcstage">${PCLAIMS.map((t, i) => `<p class="p-claim${i ? '' : ' on'}">${t}</p>`).join('')}</div>
+      <div class="pcstage">${PCLAIMS.map(t => `<p class="p-claim">${t}</p>`).join('')}</div>
       <div class="pcdots">${PCLAIMS.map((_, i) => `<i class="${i ? '' : 'on'}" data-pcd="${i}"></i>`).join('')}</div>
     </div>
   </div>
 
   <div class="sec-label">Подробно о вас</div>
-  <p class="p-vol">Четыре школы · одиннадцать тем · сорок четыре разбора</p>
+  <p class="p-vol">${scopeLine().charAt(0).toUpperCase() + scopeLine().slice(1)}</p>
   <div class="segtabs" id="pvTabs"><i class="on" data-pv="themes">Темы</i><i data-pv="schools">Школы</i></div>
 
   <div id="pvThemes">
@@ -2971,6 +2981,24 @@ Object.defineProperty(S, "profile", { get: buildProfile });
    трёх разных источников разметки — два рукописных экрана и общий шаблон. */
 const TORDER = ['tCharacter','tMind','tLove','tWork','tTalent','tMoney','tEnergy','tFamily','tPurpose','tPeriod','tCrisis'];
 const TGO = { w: 'dWest', v: 'dVedic', b: 'dBazi', n: 'dNum' };
+
+/* состав разбора называется одинаково везде и считается из матрицы:
+   вручную написанное число расходится при первой же правке структуры */
+const N_NOM = { 4: 'четыре', 10: 'десять', 11: 'одиннадцать', 39: 'тридцать девять', 40: 'сорок', 44: 'сорок четыре' };
+const N_PREP = { 4: 'четырёх', 10: 'десяти', 11: 'одиннадцати' };
+/* «сорок четыре разбора», но «сорок разборов» — форма зависит от последней цифры */
+const plural = (n, one, few, many) => {
+  const t = n % 100, d = n % 10;
+  if (t >= 11 && t <= 14) return many;
+  if (d === 1) return one;
+  if (d >= 2 && d <= 4) return few;
+  return many;
+};
+const scopeThemes = () => TORDER.length;
+const scopeSchools = () => 4;
+const scopeCells = () => scopeThemes() * scopeSchools();
+const scopeLine = () => `${N_NOM[scopeSchools()]} школы · ${N_NOM[scopeThemes()]} тем · ${N_NOM[scopeCells()]} ${plural(scopeCells(), 'разбор', 'разбора', 'разборов')}`;
+const scopeProse = () => `${N_NOM[scopeThemes()]} тем в ${N_PREP[scopeSchools()]} школах`;
 
 const TDATA = {
   tCharacter: {
@@ -5674,13 +5702,18 @@ S.numSynth = `<div class="pad">
 
 
 
-const SHARE_OF = {"receipt": ["Чек LN-8412-DK", "Чек об оплате — реквизиты продавца видны получателю"], "invite": ["Лунора считает карту по четырём школам сразу", "Приглашение · час разговора в подарок обоим"], "giftCard": ["Подарочный сертификат Луноры", "Сертификат на выбранный разбор"], "prodResult": ["Разбор готов", "Полный разбор"], "today": ["Сегодня у меня день завершения, а не начала.", "Ваш день целиком"], "pay6": ["Вы оба выдерживаете подолгу — и оба не говорите, когда стало тяжело.", "Платный документ — ссылка не передаётся"], "profile": ["У вас больше внутри, чем снаружи.", "профиль целиком: все одиннадцать тем"], "dWest": ["Снаружи вас читают мягче, чем вы себя чувствуете.", "Разбор западной школы целиком"], "dVedic": ["Внутри у вас напряжение, которое не разряжается.", "Разбор ведической школы целиком"], "dBazi": ["У вас есть всё, кроме канала, чтобы это выпускать.", "Разбор Ба-Цзы целиком"], "dNum": ["Вы верите в труд, а не в удачу.", "Разбор нумерологии целиком"], "schWest": ["Западная астрология о вас", "западная астрология целиком: карта и все разделы"], "schVedic": ["Ведическая астрология о вас", "ведическая астрология целиком: карта и все разделы"], "schBazi": ["Ба-Цзы о вас", "Ба-Цзы целиком: столпы и все разделы"], "schNum": ["Нумерология о вас", "нумерология целиком: квадрат и все разделы"]};
+const SHARE_OF = {"receipt": ["Чек LN-8412-DK", "Чек об оплате — реквизиты продавца видны получателю"], "invite": ["Лунора считает карту по четырём школам сразу", "Приглашение · час разговора в подарок обоим"], "giftCard": ["Подарочный сертификат Луноры", "Сертификат на выбранный разбор"], "prodResult": ["Разбор готов", "Полный разбор"], "today": ["Сегодня у меня день завершения, а не начала.", "Ваш день целиком"], "pay6": ["Вы оба выдерживаете подолгу — и оба не говорите, когда стало тяжело.", "Платный документ — ссылка не передаётся"], "profile": ["У вас больше внутри, чем снаружи.", `профиль целиком: ${scopeProse()}`], "dWest": ["Снаружи вас читают мягче, чем вы себя чувствуете.", "Разбор западной школы целиком"], "dVedic": ["Внутри у вас напряжение, которое не разряжается.", "Разбор ведической школы целиком"], "dBazi": ["У вас есть всё, кроме канала, чтобы это выпускать.", "Разбор Ба-Цзы целиком"], "dNum": ["Вы верите в труд, а не в удачу.", "Разбор нумерологии целиком"], "schWest": ["Западная астрология о вас", "западная астрология целиком: карта и все разделы"], "schVedic": ["Ведическая астрология о вас", "ведическая астрология целиком: карта и все разделы"], "schBazi": ["Ба-Цзы о вас", "Ба-Цзы целиком: столпы и все разделы"], "schNum": ["Нумерология о вас", "нумерология целиком: квадрат и все разделы"]};
 
 
 
 
 /* ============ ПРОДАЖА PDF ============ */
-S.pdfSell = `<div class="pad">
+/* объём документа живёт одной строкой: и в карточке файла, и в тексте продажи */
+const DOC_PAGES = 40;
+const DOC_PAGES_TXT = `${DOC_PAGES} ${plural(DOC_PAGES, 'страница', 'страницы', 'страниц')}`;
+const DOC_PAGES_WORD = { 40: 'Сорок страниц' }[DOC_PAGES] || DOC_PAGES_TXT;
+/* ленивая: PROD объявляется ниже, а число страниц берётся оттуда */
+Object.defineProperty(S, 'pdfSell', { get: () => `<div class="pad">
   <div class="dochead" data-go="profile"><span>&lsaquo;</span><div>Назад · Профиль</div></div>
   <h2 class="t-title" style="font-size:21px">Ваш разбор в виде документа</h2>
   <p class="d-lede">Весь ваш разбор можно собрать в один файл и сохранить у себя. Его удобно распечатать или кому-то отправить.</p>
@@ -5690,22 +5723,23 @@ S.pdfSell = `<div class="pad">
   <div class="pdfcar">
     ${pdfPages('pdfStrip')}
     <div class="pdots" id="pdfDots"><i class="on" data-pdot="0"></i><i class="" data-pdot="1"></i><i class="" data-pdot="2"></i><i class="" data-pdot="3"></i><i class="" data-pdot="4"></i></div>
-    <span class="pdflink" data-pdfdemo="1">Посмотреть пример документа</span>
   </div>
 
-  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:14px">Около сорока страниц. Документ собирается по вашим данным в момент скачивания, а если вы позже уточните время рождения — пересоберём заново и бесплатно.</p>
+  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:12px">${DOC_PAGES_WORD} собираются по вашим данным в момент скачивания.${DATAFULL ? '' : ' Если позже вы уточните данные о рождении, мы пересоберём файл заново и бесплатно.'}</p>
+
+  <div style="text-align:center;margin-top:12px"><span class="pdflink" data-pdfdemo="1">Посмотреть пример документа</span></div>
 
   <div class="sec-label">Что внутри</div>
   <div class="body-text whatin">
-    <p><b>Одиннадцать тем о вас</b>Характер, мышление, отношения, работа, деньги, семья, таланты, энергия, предназначение, трудные времена и периоды жизни. В каждой — наш свод и то, что говорит о ней каждая школа.</p>
-    <p><b>Разбор по четырём школам</b>Четыре полных разбора в своих понятиях: планеты и дома, накшатры и периоды, столпы и стихии, числа даты и имени.</p>
-    <p><b>Четыре чертежа вашей карты</b>Колесо западной карты, ведический квадрат, столпы Ба-Цзы и квадрат Пифагора — рядом друг с другом, на одной странице.</p>
+    <p><b>Полный разбор по четырём школам</b>Западная астрология, ведическая, Ба-Цзы и нумерология. Каждая говорит о вас своими понятиями и в своём порядке: планеты и дома, накшатры и периоды, столпы и стихии, числа даты и имени.</p>
+    <p><b>Одиннадцать тем с выводом Луноры</b>Характер, отношения, работа, деньги и ещё семь тем о вас. По каждой мы разбираем, что о ней говорит каждая школа: в чём они сходятся, в чём расходятся и что из этого следует для вас.</p>
+    <p><b>Четыре чертежа вашей карты</b>Колесо западной карты, ведический квадрат, столпы Ба-Цзы и квадрат Пифагора.</p>
     <p><b>Таблицы положений и настройки расчёта</b>Все позиции, градусы, накшатры, столпы и числа, по которым сделан разбор, вместе с эфемеридами, системой домов, айанамшей и часовым поясом.</p>
-    <p><b>Словарь терминов</b>Четыре школы говорят разными словами, и почти каждое требует пояснения хотя бы раз.</p>
+    <p><b>Словарь терминов</b>Объясняем специальные слова каждой школы, чтобы всё стало понятным.</p>
   </div>
 
   <div class="w-btn" data-prod="pdf" style="margin-top:18px">Скачать PDF · 149 ₽</div>
-</div>`;
+</div>` });
 
 
 /* ============ ФОРМА ДОБАВЛЕНИЯ ЧЕЛОВЕКА ============ */
@@ -6518,7 +6552,7 @@ function buildShop() { return `<div class="pad">
     <div class="cards">
       <div class="doc" data-res="year"><b>4 фев 2026 — 4 фев 2027</b><span>Карта на год</span></div>
       <div class="doc" data-res="rename"><b>Тыщенко → Ковалёва</b><span>Смена фамилии</span></div>
-      <div class="doc" data-res="pdf"><b>Разбор личности</b><span>PDF · 40 страниц</span></div>
+      <div class="doc" data-res="pdf"><b>Разбор личности</b><span>PDF · ${DOC_PAGES_TXT}</span></div>
     </div>
 
     <div class="sec-label">Про людей</div>
@@ -6596,7 +6630,7 @@ S.shopGift = `<div class="pad">
 
   <div class="sec-label">Что можно подарить</div>
   <div class="cards">
-    <div class="card-it" data-go="prodPay"><div><div class="t">Полный разбор личности</div><span class="s">Четыре школы, одиннадцать тем</span></div><div class="price">990 ₽</div></div>
+    <div class="card-it" data-go="prodPay"><div><div class="t">Полный разбор личности</div><span class="s">${scopeProse().charAt(0).toUpperCase() + scopeProse().slice(1)}</span></div><div class="price">990 ₽</div></div>
     <div class="card-it" data-go="prodPay"><div><div class="t">Карта на год</div><span class="s">От его дня рождения до следующего</span></div><div class="price">1 990 ₽</div></div>
     <div class="card-it" data-prod="child"><div><div class="t">Натальная карта ребёнка</div><span class="s">Для родителей</span></div><div class="price">1 490 ₽</div></div>
   </div>
@@ -7009,7 +7043,7 @@ const PROD = {
       ['Не сгорают','Три вопроса лежат, пока не спросите. Срока нет.']
     ],
     need:'Ничего вводить не нужно — всё есть в вашем профиле.',
-    fields:[], depth:'—', depthNote:'Отвечаем по данным профиля. Если уточните время рождения — ответы станут точнее.',
+    fields:[], depth:'—', depthNote:'Отвечаем по данным профиля. Если уточните данные о рождении, ответы станут точнее.',
     build:['Открываю вашу карту','Готова отвечать'],
     doc:`
 <div class="body-text"><p>Три вопроса добавлены. Счётчик в чате обновлён.</p></div>`,
@@ -7090,7 +7124,7 @@ const PROD = {
       ['По сферам','Работа, отношения, деньги, силы — по вашей карте, а не по знаку.']
     ],
     need:'Ничего вводить не нужно — всё уже есть в вашем профиле.',
-    fields:[], depth:'82%', depthNote:'Считаем по данным профиля. Если уточните время рождения — пересчитаем бесплатно.',
+    fields:[], depth:'82%', depthNote:'Считаем по данным профиля. Если уточните данные о рождении, пересчитаем бесплатно.',
     build:['Взяла вашу карту','Посчитала соляр — возврат Солнца','Проверила ведический варшапхал','Наложила годовой столп Ба-Цзы','Свожу три школы','Пишу разбор'],
     doc:`
 
@@ -7152,15 +7186,15 @@ const PROD = {
     lead:'Свёрстанный файл со всеми четырьмя чертежами и полным разбором. Сам разбор в приложении остаётся бесплатным.',
     sell:[
       ['Все четыре чертежа','Колесо западной карты, ведический квадрат, столпы Ба-Цзы и квадрат Пифагора — рядом друг с другом, на одной странице.'],
-      ['Весь разбор целиком','Одиннадцать тем и четыре школы, свёрстанные для чтения подряд, а не по экранам.'],
+      ['Весь разбор целиком',`${scopeProse().charAt(0).toUpperCase() + scopeProse().slice(1)}, свёрстанные для чтения подряд, а не по экранам.`],
       ['Файл остаётся у вас','Можно распечатать, отправить, сохранить. Не зависит от того, работает ли приложение.']
     ],
     need:'Ничего вводить не нужно.',
-    fields:[], depth:'82%', depthNote:'Файл соберётся по тем данным, что есть сейчас. Уточните время рождения — пересоберём бесплатно.',
+    fields:[], depth:'82%', depthNote:'Файл соберётся по тем данным, что есть сейчас. Уточните данные о рождении, и мы пересоберём его бесплатно.',
     build:['Собираю чертежи','Верстаю одиннадцать тем','Готовлю файл'],
     doc:`<div class="sec-label">Что внутри</div><div class="cards"><div class="card-it"><div><div class="t">Четыре школы</div><span class="s">Каждая рассказывает о вас по-своему и в своём порядке</span></div><div class="chev">›</div></div><div class="card-it"><div><div class="t">Одиннадцать тем</div><span class="s">Характер, отношения, работа, деньги, периоды жизни и другие</span></div><div class="chev">›</div></div><div class="card-it"><div><div class="t">Чертежи и расчёты</div><span class="s">Четыре карты, таблицы положений и словарь — всё, на чём построен разбор</span></div><div class="chev">›</div></div></div>`,
     res:'Разбор личности', resPhrase:'Ваша карта по четырём школам — сорок страниц.',
-    file:{ name:'Разбор личности.pdf', size:'6,4 МБ', pages:'40 страниц' }
+    file:{ name:'Разбор личности.pdf', size:'6,4 МБ', pages: DOC_PAGES_TXT }
   },
   date: {
     t:'Разбор даты', price:'390 ₽', crumb:'Разборы',
@@ -7197,6 +7231,8 @@ const PROD = {
 
 };
 let CUR = 'compat';
+/* просмотр примера до покупки: тот же экран, но без скачивания и пересылки */
+let DOCPREVIEW = false;
 let SHOPTAB = 'list';
 
 function prodPage() { const p = PROD[CUR]; return `<div class="pad">
@@ -7287,16 +7323,17 @@ function pdfIcon() {
 }
 
 function pdfPages(id) { return `<div class="strip" id="${id}">
-      <div class="pg"><svg viewBox="0 0 60 84" class="pgv"><circle cx="30" cy="30" r="19" fill="none" stroke="var(--wire-line)"/><circle cx="30" cy="30" r="12" fill="none" stroke="var(--wire-line)"/><line x1="42.0" y1="30.0" x2="49.0" y2="30.0" stroke="var(--wire-line)"/><line x1="40.4" y1="36.0" x2="46.5" y2="39.5" stroke="var(--wire-line)"/><line x1="36.0" y1="40.4" x2="39.5" y2="46.5" stroke="var(--wire-line)"/><line x1="30.0" y1="42.0" x2="30.0" y2="49.0" stroke="var(--wire-line)"/><line x1="24.0" y1="40.4" x2="20.5" y2="46.5" stroke="var(--wire-line)"/><line x1="19.6" y1="36.0" x2="13.5" y2="39.5" stroke="var(--wire-line)"/><line x1="18.0" y1="30.0" x2="11.0" y2="30.0" stroke="var(--wire-line)"/><line x1="19.6" y1="24.0" x2="13.5" y2="20.5" stroke="var(--wire-line)"/><line x1="24.0" y1="19.6" x2="20.5" y2="13.5" stroke="var(--wire-line)"/><line x1="30.0" y1="18.0" x2="30.0" y2="11.0" stroke="var(--wire-line)"/><line x1="36.0" y1="19.6" x2="39.5" y2="13.5" stroke="var(--wire-line)"/><line x1="40.4" y1="24.0" x2="46.5" y2="20.5" stroke="var(--wire-line)"/><line x1="10" y1="62" x2="50" y2="62" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="68" x2="40" y2="68" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="74" x2="46" y2="74" stroke="var(--wire-fill-2)" stroke-width="2"/></svg><b>Обложка</b></div><div class="pg"><svg viewBox="0 0 60 84" class="pgv"><line x1="10" y1="16" x2="38" y2="16" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="52" y1="16" x2="54" y2="16" stroke="var(--wire-line)" stroke-width="2"/><line x1="10" y1="23" x2="50" y2="23" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="52" y1="23" x2="54" y2="23" stroke="var(--wire-line)" stroke-width="2"/><line x1="10" y1="30" x2="50" y2="30" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="52" y1="30" x2="54" y2="30" stroke="var(--wire-line)" stroke-width="2"/><line x1="10" y1="37" x2="38" y2="37" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="52" y1="37" x2="54" y2="37" stroke="var(--wire-line)" stroke-width="2"/><line x1="10" y1="44" x2="50" y2="44" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="52" y1="44" x2="54" y2="44" stroke="var(--wire-line)" stroke-width="2"/><line x1="10" y1="51" x2="50" y2="51" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="52" y1="51" x2="54" y2="51" stroke="var(--wire-line)" stroke-width="2"/><line x1="10" y1="58" x2="38" y2="58" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="52" y1="58" x2="54" y2="58" stroke="var(--wire-line)" stroke-width="2"/><line x1="10" y1="65" x2="50" y2="65" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="52" y1="65" x2="54" y2="65" stroke="var(--wire-line)" stroke-width="2"/><line x1="10" y1="72" x2="50" y2="72" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="52" y1="72" x2="54" y2="72" stroke="var(--wire-line)" stroke-width="2"/></svg><b>Оглавление</b></div><div class="pg"><svg viewBox="0 0 60 84" class="pgv"><circle cx="18" cy="20" r="9" fill="none" stroke="var(--wire-line)"/><rect x="33" y="11" width="18" height="18" fill="none" stroke="var(--wire-line)"/><line x1="33" y1="11" x2="51" y2="29" stroke="var(--wire-line)"/><line x1="51" y1="11" x2="33" y2="29" stroke="var(--wire-line)"/><rect x="10" y="38" width="8" height="16" fill="none" stroke="var(--wire-line)"/><rect x="21" y="38" width="8" height="16" fill="none" stroke="var(--wire-line)"/><rect x="32" y="38" width="8" height="16" fill="none" stroke="var(--wire-line)"/><rect x="43" y="38" width="8" height="16" fill="none" stroke="var(--wire-line)"/><rect x="19" y="60" width="22" height="18" fill="none" stroke="var(--wire-line)"/><line x1="26.3" y1="60" x2="26.3" y2="78" stroke="var(--wire-line)"/><line x1="33.6" y1="60" x2="33.6" y2="78" stroke="var(--wire-line)"/><line x1="19" y1="66" x2="41" y2="66" stroke="var(--wire-line)"/><line x1="19" y1="72" x2="41" y2="72" stroke="var(--wire-line)"/></svg><b>Четыре школы</b></div><div class="pg"><svg viewBox="0 0 60 84" class="pgv"><line x1="10" y1="8" x2="30" y2="8" stroke="var(--wire-line)" stroke-width="2.5"/><line x1="10" y1="14" x2="34" y2="14" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="20" x2="50" y2="20" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="26" x2="50" y2="26" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="32" x2="50" y2="32" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="38" x2="34" y2="38" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="44" x2="50" y2="44" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="50" x2="50" y2="50" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="56" x2="50" y2="56" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="62" x2="34" y2="62" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="68" x2="50" y2="68" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="74" x2="50" y2="74" stroke="var(--wire-fill-2)" stroke-width="2"/></svg><b>Тема целиком</b></div><div class="pg"><svg viewBox="0 0 60 84" class="pgv"><rect x="8" y="12" width="44" height="52" fill="none" stroke="var(--wire-line)"/><line x1="8" y1="20.6" x2="52" y2="20.6" stroke="var(--wire-fill-2)"/><line x1="8" y1="29.2" x2="52" y2="29.2" stroke="var(--wire-fill-2)"/><line x1="8" y1="37.8" x2="52" y2="37.8" stroke="var(--wire-fill-2)"/><line x1="8" y1="46.4" x2="52" y2="46.4" stroke="var(--wire-fill-2)"/><line x1="8" y1="55.0" x2="52" y2="55.0" stroke="var(--wire-fill-2)"/><line x1="8" y1="63.599999999999994" x2="52" y2="63.599999999999994" stroke="var(--wire-fill-2)"/><line x1="26" y1="12" x2="26" y2="64" stroke="var(--wire-fill-2)"/><line x1="39" y1="12" x2="39" y2="64" stroke="var(--wire-fill-2)"/><line x1="8" y1="72" x2="38" y2="72" stroke="var(--wire-fill-2)" stroke-width="2"/></svg><b>Чертежи и расчёты</b></div>
+      <div class="pg"><svg viewBox="0 0 60 84" class="pgv"><circle cx="30" cy="30" r="19" fill="none" stroke="var(--wire-line)"/><circle cx="30" cy="30" r="12" fill="none" stroke="var(--wire-line)"/><line x1="42.0" y1="30.0" x2="49.0" y2="30.0" stroke="var(--wire-line)"/><line x1="40.4" y1="36.0" x2="46.5" y2="39.5" stroke="var(--wire-line)"/><line x1="36.0" y1="40.4" x2="39.5" y2="46.5" stroke="var(--wire-line)"/><line x1="30.0" y1="42.0" x2="30.0" y2="49.0" stroke="var(--wire-line)"/><line x1="24.0" y1="40.4" x2="20.5" y2="46.5" stroke="var(--wire-line)"/><line x1="19.6" y1="36.0" x2="13.5" y2="39.5" stroke="var(--wire-line)"/><line x1="18.0" y1="30.0" x2="11.0" y2="30.0" stroke="var(--wire-line)"/><line x1="19.6" y1="24.0" x2="13.5" y2="20.5" stroke="var(--wire-line)"/><line x1="24.0" y1="19.6" x2="20.5" y2="13.5" stroke="var(--wire-line)"/><line x1="30.0" y1="18.0" x2="30.0" y2="11.0" stroke="var(--wire-line)"/><line x1="36.0" y1="19.6" x2="39.5" y2="13.5" stroke="var(--wire-line)"/><line x1="40.4" y1="24.0" x2="46.5" y2="20.5" stroke="var(--wire-line)"/><line x1="10" y1="62" x2="50" y2="62" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="68" x2="40" y2="68" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="74" x2="46" y2="74" stroke="var(--wire-fill-2)" stroke-width="2"/></svg><b>Обложка</b></div><div class="pg"><svg viewBox="0 0 60 84" class="pgv"><line x1="10" y1="16" x2="38" y2="16" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="52" y1="16" x2="54" y2="16" stroke="var(--wire-line)" stroke-width="2"/><line x1="10" y1="23" x2="50" y2="23" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="52" y1="23" x2="54" y2="23" stroke="var(--wire-line)" stroke-width="2"/><line x1="10" y1="30" x2="50" y2="30" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="52" y1="30" x2="54" y2="30" stroke="var(--wire-line)" stroke-width="2"/><line x1="10" y1="37" x2="38" y2="37" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="52" y1="37" x2="54" y2="37" stroke="var(--wire-line)" stroke-width="2"/><line x1="10" y1="44" x2="50" y2="44" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="52" y1="44" x2="54" y2="44" stroke="var(--wire-line)" stroke-width="2"/><line x1="10" y1="51" x2="50" y2="51" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="52" y1="51" x2="54" y2="51" stroke="var(--wire-line)" stroke-width="2"/><line x1="10" y1="58" x2="38" y2="58" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="52" y1="58" x2="54" y2="58" stroke="var(--wire-line)" stroke-width="2"/><line x1="10" y1="65" x2="50" y2="65" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="52" y1="65" x2="54" y2="65" stroke="var(--wire-line)" stroke-width="2"/><line x1="10" y1="72" x2="50" y2="72" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="52" y1="72" x2="54" y2="72" stroke="var(--wire-line)" stroke-width="2"/></svg><b>Оглавление</b></div><div class="pg"><svg viewBox="0 0 60 84" class="pgv"><line x1="10" y1="10" x2="32" y2="10" stroke="var(--wire-line)" stroke-width="2.5"/><circle cx="30" cy="30" r="13" fill="none" stroke="var(--wire-line)"/><circle cx="30" cy="30" r="8" fill="none" stroke="var(--wire-line)"/><line x1="38.0" y1="30.0" x2="43.0" y2="30.0" stroke="var(--wire-line)"/><line x1="36.9" y1="34.0" x2="41.3" y2="36.5" stroke="var(--wire-line)"/><line x1="34.0" y1="36.9" x2="36.5" y2="41.3" stroke="var(--wire-line)"/><line x1="30.0" y1="38.0" x2="30.0" y2="43.0" stroke="var(--wire-line)"/><line x1="26.0" y1="36.9" x2="23.5" y2="41.3" stroke="var(--wire-line)"/><line x1="23.1" y1="34.0" x2="18.7" y2="36.5" stroke="var(--wire-line)"/><line x1="22.0" y1="30.0" x2="17.0" y2="30.0" stroke="var(--wire-line)"/><line x1="23.1" y1="26.0" x2="18.7" y2="23.5" stroke="var(--wire-line)"/><line x1="26.0" y1="23.1" x2="23.5" y2="18.7" stroke="var(--wire-line)"/><line x1="30.0" y1="22.0" x2="30.0" y2="17.0" stroke="var(--wire-line)"/><line x1="34.0" y1="23.1" x2="36.5" y2="18.7" stroke="var(--wire-line)"/><line x1="36.9" y1="26.0" x2="41.3" y2="23.5" stroke="var(--wire-line)"/><line x1="10" y1="52" x2="50" y2="52" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="58" x2="50" y2="58" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="64" x2="38" y2="64" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="70" x2="50" y2="70" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="76" x2="44" y2="76" stroke="var(--wire-fill-2)" stroke-width="2"/></svg><b>Школа целиком</b></div><div class="pg"><svg viewBox="0 0 60 84" class="pgv"><line x1="10" y1="8" x2="30" y2="8" stroke="var(--wire-line)" stroke-width="2.5"/><line x1="10" y1="14" x2="34" y2="14" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="20" x2="50" y2="20" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="26" x2="50" y2="26" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="32" x2="50" y2="32" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="38" x2="34" y2="38" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="44" x2="50" y2="44" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="50" x2="50" y2="50" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="56" x2="50" y2="56" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="62" x2="34" y2="62" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="68" x2="50" y2="68" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="74" x2="50" y2="74" stroke="var(--wire-fill-2)" stroke-width="2"/></svg><b>Тема целиком</b></div><div class="pg"><svg viewBox="0 0 60 84" class="pgv"><rect x="8" y="12" width="44" height="52" fill="none" stroke="var(--wire-line)"/><line x1="8" y1="20.6" x2="52" y2="20.6" stroke="var(--wire-fill-2)"/><line x1="8" y1="29.2" x2="52" y2="29.2" stroke="var(--wire-fill-2)"/><line x1="8" y1="37.8" x2="52" y2="37.8" stroke="var(--wire-fill-2)"/><line x1="8" y1="46.4" x2="52" y2="46.4" stroke="var(--wire-fill-2)"/><line x1="8" y1="55.0" x2="52" y2="55.0" stroke="var(--wire-fill-2)"/><line x1="8" y1="63.599999999999994" x2="52" y2="63.599999999999994" stroke="var(--wire-fill-2)"/><line x1="26" y1="12" x2="26" y2="64" stroke="var(--wire-fill-2)"/><line x1="39" y1="12" x2="39" y2="64" stroke="var(--wire-fill-2)"/><line x1="8" y1="72" x2="38" y2="72" stroke="var(--wire-fill-2)" stroke-width="2"/></svg><b>Таблицы расчёта</b></div>
     </div>`; }
 
 /* просмотр документа: человек листает страницы до того, как скачает */
 Object.defineProperty(S, 'docView', { get() {
   const p = PROD[CUR] || PROD.pdf;
+  const pv = DOCPREVIEW;
   return `<div class="pad">
-  <div class="dochead" data-go="prodResult"><span>&lsaquo;</span><div>Назад · документ</div></div>
-  <h2 class="t-title" style="font-size:19px">${p.file ? p.file.name : 'Документ'}</h2>
-  <p class="t-onephrase">${p.file ? p.file.size + ' · ' + p.file.pages : ''}</p>
+  <div class="dochead" data-go="${pv ? 'pdfSell' : 'prodResult'}"><span>&lsaquo;</span><div>Назад · ${pv ? 'разбор в одном файле' : 'документ'}</div></div>
+  <h2 class="t-title" style="font-size:19px">${pv ? 'Пример документа' : (p.file ? p.file.name : 'Документ')}</h2>
+  <p class="t-onephrase">${pv ? 'Так выглядит разбор внутри. Ваш соберётся по вашим данным' : (p.file ? p.file.size + ' · ' + p.file.pages : '')}</p>
 
   <div class="pdfcar" style="margin-top:18px">
     ${pdfPages('docStrip')}
@@ -7305,8 +7342,10 @@ Object.defineProperty(S, 'docView', { get() {
   <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:12px;text-align:center">Листайте страницы вбок</p>
 
   <div class="docfoot boxed">
-    <div class="w-btn ghost" data-save="doc">${ICO.down}Скачать PDF</div>
-    <div class="w-btn ghost" data-share="prodResult">${ICO.share}Переслать документ</div>
+    ${pv
+      ? `<div class="w-btn" data-prod="pdf">Скачать PDF · 149 ₽</div>`
+      : `<div class="w-btn ghost" data-save="doc">${ICO.down}Скачать PDF</div>
+         <div class="w-btn ghost" data-share="prodResult">${ICO.share}Переслать документ</div>`}
   </div>
 </div>`; }});
 
@@ -7583,6 +7622,8 @@ function stError(k) {
    спорила бы с ним: «оплата подтверждена» и «деньги не списаны» одновременно. */
 let PAYST = '';
 let PDFST = '';   /* '' не куплен · bought куплен · stale данные уточнены после покупки */
+/* полнота данных профиля: от неё зависит, обещаем ли бесплатную пересборку */
+let DATAFULL = false;
 
 function payScreenBox(kind, title, text, acts, note) {
   const ic = { warn: '◷', bad: '✕', note: '◍' }[kind] || '◷';
@@ -7625,7 +7666,7 @@ const PDF_STATES = {
       'Вы покупали его 12 августа. Файл лежит в разделе «Мои разборы» и скачивается сколько угодно раз.',
       [['Открыть документ', 'prodResult'], ['К списку разборов', 'shop']]) },
   stale: { prodResult: () => payScreenBox('note', 'Данные изменились',
-      'Вы уточнили время рождения, и расчёт пересчитан. Документ, который вы скачали раньше, собран по старым данным. Соберём заново, это бесплатно.',
+      'Вы уточнили данные о рождении, и расчёт обновлён. Документ, который вы скачали раньше, собран по старым данным. Соберём заново, это бесплатно.',
       [['Пересобрать документ', 'docBuild'], ['Оставить как есть', 'shop']]) }
 };
 
@@ -7729,7 +7770,7 @@ const B = {
 
 'Б-03': ['Карта готова', 'Доставка расчёта, если человек закрыл приложение', [
   msg('Карта посчитана.', '9:21'),
-  msg('<span class="lead">Четыре школы, одиннадцать тем.</span>Три из четырёх сошлись на одном: вы дольше других держите то, что уже не работает. Но каждая объясняет это по-своему.', '9:21', ['Посмотреть карту']),
+  msg('<span class="lead">${scopeProse().charAt(0).toUpperCase() + scopeProse().slice(1)}.</span>Три из четырёх сошлись на одном: вы дольше других держите то, что уже не работает. Но каждая объясняет это по-своему.', '9:21', ['Посмотреть карту']),
 ], [
   ['Доставка обязательна',
    'Расчёт занимает до минуты, и человек за это время может закрыть приложение. Мы обещали «пришлём, когда будет готово» — вот это сообщение.'],
@@ -7858,7 +7899,7 @@ const B = {
 ]],
 
 'Б-15': ['Документ готов', 'Уведомление после сборки', [
-  msg('<span class="lead">Ваш документ готов.</span>Сорок страниц: четыре чертежа вашей карты, одиннадцать тем и разборы по школам. Открывается в приложении.', '12:07', ['Открыть документ']),
+  msg('<span class="lead">Ваш документ готов.</span>Сорок страниц: четыре чертежа вашей карты и ${scopeProse()}. Открывается в приложении.', '12:07', ['Открыть документ']),
 ], [
   ['Ссылка в приложение, а не файл в чат',
    'Приложение — наша витрина. Файл, отправленный в переписку, уводит человека из продукта: он получает купленное и больше не возвращается. Кнопка открывает конкретный экран документа, а не приложение вообще.'],
@@ -7997,12 +8038,10 @@ Object.defineProperty(S, 'payConfirm', { get() {
   <div class="sumcard" style="margin-top:14px">
     <div><u>Документ</u><b>Индивидуальный разбор личности · PDF</b></div>
     <div class="ml"><u>Данные для расчёта</u><b>${fio}<br>${date}, ${time}<br>${place}</b></div>
-    <div><u>Стоимость</u><b>149 ₽</b></div>
   </div>
 
   <div class="body-text" style="margin-top:16px">
     <p>Документ начнёт формироваться сразу после оплаты и появится в разделе «Мои разборы». Скачать его можно оттуда.</p>
-    <p>Чек вы увидите сразу после оплаты — он останется в разделе «Платежи и чеки».</p>
   </div>
 
   <div class="docfoot boxed" style="margin-top:18px">
@@ -8649,6 +8688,7 @@ function receiptHTML() {
 }
 
 function render(k, push = true, restore = 0) {
+  if (k !== 'docView') DOCPREVIEW = false;
   /* листы не переживают смену экрана: иначе открытый шеринг висит поверх нового экрана */
   document.querySelectorAll('.sheet.show').forEach(s => s.classList.remove('show'));
   if (push && k !== cur) hist.push([cur, view.scrollTop]);
@@ -8770,6 +8810,15 @@ document.getElementById('pdfsw').addEventListener('click', e => {
   PDFST = b.dataset.pdf;
   try { localStorage.setItem('lunora_pdfst', PDFST); } catch (e) {}
   document.querySelectorAll('#pdfsw b').forEach(x => x.classList.toggle('on', x === b));
+  render(cur, false);
+});
+
+document.getElementById('datasw').addEventListener('click', e => {
+  const b = e.target.closest('[data-full]');
+  if (!b) return;
+  DATAFULL = b.dataset.full === '1';
+  try { localStorage.setItem('lunora_datafull', DATAFULL ? '1' : '0'); } catch (e) {}
+  document.querySelectorAll('#datasw b').forEach(x => x.classList.toggle('on', x === b));
   render(cur, false);
 });
 
@@ -9025,20 +9074,54 @@ function pcRun() {
   const box = document.getElementById('pclaims');
   if (!box) return;
   PC_I = 0;
-  const show = n => {
-    PC_I = n;
-    box.querySelectorAll('.p-claim').forEach((p, i) => p.classList.toggle('on', i === n));
-    box.querySelectorAll('.pcdots i').forEach((d, i) => d.classList.toggle('on', i === n));
+  const stage = box.querySelector('.pcstage');
+  const dots = n => box.querySelectorAll('.pcdots i').forEach((d, i) => d.classList.toggle('on', i === n));
+  const go = (n, smooth) => {
+    PC_I = (n + PCLAIMS.length) % PCLAIMS.length;
+    const to = PC_I * stage.clientWidth;
+    const soft = smooth !== false && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+    stage.scrollTo({ left: to, behavior: soft ? 'smooth' : 'auto' });
+    /* плавная прокрутка поддерживается не везде: если через полсекунды лента не доехала, доводим сразу */
+    if (soft) setTimeout(() => { if (Math.abs(stage.scrollLeft - to) > 4) stage.scrollLeft = to; }, 500);
+    dots(PC_I);
   };
-  show(0);
-  PC_T = setInterval(() => show((PC_I + 1) % PCLAIMS.length), 5200);
+  go(0, false);
+  const tick = () => { PC_T = setInterval(() => go(PC_I + 1), 5200); };
+  tick();
+  /* точки следуют за пальцем, а не за таймером */
+  stage.onscroll = () => {
+    const n = Math.round(stage.scrollLeft / stage.clientWidth);
+    if (n !== PC_I && n >= 0 && n < PCLAIMS.length) { PC_I = n; dots(n); }
+  };
+  /* мышью лента тянется перетаскиванием: на десктопе пальца нет, а листать надо */
+  let dragFrom = 0, dragAt = 0, dragging = false;
+  stage.onpointerdown = e => {
+    clearInterval(PC_T);
+    if (e.pointerType !== 'mouse') return;
+    dragging = true; dragFrom = e.clientX; dragAt = stage.scrollLeft;
+    stage.style.scrollSnapType = 'none';
+    stage.setPointerCapture(e.pointerId);
+  };
+  stage.onpointermove = e => { if (dragging) stage.scrollLeft = dragAt - (e.clientX - dragFrom); };
+  /* после того как человек отпустил, лента встаёт на ближайшую карточку и смена возобновляется */
+  const release = () => {
+    if (dragging) {
+      dragging = false;
+      stage.style.scrollSnapType = '';
+      go(Math.round(stage.scrollLeft / stage.clientWidth));
+    }
+    clearInterval(PC_T);
+    tick();
+  };
+  stage.onpointerup = release;
+  stage.onpointercancel = release;
   box.onclick = e => {
     const d = e.target.closest('[data-pcd]');
     if (!d) return;
     e.stopPropagation();
     clearInterval(PC_T);
-    show(+d.dataset.pcd);
-    PC_T = setInterval(() => show((PC_I + 1) % PCLAIMS.length), 5200);
+    go(+d.dataset.pcd);
+    tick();
   };
 }
 
@@ -9054,7 +9137,7 @@ view.addEventListener('click', e => {
     document.querySelectorAll('#pdfDots i').forEach((x, i) => x.classList.toggle('on', i === n));
     return;
   }
-  if (e.target.closest('[data-pdfdemo]')) { CUR = 'pdf'; render('docView'); return; }
+  if (e.target.closest('[data-pdfdemo]')) { CUR = 'pdf'; DOCPREVIEW = true; render('docView'); return; }
 });
 view.addEventListener('scroll', e => {
   const strip = e.target.closest('#pdfStrip, #docStrip');
@@ -9823,6 +9906,8 @@ runGo(0);
     const p = localStorage.getItem('lunora_pdfst') || '';
     const f = localStorage.getItem('lunora_fisc') || 'npd';
     if (p) { PDFST = p; document.querySelectorAll('#pdfsw b').forEach(x => x.classList.toggle('on', x.dataset.pdf === p)); }
+    const df = localStorage.getItem('lunora_datafull');
+    if (df) { DATAFULL = df === '1'; document.querySelectorAll('#datasw b').forEach(x => x.classList.toggle('on', x.dataset.full === df)); }
     if (f !== 'npd') { FISC = f; document.querySelectorAll('#fscsw b').forEach(x => x.classList.toggle('on', x.dataset.fsc === f)); }
     if (k && S[k] !== undefined) render(k, false);
   } catch (e) {}
