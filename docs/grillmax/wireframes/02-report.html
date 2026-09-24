@@ -2589,7 +2589,7 @@ S.obName = `<div class="pad">
     <div><div class="w-label">Имя</div><div class="w-field filled" data-obfill="name" data-val="Антон" data-ph="Введите ваше имя">Антон</div></div>
     <div><div class="w-label">Отчество</div><div class="w-field" data-obfill="pat" data-val="Юрьевич" data-ph="Введите ваше отчество">Введите ваше отчество</div></div>
     <div><div class="w-label">Фамилия</div><div class="w-field filled" data-obfill="fam" data-val="Тыщенко" data-ph="Введите вашу фамилию">Тыщенко</div>
-      <p class="obhint">Фамилию и отчество заполнять не обязательно.<br><br>Но при добавлении расчёт по нумерологии будет максимально глубоким.</p>
+      <p class="obhint">Фамилию и отчество можно не заполнять, но с ними нумерология посчитает вас глубже.</p>
     </div>
     <div>
       <div class="w-label">Ваш пол</div>
@@ -2700,10 +2700,17 @@ function obSummary() {
 /* говорим о потере на языке результата, а не процента, и только если она заметна */
 function obGapNote() {
   if (obPct() >= 100) return '';
-  return `<p style="font-size:11.5px;line-height:1.55;color:var(--ink-soft);margin:0 0 14px">Данные всегда можно дополнить — карту пересчитаем заново и бесплатно.</p>`;
+  return `<p style="font-size:11.5px;line-height:1.55;color:var(--ink-soft);margin:0 0 14px">Данные всегда можно дополнить, карту пересчитаем бесплатно.</p>`;
 }
 
 Object.defineProperty(S, 'obCalc', { get() {
+  /* на экран можно попасть по прямой ссылке: без имени, города и даты считать нечего */
+  const ready = !!OB.name && !!OB.city && obDateFull();
+  if (!ready) return `<div class="pad" style="min-height:520px;display:flex;flex-direction:column;justify-content:center">
+  ${obSummary()}
+  <p style="font-size:12.5px;line-height:1.6;color:var(--ink-soft);margin:0 0 18px">Чтобы построить карту, нужны имя, место и дата рождения. Без них считать нечего.</p>
+  <div class="w-btn" data-go="obName">Заполнить данные</div>
+</div>`;
   return `<div class="pad" style="min-height:520px;display:flex;flex-direction:column;justify-content:center">
   ${obSummary()}
   ${obGapNote()}
