@@ -2434,12 +2434,10 @@ S.obStart = `<div class="pad" style="min-height:520px;display:flex;flex-directio
 /* объяснения у полей: первый уровень — человеческий, второй — для тех, кто знает астрологию */
 const INFO = {
   name: ['Зачем полное имя',
-    `<p>Имя нужно такое, как в документах. Нумерология считает по буквам, и «Анна» с «Аней» дают разные числа.</p>
-     <p>Отчество и фамилия открывают второй контур: числа выражения, сердца и облика. Без них нумерология посчитает вас только по дате рождения, а это половина школы.</p>
-     <p>Остальные три школы имя не используют вовсе: они считают по моменту рождения.</p>`],
+    `<p>Нумерология считает по буквам имени, поэтому полная форма и домашняя дают разные числа: «Анна» и «Аня» посчитаются по-разному.</p>
+     <p>Полное имя — то, которым вас называют официально, а не то, к которому вы привыкли.</p>`],
   sex: ['Зачем нам пол',
-    `<p>В китайской школе направление жизненных периодов зависит от пола: при одной и той же дате рождения у мужчины и женщины столпы удачи разворачиваются в разные стороны. Без этого не построить временну́ю линию.</p>
-     <p>В остальных трёх школах пол не используется.</p>`],
+    `<p>В китайской школе направление жизненных периодов зависит от пола: при одной и той же дате рождения у мужчины и женщины столпы удачи разворачиваются в разные стороны. Без этого не построить временну́ю линию.</p>`],
   time: ['Насколько важно точное время',
     `<p>Чем точнее время, тем больше можно сказать. Точное время открывает всё: как вас видят со стороны, как устроены дом и семья, когда наступают жизненные периоды.</p>
      <p>Ошибка в полчаса почти ничего не портит — плывут только границы между сферами жизни. Если помните только время суток, характер и внутренний мир остаются, а всё, что привязано к моменту, мы считать не станем.</p>`,
@@ -2458,7 +2456,7 @@ S.obName = `<div class="pad">
   <h2 class="t-title" style="font-size:20px;margin-top:16px">Давайте познакомимся</h2>
 
   <div class="fields" style="margin-top:16px">
-    <div><div class="w-label">Имя <u class="ihint" data-info="name">i</u></div><div class="w-field filled" data-obfill="name" data-val="Антон" data-ph="Введите ваше имя">Антон</div></div>
+    <div><div class="w-label">Полное имя <u class="ihint" data-info="name">i</u></div><div class="w-field filled" data-obfill="name" data-val="Антон" data-ph="Введите ваше имя">Антон</div></div>
     <div><div class="w-label">Отчество</div><div class="w-field" data-obfill="pat" data-val="Юрьевич" data-ph="Введите ваше отчество">Введите ваше отчество</div></div>
     <div><div class="w-label">Фамилия</div><div class="w-field filled" data-obfill="fam" data-val="Тыщенко" data-ph="Введите вашу фамилию">Тыщенко</div>
       <p class="obhint">Фамилию и отчество можно не заполнять, но с ними нумерология посчитает вас глубже.</p>
@@ -9681,6 +9679,11 @@ document.getElementById('pop').addEventListener('click', e => {
 
 
 
+document.getElementById('infoSheet').addEventListener('click', e => {
+  if (e.target.id === 'infoSheet' || e.target.closest('[data-sheet]'))
+    document.getElementById('infoSheet').classList.remove('show');
+});
+
 document.getElementById('saveSheet').addEventListener('click', e => {
   if (e.target.id === 'saveSheet' || e.target.closest('[data-sheet]'))
     document.getElementById('saveSheet').classList.remove('show');
@@ -9730,6 +9733,11 @@ function regGo(n) {
     const el = document.querySelector(`[data-info="${r.info}"]`);
     if (el) el.dispatchEvent(new MouseEvent('click', { bubbles: true }));
     if (r.lvl === 2) document.getElementById('infoLvl').click();
+    /* номер в шапке остаётся за подсказкой, пока она открыта */
+    REG_CUR = r.n;
+    const sc = document.getElementById('scode');
+    if (sc) sc.textContent = r.n;
+    regPaint();
   }, 60);
   if (r.sheet) setTimeout(() => popShow(r.sheet), 60);
 }
