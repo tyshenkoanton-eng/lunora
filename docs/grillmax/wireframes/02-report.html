@@ -122,6 +122,7 @@
   .wel .logo svg { width: 78px; height: 78px; }
   .wel .logo b { display: block; font-size: 19px; font-weight: 650; letter-spacing: -.01em; margin-top: 12px; }
   .wel h2 { font-size: 25px; line-height: 1.2; font-weight: 650; letter-spacing: -.02em; text-align: center; margin: 0 0 12px; text-wrap: balance; }
+  .wel .welsub { font-size: 16px; font-weight: 640; text-align: center; color: var(--luna); margin: 0 0 14px; letter-spacing: -.01em; }
   .wel .sub { font-size: 14.5px; line-height: 1.55; color: var(--ink-soft); text-align: center; margin: 0 0 20px; }
   .wel .bonus { text-align: center; border: 1px solid var(--luna-line); background: var(--luna-bg); border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; }
   .wel .bonus b { display: block; font-size: 16px; font-weight: 650; color: var(--luna); letter-spacing: -.01em; }
@@ -5592,30 +5593,28 @@ S.welcome = `<div class="pad wel" style="padding:24px 18px 28px">
           </div>
 
           <h2>Вас пригласили в Лунору</h2>
-          <p class="sub">Лунора считает вашу карту рождения и рассказывает, как вы устроены: характер, отношения, работа, деньги, сильные и слабые стороны, периоды жизни.</p>
-
-          <div class="bonus">
-            <b>Полный разбор бесплатно</b>
-            <span>Четыре школы целиком: западная астрология, ведическая, китайская Ба-Цзы и нумерология. Ничего покупать не нужно.</span>
-          </div>
+          <p class="welsub">Узнайте себя по-настоящему</p>
+          <p class="sub">Лунора — ваш персональный астролог на основе искусственного интеллекта. По дате, времени и месту рождения она рассчитает вашу карту сразу по четырём основным школам, объяснит её простым языком и расскажет о самом главном: о характере, отношениях, работе и деньгах, о периодах, которые ждут вас впереди.</p>
 
           <div class="feats">
-            <div class="feat"><i>◐</i><div><b>Четыре школы, а не одна</b><span>Там, где они сходятся, вывод надёжнее. Там, где расходятся, вы увидите обе стороны</span></div></div>
-            <div class="feat"><i>◍</i><div><b>По вашей карте, а не по знаку</b><span>Считаем по дате, времени и месту рождения</span></div></div>
-            <div class="feat"><i>◌</i><div><b>Одиннадцать тем о вас</b><span>От характера и отношений до денег, здоровья и периодов жизни</span></div></div>
+            <div class="feat"><i>◐</i><div><b>Четыре школы в одном разборе</b><span>Западная, ведическая, Ба-Цзы и нумерология дополняют друг друга.</span></div></div>
+            <div class="feat"><i>◍</i><div><b>Лично для вас</b><span>Максимально точная карта вашей личности.</span></div></div>
+            <div class="feat"><i>◌</i><div><b>Одиннадцать граней</b><span>От характера до денег и здоровья.</span></div></div>
           </div>
 
           <div class="bonus" style="margin-bottom:22px">
-            <b>И час разговора в подарок</b>
-            <span>Лунора отвечает на ваши вопросы, опираясь на вашу карту. Час открывается сразу после расчёта.</span>
+            <b>Ваш подарок</b>
+            <span>Полный разбор для вас бесплатен. А ещё час разговора с Лунорой: задавайте любые вопросы, и она ответит, опираясь на вашу карту. Час откроется, как только карта будет готова.</span>
           </div>
 
-          <p class="chq">Как вам удобнее продолжить?</p>
+          <p class="chq">Где вам удобнее открыть Лунору?</p>
           <div class="chans">
             <div class="chan" data-go="Б-02"><div class="cic">◈</div><b>Telegram</b></div>
             <div class="chan"><div class="cic">◇</div><b>MAX</b></div>
           </div>
-          <p class="free" style="margin:14px 0 0">Нужны дата, время и место рождения. Расчёт занимает минуту.</p>
+          <div class="chans" style="margin-top:10px">
+            <div class="chan" style="grid-column:1 / -1"><div class="cic">◎</div><b>Веб</b></div>
+          </div>
 </div>`;
 
 /* ============ ПРОДАЖА PDF ============ */
