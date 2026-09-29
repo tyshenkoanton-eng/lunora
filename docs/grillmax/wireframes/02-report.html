@@ -127,6 +127,9 @@
   .wel .bonus { text-align: center; border: 1px solid var(--luna-line); background: var(--luna-bg); border-radius: 12px; padding: 14px 16px; margin-bottom: 8px; }
   .wel .bonus b { display: block; font-size: 16px; font-weight: 650; color: var(--luna); letter-spacing: -.01em; }
   .wel .bonus span { display: block; font-size: 12.5px; color: var(--ink-soft); margin-top: 5px; line-height: 1.5; }
+  .wel .bonlist { list-style: none; margin: 9px 0 0; padding: 0; text-align: left; display: flex; flex-direction: column; gap: 7px; }
+  .wel .bonlist li { position: relative; padding-left: 15px; font-size: 12.5px; line-height: 1.5; color: var(--ink-soft); }
+  .wel .bonlist li::before { content: '·'; position: absolute; left: 4px; top: -1px; font-size: 16px; font-weight: 700; color: var(--luna); }
   .wel .free { font-size: 12.5px; color: var(--ink-faint); text-align: center; margin: 0 0 22px; }
   .wel .feats { display: flex; flex-direction: column; gap: 8px; margin-bottom: 26px; }
   .wel .feat { display: grid; grid-template-columns: 40px 1fr; gap: 12px; align-items: center; border: 1px solid var(--rule); border-radius: 11px; padding: 12px 13px; }
@@ -5595,7 +5598,7 @@ S.welcome = `<div class="pad wel" style="padding:24px 18px 28px">
           <h2>Вас пригласили в Лунору</h2>
           <p class="welsub">Узнайте себя по-настоящему</p>
           <p class="sub">Лунора — ваш персональный астролог. По дате, времени и месту рождения она рассчитает вашу карту сразу по четырём основным школам в одном исследовании.</p>
-          <p class="sub">А также объяснит его простым языком и расскажет о самом главном: о характере, отношениях, работе и деньгах, о периодах, которые ждут вас впереди.</p>
+          <p class="sub">Разбор написан обычным языком — о характере, отношениях, работе и деньгах, о периодах, которые ждут вас впереди.</p>
 
           <div class="feats">
             <div class="feat"><i>◐</i><div><b>Четыре школы в одном разборе</b><span>Западная, ведическая, Ба-Цзы и нумерология дополняют друг друга.</span></div></div>
@@ -5604,8 +5607,11 @@ S.welcome = `<div class="pad wel" style="padding:24px 18px 28px">
           </div>
 
           <div class="bonus" style="margin-bottom:22px">
-            <b>Ваш подарок</b>
-            <span>Полный разбор для вас бесплатен. А ещё час разговора с Лунорой: задавайте любые вопросы, и она ответит, опираясь на вашу карту. Час откроется, как только карта будет готова.</span>
+            <b>Что вы получите</b>
+            <ul class="bonlist">
+              <li>Полный разбор по четырём школам</li>
+              <li>Час разговора с Лунорой: задавайте любые вопросы, и она ответит, опираясь на вашу карту</li>
+            </ul>
           </div>
 
           <p class="chq">Где вам удобнее открыть Лунору?</p>
