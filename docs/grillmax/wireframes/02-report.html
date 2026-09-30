@@ -1390,6 +1390,8 @@
   .w-btn.ghost { background: transparent; color: var(--ink); border-color: var(--rule); font-weight: 600; }
   .w-btn:active { opacity: .8; }
   .sheet .w-btn { min-height: 48px; }
+  /* в шторке светлая обводка держит кнопку: тусклая рамка терялась на затемнении */
+  .sheet .w-btn.ghost { border-color: var(--ink); }
   .docfoot .w-btn, .stfull .w-btn { display: grid; place-items: center; }
 
   /* чат — телеграмный вид */
