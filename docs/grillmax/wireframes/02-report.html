@@ -940,7 +940,8 @@
   .dd.obdd .r.has b { color: var(--ink-soft); }
   .dd.obdd .r.add { color: var(--ink-soft); }
   .dd.obdd .dgroup { gap: 9px; }
-  .dd.insheet { display: flex; background: none; padding: 0; margin: 4px 0 0; }
+  .dd.insheet { display: flex; background: none; padding: 0; margin: 16px 0 0; gap: 9px; }
+  .ddnow { font-size: 15px; font-weight: 680; color: var(--ink); margin: 12px 0 0; }
 
   /* экран темы: трактовка подзаголовками, источники карточками */
   /* трактовка остаётся выделенной цветом, но внутри разделена подзаголовками */
@@ -2425,10 +2426,17 @@ function obDepthHTML() {
                 city: !!OB.city, addr: !!(OB.city && OB.addr), date: obDateFull(),
                 time: obDateFull() && obTimeFull() && OB.prec !== 'n',
                 prec: obDateFull() && obTimeFull() && OB.prec === 't' };
-  return `<p class="ddlead">Сейчас ${obPct()} %. Проценты показывают, сколько данных о вас у меня есть: чем их больше, тем подробнее расчёт.</p>
-    <div class="dd obdd insheet"><div class="dgroup">
-      ${OB_ROWS.map(([k, t]) => `<div class="r ${got[k] ? 'has' : 'add'}"><div>${t}</div><b>${got[k] ? '' : '+'}${DW[k]}%</b></div>`).join('')}
-    </div></div>`;
+  const has = OB_ROWS.filter(([k]) => got[k]);
+  /* недостающее идёт по весу: сверху то, что добавит больше всего */
+  const add = OB_ROWS.filter(([k]) => !got[k]).sort((a, b) => DW[b[0]] - DW[a[0]]);
+  const rows = (list, plus) => list.map(([k, t]) =>
+    `<div class="r ${plus ? 'add' : 'has'}"><div>${t}</div><b>${plus ? '+' : ''}${DW[k]}\u00a0%</b></div>`).join('');
+  const block = (title, list, plus) => list.length
+    ? `<div class="dd obdd insheet"><div class="sheet-h">${title}</div><div class="dgroup">${rows(list, plus)}</div></div>` : '';
+  return `<p class="ddlead">Проценты показывают, сколько данных о вас у меня есть: чем их больше, тем подробнее расчёт.</p>
+    <p class="ddnow">Сейчас ${obPct()}\u00a0%</p>
+    ${block('Уже знаю', has, false)}
+    ${block('Можно добавить', add, true)}`;
 }
 
 function stepper(n) {
