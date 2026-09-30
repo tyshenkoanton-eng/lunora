@@ -2430,11 +2430,11 @@ function obDepthHTML() {
   /* недостающее идёт по весу: сверху то, что добавит больше всего */
   const add = OB_ROWS.filter(([k]) => !got[k]).sort((a, b) => DW[b[0]] - DW[a[0]]);
   const rows = (list, plus) => list.map(([k, t]) =>
-    `<div class="r ${plus ? 'add' : 'has'}"><div>${t}</div><b>${plus ? '+' : ''}${DW[k]}\u00a0%</b></div>`).join('');
+    `<div class="r ${plus ? 'add' : 'has'}"><div>${t}</div><b>${plus ? '+\u00a0' : ''}${DW[k]}%</b></div>`).join('');
   const block = (title, list, plus) => list.length
     ? `<div class="dd obdd insheet"><div class="sheet-h">${title}</div><div class="dgroup">${rows(list, plus)}</div></div>` : '';
   return `<p class="ddlead">Проценты показывают, сколько данных о вас у меня есть: чем их больше, тем подробнее расчёт.</p>
-    <p class="ddnow">Сейчас ${obPct()}\u00a0%</p>
+    <p class="ddnow">Сейчас ${obPct()}%</p>
     ${block('Уже знаю', has, false)}
     ${block('Можно добавить', add, true)}`;
 }
