@@ -2425,7 +2425,7 @@ function obDepthHTML() {
                 city: !!OB.city, addr: !!(OB.city && OB.addr), date: obDateFull(),
                 time: obDateFull() && obTimeFull() && OB.prec !== 'n',
                 prec: obDateFull() && obTimeFull() && OB.prec === 't' };
-  return `<p class="ddlead">Чем полнее вы расскажете о себе, тем подробнее будет расчёт.</p>
+  return `<p class="ddlead">Сейчас ${obPct()} %. Проценты показывают, сколько данных о вас у меня есть: чем их больше, тем подробнее расчёт.</p>
     <div class="dd obdd insheet"><div class="dgroup">
       ${OB_ROWS.map(([k, t]) => `<div class="r ${got[k] ? 'has' : 'add'}"><div>${t}</div><b>${got[k] ? '' : '+'}${DW[k]}%</b></div>`).join('')}
     </div></div>`;
