@@ -1389,6 +1389,8 @@
   .w-btn.quiet { background: var(--card); color: var(--ink-soft); border-color: var(--rule); font-weight: 600; }
   .w-btn.ghost { background: transparent; color: var(--ink); border-color: var(--rule); font-weight: 600; }
   .w-btn:active { opacity: .8; }
+  /* отклик на нажатие для всего нажимаемого внутри телефона */
+  .phone .press { opacity: .68; transition: opacity .05s linear; }
   .sheet .w-btn { min-height: 48px; }
   /* в шторке светлая обводка держит кнопку: тусклая рамка терялась на затемнении */
   .sheet .w-btn.ghost { border-color: var(--ink); }
@@ -9751,6 +9753,29 @@ document.getElementById('osShare').addEventListener('click', e => {
   if (e.target.id === 'osShare' || e.target.closest('[data-sheet]') || e.target.closest('.osapp'))
     document.getElementById('osShare').classList.remove('show');
 });
+
+/* Отклик на нажатие. Кликабельного в прототипе около сотни мест, а отзывались
+   единицы: человек нажимал и не понимал, попал ли. Правило общее — подсвечиваем
+   ближайший элемент, который сам объявил себя нажимаемым курсором-указателем,
+   поэтому оно накрывает и то, что появится позже. */
+(() => {
+  const phone = document.querySelector('.phone');
+  let held = null;
+  const hit = t => {
+    for (let el = t; el && el !== phone; el = el.parentElement) {
+      if (el.nodeType === 1 && getComputedStyle(el).cursor === 'pointer') return el;
+    }
+    return null;
+  };
+  const drop = () => { if (held) { held.classList.remove('press'); held = null; } };
+  phone.addEventListener('pointerdown', e => {
+    drop();
+    held = hit(e.target);
+    if (held) held.classList.add('press');
+  });
+  ['pointerup', 'pointercancel', 'pointerleave', 'scroll'].forEach(ev =>
+    phone.addEventListener(ev, drop, true));
+})();
 
 document.getElementById('tabbar').addEventListener('click', e => {
   const t = e.target.closest('[data-go]');
