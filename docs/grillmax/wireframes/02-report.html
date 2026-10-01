@@ -9328,7 +9328,7 @@ function obRestore(k) {
     if (OB.addr) {
       const box = document.getElementById('obAddrBox');
       const link = view.querySelector('[data-obaddr]');
-      if (box) { box.style.display = ''; box.querySelector('[data-sug="street"]').textContent = OB.addr; }
+      if (box) { box.style.display = ''; const s = box.querySelector('[data-sug="street"]'); s.textContent = OB.addr; s.classList.add('filled'); }
       if (link) link.style.display = 'none';
     }
   }
