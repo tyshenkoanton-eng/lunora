@@ -2442,7 +2442,7 @@ function obDepthHTML() {
     `<div class="r ${plus ? 'add' : 'has'}"><div>${t}</div><b>${plus ? '+\u00a0' : ''}${DW[k]}%</b></div>`).join('');
   const block = (title, list, plus) => list.length
     ? `<div class="dd obdd insheet"><div class="sheet-h">${title}</div><div class="dgroup">${rows(list, plus)}</div></div>` : '';
-  return `<p class="ddlead">Проценты показывают, сколько данных о вас у меня есть: чем их больше, тем подробнее расчёт.</p>
+  return `<p class="ddlead">Процент говорит о том, насколько полно вы передо мной раскрылись: чем больше я о вас знаю, тем глубже и точнее становится расчёт.</p>
     <div class="ddbar"><div class="bar"><i style="left:0;width:${obPct()}%"></i></div><b>${obPct()}%</b></div>
     ${block('Уже знаю', has, false)}
     ${block('Можно добавить', add, true)}`;
