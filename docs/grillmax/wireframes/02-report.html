@@ -9260,7 +9260,7 @@ const MONTHS = ['января','февраля','марта','апреля','м�
 /* год по умолчанию — середина ядра ЦА: женщина 35–44, 03_audience.md */
 const ICP_YEAR = 1986;
 const OB = { name: 'Антон', fam: 'Тыщенко', pat: '', sex: 'ж',
-             city: '', addr: '', d: '', m: '', y: '', h: '', i: '', prec: 'p' };
+             city: '', addr: '', d: '', m: '', y: '', h: '', i: '', prec: 'p', consent: false };
 const OB_PH = { name: 'Введите ваше имя', pat: 'Введите ваше отчество', fam: 'Введите вашу фамилию' };
 const OB_DEF = { name: 'Антон', pat: 'Юрьевич', fam: 'Тыщенко' };
 
@@ -9301,6 +9301,13 @@ function obPaint() {
   if (why) {
     why.style.display = obDateFull() ? 'none' : '';
     why.textContent = 'Заполните дату — без неё карту не построить';
+  }
+  /* согласие — такое же сохраняемое поле, как имя и дата: восстанавливаем из состояния */
+  const chk = view.querySelector('.w-check[data-consent]');
+  if (chk) {
+    chk.classList.toggle('on', !!OB.consent);
+    const cbtn = document.getElementById('obConsentGo');
+    if (cbtn) cbtn.classList.toggle('off', !OB.consent);
   }
 }
 
@@ -9411,6 +9418,7 @@ view.addEventListener('click', e => {
   if (!ch) return;
   const on = ch.classList.toggle('on');
   if (ch.dataset.consent) {
+    OB.consent = on;
     const btn = document.getElementById('obConsentGo');
     if (btn) btn.classList.toggle('off', !on);
   }
