@@ -6028,13 +6028,13 @@ S.docs = `<div class="pad">
 /* рендер правового документа. pending=true — согласие ещё не принято (экран из онбординга) */
 function renderLegal(k, pending) {
   const [title, ver, plain, parts, note] = LEGAL[k];
-  const sub = pending ? 'Редакция от 7 августа 2026' : ver;
+  const sub = pending ? '' : ver;
   const backK = pending ? 'obConsent' : 'docs';
   const backL = pending ? 'Согласие' : 'Документы';
   return `<div class="pad">
       <div class="dochead" data-go="${backK}"><span>&lsaquo;</span><div>Назад · ${backL}</div></div>
       <h2 class="t-title" style="font-size:21px">${title}</h2>
-      <p style="font-size:11.5px;color:var(--ink-faint);margin:6px 0 0">${sub}</p>
+      ${sub ? `<p style="font-size:11.5px;color:var(--ink-faint);margin:6px 0 0">${sub}</p>` : ''}
 
       <div class="plain">
         <div class="lab">Кратко</div>
