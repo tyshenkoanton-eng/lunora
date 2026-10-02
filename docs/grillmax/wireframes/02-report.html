@@ -2842,7 +2842,7 @@ function buildProfile() { return `<div class="pad">
       <span style="font-size:19px;color:var(--ink-soft);cursor:pointer;width:44px;height:44px;display:grid;place-items:center;margin:-10px 0 0 0;flex:0 0 auto" data-go="settings">⚙</span>
     </div>
     <div class="pclaims" id="pclaims">
-      <div class="pcstage">${PCLAIMS.map(t => `<p class="p-claim">${t}</p>`).join('')}</div>
+      <div class="pcstage">${PCLAIMS.map(t => `<p class="p-claim">${t}</p>`).join('')}<p class="p-claim" aria-hidden="true">${PCLAIMS[0]}</p></div>
       <div class="pcdots">${PCLAIMS.map((_, i) => `<i class="${i ? '' : 'on'}" data-pcd="${i}"></i>`).join('')}</div>
     </div>
   </div>
@@ -8986,23 +8986,28 @@ function pcRun() {
   if (!box) return;
   PC_I = 0;
   const stage = box.querySelector('.pcstage');
-  const dots = n => box.querySelectorAll('.pcdots i').forEach((d, i) => d.classList.toggle('on', i === n));
-  const go = (n, smooth) => {
-    PC_I = (n + PCLAIMS.length) % PCLAIMS.length;
-    const to = PC_I * stage.clientWidth;
-    const soft = smooth !== false && !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const N = PCLAIMS.length;          /* реальных карточек (в конце ещё клон первой) */
+  let pos = 0;                        /* позиция ленты: 0..N, где N — клон первой */
+  const reduce = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const dots = n => box.querySelectorAll('.pcdots i').forEach((d, i) => d.classList.toggle('on', i === ((n % N) + N) % N));
+  const go = (p, smooth) => {
+    pos = p;
+    PC_I = ((pos % N) + N) % N;
+    const to = pos * stage.clientWidth;
+    const soft = smooth !== false && !reduce();
     stage.scrollTo({ left: to, behavior: soft ? 'smooth' : 'auto' });
-    /* плавная прокрутка поддерживается не везде: если через полсекунды лента не доехала, доводим сразу */
-    if (soft) setTimeout(() => { if (Math.abs(stage.scrollLeft - to) > 4) stage.scrollLeft = to; }, 500);
-    dots(PC_I);
+    dots(pos);
+    /* доехали до клона первой карточки — бесшовно (без анимации) возвращаемся на настоящую первую */
+    if (pos >= N) setTimeout(() => { pos = 0; stage.scrollTo({ left: 0, behavior: 'auto' }); dots(0); }, soft ? 650 : 0);
+    else if (soft) setTimeout(() => { if (Math.abs(stage.scrollLeft - to) > 4) stage.scrollLeft = to; }, 500);
   };
   go(0, false);
-  const tick = () => { PC_T = setInterval(() => go(PC_I + 1), 5200); };
+  const tick = () => { PC_T = setInterval(() => go(pos + 1), 5200); };
   tick();
   /* точки следуют за пальцем, а не за таймером */
   stage.onscroll = () => {
     const n = Math.round(stage.scrollLeft / stage.clientWidth);
-    if (n !== PC_I && n >= 0 && n < PCLAIMS.length) { PC_I = n; dots(n); }
+    if (n >= 0 && n < N && n !== PC_I) { PC_I = n; pos = n; dots(n); }
   };
   /* мышью лента тянется перетаскиванием: на десктопе пальца нет, а листать надо */
   let dragFrom = 0, dragAt = 0, dragging = false;
