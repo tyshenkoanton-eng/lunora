@@ -1811,7 +1811,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span id="lockcount">Проверено 0</span><span style="display:flex;gap:10px"><b id="regfilter">Только непроверенные</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span id="lockcount">Проверено 0</span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -8490,6 +8490,29 @@ document.getElementById('regfilter').addEventListener('click', e => {
   e.target.classList.toggle('on', REG_FILTER);
   e.target.textContent = REG_FILTER ? 'Показать все' : 'Только непроверенные';
   regPaint();
+});
+
+/* экспорт/импорт отметок: localStorage не переезжает между устройствами, переносим кодом */
+document.getElementById('regexport').addEventListener('click', () => {
+  if (!regOk.size && !regFlag.size) { alert('Отметок пока нет.'); return; }
+  const code = JSON.stringify({ v: 1, round: REG_ROUND, ok: [...regOk], flag: [...regFlag] });
+  prompt(`Код отметок (проверено: ${regOk.size}, с замечанием: ${regFlag.size}).\nСкопируйте его и вставьте на другом устройстве через «Импорт».`, code);
+});
+
+document.getElementById('regimport').addEventListener('click', () => {
+  const s = prompt('Вставьте код отметок, скопированный на другом устройстве:');
+  if (!s || !s.trim()) return;
+  let d;
+  try { d = JSON.parse(s.trim()); } catch (e) { alert('Не удалось разобрать код: это не похоже на код отметок.'); return; }
+  const ok = Array.isArray(d.ok) ? d.ok.filter(n => regBy(n)) : [];
+  const flag = Array.isArray(d.flag) ? d.flag.filter(n => regBy(n)) : [];
+  if (!ok.length && !flag.length) { alert('В коде нет подходящих отметок.'); return; }
+  const note = (d.round && d.round !== REG_ROUND) ? '\n\n⚠️ Код из другого раунда проверки — отметки всё равно будут добавлены.' : '';
+  if (!confirm(`Добавить к текущим отметкам: проверено ${ok.length}, с замечанием ${flag.length}?${note}`)) return;
+  ok.forEach(n => { regOk.add(n); regFlag.delete(n); });
+  flag.forEach(n => { regFlag.add(n); regOk.delete(n); });
+  regSave(); tSync();
+  alert(`Готово. Теперь проверено: ${regOk.size}, с замечанием: ${regFlag.size}.`);
 });
 
 /* галочка и восклицательный — исходы одной проверки: включение одного снимает другой */
