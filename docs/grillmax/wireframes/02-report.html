@@ -7384,7 +7384,67 @@ const regFlag = new Set(JSON.parse(localStorage.getItem('lunora_reg_flag') || '[
 const regSave = () => { try {
   localStorage.setItem('lunora_reg_ok', JSON.stringify([...regOk]));
   localStorage.setItem('lunora_reg_flag', JSON.stringify([...regFlag]));
-} catch (e) {} };
+} catch (e) {} revPush(); };
+
+/* ОБЩЕЕ ХРАНИЛИЩЕ ОТМЕТОК.
+   В опубликованном артефакте (claude.ai) галочки «проверено / с замечанием»
+   синхронизируются между устройствами через серверное хранилище db: ставите
+   на одном ноуте — появляются на другом сами, без экспорта. При открытии
+   локальным файлом (режим восстановления) или без входа в аккаунт db
+   недоступно — тогда работает прежняя логика localStorage, как и раньше.
+   Отметки лежат в личном поддереве зрителя data/users/<id>: их видит только
+   владелец ссылки, у постороннего — свой пустой набор. */
+let REVDOC = null;         /* документ отметок в общем хранилище, null — db нет */
+let REV_APPLYING = false;  /* защита от эха: входящий снимок не пишем обратно */
+function revApply(ok, flag) {
+  REV_APPLYING = true;
+  /* галочка и замечание взаимоисключаемы: если код пришёл в обоих, оставляем замечание */
+  const flagSet = new Set(Array.isArray(flag) ? flag : []);
+  const okSet = new Set((Array.isArray(ok) ? ok : []).filter(n => !flagSet.has(n)));
+  regOk.clear(); okSet.forEach(n => regOk.add(n));
+  regFlag.clear(); flagSet.forEach(n => regFlag.add(n));
+  try {
+    localStorage.setItem('lunora_reg_ok', JSON.stringify([...regOk]));
+    localStorage.setItem('lunora_reg_flag', JSON.stringify([...regFlag]));
+  } catch (e) {}
+  if (typeof tSync === 'function') tSync();
+  REV_APPLYING = false;
+}
+function revPush() {
+  if (!REVDOC || REV_APPLYING) return;
+  REVDOC.set({ ok: [...regOk], flag: [...regFlag], round: REG_ROUND }).catch(() => {});
+}
+async function revInit() {
+  if (typeof window === 'undefined' || !window.claude || typeof window.claude.use !== 'function') return;
+  let db, user;
+  try { db = await window.claude.use('db'); user = await window.claude.use('user'); } catch (e) { return; }
+  if (!db || !user) return;                 /* не выдано или не вошёл — остаёмся на localStorage */
+  let id = null;
+  try { id = await user.id(); } catch (e) {}
+  if (!id) return;
+  let doc;
+  try { doc = db.doc('data/users/' + id + '/review'); } catch (e) { return; }
+  try {
+    const snap = await doc.get();
+    const d = snap.exists ? (snap.data() || {}) : {};
+    /* отметки прошлого раунда проверки не воскрешаем — как и localStorage при смене раунда */
+    const same = !d.round || d.round === REG_ROUND;
+    const baseOk = same && Array.isArray(d.ok) ? d.ok : [];
+    const baseFlag = same && Array.isArray(d.flag) ? d.flag : [];
+    /* первый приход: объединяем локальные отметки с хранилищем, чтобы ничего не потерять */
+    const ok = [...new Set([...baseOk, ...regOk])];
+    const flag = [...new Set([...baseFlag, ...regFlag])];
+    revApply(ok, flag);
+    await doc.set({ ok: [...regOk], flag: [...regFlag], round: REG_ROUND });
+    REVDOC = doc;                            /* пишем в db только после успешной первой записи */
+  } catch (e) { return; }                    /* напр. зритель только для чтения — тихо на localStorage */
+  try {
+    doc.onSnapshot(s => {
+      const d = s.exists ? (s.data() || {}) : {};
+      revApply(Array.isArray(d.ok) ? d.ok : [], Array.isArray(d.flag) ? d.flag : []);
+    }, () => {});
+  } catch (e) {}
+}
 /* какие экраны человек уже открывал: по этому показывается приглашение */
 const seen = new Set();
 let REG_CUR = REG[0].n;
@@ -9969,4 +10029,8 @@ regGo(REG[0].n);
     if (k && S[k] !== undefined) render(k, false);
   } catch (e) {}
 })();
+
+/* подключаем общее хранилище отметок (в опубликованном артефакте); в локальном
+   файле тихо ничего не делает и остаётся прежнее поведение на localStorage */
+revInit();
 </script>
