@@ -2149,6 +2149,7 @@ Object.keys(SEC).forEach(k => {
           <i style="font-style:normal">${note.startsWith('🔑') ? '🔑' : note.startsWith('⛔') ? '⛔' : '⚠'}</i><div>${note.replace(/^[🔑⛔⚠️]\s*/, '')}</div></div>` : ''}
       </div></div>
 
+      <div class="nextsec" data-go="${back}"><div><u>${school}</u><b>Вернуться к разделам</b></div><span>→</span></div>
     </div>`;
   }});
 });
@@ -5028,7 +5029,8 @@ function calcFull(key) {
       ${rows.map(([a, b]) => `<div class="pr"><u>${a}</u><span>${b}</span></div>`).join('')}
     </div></div>
   </div>`).join('')}
-  <p style="font-size:10.5px;color:var(--ink-faint);line-height:1.55;margin-top:12px">🔭 нужны эфемериды · 📖 нужен текст источника</p>`;
+  <p style="font-size:10.5px;color:var(--ink-faint);line-height:1.55;margin-top:12px">🔭 нужны эфемериды · 📖 нужен текст источника</p>
+  <div class="nextsec" data-go="${key}"><div><u>${SCH_TITLE[key]}</u><b>Вернуться к разделам</b></div><span>→</span></div>`;
 }
 
 function sectionList(key) {
