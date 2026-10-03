@@ -7808,6 +7808,33 @@ function applyState(k) {
 const CODE = {welcome:'В-01', obStart:'О-01', obName:'О-02', obPlace:'О-03', obDate:'О-04', obConsent:'О-05', obCalc:'О-06', obRun:'О-07', s1:'П-01', s2:'П-02', s3:'П-03', s4:'П-04', today:'С-01', monthPick:'С-02', slot:'С-03', feedTime:'С-04', profile:'Л-01', tCharacter:'Л-02', tMind:'Л-22', tWork:'Л-03', tPurpose:'Л-04', tMoney:'Л-05', tEnergy:'Л-06', tFamily:'Л-07', tTalent:'Л-08', dWest:'Л-09', dVedic:'Л-10', dBazi:'Л-11', dNum:'Л-12', tLove:'Л-19', tPeriod:'Л-20', tCrisis:'Л-21', peopleRel:'Л-13', addPerson:'Л-14', compat:'Л-15', persData:'Л-16', confirmRecalc:'Л-17', recalcDone:'Л-18', schWest:'Ш-01', schVedic:'Ш-02', schBazi:'Ш-03', schNum:'Ш-04', numData:'Ш-05', numName:'Ш-06', numDate:'Ш-07', numCycles:'Ш-08', numSynth:'Ш-09', 'sec-v-dashas':'Ш-24', 'sec-b-luck':'Ш-31', 'sec-w-time':'Ш-41', 'sec-b-prac':'Ш-53', numDo:'Ш-54', calcWest:'Ш-55', calcVedic:'Ш-56', calcBazi:'Ш-57', calcNum:'Ш-58', docView:'Р-17', pw0:'Ш-60', pw1:'Ш-61', pw2:'Ш-62', pw3:'Ш-63', pw4:'Ш-64', pw5:'Ш-65', pw6:'Ш-66', pw7:'Ш-67', pw8:'Ш-68', pw9:'Ш-69', nc2:'Ш-34', 'vz-Водолей':'Ш-35', 'vz-Козерог':'Ш-36', 'vz-Весы':'Ш-37', 'vz-Близнецы':'Ш-38', 'vz-Телец':'Ш-32', 'vz-Скорпион':'Ш-33', 'vz-Стрелец':'Ш-40', bz1:'Ш-39', shop:'Р-01', shopTalk:'Р-02', shopMe:'Р-03', shopPeople:'Р-04', shopGift:'Р-05', giftCard:'Р-06', giftUsed:'Р-07', giftRefund:'Р-08', prodPage:'Р-09', prodData:'Р-10', prodDepth:'Р-11', prodPay:'Р-12', prodBuild:'Р-13', prodResult:'Р-14', pdfSell:'Р-15', chatList:'Ч-01', chat:'Ч-02', chatPaywall:'Ч-03', hour:'Ч-04', settings:'Н-01', memory:'Н-02', invite:'Н-03', support:'Н-04', idea:'Н-05', docs:'Н-06', delete:'Н-07', delPerson:'Н-08', delAll:'Н-09', 'help-calc':'Н-10', 'help-pay':'Н-11', 'help-data':'Н-12', 'help-chat':'Н-13', 'doc-consent':'Н-14', 'doc-policy':'Н-15', 'doc-terms':'Н-16', 'doc-offer':'Н-17', payConfirm:'К-20', payGate:'К-21', payOk:'К-22', payWait:'К-24', payContact:'К-25', docBuild:'Р-16', payErr:'К-23', payFail:'Х-01', states:'Х-02', stWebhook:'Х-03', stDouble:'Х-04', stPartial:'Х-05', stTime:'Х-06', stLat:'Х-07'};
 const SECNAME = {'О':'Онбординг', 'П':'Показ', 'С':'Сегодня', 'Л':'Профиль и люди', 'Ш':'Школы', 'Р':'Разборы', 'Ч':'Чат', 'Н':'Настройки', 'Х':'Сбои'};
 
+/* Экраны-детализации школ открываются кликом с карты: столпы Ба-Цзы, клетки и
+   линии квадрата Пифагора. Раньше у них не было ни кода, ни названия, поэтому в
+   шапке стояло «— · Лунора» и таким же копировался адрес. Даём коды явно,
+   названия выводим из их же данных (чтобы не расходились с содержимым) и
+   добавляем записи в реестр — в свои разделы, рядом с уже учтёнными столпом дня
+   (Ш-39) и клеткой (Ш-34). Плюс doc-consentNew остался без кода. */
+Object.assign(CODE, {
+  bz0:'Ш-42', bz2:'Ш-43', bz3:'Ш-44',
+  nc1:'Ш-10', nc3:'Ш-11', nc4:'Ш-12', nc5:'Ш-13', nc6:'Ш-14', nc7:'Ш-15', nc8:'Ш-16', nc9:'Ш-17',
+  'nl-str-147':'Ш-18', 'nl-str-258':'Ш-19', 'nl-str-369':'Ш-20',
+  'nl-col-123':'Ш-21', 'nl-col-456':'Ш-22', 'nl-col-789':'Ш-23',
+  'nl-dia-159':'Ш-25', 'nl-dia-357':'Ш-26',
+  'doc-consentNew':'Н-14н'
+});
+['bz0','bz1','bz2','bz3'].forEach((k, i) => { TITLES[k] = BZ_TXT[i][0].split(' · ')[0]; });
+[1,2,3,4,5,6,7,8,9].forEach(n => { TITLES['nc' + n] = 'Клетка · ' + NCELL[n][0]; TAB_OF['nc' + n] = 'profile'; });
+Object.keys(NLINE).forEach(id => { TITLES['nl-' + id] = 'Линия · ' + NLINE[id][0]; TAB_OF['nl-' + id] = 'profile'; });
+(function catalogDetailScreens() {
+  const insertAfter = (n, items) => { const i = REG.findIndex(r => r.n === n); if (i >= 0) REG.splice(i + 1, 0, ...items); };
+  const pillars = [['bz0', 'Столп часа'], ['bz2', 'Столп месяца'], ['bz3', 'Столп года']]
+    .map(([k, t]) => ({ n: CODE[k], t, k, g: 'Ба-Цзы' }));
+  const cells = [1, 3, 4, 5, 6, 7, 8, 9].map(num => ({ n: CODE['nc' + num], t: 'Клетка · ' + NCELL[num][0], k: 'nc' + num, g: 'Нумерология' }));
+  const lines = Object.keys(NLINE).map(id => ({ n: CODE['nl-' + id], t: 'Линия · ' + NLINE[id][0], k: 'nl-' + id, g: 'Нумерология' }));
+  insertAfter('Ш-34', [...cells, ...lines]);  /* Нумерология — дальше в массиве, вставляем первой */
+  insertAfter('Ш-39', pillars);               /* Ба-Цзы — раньше, индекс не сдвинулся */
+})();
+
 /* Адрес экрана для обратной связи: буква раздела + номер внутри раздела.
    Номера локальны — новый экран в одном разделе не сдвигает нумерацию другого. */
 /* Вкладки внутри экрана — часть адреса: Р-01а «Что считаем», Р-01б «Мои разборы». */
