@@ -7399,11 +7399,43 @@ const view = document.getElementById('view');
 const jump = document.getElementById('jump');
 const LOCK_SVG = '<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="3.4" y="7" width="9.2" height="6.4" rx="1.3"/><path d="M5.8 7V5.4a2.2 2.2 0 0 1 4.4 0V7"/></svg>';
 /* отметки и номер в шапке идут за текущим экраном */
-function tSync() {
-  if (!regBy(REG_CUR) || regBy(REG_CUR).k !== cur) {
-    const r = REG.find(x => x.k === cur);
-    if (r) REG_CUR = r.n;
+/* живое значение состояния по ключу записи реестра */
+function liveState(key) {
+  switch (key) {
+    case 'pdf': return PDFST;
+    case 'full': return DATAFULL ? 1 : 0;
+    case 'shoptab': return SHOPTAB;
+    case 'cptab': return CPTAB;
+    case 'fsc': return FISC;
+    case 'pst': return PAYST;
+    case 'preview': return DOCPREVIEW ? 1 : 0;
+    case 'bal': return BAL;
+    case 'nofio': return NAME_FULL ? 0 : 1;
+    default: return undefined;
   }
+}
+/* среди записей одного экрана выбираем ту, что совпадает с активной вкладкой и состоянием */
+function regFor(k) {
+  const cands = REG.filter(r => r.k === k && !r.sheet && !r.info && !r.open);
+  if (cands.length <= 1) return cands[0] || null;
+  const score = r => {
+    let s = 0;
+    if (r.tab) {
+      const [box, attr, val] = r.tab;
+      const on = document.querySelector(`#${box} [data-${attr}].on`);
+      s += (on && on.dataset[attr] === val) ? 3 : -3;
+    }
+    if (r.s) for (const key in r.s) {
+      const lv = liveState(key);
+      if (lv !== undefined) s += (String(lv) === String(r.s[key]) ? 1 : -1);
+    }
+    return s;
+  };
+  return cands.reduce((b, r) => score(r) > score(b) ? r : b, cands[0]);
+}
+function tSync() {
+  const rr = regFor(cur);
+  if (rr) REG_CUR = rr.n;
   regPaint();
   const sok = document.getElementById('sok');
   const sf = document.getElementById('sflag');
@@ -8891,7 +8923,7 @@ view.addEventListener('click', e => {
     const themes = pv.dataset.pv === 'themes';
     document.getElementById('pvThemes').style.display = themes ? 'block' : 'none';
     document.getElementById('pvSchools').style.display = themes ? 'none' : 'block';
-    document.getElementById('scode').textContent = codeOf(cur);
+    tSync();
     return;
   }
   const sh = e.target.closest('[data-share]');
