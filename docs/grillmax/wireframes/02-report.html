@@ -9062,7 +9062,7 @@ view.addEventListener('click', e => {
     const isList = SHOPTAB === 'list';
     document.getElementById('plList').style.display = isList ? 'block' : 'none';
     document.getElementById('plDocs').style.display = isList ? 'none' : 'block';
-    document.getElementById('scode').textContent = codeOf(cur);
+    tSync();
     return;
   }
   const pv = e.target.closest('#pvTabs i');
