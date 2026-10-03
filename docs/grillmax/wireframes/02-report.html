@@ -5097,7 +5097,6 @@ Object.defineProperty(S, 'calcVedic', { get: () => `<div class="pad">
     ${[[1,28],[2,26],[3,31],[4,25],[5,30],[6,33],[7,29],[8,22],[9,27],[10,30],[11,34],[12,22]].map(([h,b]) =>
       `<div class="el${b < 26 ? ' zero' : ''}"><span>Бхава ${h}</span><i style="width:${(b/40*100).toFixed(0)}%"></i><b>${b}</b></div>`).join('')}
   </div>
-  <p style="font-size:10.5px;line-height:1.55;margin-top:8px"><span class="approx">Все значения примерные</span> — поставлены ради скелета. Настоящий расчёт складывает бинду от семи грах и лагны по правилам каждой, сумма по всем бхавам всегда 337.</p>
   <p style="font-size:10.5px;color:var(--ink-faint);line-height:1.55;margin-top:6px">Единственный количественный инструмент джйотиш: бхава с большим числом бинду даёт результат легче, с малым — труднее. Порог обычно ставят на 28.</p>
 
   <div class="t-sub" style="margin-top:22px">Бхава-чалит</div>
@@ -5111,7 +5110,6 @@ Object.defineProperty(S, 'calcVedic', { get: () => `<div class="pad">
     <tr><td>9</td><td class="approx">Кумбха 17°</td><td>Кумбха</td><td>Чандра</td></tr>
     <tr><td>12</td><td class="approx">Вришабха 17°</td><td>Вришабха</td><td>Раху</td></tr>
   </table>
-  <p style="font-size:10.5px;line-height:1.55;margin-top:8px"><span class="approx">Куспиды примерные</span> — взяты равнодомными от лагны. Настоящие требуют эфемерид 🔭.</p>
   <p style="font-size:10.5px;color:var(--ink-faint);line-height:1.55;margin-top:6px">⚠️ Чалит важен тем, что граха может стоять в разных бхавах по раши и по чалит. Здесь это уже видно: Гуру в раши попадает в седьмую бхаву, а по куспидам ближе к восьмой. Именно отсюда берутся расхождения с другими сервисами, и без чалит их нечем объяснить.</p>
 
   <div class="t-sub" style="margin-top:22px">Навамша Д-9</div>
