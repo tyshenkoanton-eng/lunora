@@ -1368,30 +1368,27 @@
   .sq.sqi div { cursor: pointer; transition: background .12s; }
   .sq.sqi div:hover { background: var(--wire-fill-2); }
   .sq.sqi div.over b { color: var(--warn); }
-  /* квадрат Пифагора с кнопками линий: строки открываются треугольниками слева,
-     столбцы — треугольниками сверху; широкая сторона треугольника смотрит в квадрат */
-  .sqbox { display: grid; grid-template-columns: 22px 1fr 22px; grid-template-rows: 22px 1fr;
-           gap: 5px; max-width: 310px; margin: 0 0 4px; }
-  .sqbox .sqtop { grid-column: 2; grid-row: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
-  .sqbox .sqleft { grid-column: 1; grid-row: 2; display: grid; grid-template-rows: repeat(3, 1fr); gap: 5px; }
-  .sqbox .sq { grid-column: 2; grid-row: 2; }
-  .sqbox .sqcorner.tl { grid-column: 1; grid-row: 1; }
-  .sqbox .sqcorner.tr { grid-column: 3; grid-row: 1; }
-  .sqbox .sq div { min-height: 0; aspect-ratio: 1; display: flex; flex-direction: column;
+  /* Квадрат Пифагора с кнопками линий. Основания боковых треугольников лежат
+     на одной вертикали (x=6), оснований верхних — на одной горизонтали (y=6);
+     диагональные треугольники стоят на пересечении этих линий, в углах. */
+  .sqbox { position: relative; width: 294px; max-width: 100%; margin: 0 0 6px; }
+  .sqbox .sq { margin: 18px 0 0 18px; display: grid; grid-template-columns: repeat(3, 82px); grid-auto-rows: 82px; gap: 6px; }
+  .sqbox .sq div { width: 82px; height: 82px; min-height: 0; display: flex; flex-direction: column;
                    align-items: center; justify-content: center; padding: 4px 3px; }
-  .sqbox .sqtop b, .sqbox .sqleft b, .sqbox .sqcorner { display: flex; align-items: center; justify-content: center;
-           cursor: pointer; border-radius: 6px; transition: background .12s; }
-  .sqbox .sqtop b:hover, .sqbox .sqleft b:hover, .sqbox .sqcorner:hover { background: var(--wire-fill-2); }
-  .tri { width: 0; height: 0; }
-  /* остриё смотрит в квадрат */
-  .tri.down { border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 10px solid var(--ink-faint); }
-  .tri.right { border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-left: 10px solid var(--ink-faint); }
-  .tri.diag { border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-left: 10px solid var(--ink-faint); }
-  .sqbox .sqcorner.tl .tri.diag { transform: rotate(45deg); }
-  .sqbox .sqcorner.tr .tri.diag { transform: rotate(135deg); }
-  .sqbox .sqtop b:hover .tri.down { border-top-color: var(--luna); }
-  .sqbox .sqleft b:hover .tri.right { border-left-color: var(--luna); }
-  .sqbox .sqcorner:hover .tri.diag { border-left-color: var(--luna); }
+  .sqbox b.t { position: absolute; width: 22px; height: 22px; cursor: pointer; border-radius: 5px; transition: background .12s; }
+  .sqbox b.t:hover { background: var(--wire-fill-2); }
+  .sqbox b.t i { position: absolute; width: 0; height: 0; }
+  .sqbox b.t.row { left: 0; top: calc(var(--c) - 11px); }
+  .sqbox b.t.row i { left: 6px; top: 11px; margin-top: -7px; border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-left: 9px solid var(--ink-faint); }
+  .sqbox b.t.col { top: 0; left: calc(var(--c) - 11px); }
+  .sqbox b.t.col i { top: 6px; left: 11px; margin-left: -7px; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 9px solid var(--ink-faint); }
+  .sqbox b.t.diag i { border-top: 7px solid transparent; border-bottom: 7px solid transparent; border-left: 9px solid var(--ink-faint); }
+  .sqbox b.t.tl { left: 0; top: 0; }
+  .sqbox b.t.tl i { left: 2px; top: 2px; transform: rotate(45deg); }
+  .sqbox b.t.tr { right: 0; top: 0; }
+  .sqbox b.t.tr i { right: 2px; top: 2px; transform: rotate(135deg); }
+  .sqbox b.t.row:hover i, .sqbox b.t.diag:hover i { border-left-color: var(--luna); }
+  .sqbox b.t.col:hover i { border-top-color: var(--luna); }
   .nlines { display: flex; flex-direction: column; }
   .nline { display: grid; grid-template-columns: minmax(0, 1fr) 70px 20px; gap: 8px; align-items: center; padding: 8px 0 5px; }
   .nline b { font-size: 13px; font-weight: 600; display: block; }
@@ -5318,23 +5315,17 @@ Object.defineProperty(S, 'schNum', { get: () => `<div class="pad">
 
   <div class="sqi-hint">Клетки открывают разбор цифры. Треугольники — разбор линии: слева строки, сверху столбцы, по углам диагонали.</div>
   <div class="sqbox">
-    <div class="sqcorner tl" data-go="nl-dia-159" title="Потребность в смысле · 1·5·9"><i class="tri diag"></i></div>
-    <div class="sqtop">
-      <b data-go="nl-col-123" title="Самооценка · 1·2·3"><i class="tri down"></i></b>
-      <b data-go="nl-col-456" title="Быт и труд · 4·5·6"><i class="tri down"></i></b>
-      <b data-go="nl-col-789" title="Талант · 7·8·9"><i class="tri down"></i></b>
-    </div>
-    <div class="sqcorner tr" data-go="nl-dia-357" title="Темперамент · 3·5·7"><i class="tri diag"></i></div>
-    <div class="sqleft">
-      <b data-go="nl-str-147" title="Целеустремлённость · 1·4·7"><i class="tri right"></i></b>
-      <b data-go="nl-str-258" title="Качество семьянина · 2·5·8"><i class="tri right"></i></b>
-      <b data-go="nl-str-369" title="Стабильность · 3·6·9"><i class="tri right"></i></b>
-    </div>
     <div class="sq sqi">
       ${[1,4,7,2,5,8,3,6,9].map(n => { const c = NCELL[n];
         return `<div class="${c[1]==='—'?'empty':''}${c[2]==='избыток'?' over':''}" data-go="nc${n}"><u>${c[0]}</u><b>${c[1]}</b></div>`;
       }).join('')}
     </div>
+    ${[['str-147','Целеустремлённость · 1·4·7'],['str-258','Качество семьянина · 2·5·8'],['str-369','Стабильность · 3·6·9']]
+      .map((x,r) => `<b class="t row" style="--c:${59 + r*88}px" data-go="nl-${x[0]}" title="${x[1]}"><i></i></b>`).join('')}
+    ${[['col-123','Самооценка · 1·2·3'],['col-456','Быт и труд · 4·5·6'],['col-789','Талант · 7·8·9']]
+      .map((x,c) => `<b class="t col" style="--c:${59 + c*88}px" data-go="nl-${x[0]}" title="${x[1]}"><i></i></b>`).join('')}
+    <b class="t diag tl" data-go="nl-dia-159" title="Потребность в смысле · 1·5·9"><i></i></b>
+    <b class="t diag tr" data-go="nl-dia-357" title="Темперамент · 3·5·7"><i></i></b>
   </div>
 
   ${sectionList('schNum')}
