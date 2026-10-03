@@ -3320,6 +3320,9 @@ let TCUR = 'tCharacter';
 const DTITLE = { w: 'Западная астрология', v: 'Ведическая астрология', b: 'Ба-Цзы', n: 'Нумерология' };
 const DGEN = { w: 'западной астрологии', v: 'ведической астрологии', b: 'Ба-Цзы', n: 'нумерологии' };
 const DKEY = { w: 'dWest', v: 'dVedic', b: 'dBazi', n: 'dNum' };
+/* короткое имя школы для заголовка разбора темы: четыре записи в реестре общие,
+   поэтому имя вверху собираем из текущей темы и школы — «Характер · западная» */
+const DTITLE_SCH = { dWest: 'западная', dVedic: 'ведическая', dBazi: 'Ба-Цзы', dNum: 'нумерология' };
 const CELL_TXT = {
   'v|tLove': `<p class="d-lede">Область близких союзов — самое густое место вашей карты. Из двенадцати областей жизни именно эта собрала больше всего, и это редкий случай: у большинства людей вес распределён ровнее.</p>
 
@@ -8679,6 +8682,7 @@ function render(k, push = true, restore = 0) {
   document.getElementById('barTitle').textContent =
     (k === 'prodResult' && PROD[CUR]) ? PROD[CUR].res :
     (k.startsWith('prod') && PROD[CUR]) ? PROD[CUR].t :
+    (DTITLE_SCH[k] && TDATA[TCUR]) ? (TDATA[TCUR].title + ' · ' + DTITLE_SCH[k]) :
     (TITLES[k] || 'Лунора');
   document.getElementById('scode').textContent = codeOf(k);
   const shell = shellOf(k);
