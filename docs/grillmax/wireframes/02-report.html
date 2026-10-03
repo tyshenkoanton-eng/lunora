@@ -8058,21 +8058,6 @@ const isBot = k => shellOf(k) === 'bot';
 /* ============ ПОКУПКА PDF: ПОДТВЕРЖДЕНИЕ → ОПЕРАТОР → РЕЗУЛЬТАТ ============
    Короткий путь для продукта, которому не нужны новые данные: всё уже посчитано,
    человек платит только за файл. Длинный конвейер prodPage…prodResult здесь избыточен. */
-let PAYERR = 'decline';
-const PAYERRS = {
-  decline: ['Банк отклонил платёж',
-    'Чаще всего это лимит на интернет-покупки или недостаточно средств на карте. Деньги не списаны.',
-    ['Оплатить другой картой', 'Проверить лимиты в банке']],
-  cancel: ['Оплата отменена',
-    'Вы вышли со страницы оплаты, не завершив платёж. Ничего не списано, покупка не оформлена.',
-    ['Вернуться к оплате']],
-  secure: ['Подтверждение не прошло',
-    'Банк не получил код подтверждения — он мог не прийти, или срок ввода истёк. Деньги не списаны, карту менять не нужно.',
-    ['Повторить оплату той же картой']],
-  timeout: ['Банк не ответил вовремя',
-    'Платёж мог пройти, а мог и нет — ответ от банка не пришёл за отведённое время. Если деньги списались, мы вернём их автоматически в течение суток.',
-    ['Проверить статус платежа', 'Оплатить заново']]
-};
 
 
 /* К-25: контакт для чека. Телефон берётся из Telegram одним тапом — ввод руками
@@ -8176,7 +8161,7 @@ S.payGate = `<div class="pad">
     <div class="w-btn" data-payres="ok" style="margin-top:16px">Оплатить 149 ₽</div>
     <div class="pg-cancel" data-payres="cancel">Отменить и вернуться в приложение</div>
     <p class="pg-note">Страница платёжного оператора. Данные карты не попадают к продавцу.</p>
-    <div class="pg-test">Тестовый режим · <u data-payres="decline">отказ банка</u> · <u data-payres="secure">код не прошёл</u> · <u data-payres="timeout">нет ответа</u> · <u data-payres="wait">вернулся раньше</u></div>
+    <div class="pg-test">Тестовый режим · <u data-payres="decline">оплата не прошла</u> · <u data-payres="wait">вернулся раньше</u></div>
   </div>
 </div>`;
 
@@ -8204,17 +8189,14 @@ Object.defineProperty(S, 'payOk', { get() {
 </div>`;
 }});
 
-Object.defineProperty(S, 'payErr', { get() {
-  const [title, text, acts] = PAYERRS[PAYERR];
-  return `<div class="pad" style="min-height:500px;display:flex;flex-direction:column;justify-content:center;text-align:center">
+S.payErr = `<div class="pad" style="min-height:500px;display:flex;flex-direction:column;justify-content:center;text-align:center">
   <div class="payic bad">✕</div>
-  <b style="font-size:19px;font-weight:640;display:block;margin-bottom:10px">${title}</b>
-  <p style="font-size:13px;color:var(--ink-soft);line-height:1.6;margin:0 0 22px">${text}</p>
-  ${acts.map((a, i) => `<div class="w-btn${i ? ' ghost' : ''}" data-go="payGate" style="margin-top:${i ? 8 : 0}px">${a}</div>`).join('')}
+  <b style="font-size:19px;font-weight:640;display:block;margin-bottom:10px">Оплата не прошла</b>
+  <p style="font-size:13px;color:var(--ink-soft);line-height:1.6;margin:0 0 22px">Платёж не завершён. Если деньги всё же списались, они вернутся автоматически в течение суток. Можно попробовать ещё раз.</p>
+  <div class="w-btn" data-go="payGate">Повторить оплату</div>
   <div class="w-btn ghost" data-go="pdfSell" style="margin-top:8px">Вернуться к описанию</div>
   <p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin:14px 0 0">Не получается? <span style="color:var(--note);cursor:pointer" data-go="help-pay">Напишите нам</span> — номер заказа LN-8412-DK.</p>
 </div>`;
-}});
 
 SHELL.payGate = 'web';
 SHELL.welcome = 'web';   /* ссылка приглашения открывается в браузере, до всякого мессенджера */
@@ -8967,7 +8949,7 @@ view.addEventListener('click', e => {
     const r = py.dataset.payres;
     if (r === 'ok') { render('payOk'); return; }
     if (r === 'wait') { render('payWait'); return; }
-    PAYERR = r; render('payErr'); return;
+    render('payErr'); return;
   }
   /* «Перейти к документу» ведёт в Разборы → Мои разборы, где лежит файл */
   const cp = e.target.closest('[data-cptab]');
