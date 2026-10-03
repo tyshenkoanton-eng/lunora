@@ -7468,6 +7468,13 @@ function regPaint() {
   const done = REG.filter(r => regOk.has(r.n)).length, flag = REG.filter(r => regFlag.has(r.n)).length;
   const lc = document.getElementById('lockcount');
   if (lc) lc.textContent = `Проверено ${done} из ${REG.length}` + (flag ? ` · с замечанием ${flag}` : '');
+  /* подкрутить список к текущему экрану, если он ушёл из зоны видимости */
+  const act = jump.querySelector('.instep');
+  if (act) {
+    const ar = act.getBoundingClientRect(), jr = jump.getBoundingClientRect();
+    if (ar.top < jr.top) jump.scrollTop += ar.top - jr.top - 8;
+    else if (ar.bottom > jr.bottom) jump.scrollTop += ar.bottom - jr.bottom + 8;
+  }
 }
 
 const TAB_OF = { today:'today', slot:'today',
