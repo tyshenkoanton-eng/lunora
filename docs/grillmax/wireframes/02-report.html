@@ -9052,6 +9052,7 @@ view.addEventListener('click', e => {
     const give = rf.dataset.rf === 'give';
     document.getElementById('rfGive').style.display = give ? 'block' : 'none';
     document.getElementById('rfGot').style.display = give ? 'none' : 'block';
+    tSync();
     return;
   }
   const pl = e.target.closest('#plTabs i');
@@ -9160,6 +9161,7 @@ view.addEventListener('click', e => {
     document.getElementById('vedNote').textContent = south
       ? 'Знаки стоят на постоянных местах. Чёрточка в углу клетки отмечает восходящий знак — точку, с которой начинается ваша карта; от неё по часовой стрелке считаются области жизни. Нажмите на заполненную клетку, чтобы прочитать о ней.'
       : 'Здесь на постоянных местах стоят области жизни: первая — верхний ромб, дальше против часовой стрелки. В каждой клетке подписан знак, который в неё попал. Нажмите на заполненную клетку, чтобы прочитать о ней.';
+    tSync();
     return;
   }
   const tog = e.target.closest('#chartToggle i');
@@ -9622,7 +9624,7 @@ view.addEventListener('click', e => {
     view.querySelectorAll('#obPrec i').forEach(i => i.classList.toggle('on', i === op2));
     const tb = document.getElementById('obTime');
     if (tb) tb.style.display = OB.prec === 'n' ? 'none' : '';
-    obPaint(); return;
+    obPaint(); if (typeof tSync === 'function') tSync(); return;
   }
 });
 
