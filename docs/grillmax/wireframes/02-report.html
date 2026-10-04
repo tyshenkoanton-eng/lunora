@@ -828,6 +828,9 @@
   .segtabs { display: flex; border: 1px solid var(--wire-line); border-radius: 8px; overflow: hidden; margin-bottom: 16px; }
   .segtabs i { flex: 1; font-style: normal; text-align: center; font-size: 13.5px; padding: 14px 9px; cursor: pointer; color: var(--ink-faint); font-weight: 600; }
   .segtabs i.on { background: var(--wire-fill-2); color: var(--ink); }
+  /* обрамлённый блок контуров: переключатель и содержимое вместе, темы остаются снаружи */
+  .contwrap { border: 1px solid var(--rule); border-radius: 14px; padding: 12px 13px 15px; margin: 18px 0 6px; background: var(--card); }
+  .contwrap .segtabs { margin: 0 0 13px; }
   /* переключатель разрезов не должен читаться как ещё одна карточка списка:
      он на подложке, активный сегмент приподнят, и до списка добавлен воздух */
   #pvTabs { background: var(--wire-fill); border: 0; border-radius: 10px; padding: 3px; gap: 3px; margin-bottom: 22px; }
@@ -5460,10 +5463,11 @@ Object.defineProperty(S, 'schNum', { get: () => `<div class="pad">
     ${SCH_INTRO.schNum}
   </div>
 
-  <div class="segtabs" id="numToggle" style="margin:18px 0 14px"><i class="on" data-numc="date">Контур даты</i><i data-numc="name">Контур имени</i></div>
-
-  <div id="numPaneDate">${dateContourPane()}</div>
-  <div id="numPaneName" style="display:none">${nameContourPane()}</div>
+  <div class="contwrap">
+    <div class="segtabs" id="numToggle"><i class="on" data-numc="date">Контур даты</i><i data-numc="name">Контур имени</i></div>
+    <div id="numPaneDate">${dateContourPane()}</div>
+    <div id="numPaneName" style="display:none">${nameContourPane()}</div>
+  </div>
 
   ${sectionList('schNum', true)}
 
