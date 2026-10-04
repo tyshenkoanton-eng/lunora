@@ -1397,7 +1397,7 @@
   .sqbox .sqleft b:hover .tri.right { border-left-color: var(--luna); }
   .sqbox .sqcorner:hover .tri.diag { border-left-color: var(--luna); }
   /* схема-квадрат в разборе клетки и линии: показывает, где в квадрате стоит разбираемое */
-  .nsq { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; max-width: 176px; margin: 10px 0 2px; }
+  .nsq { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; max-width: 176px; margin: 14px auto 6px; }
   .nsq-c { position: relative; aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
            border: 1px solid var(--rule); border-radius: 7px; background: var(--card); }
   .nsq-c b { font-size: 12.5px; font-weight: 650; font-variant-numeric: tabular-nums; letter-spacing: -.03em; color: var(--ink); }
@@ -1407,7 +1407,6 @@
   .nsq-c.on { border-color: var(--luna); background: var(--luna-bg); }
   .nsq-c.on b { color: var(--luna); }
   .nsq-c.on.empty b { color: var(--luna-line); }
-  .nsq-cap { font-size: 11px; color: var(--ink-faint); line-height: 1.5; margin: 7px 0 0; }
   .nlines { display: flex; flex-direction: column; }
   .nline { display: grid; grid-template-columns: minmax(0, 1fr) 70px 20px; gap: 8px; align-items: center; padding: 8px 0 5px; }
   .nline b { font-size: 13px; font-weight: 600; display: block; }
@@ -5428,7 +5427,6 @@ Object.keys(NLINE).forEach(id => {
       <div class="nline" style="margin-top:6px"><div><b>Сила линии</b><span>из шести</span></div>
         <div class="nl-bar"><i style="width:${Math.min(L[2],6)/6*100}%"></i></div><em>${L[2]}</em></div>
       ${numSchema(cells)}
-      <p class="nsq-cap">Линия это ${id.startsWith('str')?'строка':id.startsWith('col')?'столбец':'диагональ'} квадрата. Её клетки ${L[1]} подсвечены, сила линии это сумма цифр в них.</p>
       <div class="body-text" style="margin-top:14px">
         <div class="sec-label">Что это за линия</div><p>${L[3]}</p>
         <div class="sec-label">Что это значит для вас</div><p>${L[4]}</p>
