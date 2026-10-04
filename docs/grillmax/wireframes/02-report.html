@@ -1396,6 +1396,18 @@
   .sqbox .sqtop b:hover .tri.down { border-top-color: var(--luna); }
   .sqbox .sqleft b:hover .tri.right { border-left-color: var(--luna); }
   .sqbox .sqcorner:hover .tri.diag { border-left-color: var(--luna); }
+  /* схема-квадрат в разборе клетки и линии: показывает, где в квадрате стоит разбираемое */
+  .nsq { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; max-width: 176px; margin: 10px 0 2px; }
+  .nsq-c { position: relative; aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+           border: 1px solid var(--rule); border-radius: 7px; background: var(--card); }
+  .nsq-c b { font-size: 12.5px; font-weight: 650; font-variant-numeric: tabular-nums; letter-spacing: -.03em; color: var(--ink); }
+  .nsq-c u { position: absolute; top: 3px; left: 5px; font: 700 7.5px/1 ui-monospace, Menlo, monospace;
+             color: var(--ink-faint); text-decoration: none; }
+  .nsq-c.empty b { color: var(--rule); }
+  .nsq-c.on { border-color: var(--luna); background: var(--luna-bg); }
+  .nsq-c.on b { color: var(--luna); }
+  .nsq-c.on.empty b { color: var(--luna-line); }
+  .nsq-cap { font-size: 11px; color: var(--ink-faint); line-height: 1.5; margin: 7px 0 0; }
   .nlines { display: flex; flex-direction: column; }
   .nline { display: grid; grid-template-columns: minmax(0, 1fr) 70px 20px; gap: 8px; align-items: center; padding: 8px 0 5px; }
   .nline b { font-size: 13px; font-weight: 600; display: block; }
@@ -5362,6 +5374,16 @@ Object.defineProperty(S, 'schNum', { get: () => `<div class="pad">
 
 </div>` });
 
+/* компактная схема квадрата для разбора: подсвечивает разбираемые клетки, цифра в клетке
+   это её значение (сколько таких цифр в дате), прочерк значит клетку пустую */
+function numSchema(hi) {
+  const set = new Set(hi);
+  return `<div class="nsq">${[1,4,7,2,5,8,3,6,9].map(n => {
+    const c = NCELL[n], empty = c[1] === '—';
+    return `<div class="nsq-c${set.has(n) ? ' on' : ''}${empty ? ' empty' : ''}" data-go="nc${n}"><b>${empty ? '·' : c[1]}</b><u>${n}</u></div>`;
+  }).join('')}</div>`;
+}
+
 /* --- девять экранов клеток --- */
 [1,2,3,4,5,6,7,8,9].forEach(n => {
   Object.defineProperty(S, 'nc' + n, { get() {
@@ -5371,6 +5393,8 @@ Object.defineProperty(S, 'schNum', { get: () => `<div class="pad">
       <div class="d-crumb">Квадрат Пифагора · клетка ${n}</div>
       <h2 class="t-title" style="font-size:21px">${c[0]}${c[1]==='—'?' · цифры нет' : ' · ' + c[1]}</h2>
       <p class="t-onephrase">${c[3]}</p>
+      ${numSchema([n])}
+      <p class="nsq-cap">Где клетка стоит в квадрате. Остальные показаны для ориентира, прочерк это пустая клетка.</p>
       <div class="body-text" style="margin-top:16px">
         <div class="sec-label">Что это за цифра</div><p>${c[4]}</p>
         <div class="sec-label">Что это значит для вас</div><p>${c[5]}</p>
@@ -5404,6 +5428,8 @@ Object.keys(NLINE).forEach(id => {
       <h2 class="t-title" style="font-size:21px">${L[0]} · ${L[2]} ${L[2]===1?'цифра':(L[2]<5?'цифры':'цифр')}</h2>
       <div class="nline" style="margin-top:6px"><div><b>Сила линии</b><span>из шести</span></div>
         <div class="nl-bar"><i style="width:${Math.min(L[2],6)/6*100}%"></i></div><em>${L[2]}</em></div>
+      ${numSchema(cells)}
+      <p class="nsq-cap">Линия это ${id.startsWith('str')?'строка':id.startsWith('col')?'столбец':'диагональ'} квадрата. Её клетки ${L[1]} подсвечены, сила линии это сумма цифр в них.</p>
       <div class="body-text" style="margin-top:14px">
         <div class="sec-label">Что это за линия</div><p>${L[3]}</p>
         <div class="sec-label">Что это значит для вас</div><p>${L[4]}</p>
