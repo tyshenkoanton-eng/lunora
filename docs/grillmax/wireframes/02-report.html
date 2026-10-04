@@ -7480,6 +7480,24 @@ try {
 } catch (e) {}
 const regOk = new Set(JSON.parse(localStorage.getItem('lunora_reg_ok') || '[]'));
 const regFlag = new Set(JSON.parse(localStorage.getItem('lunora_reg_flag') || '[]'));
+
+/* ТОЧЕЧНЫЙ СБРОС «ПРОВЕРЕНО».
+   Экраны, изменённые правкой, человек должен проверить заново: снимаем у них
+   галочку и замечание, остальные отметки не трогаем. Срабатывает один раз на
+   зрителя (метка в localStorage), в db метка дописывается ниже в revInit, чтобы
+   сброс не воскрешался из общего хранилища и чтобы новые отметки потом держались. */
+const REG_RECHECK = { tag: '2026-10-04-num', codes: [
+  'Ш-04','Ш-05','Ш-06-1','Ш-06-2','Ш-07','Ш-08','Ш-09','Ш-34','Ш-58'
+] };
+try {
+  if (localStorage.getItem('lunora_reg_recheck') !== REG_RECHECK.tag) {
+    REG_RECHECK.codes.forEach(n => { regOk.delete(n); regFlag.delete(n); });
+    localStorage.setItem('lunora_reg_ok', JSON.stringify([...regOk]));
+    localStorage.setItem('lunora_reg_flag', JSON.stringify([...regFlag]));
+    localStorage.setItem('lunora_reg_recheck', REG_RECHECK.tag);
+  }
+} catch (e) {}
+
 const regSave = () => { try {
   localStorage.setItem('lunora_reg_ok', JSON.stringify([...regOk]));
   localStorage.setItem('lunora_reg_flag', JSON.stringify([...regFlag]));
@@ -7528,13 +7546,20 @@ async function revInit() {
     const d = snap.exists ? (snap.data() || {}) : {};
     /* отметки прошлого раунда проверки не воскрешаем — как и localStorage при смене раунда */
     const same = !d.round || d.round === REG_ROUND;
-    const baseOk = same && Array.isArray(d.ok) ? d.ok : [];
-    const baseFlag = same && Array.isArray(d.flag) ? d.flag : [];
+    let baseOk = same && Array.isArray(d.ok) ? d.ok : [];
+    let baseFlag = same && Array.isArray(d.flag) ? d.flag : [];
+    /* точечный сброс отметок у изменённых экранов — один раз, пока в db нет метки сброса */
+    if (d.recheck !== REG_RECHECK.tag) {
+      const rc = new Set(REG_RECHECK.codes);
+      baseOk = baseOk.filter(n => !rc.has(n));
+      baseFlag = baseFlag.filter(n => !rc.has(n));
+      REG_RECHECK.codes.forEach(n => { regOk.delete(n); regFlag.delete(n); });
+    }
     /* первый приход: объединяем локальные отметки с хранилищем, чтобы ничего не потерять */
     const ok = [...new Set([...baseOk, ...regOk])];
     const flag = [...new Set([...baseFlag, ...regFlag])];
     revApply(ok, flag);
-    await doc.set({ ok: [...regOk], flag: [...regFlag], round: REG_ROUND });
+    await doc.set({ ok: [...regOk], flag: [...regFlag], round: REG_ROUND, recheck: REG_RECHECK.tag });
     REVDOC = doc;                            /* пишем в db только после успешной первой записи */
   } catch (e) { return; }                    /* напр. зритель только для чтения — тихо на localStorage */
   try {
