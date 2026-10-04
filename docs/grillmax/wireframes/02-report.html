@@ -4660,8 +4660,7 @@ const SCH_TAIL = {
   schBazi:  [['Периоды жизни', 'Какой сейчас период и в чём его особенность', 'sec-b-luck'],
              ['Практическое', 'Среда, ритм, занятия — то, что можно поменять завтра', 'sec-b-prac'],
              ['Данные расчёта', 'Столпы, скрытые стволы, стихии', 'calcBazi']],
-  schNum:   [['Контур имени', 'Что рассказывает о вас имя', 'numName'],
-             ['Дата рождения и имя вместе', 'Как дата и имя дополняют друг друга', 'numSynth'],
+  schNum:   [['Дата рождения и имя вместе', 'Как дата и имя дополняют друг друга', 'numSynth'],
              ['Периоды жизни', 'Какой сейчас период и в чём его особенность', 'numCycles'],
              ['Данные расчёта', 'Числа, буквенная таблица, формулы', 'calcNum']],
 };
@@ -5358,12 +5357,9 @@ function nameSpell() {
   }).join('')}</div>`;
 }
 
-Object.defineProperty(S, 'schNum', { get: () => `<div class="pad">
-  <div class="dochead" data-go="profile"><span>&lsaquo;</span><div>Назад · Профиль</div></div>
-  <h2 class="t-title" style="font-size:21px">Нумерология</h2>
-  <p class="d-lede" style="border:0;padding-bottom:0;margin-bottom:14px">Единственная школа, которая смотрит не на небо, а на числа.</p>
-  <p class="d-lede">Вас она читает по двум независимым контурам. Первый, квадрат Пифагора, строится из даты рождения. Это одновременно чертёж и шкала: значение клетки это то, сколько раз её цифра встретилась в расчёте. Второй контур даёт полное имя, и считается он отдельно от квадрата.</p>
-
+/* вкладка «Контур даты»: квадрат, строки и столбцы, диагонали */
+function dateContourPane() {
+  return `
   <div class="sqi-hint">При нажатии на клетку открывается разбор цифры. При нажатии на треугольник открывается разбор линии: слева строки, сверху столбцы.</div>
   <div class="sqbox">
     <div class="sqtop">
@@ -5382,13 +5378,58 @@ Object.defineProperty(S, 'schNum', { get: () => `<div class="pad">
       }).join('')}
     </div>
   </div>
-  <p style="font-size:10.5px;color:var(--ink-faint);line-height:1.5;margin-top:8px"><span style="color:var(--warn);font-weight:600">Янтарным</span> отмечены клетки вне нормы: где цифры нет совсем и где её избыток (четыре и больше). Остальное в пределах нормы.</p>
+  <p style="font-size:10.5px;color:var(--ink-faint);line-height:1.5;margin-top:8px">Значение клетки это то, сколько раз её цифра встретилась в расчёте. <span style="color:var(--warn);font-weight:600">Янтарным</span> отмечены клетки вне нормы: где цифры нет совсем и где её избыток (четыре и больше). Остальное в пределах нормы.</p>
 
   <div class="sec-label" style="margin-top:20px">Диагонали</div>
   <div class="cards">
     <div class="card-it" data-go="nl-dia-159"><div><div class="t">Характер · Логика · Память</div><span class="s">Диагональ 1 · 5 · 9</span></div><div class="chev">›</div></div>
     <div class="card-it" data-go="nl-dia-357"><div><div class="t">Везение · Логика · Интерес</div><span class="s">Диагональ 7 · 5 · 3</span></div><div class="chev">›</div></div>
+  </div>`;
+}
+
+/* вкладка «Контур имени»: побуквенно, три числа, толкования и метод.
+   Та же разметка используется на отдельном экране numName (Ш-06). */
+function nameContourPane() {
+  return !NAME_FULL ? `
+  <div class="t-sub" style="margin-top:4px">Числа</div>
+  <table class="ctable">
+    <tr><th>Число</th><th>По чему</th><th>Расчёт</th><th>Итог</th></tr>
+    ${NAME.nums.map(([n, by]) => `<tr><td>${n}</td><td>${by}</td><td>—</td><td><b>—</b></td></tr>`).join('')}
+  </table>
+  <p style="font-size:12.5px;line-height:1.6;color:var(--ink-soft);margin-top:14px">Контур даты посчитан полностью: квадрат, линии и вершины на месте. Фамилия и отчество открывают вторую половину школы, числа выражения, сердца и облика.</p>
+  <div class="w-btn" data-go="persData" style="margin-top:16px">Дополнить имя</div>` : `
+  <div class="t-sub" style="margin-top:4px">Побуквенно</div>
+  ${nameSpell()}
+
+  <div class="t-sub" style="margin-top:22px">Числа</div>
+  <table class="ctable">
+    <tr><th>Число</th><th>По чему</th><th>Расчёт</th><th>Итог</th></tr>
+    ${NAME.nums.map(([n,by,cl,r]) => `<tr><td>${n}</td><td>${by}</td><td>${cl}</td><td><b>${r}</b></td></tr>`).join('')}
+  </table>
+  <div class="body-text" style="margin-top:14px">${NAME.nums.map(([n,,,r,t]) => `<p><b>${n} · ${r}.</b> ${t}</p>`).join('')}</div>
+
+  <p style="font-size:11.5px;color:var(--ink-faint);line-height:1.6;margin-top:16px">В других источниках встречается «число души»: в русской традиции так называют день рождения, у вас это 4. Чтобы два разных числа не носили одно имя, мы называем числом сердца то, что считается по гласным буквам имени.</p>
+
+  <div class="calc-h">Как это посчитано</div>
+  <div class="calc">
+    <div class="pr"><u>Метод</u><span>Классический буквенно-числовой метод, общественное достояние</span></div>
+    <div class="pr"><u>Таблица</u><span>Позиция буквы в алфавите с редукцией к 1–9. Все 33 буквы, Е и Ё различаются, И и Й тоже</span></div>
+    <div class="pr"><u>Почему так</u><span>Кириллического канона не существует. Классический метод применён к русскому алфавиту буквально, а не через подгонку под 26 латинских букв</span></div>
   </div>
+  <div class="ntable">${[...NAME.table].map((ch,i) => `<span><b>${ch.toUpperCase()}</b>${i%9+1}</span>`).join('')}</div>
+  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:10px">Если вы считали своё имя на другом сайте и получили другое число, там другая адаптация буквенной таблицы. Наша приведена полностью.</p>`;
+}
+
+Object.defineProperty(S, 'schNum', { get: () => `<div class="pad">
+  <div class="dochead" data-go="profile"><span>&lsaquo;</span><div>Назад · Профиль</div></div>
+  <h2 class="t-title" style="font-size:21px">Нумерология</h2>
+  <p class="d-lede" style="border:0;padding-bottom:0;margin-bottom:14px">Единственная школа, которая смотрит не на небо, а на числа.</p>
+  <p class="d-lede">Вас она читает по двум независимым контурам. Первый, квадрат Пифагора, строится из даты рождения. Второй контур даёт полное имя, и считается он отдельно от квадрата.</p>
+
+  <div class="segtabs" id="numToggle" style="margin:6px 0 14px"><i class="on" data-numc="date">Контур даты</i><i data-numc="name">Контур имени</i></div>
+
+  <div id="numPaneDate">${dateContourPane()}</div>
+  <div id="numPaneName" style="display:none">${nameContourPane()}</div>
 
   ${sectionList('schNum')}
 
@@ -5468,47 +5509,12 @@ Object.keys(NLINE).forEach(id => {
 
 /* --- контур имени --- */
 /* без фамилии и отчества второй контур закрыт прочерками: квадрат по дате всё равно посчитан */
-Object.defineProperty(S, 'numName', { get: () => !NAME_FULL ? `<div class="pad">
+Object.defineProperty(S, 'numName', { get: () => `<div class="pad">
   <div class="dochead" data-go="schNum"><span>&lsaquo;</span><div>Назад · Нумерология</div></div>
   <h2 class="t-title" style="font-size:21px">Контур имени</h2>
-  <p class="d-lede">Этот контур считается по фамилии, имени и отчеству. Пока указано только имя, поэтому числа закрыты.</p>
-
-  <div class="t-sub" style="margin-top:18px">Числа</div>
-  <table class="ctable">
-    <tr><th>Число</th><th>По чему</th><th>Расчёт</th><th>Итог</th></tr>
-    ${NAME.nums.map(([n, by]) => `<tr><td>${n}</td><td>${by}</td><td>—</td><td><b>—</b></td></tr>`).join('')}
-  </table>
-
-  <p style="font-size:12.5px;line-height:1.6;color:var(--ink-soft);margin-top:14px">Контур даты посчитан полностью: квадрат, линии и вершины на месте. Фамилия и отчество открывают вторую половину школы — числа выражения, сердца и облика.</p>
-
-  <div class="w-btn" data-go="persData" style="margin-top:16px">Дополнить имя</div>
-</div>` : `<div class="pad">
-  <div class="dochead" data-go="schNum"><span>&lsaquo;</span><div>Назад · Нумерология</div></div>
-  <h2 class="t-title" style="font-size:21px">Контур имени</h2>
-  <p class="d-lede">Тыщенко Антон Юрьевич. Второй контур считается отдельно от даты — это буквально другая система, а не половина одной.</p>
-
-  <div class="t-sub">Побуквенно</div>
-  ${nameSpell()}
-
-  <div class="t-sub" style="margin-top:22px">Числа</div>
-  <table class="ctable">
-    <tr><th>Число</th><th>По чему</th><th>Расчёт</th><th>Итог</th></tr>
-    ${NAME.nums.map(([n,by,cl,r]) => `<tr><td>${n}</td><td>${by}</td><td>${cl}</td><td><b>${r}</b></td></tr>`).join('')}
-  </table>
-  <div class="body-text" style="margin-top:14px">${NAME.nums.map(([n,,,r,t]) => `<p><b>${n} · ${r}.</b> ${t}</p>`).join('')}</div>
-
-  <p style="font-size:11.5px;color:var(--ink-faint);line-height:1.6;margin-top:16px">В других источниках встречается «число души» — в русской традиции так называют день рождения, у вас это 4. Чтобы два разных числа не носили одно имя, мы называем числом сердца то, что считается по гласным буквам имени.</p>
-
-  <div class="calc-h">Как это посчитано</div>
-  <div class="calc">
-    <div class="pr"><u>Метод</u><span>Классический буквенно-числовой метод, общественное достояние</span></div>
-    <div class="pr"><u>Таблица</u><span>Позиция буквы в алфавите с редукцией к 1–9. Все 33 буквы, Е и Ё различаются, И и Й тоже</span></div>
-    <div class="pr"><u>Почему так</u><span>Кириллического канона не существует. Классический метод применён к русскому алфавиту буквально, а не через подгонку под 26 латинских букв</span></div>
-  </div>
-  <div class="ntable">${[...NAME.table].map((ch,i) => `<span><b>${ch.toUpperCase()}</b>${i%9+1}</span>`).join('')}</div>
-  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:10px">Если вы считали своё имя на другом сайте и получили другое число — там другая адаптация буквенной таблицы. Наша приведена полностью.</p>
-
-  <div class="nextsec" data-go="numCycles"><div><u>Следующий блок</u><b>Ваши возрастные вершины</b></div><span>→</span></div>
+  <p class="d-lede">${NAME_FULL ? 'Тыщенко Антон Юрьевич. Второй контур считается отдельно от даты, это буквально другая система, а не половина одной.' : 'Этот контур считается по фамилии, имени и отчеству. Пока указано только имя, поэтому числа закрыты.'}</p>
+  ${nameContourPane()}
+  ${NAME_FULL ? '<div class="nextsec" data-go="numCycles"><div><u>Следующий блок</u><b>Ваши возрастные вершины</b></div><span>→</span></div>' : ''}
 </div>` });
 
 /* --- вершины, вызовы, особые числа --- */
@@ -9099,6 +9105,14 @@ view.addEventListener('click', e => {
       ? 'Знаки стоят на постоянных местах. Чёрточка в углу клетки отмечает восходящий знак: точку, с которой начинается ваша карта; от неё по часовой стрелке считаются области жизни. Нажмите на заполненную клетку, чтобы прочитать о ней.'
       : 'Здесь на постоянных местах стоят области жизни: первая это верхний ромб, дальше против часовой стрелки. В каждой клетке подписан знак, который в неё попал. Нажмите на заполненную клетку, чтобы прочитать о ней.';
     tSync();
+    return;
+  }
+  const nt = e.target.closest('#numToggle i');
+  if (nt) {
+    document.querySelectorAll('#numToggle i').forEach(i => i.classList.toggle('on', i === nt));
+    const date = nt.dataset.numc === 'date';
+    document.getElementById('numPaneDate').style.display = date ? '' : 'none';
+    document.getElementById('numPaneName').style.display = date ? 'none' : '';
     return;
   }
   const tog = e.target.closest('#chartToggle i');
