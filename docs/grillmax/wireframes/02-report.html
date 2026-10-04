@@ -4635,7 +4635,7 @@ const SCH_INTRO = {
     <p class="t-para">Отсюда способ достигать: накопление и укрепление, а не рывок. На короткой дистанции это не выглядит впечатляюще, на длинной выигрывает.</p>`,
   schNum: `<p class="t-lead">Нумерология читает вас по двум числам: по дате рождения и по имени.</p>
     <p class="t-para">У вас эти два контура совпали, а такое встречается нечасто: и дата, и имя говорят об одном. Значит, всё в итоге сходится к вам самим, и уйти от этого не получается.</p>
-    <p class="t-para">Квадрат выше это ваш портрет в девяти клетках, и прочитать его можно за пару секунд. Где клетка заполнена, там качество дано от природы; где пусто, вы добираете его сознательно.</p>`,
+    <p class="t-para">Квадрат на вкладке «Контур даты» это ваш портрет в девяти клетках, и прочитать его можно за пару секунд. Где клетка заполнена, там качество дано от природы; где пусто, вы добираете его сознательно.</p>`,
 };
 
 /* Словарь системы — только там, где без него темы нечитаемы */
@@ -5055,12 +5055,12 @@ function calcFull(key) {
   <div class="nextsec" data-go="${key}"><div><u>${SCH_TITLE[key]}</u><b>Вернуться к разделам</b></div><span>→</span></div>`;
 }
 
-function sectionList(key) {
+function sectionList(key, skipIntro) {
   const rows = schSections(key);
-  return `<div class="luna-block" style="margin-top:24px">
+  return `${skipIntro ? '' : `<div class="luna-block" style="margin-top:24px">
     <div class="lab">Главное</div>
     ${SCH_INTRO[key]}
-  </div>
+  </div>`}
 
   <div class="sec-label" style="margin-top:26px">Разделы разбора</div>
   <div class="cards">${rows.map(([t, sub, go, theme]) =>
@@ -5426,12 +5426,17 @@ Object.defineProperty(S, 'schNum', { get: () => `<div class="pad">
   <p class="d-lede" style="border:0;padding-bottom:0;margin-bottom:14px">Единственная школа, которая смотрит не на небо, а на числа.</p>
   <p class="d-lede">Вас она читает по двум независимым контурам. Первый, квадрат Пифагора, строится из даты рождения. Второй контур даёт полное имя, и считается он отдельно от квадрата.</p>
 
-  <div class="segtabs" id="numToggle" style="margin:6px 0 14px"><i class="on" data-numc="date">Контур даты</i><i data-numc="name">Контур имени</i></div>
+  <div class="luna-block" style="margin-top:4px">
+    <div class="lab">Главное</div>
+    ${SCH_INTRO.schNum}
+  </div>
+
+  <div class="segtabs" id="numToggle" style="margin:18px 0 14px"><i class="on" data-numc="date">Контур даты</i><i data-numc="name">Контур имени</i></div>
 
   <div id="numPaneDate">${dateContourPane()}</div>
   <div id="numPaneName" style="display:none">${nameContourPane()}</div>
 
-  ${sectionList('schNum')}
+  ${sectionList('schNum', true)}
 
 </div>` });
 
