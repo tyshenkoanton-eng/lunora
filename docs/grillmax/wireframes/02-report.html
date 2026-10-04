@@ -4673,7 +4673,7 @@ function schSections(key) {
   const dk = SCH_DKEY[key], sch = { dWest:'w', dVedic:'v', dBazi:'b', dNum:'n' }[dk];
   SCH_THEMES[key].forEach(t => {
     const has = (TMAT[t] || {})[sch];
-    out.push([TDATA[t].title, has ? TQ[t] || '' : 'в этой системе нет инструмента для такого вопроса',
+    out.push([TDATA[t].title, has ? TQ[t] || '' : 'в ' + DGEN[sch] + ' нет инструмента для расчёта этого раздела',
               has ? dk : null, t]);
   });
   SCH_TAIL[key].forEach(r => out.push(r));
