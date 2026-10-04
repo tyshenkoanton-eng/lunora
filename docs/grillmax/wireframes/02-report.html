@@ -1370,8 +1370,8 @@
   .sq.sqi div.over b { color: var(--warn); }
   /* квадрат Пифагора с кнопками линий: строки открываются треугольниками слева,
      столбцы — треугольниками сверху; широкая сторона треугольника смотрит в квадрат */
-  .sqbox { display: grid; grid-template-columns: 22px 1fr 22px; grid-template-rows: 22px 1fr;
-           gap: 5px; max-width: 310px; margin: 0 0 4px; }
+  .sqbox { display: grid; grid-template-columns: 22px 1fr; grid-template-rows: 22px 1fr;
+           gap: 5px; max-width: 288px; margin: 0 0 4px; }
   .sqbox .sqtop { grid-column: 2; grid-row: 1; display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
   .sqbox .sqleft { grid-column: 1; grid-row: 2; display: grid; grid-template-rows: repeat(3, 1fr); gap: 5px; }
   .sqbox .sq { grid-column: 2; grid-row: 2; }
@@ -4612,9 +4612,9 @@ const SCH_INTRO = {
   schBazi: `<p class="t-lead">Ба-Цзы отвечает не на вопрос «кто вы», а на вопрос «как вы устроены достигать».</p>
     <p class="t-para">Ваша природа — земля, и родились вы в земляной месяц: время работало на вас с самого начала. Опоры у вас в избытке, и проблема не в нехватке сил, а в том, что им некуда выходить.</p>
     <p class="t-para">Отсюда способ достигать: накопление и укрепление, а не рывок. На короткой дистанции это не выглядит впечатляюще, на длинной — выигрывает.</p>`,
-  schNum: `<p class="t-lead">Нумерология единственная считает не небо, а числа — вашу дату рождения и ваше имя.</p>
-    <p class="t-para">Два числа из пяти у вас совпали: и дата, и имя дают одно и то же. Это редкий случай, и означает он, что итог замыкается на вас — уйти от этого не выходит.</p>
-    <p class="t-para">Квадрат ниже — ваш портрет в девяти клетках. Он читается за три секунды: где заполнено, там дано, где пусто — добирается сознательно.</p>`,
+  schNum: `<p class="t-lead">Нумерология читает вас по двум числам: по дате рождения и по имени.</p>
+    <p class="t-para">У вас эти два контура совпали, а такое встречается нечасто: и дата, и имя говорят об одном. Значит, всё в итоге сходится к вам самим, и уйти от этого не получается.</p>
+    <p class="t-para">Квадрат выше это ваш портрет в девяти клетках, и прочитать его можно за пару секунд. Где клетка заполнена, там качество дано от природы; где пусто, вы добираете его сознательно.</p>`,
 };
 
 /* Словарь системы — только там, где без него темы нечитаемы */
@@ -5035,7 +5035,7 @@ function calcFull(key) {
 
 function sectionList(key) {
   const rows = schSections(key);
-  return `<div class="luna-block" style="margin-top:4px">
+  return `<div class="luna-block" style="margin-top:24px">
     <div class="lab">Главное</div>
     ${SCH_INTRO[key]}
   </div>
@@ -5330,21 +5330,15 @@ const NAME = {
 Object.defineProperty(S, 'schNum', { get: () => `<div class="pad">
   <div class="dochead" data-go="profile"><span>&lsaquo;</span><div>Назад · Профиль</div></div>
   <h2 class="t-title" style="font-size:21px">Нумерология</h2>
-  <p class="d-lede">Единственная школа, которая считает не небо, а числа. Два независимых контура: <b>дата рождения</b> — 4 февраля 1984, и <b>полное имя</b> — Тыщенко Антон Юрьевич. Чертёж — квадрат Пифагора, он же шкала: значение в клетке это количество соответствующих цифр.</p>
-  <div class="orient">
-    <p><b>Здесь нет канона в том смысле, в каком он есть у трёх других школ.</b> Западная опирается на корпус от Птолемея, джйотиш — на Парашару, Ба-Цзы — на Цзы Пин. Нумерология в нынешнем виде — набор авторских методов XX века.</p>
-    <p>Поэтому разделы названы по авторам, а не «по канону»: <b>Александров</b> для контура даты, <b>Баллиетт</b> для контура имени, <b>линия Джуно Джордан</b> для вершин и вызовов. Свод двух контуров — наш, в источниках его нет.</p>
-  </div>
+  <p class="d-lede">Единственная школа, которая считает не небо, а числа. У неё два независимых контура: дата рождения и полное имя. Чертёж называется квадратом Пифагора и одновременно служит шкалой: значение в клетке это количество соответствующих цифр.</p>
 
-  <div class="sqi-hint">Клетки открывают разбор цифры. Треугольники — разбор линии: слева строки, сверху столбцы, по углам диагонали.</div>
+  <div class="sqi-hint">Клетки открывают разбор цифры. Треугольники открывают разбор линии: слева строки, сверху столбцы.</div>
   <div class="sqbox">
-    <div class="sqcorner tl" data-go="nl-dia-159" title="Потребность в смысле · 1·5·9"><i class="tri diag"></i></div>
     <div class="sqtop">
       <b data-go="nl-col-123" title="Самооценка · 1·2·3"><i class="tri down"></i></b>
       <b data-go="nl-col-456" title="Быт и труд · 4·5·6"><i class="tri down"></i></b>
       <b data-go="nl-col-789" title="Талант · 7·8·9"><i class="tri down"></i></b>
     </div>
-    <div class="sqcorner tr" data-go="nl-dia-357" title="Темперамент · 3·5·7"><i class="tri diag"></i></div>
     <div class="sqleft">
       <b data-go="nl-str-147" title="Целеустремлённость · 1·4·7"><i class="tri right"></i></b>
       <b data-go="nl-str-258" title="Качество семьянина · 2·5·8"><i class="tri right"></i></b>
@@ -5355,6 +5349,12 @@ Object.defineProperty(S, 'schNum', { get: () => `<div class="pad">
         return `<div class="${c[1]==='—'?'empty':''}${c[2]==='избыток'?' over':''}" data-go="nc${n}"><u>${c[0]}</u><b>${c[1]}</b></div>`;
       }).join('')}
     </div>
+  </div>
+
+  <div class="sec-label" style="margin-top:4px">Диагонали</div>
+  <div class="cards">
+    <div class="card-it" data-go="nl-dia-159"><div><div class="t">Характер · Логика · Память</div><span class="s">Диагональ 1 · 5 · 9</span></div><div class="chev">›</div></div>
+    <div class="card-it" data-go="nl-dia-357"><div><div class="t">Везение · Логика · Интерес</div><span class="s">Диагональ 7 · 5 · 3</span></div><div class="chev">›</div></div>
   </div>
 
   ${sectionList('schNum')}
