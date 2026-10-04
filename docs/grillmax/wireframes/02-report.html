@@ -4665,7 +4665,7 @@ const CONF = {
   schBazi:  ['высокая', 'Час рождения известен, столп часа устойчив. Границы месяца считаются по солнечным терминам, а не по календарю.'],
   schNum:   ['средняя', 'Числа зависят от написания имени и от того, как кириллица переводится в буквенную таблицу. На другом сервисе значения могут отличаться — наше правило перевода приведено в приложении.'],
 };
-const CONF_LINK = { schWest:'calcWest', schVedic:'calcVedic', schBazi:'calcBazi', schNum:'numData' };
+const CONF_LINK = { schWest:'calcWest', schVedic:'calcVedic', schBazi:'calcBazi', schNum:'calcNum' };
 
 function schSections(key) {
   const out = [];
@@ -5447,49 +5447,6 @@ Object.keys(NLINE).forEach(id => {
   }});
 });
 
-S.numData = `<div class="pad">
-  <div class="dochead" data-go="schNum"><span>&lsaquo;</span><div>Назад · Нумерология</div></div>
-  <h2 class="t-title" style="font-size:21px">Данные и расчёт</h2>
-  <p class="d-lede">Всё, что взято на вход, и всё, что из этого получено.</p>
-
-  <div class="t-sub">Что взято</div>
-  <div class="calc" style="margin-top:8px">
-    <div class="pr"><u>Дата</u><span>4 февраля 1984</span></div>
-    <div class="pr"><u>Фамилия</u><span>Тыщенко</span></div>
-    <div class="pr"><u>Имя</u><span>Антон</span></div>
-    <div class="pr"><u>Отчество</u><span>Юрьевич</span></div>
-  </div>
-
-  <div class="t-sub" style="margin-top:22px">Контур даты · рабочие числа</div>
-  <div class="calc" style="margin-top:8px">
-    <div class="pr"><u>Первое</u><span>4+2+1+9+8+4 = <b>28</b></span></div>
-    <div class="pr"><u>Второе</u><span>2+8 = <b>10</b></span></div>
-    <div class="pr"><u>Третье</u><span>28 − 2×4 = <b>20</b> · вычитается удвоенная первая цифра дня</span></div>
-    <div class="pr"><u>Четвёртое</u><span>2+0 = <b>2</b></span></div>
-    <div class="pr"><u>В квадрат</u><span>Все ненулевые цифры даты и четырёх рабочих чисел — одиннадцать штук</span></div>
-  </div>
-
-  <div class="t-sub" style="margin-top:22px">Контур имени · побуквенно</div>
-  <div class="calc" style="margin-top:8px">
-    ${NAME.words.map(([w,br,sum]) => `<div class="pr"><u>${w}</u><span>${br} = <b>${sum}</b></span></div>`).join('')}
-  </div>
-  <div class="ntable">${[...NAME.table].map((ch,i) => `<span><b>${ch.toUpperCase()}</b>${i%9+1}</span>`).join('')}</div>
-
-  <div class="t-sub" style="margin-top:22px">Свободные числа</div>
-  <div class="body-text">
-    <p>Числа <b>8, 9, 11 и 22</b> называются свободными и не сворачиваются дальше. Это не украшение, в методе под них отведена отдельная глава.</p>
-    ${NAME.free.map(([w,n,t]) => `<p><b>${w} → ${n}.</b> ${t}</p>`).join('')}
-  </div>
-
-  <div class="calc-h">Источники</div>
-  <div class="calc">
-    <div class="pr"><u>Контур даты</u><span>Классическая психоматрица: рабочие числа, линии судьбы</span></div>
-    <div class="pr"><u>Контур имени</u><span>Классический буквенно-числовой метод, общественное достояние</span></div>
-    <div class="pr"><u>Кириллическая таблица</u><span>Метод применён к русскому алфавиту буквально: позиция буквы с редукцией к 1–9. Канона не существует, наш выбор задокументирован</span></div>
-  </div>
-  <div class="nextsec" data-go="numName"><div><u>Следующий блок</u><b>Что добавляет имя</b></div><span>→</span></div>
-</div>`;
-
 /* --- контур имени --- */
 /* без фамилии и отчества второй контур закрыт прочерками: квадрат по дате всё равно посчитан */
 Object.defineProperty(S, 'numName', { get: () => !NAME_FULL ? `<div class="pad">
@@ -5536,42 +5493,6 @@ Object.defineProperty(S, 'numName', { get: () => !NAME_FULL ? `<div class="pad">
 
   <div class="nextsec" data-go="numCycles"><div><u>Следующий блок</u><b>Ваши возрастные вершины</b></div><span>→</span></div>
 </div>` });
-
-/* --- числа даты --- */
-S.numDate = `<div class="pad">
-  <div class="dochead" data-go="schNum"><span>&lsaquo;</span><div>Назад · Нумерология</div></div>
-  <h2 class="t-title" style="font-size:21px">Числа даты</h2>
-  <p class="d-lede">04 · 02 · 1984. Из даты выводятся четыре рабочих числа, которые вместе с ней и наполняют квадрат.</p>
-
-  <div class="t-sub">Рабочие числа</div>
-  <div class="calc" style="margin-top:8px">
-    <div class="pr"><u>Первое</u><span>4+2+1+9+8+4 = <b>28</b></span></div>
-    <div class="pr"><u>Второе</u><span>2+8 = <b>10</b></span></div>
-    <div class="pr"><u>Третье</u><span>28 − 2×4 = <b>20</b> · вычитается удвоенная первая цифра дня</span></div>
-    <div class="pr"><u>Четвёртое</u><span>2+0 = <b>2</b></span></div>
-  </div>
-  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:8px">В квадрат идут все ненулевые цифры даты и всех четырёх рабочих чисел — одиннадцать штук.</p>
-
-  <div class="t-sub" style="margin-top:22px">Числа</div>
-  <table class="ctable">
-    <tr><th>Число</th><th>Расчёт</th><th>Итог</th></tr>
-    <tr><td>Души</td><td>день рождения</td><td><b>4</b></td></tr>
-    <tr><td>Жизненного пути</td><td>28 → 10 → 1+0</td><td><b>1</b></td></tr>
-    <tr><td>Личный год 2026</td><td>4 + 2 + (2+0+2+6) → 1+2</td><td><b>7</b></td></tr>
-  </table>
-  <div class="body-text" style="margin-top:14px">
-    <p><b>Души · 4.</b> В русской традиции это день рождения, а не сумма гласных. Четвёрка — про опору на устойчивое и на то, что проверено.</p>
-    <p><b>Жизненного пути · 1.</b> Дорога, на которой решения приходится принимать самому и итог замыкается на вас.</p>
-    <p><b>Личный год · 7.</b> Год разбора и отбора, а не набора. Совпадает с тем, что показывают три остальные школы.</p>
-  </div>
-
-  <div class="calc-h">Числа и линии</div>
-  <div class="calc">
-    <div class="pr"><u>Метод</u><span>Классическая психоматрица, расчёт квадрата</span></div>
-    <div class="pr"><u>Личный год</u><span>Идёт по календарю, а не от дня рождения — в этом нумерология расходится с остальными тремя школами</span></div>
-  </div>
-  <div class="nextsec" data-go="numName"><div><u>Следующий блок</u><b>Что добавляет имя</b></div><span>→</span></div>
-</div>`;
 
 /* --- вершины, вызовы, особые числа --- */
 S.numCycles = `<div class="pad">
@@ -5637,57 +5558,6 @@ S.numCycles = `<div class="pad">
     <div class="pr"><u>Источник</u><span>Поздняя американская нумерология. ⚠️ У классического метода по имени вершин и вызовов нет</span></div>
   </div>
   <div class="nextsec" data-go="numCycles"><div><u>Следующий блок</u><b>Ваши возрастные вершины</b></div><span>→</span></div>
-</div>`;
-
-/* --- синтез двух контуров --- */
-S.numDo = `<div class="pad">
-  <div class="dochead" data-go="schNum"><span>&lsaquo;</span><div>Назад · Нумерология</div></div>
-  <h2 class="t-title" style="font-size:21px">Что с этим делать</h2>
-  <p class="t-onephrase">Числа описывают устройство, а не расписание. Из них следует немногое — но оно конкретное.</p>
-
-  <p class="d-lede">Числа описывают устройство, а не расписание. Из квадрата следует немного, и это немногое стоит знать про себя.</p>
-
-  <div class="d-sec">
-    <h5>Три вещи, которые видно сразу</h5>
-    <p>Первое. Самооценка и семья у вас на максимуме шкалы — обе линии заполнены полностью. Это значит, что опора у вас внутри и в близком круге, а не во внешнем признании. Похвала приятна, но не является тем, на чём вы стоите.</p>
-    <p>Второе. Четыре пустые клетки из девяти — интерес, логика, труд и везение. Пустая клетка в этой системе не означает отсутствия качества: она означает, что качество не выдано готовым и добирается сознательно. Логика у вас работает не цепочкой рассуждений, а через опыт; результат тот же, путь другой.</p>
-    <p>Третье. Ничего не досталось даром — клетка везения пуста. Люди с таким квадратом обычно недооценивают, сколько они сделали сами, потому что не с чем сравнивать: подарков не было ни разу.</p>
-  </div>
-
-  <div class="d-sec">
-    <h5>Что из этого следует</h5>
-    <p>Слабая линия постоянства и пустой темперамент означают, что уклад для вас не ценность сам по себе. Менять привычки вам легко, и удерживать заведённый порядок ради порядка вы не станете. Это не недостаток — просто внешнюю структуру придётся ставить самому, изнутри она не растёт.</p>
-    <p>Избыток энергии при отсутствии клетки труда — сочетание, которое даёт много силы и мало желания тратить её на однообразное. Ваша энергия уходит вовне, к людям, и почти не удерживается внутри.</p>
-  </div>
-
-  <div class="d-sec">
-    <h5>Где нумерология спорит с остальными школами</h5>
-    <p>Прямое расхождение, и мы его не прячем. Квадрат показывает максимальную самооценку, не нуждающуюся в подтверждении. Западная и ведическая карты говорят обратное: разрыв между сделанным и признанным.</p>
-    <p>Обе версии могут быть верны одновременно, если различать уровни: внутренняя убеждённость в собственной правоте — высокая, а разрешение предъявлять результат и назначать ему цену — низкое. Человек может быть уверен в себе и при этом не уметь себя показывать.</p>
-    <p>Но честнее сказать иначе: методы здесь расходятся, единого ответа нет, и решать, что ближе к правде, вам.</p>
-  </div>
-
-  <div class="d-sec">
-    <p>Всё, что здесь описано, — это условия, в которых вы живёте, а не то, что с вами случится. Условия можно знать и учитывать, но выбор в них ваш.</p>
-  </div>
-
-  <div class="acc" style="margin-top:18px"><div class="acc-h">Расчёты<span>на чём построен раздел<i>⌄</i></span></div>
-  <div class="acc-b" style="padding:0 14px 14px">
-    <div class="t-sub" style="margin-top:16px">На что опирается блок</div>
-    <div class="calc" style="margin-top:8px">
-      <div class="pr"><u>Пустые клетки квадрата</u><span>что добирается сознательно, а не даётся</span></div>
-      <div class="pr"><u>Сильные линии</u><span>на что опираться, когда трудно</span></div>
-      <div class="pr"><u>Текущая вершина</u><span>чем занят нынешний отрезок жизни</span></div>
-      <div class="pr"><u>Личный год</u><span>тема ближайших двенадцати месяцев</span></div>
-    </div>
-    <div class="t-sub" style="margin-top:16px">Чего в блоке не бывает</div>
-    <div class="calc" style="margin-top:8px">
-      <div class="pr"><u>Предписаний</u><span>⚠️ условие можно узнать про себя, но не выполнить</span></div>
-      <div class="pr"><u>Слова «кармический долг»</u><span>⛔ не употребляем: рамка расплаты. И не заменяем на «урок» — так называется другой показатель</span></div>
-      <div class="pr"><u>Смены имени как средства</u><span>⛔ обещание результата</span></div>
-    </div>
-  </div></div>
-
 </div>`;
 
 S.numSynth = `<div class="pad">
@@ -7461,7 +7331,7 @@ const TITLES = {
   welcome:'Приглашение',
   s1:'Лунора', s2:'Лунора', s3:'Лунора', s4:'Лунора', s5:'Лунора',
   obStart:'Лунора', obName:'Знакомство', obPlace:'Место рождения', obDate:'Дата рождения', obConsent:'Согласие', obCalc:'Проверьте данные', obRun:'Расчёт',
-  today:'Сегодня', profile:'Ваш профиль', shop:'Разборы', monthPick:'Выбрать месяц', shopTalk:'Разговор', shopMe:'Про меня', shopPeople:'Про людей', shopGift:'Подарить', giftCard:'Сертификат', giftUsed:'Сертификат', giftRefund:'Возврат', compat:'Совместимость', persData:'Личные данные', settings:'Настройки', delPerson:'Удаление', delAll:'Удаление', tLove:'Отношения и любовь', tPeriod:'Периоды жизни', tCrisis:'Кризисы и переломы', peopleRel:'Отношения', payConfirm:'Подтверждение', payGate:'Оплата', payOk:'Оплата подтверждена', payWait:'Проверяем оплату', payContact:'Копия чека', docBuild:'Сборка документа', payErr:'Оплата не прошла', payFail:'Сбой оплаты', numName:'Контур имени', pw0:'Планета', pw1:'Планета', pw2:'Планета', pw3:'Планета', pw4:'Планета', pw5:'Планета', pw6:'Планета', pw7:'Планета', pw8:'Планета', pw9:'Планета', numData:'Данные и расчёт', numDo:'Что с этим делать', calcWest:'Данные расчёта', calcVedic:'Данные расчёта', calcBazi:'Данные расчёта', calcNum:'Данные расчёта', docView:'Просмотр документа', 'sec-b-prac':'Раздел', 'sec-w-time':'Раздел', 'sec-v-dashas':'Раздел', 'sec-b-luck':'Раздел', 'help-calc':'Расчёты и разборы', 'help-pay':'Платежи', 'help-data':'Мои данные', 'help-chat':'Чат и лента', idea:'У меня идея', docs:'Документы', delete:'Удаление данных', 'doc-consent':'Согласие на ПД', 'doc-consentNew':'Согласие на ПД', 'doc-policy':'Политика ПД', 'doc-terms':'Соглашение', 'doc-offer':'Оферта', invite:'Рефералы', hour:'Час разговора', memory:'Память', confirmRecalc:'Проверьте данные', recalcDone:'Пересчитано', support:'Поддержка', tPurpose:'Путь и предназначение', tMoney:'Деньги и достаток', tEnergy:'Энергия и здоровье', tFamily:'Семья и род', tTalent:'Таланты и способности', addPerson:'Новый человек', feedTime:'Утренняя лента', pdfSell:'Разбор в одном файле', states:'Состояния экранов', stWebhook:'Платёж обрабатывается', stDouble:'Двойная оплата', stPartial:'Неполные данные', stTime:'Время неизвестно', stLat:'Высокие широты', numCycles:'Вершины и вызовы', numDate:'Числа даты', numSynth:'Два контура', prodPage:'Продукт', prodData:'Данные', prodDepth:'Расчёт', prodPay:'Оплата', prodBuild:'Сборка', prodResult:'Разбор', slot:'Третий слот', chatList:'Диалоги', chat:'Работа в сентябре', chatPaywall:'Работа в сентябре', tCharacter:'Характер', tMind:'Мышление и решения', tWork:'Работа и карьера',
+  today:'Сегодня', profile:'Ваш профиль', shop:'Разборы', monthPick:'Выбрать месяц', shopTalk:'Разговор', shopMe:'Про меня', shopPeople:'Про людей', shopGift:'Подарить', giftCard:'Сертификат', giftUsed:'Сертификат', giftRefund:'Возврат', compat:'Совместимость', persData:'Личные данные', settings:'Настройки', delPerson:'Удаление', delAll:'Удаление', tLove:'Отношения и любовь', tPeriod:'Периоды жизни', tCrisis:'Кризисы и переломы', peopleRel:'Отношения', payConfirm:'Подтверждение', payGate:'Оплата', payOk:'Оплата подтверждена', payWait:'Проверяем оплату', payContact:'Копия чека', docBuild:'Сборка документа', payErr:'Оплата не прошла', payFail:'Сбой оплаты', numName:'Контур имени', pw0:'Планета', pw1:'Планета', pw2:'Планета', pw3:'Планета', pw4:'Планета', pw5:'Планета', pw6:'Планета', pw7:'Планета', pw8:'Планета', pw9:'Планета', calcWest:'Данные расчёта', calcVedic:'Данные расчёта', calcBazi:'Данные расчёта', calcNum:'Данные расчёта', docView:'Просмотр документа', 'sec-b-prac':'Раздел', 'sec-w-time':'Раздел', 'sec-v-dashas':'Раздел', 'sec-b-luck':'Раздел', 'help-calc':'Расчёты и разборы', 'help-pay':'Платежи', 'help-data':'Мои данные', 'help-chat':'Чат и лента', idea:'У меня идея', docs:'Документы', delete:'Удаление данных', 'doc-consent':'Согласие на ПД', 'doc-consentNew':'Согласие на ПД', 'doc-policy':'Политика ПД', 'doc-terms':'Соглашение', 'doc-offer':'Оферта', invite:'Рефералы', hour:'Час разговора', memory:'Память', confirmRecalc:'Проверьте данные', recalcDone:'Пересчитано', support:'Поддержка', tPurpose:'Путь и предназначение', tMoney:'Деньги и достаток', tEnergy:'Энергия и здоровье', tFamily:'Семья и род', tTalent:'Таланты и способности', addPerson:'Новый человек', feedTime:'Утренняя лента', pdfSell:'Разбор в одном файле', states:'Состояния экранов', stWebhook:'Платёж обрабатывается', stDouble:'Двойная оплата', stPartial:'Неполные данные', stTime:'Время неизвестно', stLat:'Высокие широты', numCycles:'Вершины и вызовы', numSynth:'Два контура', prodPage:'Продукт', prodData:'Данные', prodDepth:'Расчёт', prodPay:'Оплата', prodBuild:'Сборка', prodResult:'Разбор', slot:'Третий слот', chatList:'Диалоги', chat:'Работа в сентябре', chatPaywall:'Работа в сентябре', tCharacter:'Характер', tMind:'Мышление и решения', tWork:'Работа и карьера',
   dWest:'Западная астрология', dVedic:'Ведическая астрология', dBazi:'Ба-Цзы', dNum:'Нумерология',
   schWest:'Западная астрология', schVedic:'Ведическая астрология', schBazi:'Ба-Цзы', schNum:'Нумерология',
   'vz-Водолей':'Луна в Водолее', 'vz-Козерог':'Солнце в Козероге', 'vz-Весы':'Марс и Сатурн в Весах', 'vz-Близнецы':'Восходящий знак', 'vz-Телец':'Раху в Тельце', 'vz-Скорпион':'Кету в Скорпионе', 'vz-Стрелец':'Меркурий, Юпитер и Венера'
@@ -7705,7 +7575,7 @@ const TAB_OF = { today:'today', slot:'today',
   tLove:'profile', tPeriod:'profile', tCrisis:'profile', peopleRel:'profile', tCharacter:'profile', tMind:'profile', tWork:'profile',
   dWest:'profile', dVedic:'profile', dBazi:'profile', dNum:'profile',
   schWest:'profile', schVedic:'profile', schBazi:'profile', schNum:'profile', 'sec-v-dashas':'profile', 'sec-w-time':'profile', 'sec-b-luck':'profile',
-  numName:'profile', numDate:'profile', numSynth:'profile', numData:'profile', numCycles:'profile', numDo:'profile', calcWest:'profile', calcVedic:'profile', calcBazi:'profile', calcNum:'profile', docView:'shop',
+  numName:'profile', numSynth:'profile', numCycles:'profile', calcWest:'profile', calcVedic:'profile', calcBazi:'profile', calcNum:'profile', docView:'shop',
   pw0:'profile', pw1:'profile', pw2:'profile', pw3:'profile', pw4:'profile', pw5:'profile', pw6:'profile', pw7:'profile', pw8:'profile', pw9:'profile', bz0:'profile', bz1:'profile', bz2:'profile', bz3:'profile',
   'vz-Козерог':'profile', 'vz-Водолей':'profile', 'vz-Весы':'profile', 'vz-Близнецы':'profile', 'vz-Телец':'profile', 'vz-Скорпион':'profile', 'vz-Стрелец':'profile',
   obStart:'today', obName:'today', obPlace:'today', obDate:'today', obConsent:'today', obCalc:'today', obRun:'today',
@@ -7989,7 +7859,7 @@ function applyState(k) {
   return false;
 }
 
-const CODE = {welcome:'В-01', obStart:'О-01', obName:'О-02', obPlace:'О-03', obDate:'О-04', obConsent:'О-05', obCalc:'О-06', obRun:'О-07', s1:'П-01', s2:'П-02', s3:'П-03', s4:'П-04', today:'С-01', monthPick:'С-02', slot:'С-03', feedTime:'С-04', profile:'Л-01', tCharacter:'Л-02', tMind:'Л-22', tWork:'Л-03', tPurpose:'Л-04', tMoney:'Л-05', tEnergy:'Л-06', tFamily:'Л-07', tTalent:'Л-08', dWest:'Л-09', dVedic:'Л-10', dBazi:'Л-11', dNum:'Л-12', tLove:'Л-19', tPeriod:'Л-20', tCrisis:'Л-21', peopleRel:'Л-13', addPerson:'Л-14', compat:'Л-15', persData:'Л-16', confirmRecalc:'Л-17', recalcDone:'Л-18', schWest:'Ш-01', schVedic:'Ш-02', schBazi:'Ш-03', schNum:'Ш-04', numData:'Ш-05', numName:'Ш-06', numDate:'Ш-07', numCycles:'Ш-08', numSynth:'Ш-09', 'sec-v-dashas':'Ш-24', 'sec-b-luck':'Ш-31', 'sec-w-time':'Ш-41', 'sec-b-prac':'Ш-53', numDo:'Ш-54', calcWest:'Ш-55', calcVedic:'Ш-56', calcBazi:'Ш-57', calcNum:'Ш-58', docView:'Р-17', pw0:'Ш-60', pw1:'Ш-61', pw2:'Ш-62', pw3:'Ш-63', pw4:'Ш-64', pw5:'Ш-65', pw6:'Ш-66', pw7:'Ш-67', pw8:'Ш-68', pw9:'Ш-69', nc2:'Ш-34', 'vz-Водолей':'Ш-35', 'vz-Козерог':'Ш-36', 'vz-Весы':'Ш-37', 'vz-Близнецы':'Ш-38', 'vz-Телец':'Ш-32', 'vz-Скорпион':'Ш-33', 'vz-Стрелец':'Ш-40', bz1:'Ш-39', shop:'Р-01', shopTalk:'Р-02', shopMe:'Р-03', shopPeople:'Р-04', shopGift:'Р-05', giftCard:'Р-06', giftUsed:'Р-07', giftRefund:'Р-08', prodPage:'Р-09', prodData:'Р-10', prodDepth:'Р-11', prodPay:'Р-12', prodBuild:'Р-13', prodResult:'Р-14', pdfSell:'Р-15', chatList:'Ч-01', chat:'Ч-02', chatPaywall:'Ч-03', hour:'Ч-04', settings:'Н-01', memory:'Н-02', invite:'Н-03', support:'Н-04', idea:'Н-05', docs:'Н-06', delete:'Н-07', delPerson:'Н-08', delAll:'Н-09', 'help-calc':'Н-10', 'help-pay':'Н-11', 'help-data':'Н-12', 'help-chat':'Н-13', 'doc-consent':'Н-14', 'doc-policy':'Н-15', 'doc-terms':'Н-16', 'doc-offer':'Н-17', payConfirm:'К-20', payGate:'К-21', payOk:'К-22', payWait:'К-24', payContact:'К-25', docBuild:'Р-16', payErr:'К-23', payFail:'Х-01', states:'Х-02', stWebhook:'Х-03', stDouble:'Х-04', stPartial:'Х-05', stTime:'Х-06', stLat:'Х-07'};
+const CODE = {welcome:'В-01', obStart:'О-01', obName:'О-02', obPlace:'О-03', obDate:'О-04', obConsent:'О-05', obCalc:'О-06', obRun:'О-07', s1:'П-01', s2:'П-02', s3:'П-03', s4:'П-04', today:'С-01', monthPick:'С-02', slot:'С-03', feedTime:'С-04', profile:'Л-01', tCharacter:'Л-02', tMind:'Л-22', tWork:'Л-03', tPurpose:'Л-04', tMoney:'Л-05', tEnergy:'Л-06', tFamily:'Л-07', tTalent:'Л-08', dWest:'Л-09', dVedic:'Л-10', dBazi:'Л-11', dNum:'Л-12', tLove:'Л-19', tPeriod:'Л-20', tCrisis:'Л-21', peopleRel:'Л-13', addPerson:'Л-14', compat:'Л-15', persData:'Л-16', confirmRecalc:'Л-17', recalcDone:'Л-18', schWest:'Ш-01', schVedic:'Ш-02', schBazi:'Ш-03', schNum:'Ш-04', numName:'Ш-06', numCycles:'Ш-08', numSynth:'Ш-09', 'sec-v-dashas':'Ш-24', 'sec-b-luck':'Ш-31', 'sec-w-time':'Ш-41', 'sec-b-prac':'Ш-53', calcWest:'Ш-55', calcVedic:'Ш-56', calcBazi:'Ш-57', calcNum:'Ш-58', docView:'Р-17', pw0:'Ш-60', pw1:'Ш-61', pw2:'Ш-62', pw3:'Ш-63', pw4:'Ш-64', pw5:'Ш-65', pw6:'Ш-66', pw7:'Ш-67', pw8:'Ш-68', pw9:'Ш-69', nc2:'Ш-34', 'vz-Водолей':'Ш-35', 'vz-Козерог':'Ш-36', 'vz-Весы':'Ш-37', 'vz-Близнецы':'Ш-38', 'vz-Телец':'Ш-32', 'vz-Скорпион':'Ш-33', 'vz-Стрелец':'Ш-40', bz1:'Ш-39', shop:'Р-01', shopTalk:'Р-02', shopMe:'Р-03', shopPeople:'Р-04', shopGift:'Р-05', giftCard:'Р-06', giftUsed:'Р-07', giftRefund:'Р-08', prodPage:'Р-09', prodData:'Р-10', prodDepth:'Р-11', prodPay:'Р-12', prodBuild:'Р-13', prodResult:'Р-14', pdfSell:'Р-15', chatList:'Ч-01', chat:'Ч-02', chatPaywall:'Ч-03', hour:'Ч-04', settings:'Н-01', memory:'Н-02', invite:'Н-03', support:'Н-04', idea:'Н-05', docs:'Н-06', delete:'Н-07', delPerson:'Н-08', delAll:'Н-09', 'help-calc':'Н-10', 'help-pay':'Н-11', 'help-data':'Н-12', 'help-chat':'Н-13', 'doc-consent':'Н-14', 'doc-policy':'Н-15', 'doc-terms':'Н-16', 'doc-offer':'Н-17', payConfirm:'К-20', payGate:'К-21', payOk:'К-22', payWait:'К-24', payContact:'К-25', docBuild:'Р-16', payErr:'К-23', payFail:'Х-01', states:'Х-02', stWebhook:'Х-03', stDouble:'Х-04', stPartial:'Х-05', stTime:'Х-06', stLat:'Х-07'};
 const SECNAME = {'О':'Онбординг', 'П':'Показ', 'С':'Сегодня', 'Л':'Профиль и люди', 'Ш':'Школы', 'Р':'Разборы', 'Ч':'Чат', 'Н':'Настройки', 'Х':'Сбои'};
 
 /* Экраны-детализации школ открываются кликом с карты: столпы Ба-Цзы, клетки и
