@@ -5380,11 +5380,13 @@ function dateContourPane() {
   </div>
   <p style="font-size:10.5px;color:var(--ink-faint);line-height:1.5;margin-top:8px">Значение клетки это то, сколько раз её цифра встретилась в расчёте. <span style="color:var(--warn);font-weight:600">Янтарным</span> отмечены клетки вне нормы: где цифры нет совсем и где её избыток (четыре и больше). Остальное в пределах нормы.</p>
 
-  <div class="sec-label" style="margin-top:20px">Диагонали</div>
-  <div class="cards">
-    <div class="card-it" data-go="nl-dia-159"><div><div class="t">Характер · Логика · Память</div><span class="s">Диагональ 1 · 5 · 9</span></div><div class="chev">›</div></div>
-    <div class="card-it" data-go="nl-dia-357"><div><div class="t">Везение · Логика · Интерес</div><span class="s">Диагональ 7 · 5 · 3</span></div><div class="chev">›</div></div>
-  </div>`;
+  <div class="sec-label" style="margin-top:22px">Разборы</div>
+  <p style="font-size:11px;color:var(--ink-faint);line-height:1.5;margin:0 0 2px">Девять клеток открываются нажатием на квадрат. Строки, столбцы и диагонали собраны здесь.</p>
+  ${[['Строки',['str-147','str-258','str-369']],['Столбцы',['col-123','col-456','col-789']],['Диагонали',['dia-159','dia-357']]].map(([grp, ids]) => `
+    <div class="t-sub" style="margin-top:14px">${grp}</div>
+    <div class="cards">${ids.map(id => { const L = NLINE[id];
+      return `<div class="card-it" data-go="nl-${id}"><div><div class="t">${L[0]}</div><span class="s">${L[1]} · сила ${L[2]}</span></div><div class="chev">›</div></div>`;
+    }).join('')}</div>`).join('')}`;
 }
 
 /* вкладка «Контур имени»: побуквенно, три числа, толкования и метод.
@@ -5401,12 +5403,8 @@ function nameContourPane() {
   <div class="t-sub" style="margin-top:4px">Побуквенно</div>
   ${nameSpell()}
 
-  <div class="t-sub" style="margin-top:22px">Числа</div>
-  <table class="ctable">
-    <tr><th>Число</th><th>По чему</th><th>Расчёт</th><th>Итог</th></tr>
-    ${NAME.nums.map(([n,by,cl,r]) => `<tr><td>${n}</td><td>${by}</td><td>${cl}</td><td><b>${r}</b></td></tr>`).join('')}
-  </table>
-  <div class="body-text" style="margin-top:14px">${NAME.nums.map(([n,,,r,t]) => `<p><b>${n} · ${r}.</b> ${t}</p>`).join('')}</div>
+  <div class="sec-label" style="margin-top:22px">Разборы</div>
+  <div class="cards">${NAME.nums.map(([nm,,,r], i) => `<div class="card-it" data-go="nn${i}"><div><div class="t"><span class="secn">${r}</span>Число ${nm.toLowerCase()}</div><span class="s">${['Каким вас видят в деле','Чего вы хотите на самом деле','Какое первое впечатление'][i]}</span></div><div class="chev">›</div></div>`).join('')}</div>
 
   <p style="font-size:11.5px;color:var(--ink-faint);line-height:1.6;margin-top:16px">В других источниках встречается «число души»: в русской традиции так называют день рождения, у вас это 4. Чтобы два разных числа не носили одно имя, мы называем числом сердца то, что считается по гласным буквам имени.</p>
 
@@ -5419,6 +5417,27 @@ function nameContourPane() {
   <div class="ntable">${[...NAME.table].map((ch,i) => `<span><b>${ch.toUpperCase()}</b>${i%9+1}</span>`).join('')}</div>
   <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:10px">Если вы считали своё имя на другом сайте и получили другое число, там другая адаптация буквенной таблицы. Наша приведена полностью.</p>`;
 }
+
+/* три экрана чисел имени: выражение, сердце, облик */
+[0, 1, 2].forEach(i => {
+  Object.defineProperty(S, 'nn' + i, { get() {
+    const [nm, by, cl, r, t] = NAME.nums[i];
+    return `<div class="pad">
+      <div class="dochead" data-go="schNum"><span>&lsaquo;</span><div>Назад · Нумерология</div></div>
+      <div class="d-crumb">Контур имени</div>
+      <h2 class="t-title" style="font-size:21px">Число ${nm.toLowerCase()} · ${r}</h2>
+      <div class="body-text" style="margin-top:14px">
+        <div class="sec-label">Что это значит для вас</div><p>${t}</p>
+      </div>
+      <div class="calc-h">Как посчитано</div>
+      <div class="calc">
+        <div class="pr"><u>По чему</u><span>${by}</span></div>
+        <div class="pr"><u>Расчёт</u><span>${cl} = <b>${r}</b></span></div>
+        <div class="pr"><u>Источник</u><span>Классический буквенно-числовой метод</span></div>
+      </div>
+    </div>`;
+  }});
+});
 
 Object.defineProperty(S, 'schNum', { get: () => `<div class="pad">
   <div class="dochead" data-go="profile"><span>&lsaquo;</span><div>Назад · Профиль</div></div>
