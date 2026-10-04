@@ -1431,8 +1431,16 @@
   .spellrow .stiles span { min-width: 27px; border: 1px solid var(--rule-soft); border-radius: 5px;
                            padding: 5px 0; text-align: center; font-size: 10px; color: var(--ink-faint); }
   .spellrow .stiles span b { display: block; font-size: 12px; color: var(--ink); font-weight: 600; }
+  /* гласные — число сердца, согласные — число облика */
+  .spellrow .stiles span.v { background: var(--luna-bg); border-color: var(--luna-line); }
+  .spellrow .stiles span.v b { color: var(--luna); }
+  .spellrow .stiles span.c { background: rgba(61,107,74,.12); border-color: rgba(61,107,74,.32); }
+  .spellrow .stiles span.c b { color: var(--good); }
   .spellrow .ssum { font-style: normal; margin-left: 5px; font-size: 13px; font-weight: 650;
                     color: var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .spell-leg { font-size: 11px; color: var(--ink-faint); line-height: 1.55; margin: 9px 0 0; }
+  .spell-leg b.v { color: var(--luna); font-weight: 650; }
+  .spell-leg b.c { color: var(--good); font-weight: 650; }
 
   /* кнопка — базовый стиль (был не определён, все .w-btn рисовались текстом) */
   .w-btn { display: flex; align-items: center; justify-content: center; gap: 0; min-height: 46px; padding: 12px 16px;
@@ -5350,10 +5358,16 @@ const NAME = {
         ['Юрьевич · согласные','22','Ещё одно. В сумме отчества согласные дают 22 — второй раз то же свободное число.']]
 };
 
-/* побуквенный разбор ФИО: каждое слово строкой плиток «буква сверху, её число снизу» и сумма */
+/* побуквенный разбор ФИО: каждое слово строкой плиток «буква сверху, её число снизу» и сумма.
+   Гласные и согласные подсвечены разным цветом — так видно, откуда числа сердца и облика.
+   Мягкий и твёрдый знаки в этом методе считаются с согласными (сумма согласных отчества это подтверждает). */
 function nameSpell() {
+  const V = 'аеёиоуыэюя';
   return `<div class="spell">${NAME.words.map(([w, br, sum]) => {
-    const tiles = br.split(' + ').map(tok => `<span><b>${tok.slice(0,1)}</b>${tok.slice(1)}</span>`).join('');
+    const tiles = br.split(' + ').map(tok => {
+      const L = tok.slice(0, 1);
+      return `<span class="${V.includes(L.toLowerCase()) ? 'v' : 'c'}"><b>${L}</b>${tok.slice(1)}</span>`;
+    }).join('');
     return `<div class="spellrow"><u>${w}</u><div class="stiles">${tiles}<em class="ssum">= ${sum}</em></div></div>`;
   }).join('')}</div>`;
 }
@@ -5489,6 +5503,7 @@ Object.defineProperty(S, 'numName', { get: () => !NAME_FULL ? `<div class="pad">
 
   <div class="t-sub">Побуквенно</div>
   ${nameSpell()}
+  <p class="spell-leg"><b class="v">Гласные</b> складываются в число сердца, <b class="c">согласные</b> в число облика.</p>
 
   <div class="t-sub" style="margin-top:22px">Числа</div>
   <table class="ctable">
