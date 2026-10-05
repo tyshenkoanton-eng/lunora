@@ -1835,6 +1835,12 @@
           <div class="w-btn" id="popOk"></div>
           <div class="w-btn ghost" data-pop-close="1">Отмена</div>
         </div></div>
+        <div class="sheet" id="recalcSheet"><div class="sheet-in">
+          <div class="sheet-h">Новые данные сохранены</div>
+          <p style="font-size:13px;line-height:1.6;color:var(--ink-soft);margin:0">Вы добавили новые данные. Готовы пересчитать ваши разборы бесплатно.</p>
+          <div class="w-btn" data-recalc-go="1" style="margin-top:14px">Пересчитать разборы</div>
+          <div class="w-btn ghost" data-recalc-later="1">Позже</div>
+        </div></div>
         <div class="sheet" id="osShare"><div class="sheet-in">
           <div class="osfile" id="osFile"><div class="fi">PDF</div><div><b id="osName">Чек LN-8412-DK.pdf</b><span>84 КБ</span></div></div>
           <div class="osfile" id="osLink" style="display:none"><div class="fi" style="font-size:15px">↗</div><div><b id="osLinkT">Разбор</b><span id="osLinkU">lunora.ru/s/a7f3k2</span></div></div>
@@ -6969,9 +6975,12 @@ S.persData = `<div class="pad">
   <div class="dochead" data-go="settings"><span>&lsaquo;</span><div>Назад · Настройки</div></div>
   <h2 class="t-title" style="font-size:21px">Личные данные</h2>
 
+  <div class="w-btn" id="pendingRecalc" data-recalc-go="1" style="display:none;margin:4px 0 16px">Пересчитать разборы</div>
+
   <div class="orient">
     <span class="cl" data-close="1">✕</span>
-    <p>Сейчас глубина расчёта составляет <b>82%</b>. Её можно увеличить до 100%, добавив недостающие данные.</p>
+    <p>Сейчас глубина расчёта составляет <b>82%</b>.</p>
+    <p style="margin-top:13px">Её можно увеличить до 100%, добавив недостающие данные.</p>
     <p style="margin-top:13px">Мы пересчитаем карту и все купленные разборы бесплатно.</p>
     <div class="miss">
       <div><span>Добавьте отчество</span><b>+5%</b></div>
@@ -6981,7 +6990,7 @@ S.persData = `<div class="pad">
   </div>
 
   <div class="drows">
-    <div class="drow"><u>Имя</u><b>Антон</b></div>
+    <div class="drow"><u>Полное имя</u><b>Антон</b></div>
     <div class="drow"><u>Отчество</u>
       <span class="w-link" data-open="fpick">Указать отчество</span>
       <div class="pick" id="fpick">
@@ -7000,11 +7009,11 @@ S.persData = `<div class="pad">
       <div class="pick" id="tpick">
         <div class="pick-h">Введите точное время рождения</div>
         <div class="hm">
-          <div><div class="w-label">Час</div><input class="w-field" type="number" min="0" max="23" step="1" placeholder="15" data-num="h"></div>
-          <div><div class="w-label">Минуты</div><input class="w-field" type="number" min="0" max="59" step="1" placeholder="00" data-num="m"></div>
+          <div><div class="w-label">Час</div><input class="w-field" type="number" min="0" max="23" step="1" placeholder="15" value="15" data-num="h"></div>
+          <div><div class="w-label">Минуты</div><input class="w-field" type="number" min="0" max="59" step="1" placeholder="00" value="00" data-num="m"></div>
         </div>
-        <div class="pick-act"><div class="w-btn off" data-ok="tpick">Готово</div><span data-cancel="tpick">Отмена</span></div>
-        <p>Точное время обычно стоит в свидетельстве о рождении или в выписке роддома.</p>
+        <div class="pick-act"><div class="w-btn" data-ok="tpick">Готово</div><span data-cancel="tpick">Отмена</span></div>
+        <p>Сейчас стоит 15:00 с допуском ± 30 минут. Если знаете точное время, введите его. Можно подтвердить и 15:00, если вы уверены в нём.</p>
       </div>
     </div>
 
@@ -7028,7 +7037,7 @@ S.persData = `<div class="pad">
 
   <div style="height:66px"></div>
   <div class="savebar" id="saveBar">
-    <div class="sb-act"><div class="w-btn" data-go="confirmRecalc">Сохранить изменения</div><span data-reset="1">Отменить</span></div>
+    <div class="sb-act"><div class="w-btn" data-recalc-save="1">Сохранить изменения</div><span data-reset="1">Отменить</span></div>
   </div>
 </div>`;
 
@@ -8899,6 +8908,10 @@ function render(k, push = true, restore = 0) {
   });
   applyState(k);
   syncSwitches(k);
+  /* кнопка «Пересчитать разборы» в личных данных — только если есть несохранённый пересчёт */
+  if (k === 'persData') { const pr = document.getElementById('pendingRecalc'); if (pr) pr.style.display = RECALC_PENDING ? 'block' : 'none'; }
+  /* дошли до «Пересчитали» — пересчёт выполнен, сбрасываем ожидание и правки */
+  if (k === 'recalcDone') { RECALC_PENDING = false; Object.keys(CHANGES).forEach(c => delete CHANGES[c]); }
   view.scrollTop = restore;
   document.getElementById('barTitle').textContent =
     (k === 'prodResult' && PROD[CUR]) ? PROD[CUR].res :
@@ -9831,18 +9844,25 @@ view.addEventListener('click', e => {
     if (ok.classList.contains('off')) return;
     const box = document.getElementById(ok.dataset.ok);
     const row = box.closest('.drow');
-    const val = [...box.querySelectorAll('.w-field')].map(f => f.textContent.trim()).filter(Boolean).join(':');
+    const isTime = ok.dataset.ok === 'tpick';
+    /* у времени поля — это <input> (значение в .value), у остального contenteditable (.textContent) */
+    const parts = [...box.querySelectorAll('.w-field')]
+      .map(f => (f.tagName === 'INPUT' ? f.value : f.textContent).trim()).filter(Boolean);
+    const val = isTime ? (parts.length === 2 ? parts.join(':') : '') : parts.join(':');
     if (val) {
       let b = row.querySelector(':scope > b');
       const label = row.querySelector('u').textContent;
       const was = b ? b.textContent.trim() : 'не было';
       if (!CHANGES[label]) CHANGES[label] = { from: was };
-      CHANGES[label].to = val;
+      CHANGES[label].to = isTime ? val + ' · точное' : val;
       if (!b) { b = document.createElement('b'); row.insertBefore(b, row.querySelector('.w-link')); }
-      b.textContent = val;
+      /* точное время заменяет «15:00 ± 30 мин» на «15:00 · точное» */
+      if (isTime) b.innerHTML = val + ' <i class="tol">точное</i>';
+      else b.textContent = val;
       row.classList.add('done');
       const lnk = row.querySelector('.w-link');
       if (lnk) lnk.textContent = 'Изменить';
+      markDirty();   /* панель сохранения появляется только после «Готово» */
     }
     box.classList.remove('show');
     const sug = box.querySelector('.sug'); if (sug) sug.classList.remove('show');
@@ -9856,6 +9876,24 @@ view.addEventListener('click', e => {
     const sug = box.querySelector('.sug'); if (sug) sug.classList.remove('show');
     return;
   }
+});
+
+/* флоу пересчёта: «Сохранить изменения» открывает шторку, а не сразу Л-17 */
+view.addEventListener('click', e => {
+  if (e.target.closest('[data-recalc-save]')) {
+    const bar = document.getElementById('saveBar');
+    if (bar) bar.classList.remove('show');
+    popShow('recalcSheet');
+    return;
+  }
+  /* кнопка «Пересчитать разборы» внутри личных данных (после «Позже») */
+  if (e.target.closest('[data-recalc-go]')) { RECALC_PENDING = false; render('confirmRecalc'); return; }
+});
+document.getElementById('recalcSheet').addEventListener('click', e => {
+  const sh = document.getElementById('recalcSheet');
+  if (e.target.closest('[data-recalc-go]')) { RECALC_PENDING = false; sh.classList.remove('show'); render('confirmRecalc'); return; }
+  if (e.target.closest('[data-recalc-later]')) { RECALC_PENDING = true; sh.classList.remove('show'); render('settings'); return; }
+  if (e.target.id === 'recalcSheet') { sh.classList.remove('show'); return; }
 });
 
 
@@ -9946,6 +9984,9 @@ function renderSug(q) {
 
 /* правка личных данных: панель сохранения, подсказки адреса, валидация времени */
 const CHANGES = {};
+/* есть несохранённый пересчёт: человек сохранил данные, но нажал «Позже».
+   При повторном входе в личные данные показываем кнопку «Пересчитать разборы». */
+let RECALC_PENDING = false;
 
 function markDirty() {
   const bar = document.getElementById('saveBar');
@@ -9965,14 +10006,12 @@ view.addEventListener('input', e => {
     const mv = pk.querySelector('[data-num="m"]').value.trim();
     const okb = pk.querySelector('[data-ok], [data-ftok]');
     if (okb) okb.classList.toggle('off', hv === '' || mv === '');
-    markDirty();
     return;
   }
   const f = e.target.closest('.w-field[contenteditable]');
   if (!f) return;
   const ib = document.querySelector('#ideaForm [data-ideasend]');
   if (ib && f.closest('#ideaForm')) { ib.classList.toggle('off', f.textContent.trim() === ''); return; }
-  markDirty();
   if (f.dataset.sug === 'addr') {
     const btn = view.querySelector('[data-ok="apick"]');
     if (btn) btn.classList.add('off');
