@@ -7080,13 +7080,13 @@ function buildConfirm() {
   <h2 class="t-title" style="font-size:21px">Проверьте перед расчётом</h2>
 
   <div class="sumcard">
-    <div><u>Имя</u><b>Антон${pat !== '—' ? ' ' + pat : ''} Тыщенко</b></div>
-    <div><u>Родились</u><b>4 февраля 1984, ${tim}</b></div>
+    <div><u>Полное имя</u><b>Антон${pat !== '—' ? ' ' + pat : ''} Тыщенко</b></div>
+    <div><u>Дата рождения</u><b>4 февраля 1984, ${tim}</b></div>
     <div><u>Место</u><b>${adr}</b></div>
   </div>
 
   ${ch.length ? `<div class="sec-label">Что изменилось</div>
-  <table class="ctable">
+  <table class="ctable diff3">
     <tr><th>Что</th><th>Было</th><th>Стало</th></tr>
     ${ch.map(([k, v]) => `<tr><td>${k}</td><td>${v.from}</td><td><b>${v.to}</b></td></tr>`).join('')}
   </table>
