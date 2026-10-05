@@ -1421,6 +1421,13 @@
   .nline .chev { color: var(--ink-faint); font-size: 17px; font-weight: 300; text-align: right; }
   .nl-bar { height: 4px; background: var(--wire-fill-2); border-radius: 2px; overflow: hidden; }
   .nl-bar i { display: block; height: 100%; background: var(--ink-faint); }
+  /* сила линии одной строкой: подпись слева, прогресс-бар, значение из скольки справа */
+  .linef { display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 12px; margin-top: 12px; }
+  .linef > b { font-size: 13.5px; font-weight: 600; white-space: nowrap; }
+  .linef .linef-bar { height: 8px; background: var(--wire-fill-2); border-radius: 999px; overflow: hidden; }
+  .linef .linef-bar i { display: block; height: 100%; background: var(--ink-faint); border-radius: 999px; }
+  .linef > em { font-style: normal; font: 600 12.5px ui-monospace, Menlo, monospace; color: var(--ink);
+                white-space: nowrap; font-variant-numeric: tabular-nums; }
   .nline.gap + .nl-txt { color: var(--warn); }
   .nl-txt { font-size: 12.5px; line-height: 1.6; color: var(--ink-soft); margin: 0 0 12px; }
   .ntable { display: grid; grid-template-columns: repeat(11, 1fr); gap: 4px; margin-top: 12px; }
@@ -5528,8 +5535,11 @@ Object.keys(NLINE).forEach(id => {
       <div class="dochead" data-go="schNum"><span>&lsaquo;</span><div>Назад · Нумерология</div></div>
       <div class="d-crumb">Линия ${L[1]}</div>
       <h2 class="t-title" style="font-size:21px">${L[0]} · ${L[2]} ${L[2]===1?'цифра':(L[2]<5?'цифры':'цифр')}</h2>
-      <div class="nline" style="margin-top:6px"><div><b>Сила линии</b><span>из шести</span></div>
-        <div class="nl-bar"><i style="width:${Math.min(L[2],6)/6*100}%"></i></div><em>${L[2]}</em></div>
+      <div class="linef">
+        <b>Сила линии</b>
+        <div class="linef-bar"><i style="width:${Math.min(L[2],6)/6*100}%"></i></div>
+        <em>${L[2]} из 6</em>
+      </div>
       ${numSchema(cells)}
       <div class="body-text" style="margin-top:14px">
         <div class="sec-label">Что это за линия</div><p>${L[3]}</p>
