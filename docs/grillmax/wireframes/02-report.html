@@ -7419,8 +7419,8 @@ const regFlag = new Set(JSON.parse(localStorage.getItem('lunora_reg_flag') || '[
    галочку и замечание, остальные отметки не трогаем. Срабатывает один раз на
    зрителя (метка в localStorage), в db метка дописывается ниже в revInit, чтобы
    сброс не воскрешался из общего хранилища и чтобы новые отметки потом держались. */
-const REG_RECHECK = { tag: '2026-10-04-num', codes: [
-  'Ш-04','Ш-05','Ш-06-1','Ш-06-2','Ш-07','Ш-08','Ш-09','Ш-34','Ш-58'
+const REG_RECHECK = { tag: '2026-10-05-num', codes: [
+  'Ш-04','Ш-06-1','Ш-06-2','Ш-08','Ш-09','Ш-34','Ш-58'
 ] };
 try {
   if (localStorage.getItem('lunora_reg_recheck') !== REG_RECHECK.tag) {
