@@ -5222,48 +5222,29 @@ ${lifeline('Да-юнь · столпы десятилетий', [
 Object.defineProperty(S, 'calcNum', { get: () => `<div class="pad">
   <div class="dochead" data-go="schNum"><span>&lsaquo;</span><div>Назад · Нумерология</div></div>
   <h2 class="t-title" style="font-size:21px">Данные расчёта</h2>
-  <p class="d-lede">Здесь собраны все технические расчёты и данные, по двум контурам отдельно.</p>
+  <p class="d-lede">Здесь только то, на что мы опираемся и как считаем. Сами числа и их разбор живут в контурах.</p>
 
   <div class="contwrap">
     <div class="segtabs" id="ndToggle"><i class="on" data-ndc="date">Контур даты</i><i data-ndc="name">Контур имени</i></div>
 
   <div id="ndPaneDate">
-    <div class="sec-label">Что в клетках</div>
-    <div class="cards">
-      ${[1,2,3,4,5,6,7,8,9].map(n => { const c = NCELL[n];
-        return `<div class="card-it" data-go="nc${n}"><div><div class="t"><span class="secn">${c[1]==='—'?'—':c[1]}</span>${c[0]}</div><span class="s">${c[3]}</span></div><div class="chev">›</div></div>`;
-      }).join('')}
+    <div class="t-sub">На что опираемся</div>
+    <div class="calc">
+      <div class="pr"><u>Дата рождения</u><span>4 февраля 1984</span></div>
+      <div class="pr"><u>Что берём</u><span>Цифры даты, из них строится квадрат Пифагора</span></div>
+      <div class="pr"><u>Метод</u><span>Классическая психоматрица</span></div>
+      <div class="pr"><u>Время и место</u><span>нумерологией не используются</span></div>
     </div>
-
-    <div class="sec-label">Линии</div>
-    <div class="nlines">
-      ${Object.entries(NLINE).map(([id,L]) => `
-        <div class="nline lnk${/^[⛔📖]/.test(L[3])?' gap':''}" data-go="nl-${id}">
-          <div><b>${L[0]}</b><span>${L[1]}</span></div>
-          <div class="nl-bar"><i style="width:${Math.min(L[2],6)/6*100}%"></i></div>
-          <em>${L[2]}</em><span class="chev">›</span>
-        </div>`).join('')}
-    </div>
-    <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:10px">Три линии посчитаны, но не истолкованы: в источнике нет нужных уровней. Помечены жёлтым.</p>
-
-    <div class="t-sub" style="margin-top:22px">Личный год</div>
-    ${personalYear(7)}
-    <p class="chart-note">Девятилетний цикл. Седьмой год это уход вглубь: разбирать, изучать, отсекать. Результат появляется в следующем.</p>
-
-    ${lifeline('Вершины и вызовы', [
-      ['Вершина 6',1984,2019,'вызов 2'], ['Вершина 8',2020,2028,'вызов 0'],
-      ['Вершина 5',2029,2037,'вызов 2'], ['Вершина 6',2038,2060,'вызов 2']
-    ], 2026, 'Первая вершина длится 36 минус число жизненного пути = 35 лет, дальше по девять. Единственная временна́я графика нумерологии, метод в остальном вне времени.')}
 
     ${calcFull('schNum')}
   </div>
 
   <div id="ndPaneName" style="display:none">
-    <div class="t-sub">Числа имени</div>
-    <table class="ctable">
-      <tr><th>Число</th><th>По чему</th><th>Расчёт</th><th>Итог</th></tr>
-      ${NAME.nums.map(([n,by,cl,r]) => `<tr><td>${n}</td><td>${by}</td><td>${cl}</td><td><b>${r}</b></td></tr>`).join('')}
-    </table>
+    <div class="t-sub">На что опираемся</div>
+    <div class="calc">
+      <div class="pr"><u>Полное имя</u><span>Тыщенко Антон Юрьевич</span></div>
+      <div class="pr"><u>Что берём</u><span>Все буквы имени, отдельно гласные и согласные</span></div>
+    </div>
 
     <div class="calc-h" style="margin-top:20px">Как это посчитано</div>
     <div class="calc">
