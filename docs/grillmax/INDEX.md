@@ -69,6 +69,7 @@
 - [agreement-rules.md](agreement-rules.md) — карточки показа: три состояния школ, типы карточек, запреты
 - [thesis-catalog.md](thesis-catalog.md) — каталог тезисов, отбор карточек, словарь качеств периодов
 - [onboarding-flow.md](onboarding-flow.md) — весь флоу онбординга О-01…П-04: состав, тексты, решения
+- [recalc-flow.md](recalc-flow.md) — пересчёт после правки данных: Л-16-1…Л-18, что от чего пересчитывается, статус прототипа
 - [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md) — вопросы, отложенные до отдельного решения
 - [theme-matrix.md](theme-matrix.md) — матрица «тема × школа»: чем каждая школа считает каждую тему
 - [research/pdf-report.md](research/pdf-report.md) — PDF-отчёты конкурентов: объём, разделы, что выносят в приложение
