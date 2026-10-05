@@ -5423,12 +5423,12 @@ function dateContourPane() {
 /* вкладка «Контур имени»: побуквенно, три числа, толкования и метод */
 function nameContourPane() {
   return !NAME_FULL ? `
-  <div class="t-sub" style="margin-top:4px">Числа</div>
-  <table class="ctable">
-    <tr><th>Число</th><th>По чему</th><th>Расчёт</th><th>Итог</th></tr>
-    ${NAME.nums.map(([n, by]) => `<tr><td>${n}</td><td>${by}</td><td>—</td><td><b>—</b></td></tr>`).join('')}
-  </table>
-  <p style="font-size:12.5px;line-height:1.6;color:var(--ink-soft);margin-top:14px">Контур даты посчитан полностью: квадрат, линии и вершины на месте. Фамилия и отчество открывают вторую половину школы, числа выражения, сердца и облика.</p>
+  <p style="font-size:13px;line-height:1.65;color:var(--ink-soft);margin-top:4px">Контур имени считается по фамилии, имени и отчеству. Пока в профиле только имя, и этого мало: числа выражения, сердца и облика посчитать ещё не из чего.</p>
+  <p style="font-size:13px;line-height:1.65;color:var(--ink-soft);margin-top:10px">Контур даты это не затрагивает, он уже готов: квадрат, линии и вершины на месте.</p>
+  <div class="luna-block" style="margin-top:16px">
+    <div class="lab">Что дальше</div>
+    <p>Добавьте полное имя в личных данных и сохраните. Мы пересчитаем карту и раскроем контур имени прямо на этой вкладке.</p>
+  </div>
   <div class="w-btn" data-go="persData" style="margin-top:16px">Дополнить имя</div>` : `
   <div class="t-sub" style="margin-top:4px">Побуквенно</div>
   ${nameSpell()}
