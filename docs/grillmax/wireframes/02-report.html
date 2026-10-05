@@ -6833,14 +6833,14 @@ S.peopleRel = `<div class="pad">
 /* ============ ЛЮДИ ============ */
 
 /* ============ НАСТРОЙКИ ============ */
-S.settings = `<div class="pad">
+Object.defineProperty(S, 'settings', { get: () => `<div class="pad">
   <div class="dochead" data-go="profile"><span>&lsaquo;</span><div>Назад · Профиль</div></div>
   <h2 class="t-title" style="font-size:21px">Настройки</h2>
 
   <div class="sec-label" style="margin-top:16px">Ваши данные</div>
   <div class="cards">
     <div class="card-it" data-go="persData"><div><div class="t">Личные данные</div><span class="s">Имя, фамилия, отчество, дата и место рождения</span></div><div class="chev">›</div></div>
-    <div class="card-it" data-go="persData"><div><div class="t">Глубина разбора</div><span class="s">Сейчас 82% — можно углубить, если дополнить данные</span></div><div class="chev">›</div></div>
+    <div class="card-it" data-go="persData"><div><div class="t">Глубина разбора</div><span class="s">${DATAFULL ? 'Все данные внесены · 100%' : 'Сейчас 82% — можно углубить, если дополнить данные'}</span></div><div class="chev">›</div></div>
   </div>
 
   <div class="sec-label">Уведомления</div>
@@ -6865,7 +6865,7 @@ S.settings = `<div class="pad">
   </div>
 
   <div class="w-btn quiet" data-go="delete" style="margin-top:26px">Удалить данные</div>
-</div>`;
+</div>` });
 
 
 function buildDelete() {
@@ -6971,7 +6971,9 @@ S.compat = `<div class="pad">
 </div>`;
 
 /* ============ ЛИЧНЫЕ ДАННЫЕ ============ */
-S.persData = `<div class="pad">
+/* геттер: содержимое зависит от полноты данных (DATAFULL), поэтому пересобирается
+   на каждый рендер. При полных данных глубина 100% и дополнять нечего (вариант Л-16-2) */
+Object.defineProperty(S, 'persData', { get: () => `<div class="pad">
   <div class="dochead" data-go="settings"><span>&lsaquo;</span><div>Назад · Настройки</div></div>
   <h2 class="t-title" style="font-size:21px">Личные данные</h2>
 
@@ -6979,6 +6981,9 @@ S.persData = `<div class="pad">
 
   <div class="orient">
     <span class="cl" data-close="1">✕</span>
+    ${DATAFULL ? `
+    <p>Все данные внесены, глубина расчёта <b>100%</b>.</p>
+    <p style="margin-top:13px">Все четыре школы работают в полную силу. Дополнять больше нечего.</p>` : `
     <p>Сейчас глубина расчёта составляет <b>82%</b>.</p>
     <p style="margin-top:13px">Её можно увеличить до 100%, добавив недостающие данные.</p>
     <p style="margin-top:13px">Мы пересчитаем карту и все купленные разборы бесплатно.</p>
@@ -6986,24 +6991,24 @@ S.persData = `<div class="pad">
       <div><span>Добавьте отчество</span><b>+5%</b></div>
       <div><span>Укажите точное время рождения</span><b>+10%</b></div>
       <div><span>Укажите адрес рождения</span><b>+3%</b></div>
-    </div>
+    </div>`}
   </div>
 
   <div class="drows">
     <div class="drow"><u>Полное имя</u><b>Антон</b></div>
-    <div class="drow"><u>Отчество</u>
+    <div class="drow"><u>Отчество</u>${DATAFULL ? `<b>Юрьевич</b>` : `
       <span class="w-link" data-open="fpick">Указать отчество</span>
       <div class="pick" id="fpick">
         <div class="w-field" contenteditable="true" data-ph="Введите ваше отчество"></div>
         <div class="pick-act"><div class="w-btn" data-ok="fpick">Готово</div><span data-cancel="fpick">Отмена</span></div>
         <p>Отчество нужно только нумерологии — оно откроет числа выражения, сердца и облика.</p>
-      </div>
+      </div>`}
     </div>
     <div class="drow"><u>Фамилия</u><b>Тыщенко</b></div>
     <div class="drow"><u>Дата рождения</u><b>4 февраля 1984</b></div>
 
     <div class="drow">
-      <u>Время рождения</u>
+      <u>Время рождения</u>${DATAFULL ? `<b>15:00 <i class="tol">точное</i></b>` : `
       <b>15:00 <i class="tol">± 30 мин</i></b>
       <span class="w-link" data-open="tpick">Уточнить время рождения</span>
       <div class="pick" id="tpick">
@@ -7014,17 +7019,17 @@ S.persData = `<div class="pad">
         </div>
         <div class="pick-act"><div class="w-btn" data-ok="tpick">Готово</div><span data-cancel="tpick">Отмена</span></div>
         <p>Сейчас стоит 15:00 с допуском ± 30 минут. Если знаете точное время, введите его. Можно подтвердить и 15:00, если вы уверены в нём.</p>
-      </div>
+      </div>`}
     </div>
 
     <div class="drow"><u>Город рождения</u><b>Волгоград</b></div>
-    <div class="drow"><u>Адрес</u>
+    <div class="drow"><u>Адрес</u>${DATAFULL ? `<b>ул. Мира, 7</b>` : `
       <span class="w-link" data-open="apick">Указать точный адрес</span>
       <div class="pick" id="apick">
         <div class="w-field" contenteditable="true" data-ph="Начните вводить адрес" data-sug="addr"></div>
         <div class="sug" id="sugAddr"></div>
         <div class="pick-act"><div class="w-btn off" data-ok="apick">Готово</div><span data-cancel="apick">Отмена</span></div>
-      </div>
+      </div>`}
     </div>
   </div>
 
@@ -7032,7 +7037,7 @@ S.persData = `<div class="pad">
   <div class="savebar" id="saveBar">
     <div class="sb-act"><div class="w-btn" data-recalc-save="1">Сохранить изменения</div><span data-reset="1">Отменить</span></div>
   </div>
-</div>`;
+</div>` });
 
 
 
