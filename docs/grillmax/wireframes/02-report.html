@@ -5196,7 +5196,8 @@ Object.defineProperty(S, 'calcNum', { get: () => `<div class="pad">
   <h2 class="t-title" style="font-size:21px">Данные расчёта</h2>
   <p class="d-lede">Здесь собраны все технические расчёты и данные, по двум контурам отдельно.</p>
 
-  <div class="segtabs" id="ndToggle" style="margin:6px 0 14px"><i class="on" data-ndc="date">Контур даты</i><i data-ndc="name">Контур имени</i></div>
+  <div class="contwrap">
+    <div class="segtabs" id="ndToggle"><i class="on" data-ndc="date">Контур даты</i><i data-ndc="name">Контур имени</i></div>
 
   <div id="ndPaneDate">
     <div class="sec-label">Что в клетках</div>
@@ -5244,6 +5245,7 @@ Object.defineProperty(S, 'calcNum', { get: () => `<div class="pad">
     </div>
     <div class="ntable">${[...NAME.table].map((ch,i) => `<span><b>${ch.toUpperCase()}</b>${i%9+1}</span>`).join('')}</div>
     <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:10px">Если вы считали своё имя на другом сайте и получили другое число, там другая адаптация буквенной таблицы. Наша приведена полностью.</p>
+  </div>
   </div>
 
   <div class="docfoot boxed" style="margin-top:22px"><div class="w-btn ghost" data-share="schNum">${ICO.share}Поделиться</div></div>
