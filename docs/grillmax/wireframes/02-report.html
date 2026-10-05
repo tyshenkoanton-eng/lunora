@@ -831,6 +831,21 @@
   /* обрамлённый блок контуров: переключатель и содержимое вместе, темы остаются снаружи */
   .contwrap { border: 1px solid var(--rule); border-radius: 14px; padding: 12px 13px 15px; margin: 18px 0 6px; background: var(--card); }
   .contwrap .segtabs { margin: 0 0 13px; }
+  /* шаги «как добавить данные»: нумерованный список кружками */
+  .nsteps { list-style: none; margin: 10px 0 0; padding: 0; counter-reset: ns; display: grid; gap: 10px; }
+  .nsteps li { counter-increment: ns; position: relative; padding-left: 30px; font-size: 13px; line-height: 1.5; color: var(--ink-soft); }
+  .nsteps li::before { content: counter(ns); position: absolute; left: 0; top: -1px; width: 21px; height: 21px;
+                       border-radius: 50%; background: var(--luna-bg); color: var(--luna); border: 1px solid var(--luna-line);
+                       font-size: 11.5px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  /* анимация расчёта контура имени: короткий прогресс с бегущей полосой */
+  .namecalc { padding: 22px 2px 6px; }
+  .namecalc .nc-head { display: flex; align-items: center; gap: 9px; font-size: 14px; font-weight: 600; color: var(--ink); }
+  .namecalc .nc-spin { width: 15px; height: 15px; border-radius: 50%; border: 2px solid var(--luna-line);
+                       border-top-color: var(--luna); animation: ncspin .7s linear infinite; flex: 0 0 auto; }
+  .namecalc .nc-bar { height: 5px; border-radius: 3px; background: var(--rule-soft); margin: 14px 0 11px; overflow: hidden; }
+  .namecalc .nc-bar i { display: block; height: 100%; width: 0; border-radius: 3px; background: var(--luna); transition: width .45s ease; }
+  .namecalc .nc-step { font-size: 12.5px; line-height: 1.5; color: var(--ink-soft); }
+  @keyframes ncspin { to { transform: rotate(360deg); } }
   /* переключатель разрезов не должен читаться как ещё одна карточка списка:
      он на подложке, активный сегмент приподнят, и до списка добавлен воздух */
   #pvTabs { background: var(--wire-fill); border: 0; border-radius: 10px; padding: 3px; gap: 3px; margin-bottom: 22px; }
@@ -2557,6 +2572,10 @@ const INFO = {
 let INFO_LVL = 1;
 /* в прототипе ФИО заполнено; запись реестра «только имя» снимает этот флаг */
 let NAME_FULL = true;
+/* фаза пустого контура имени: empty (нет данных) → ready (данные дополнены, ждём расчёт)
+   → calc (идёт расчёт). Готовый контур определяется флагом NAME_FULL. */
+let NAME_PHASE = 'empty';
+let NAME_CT = null;
 
 S.obName = `<div class="pad">
   ${stepper(0)}
@@ -5420,16 +5439,59 @@ function dateContourPane() {
   </div>`;
 }
 
+/* короткая анимация расчёта контура имени перед тем, как раскрыть числа */
+function nameCalcHTML() {
+  return `
+  <div class="namecalc">
+    <div class="nc-head"><span class="nc-spin"></span>Считаем контур имени</div>
+    <div class="nc-bar"><i id="ncBar"></i></div>
+    <div class="nc-step" id="ncStep">Разбираем имя по буквам</div>
+  </div>`;
+}
+function nameCalcRun() {
+  clearInterval(NAME_CT);
+  const steps = ['Разбираем имя по буквам', 'Складываем число выражения', 'Выводим числа сердца и облика'];
+  const bar = document.getElementById('ncBar');
+  const lbl = document.getElementById('ncStep');
+  let i = 0;
+  if (bar) requestAnimationFrame(() => { bar.style.width = '34%'; });
+  NAME_CT = setInterval(() => {
+    i++;
+    if (i >= steps.length) {
+      clearInterval(NAME_CT);
+      NAME_FULL = true;
+      NAME_PHASE = 'done';
+      const pane = document.getElementById('numPaneName');
+      if (pane) pane.innerHTML = nameContourPane();
+      tSync();
+      return;
+    }
+    if (lbl) lbl.textContent = steps[i];
+    if (bar) bar.style.width = Math.round((i + 1) / steps.length * 100) + '%';
+  }, 650);
+}
+
 /* вкладка «Контур имени»: побуквенно, три числа, толкования и метод */
 function nameContourPane() {
-  return !NAME_FULL ? `
-  <p style="font-size:13px;line-height:1.65;color:var(--ink-soft);margin-top:4px">Контур имени считается по фамилии, имени и отчеству. Пока в профиле только имя, и этого мало: числа выражения, сердца и облика посчитать ещё не из чего.</p>
+  if (!NAME_FULL) {
+    if (NAME_PHASE === 'calc') return nameCalcHTML();
+    const ready = NAME_PHASE === 'ready';
+    return `
+  <p style="font-size:13px;line-height:1.65;color:var(--ink-soft);margin-top:4px">Контур имени читается по полному имени: фамилии, имени и отчеству вместе. Сейчас в профиле записано только имя, и этого мало, чтобы вывести числа. Дополните данные, и мы соберём этот раздел для вас.</p>
   <p style="font-size:13px;line-height:1.65;color:var(--ink-soft);margin-top:10px">Контур даты это не затрагивает, он уже готов: квадрат, линии и вершины на месте.</p>
   <div class="luna-block" style="margin-top:16px">
-    <div class="lab">Что дальше</div>
-    <p>Добавьте полное имя в личных данных и сохраните. Мы пересчитаем карту и раскроем контур имени прямо на этой вкладке.</p>
+    <div class="lab">Как добавить данные</div>
+    <ol class="nsteps">
+      <li>Нажмите «Дополнить имя» внизу экрана.</li>
+      <li>На открывшемся экране впишите недостающие данные и сохраните их.</li>
+      <li>Вернитесь сюда и нажмите «Рассчитать», мы соберём контур на месте.</li>
+    </ol>
   </div>
-  <div class="w-btn" data-go="persData" style="margin-top:16px">Дополнить имя</div>` : `
+  ${ready
+    ? `<div class="w-btn" data-namecalc="1" style="margin-top:16px">Рассчитать</div>`
+    : `<div class="w-btn" data-nameadd="1" data-go="persData" style="margin-top:16px">Дополнить имя</div>`}`;
+  }
+  return `
   <div class="t-sub" style="margin-top:4px">Побуквенно</div>
   ${nameSpell()}
 
@@ -9132,6 +9194,16 @@ view.addEventListener('click', e => {
   if (rs) { CUR = rs.dataset.res; SHOPTAB = 'docs'; render('prodResult'); return; }
   const ts = e.target.closest('[data-tset]');
   if (ts) TCUR = ts.dataset.tset;
+  /* «Рассчитать» на пустом контуре имени: короткая анимация, потом раскрываем числа */
+  if (e.target.closest('[data-namecalc]')) {
+    NAME_PHASE = 'calc';
+    const pane = document.getElementById('numPaneName');
+    if (pane) pane.innerHTML = nameCalcHTML();
+    nameCalcRun();
+    return;
+  }
+  /* «Дополнить имя» ведёт в личные данные и переводит контур в состояние ожидания расчёта */
+  if (e.target.closest('[data-nameadd]')) NAME_PHASE = 'ready';
   const go = e.target.closest('[data-go]');
   if (go) {
     /* разбор школы по теме открывается из двух мест: из темы и из вкладки школы.
@@ -10066,6 +10138,8 @@ function regGo(n) {
   if ('bal'  in st) { BAL = st.bal; document.querySelectorAll('#balsw b').forEach(x => x.classList.toggle('on', x.dataset.bal === st.bal)); }
   if ('preview' in st) DOCPREVIEW = st.preview === 1;
   NAME_FULL = !('nofio' in st);
+  /* запись «только имя» всегда открывается с чистого состояния: кнопка «Дополнить имя» */
+  if ('nofio' in st) NAME_PHASE = 'empty';
   if ('shoptab' in st) SHOPTAB = st.shoptab;
   if ('cptab' in st) CPTAB = st.cptab;
   /* некоторые экраны (напр. О-06) зависят от данных OB — запись реестра может их задать */
