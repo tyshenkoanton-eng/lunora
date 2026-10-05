@@ -5500,6 +5500,13 @@ function nameContourPane() {
   return `
   <div class="t-sub" style="margin-top:4px">Побуквенно</div>
   ${nameSpell()}
+  <p style="font-size:12px;color:var(--ink-faint);line-height:1.55;margin-top:12px">Суммы слов (35, 22 и 34) вместе дают 91, из этого числа выходит выражение. Отдельно гласные дают число сердца, согласные число облика.</p>
+
+  <div class="t-sub" style="margin-top:20px">Числа</div>
+  <table class="ctable">
+    <tr><th>Число</th><th>По чему</th><th>Расчёт</th><th>Итог</th></tr>
+    ${NAME.nums.map(([n,by,cl,r]) => `<tr><td>${n}</td><td>${by}</td><td>${cl}</td><td><b>${r}</b></td></tr>`).join('')}
+  </table>
 
   <div class="sec-label" style="margin-top:22px">Разборы</div>
   <div class="cards">${NAME.nums.map(([nm,,,r], i) => `<div class="card-it" data-go="nn${i}"><div><div class="t"><span class="secn">${r}</span>Число ${nm.toLowerCase()}</div><span class="s">${['Как вы проявляете себя в деле','Чего вы хотите на самом деле','Каким вас видят при первой встрече'][i]}</span></div><div class="chev">›</div></div>`).join('')}</div>
