@@ -7702,16 +7702,18 @@ document.querySelectorAll('.sheet').forEach(el => SHEET_WATCH.observe(el, { attr
 
 function regPaint() {
   const rows = REG.filter(r => !REG_FILTER || (!regOk.has(r.n) && !regFlag.has(r.n)));
-  let g = '';
-  jump.innerHTML = rows.map(r => {
-    /* заголовок группы появляется один раз перед её первой строкой */
-    const head = r.g && r.g !== g ? `<i class="jg">${r.g}</i>` : '';
-    g = r.g || g;
+  /* группируем по категории: все экраны одной категории идут вместе и её заголовок
+     не повторяется, даже если записи в REG расставлены не подряд. Порядок категорий —
+     по первому появлению в реестре */
+  const order = [], byG = new Map();
+  for (const r of rows) { const gk = r.g || ''; if (!byG.has(gk)) { byG.set(gk, []); order.push(gk); } byG.get(gk).push(r); }
+  const cell = r => {
     const sub = (r.sheet || r.info) ? ' sub' : '';
-    return head + `<b data-j="${r.n}" class="${regOk.has(r.n) ? 'done' : ''}${regFlag.has(r.n) ? ' flagged' : ''}${r.n === REG_CUR ? ' instep' : ''}${sub}">
+    return `<b data-j="${r.n}" class="${regOk.has(r.n) ? 'done' : ''}${regFlag.has(r.n) ? ' flagged' : ''}${r.n === REG_CUR ? ' instep' : ''}${sub}">
       <u class="jmark">${regOk.has(r.n) ? '✓' : regFlag.has(r.n) ? '!' : ''}</u>
       <span class="jn">${r.n}</span><span class="jt">${r.t}</span></b>`;
-  }).join('');
+  };
+  jump.innerHTML = order.map(gk => (gk ? `<i class="jg">${gk}</i>` : '') + byG.get(gk).map(cell).join('')).join('');
   const done = REG.filter(r => regOk.has(r.n)).length, flag = REG.filter(r => regFlag.has(r.n)).length;
   const lc = document.getElementById('lockcount');
   if (lc) lc.textContent = `Проверено ${done} из ${REG.length}` + (flag ? ` · с замечанием ${flag}` : '');
