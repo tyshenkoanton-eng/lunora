@@ -1846,7 +1846,7 @@
           <div class="sheet-h">Новые данные сохранены</div>
           <p style="font-size:13px;line-height:1.6;color:var(--ink-soft);margin:0">Вы добавили новые данные. Готовы пересчитать ваши разборы бесплатно.</p>
           <div class="w-btn" data-recalc-go="1" style="margin-top:14px">Пересчитать разборы</div>
-          <div class="w-btn ghost" data-recalc-later="1">Позже</div>
+          <div class="w-btn ghost" data-recalc-later="1">Напомнить позже</div>
         </div></div>
         <div class="sheet" id="osShare"><div class="sheet-in">
           <div class="osfile" id="osFile"><div class="fi">PDF</div><div><b id="osName">Чек LN-8412-DK.pdf</b><span>84 КБ</span></div></div>
@@ -6992,8 +6992,6 @@ Object.defineProperty(S, 'persData', { get: () => `<div class="pad">
   <div class="dochead" data-go="settings"><span>&lsaquo;</span><div>Назад · Настройки</div></div>
   <h2 class="t-title" style="font-size:21px">Личные данные</h2>
 
-  <div class="w-btn" id="pendingRecalc" data-recalc-go="1" style="display:none;margin:4px 0 16px">Пересчитать разборы</div>
-
   <div class="orient">
     <span class="cl" data-close="1">✕</span>
     ${DATAFULL ? `
@@ -8924,8 +8922,8 @@ function render(k, push = true, restore = 0) {
   });
   applyState(k);
   syncSwitches(k);
-  /* кнопка «Пересчитать разборы» в личных данных — только если есть несохранённый пересчёт */
-  if (k === 'persData') { const pr = document.getElementById('pendingRecalc'); if (pr) pr.style.display = RECALC_PENDING ? 'block' : 'none'; }
+  /* вход в личные данные с незавершённым пересчётом поднимает шторку-напоминание */
+  if (k === 'persData' && RECALC_PENDING) setTimeout(() => { if (cur === 'persData' && RECALC_PENDING) popShow('recalcSheet'); }, 70);
   /* дошли до «Пересчитали» — пересчёт выполнен, сбрасываем ожидание и правки */
   if (k === 'recalcDone') { RECALC_PENDING = false; Object.keys(CHANGES).forEach(c => delete CHANGES[c]); }
   view.scrollTop = restore;
@@ -9912,8 +9910,6 @@ view.addEventListener('click', e => {
     popShow('recalcSheet');
     return;
   }
-  /* кнопка «Пересчитать разборы» внутри личных данных (после «Позже») */
-  if (e.target.closest('[data-recalc-go]')) { RECALC_PENDING = false; render('confirmRecalc'); return; }
 });
 document.getElementById('recalcSheet').addEventListener('click', e => {
   const sh = document.getElementById('recalcSheet');
