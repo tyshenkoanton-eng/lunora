@@ -7021,13 +7021,15 @@ Object.defineProperty(S, 'persData', { get: () => `<div class="pad">
       <b style="color:var(--ink-faint);font-weight:400">не указано</b>
       <span class="w-link" data-open="tpick">Указать время рождения</span>
       <div class="pick" id="tpick">
-        <div class="pick-h">Введите время рождения</div>
-        <div class="hm">
+        <div class="pick-h">Время рождения</div>
+        <p class="obhint" style="margin:0 0 8px">Насколько точно вы его знаете?</p>
+        <div class="segtabs seg4" id="tprec"><i data-tp="t">Точно</i><i class="on" data-tp="p">± 30 мин</i><i data-tp="r">± 3 часа</i><i data-tp="n">Не знаю</i></div>
+        <div class="hm" id="tpickHM">
           <div><div class="w-label">Час</div><input class="w-field" type="number" min="0" max="23" step="1" placeholder="чч" data-num="h"></div>
           <div><div class="w-label">Минуты</div><input class="w-field" type="number" min="0" max="59" step="1" placeholder="мм" data-num="m"></div>
         </div>
         <div class="pick-act"><div class="w-btn" data-ok="tpick">Готово</div><span data-cancel="tpick">Отмена</span></div>
-        <p>Укажите время рождения, если знаете его. Чем точнее, тем надёжнее дома, асцендент и столп часа.</p>
+        <p>Чем точнее время, тем надёжнее дома, асцендент и столп часа. Если не знаете — выберите «Не знаю».</p>
       </div>`}
     </div>
 
@@ -7065,8 +7067,11 @@ function buildConfirm() {
   const pat = C['Отчество'] ? C['Отчество'].to : '—';
   const tim = C['Время рождения'] ? C['Время рождения'].to : 'не указано';
   const adr = C['Адрес'] ? C['Адрес'].to : 'Волгоград';
-  const W = { 'Отчество': 5, 'Время рождения': 30, 'Адрес': 3 };
-  const gain = Object.keys(C).reduce((a, k) => a + (W[k] || 0), 0);
+  /* вклад времени зависит от выбранной точности: точное +30, ± 30 мин +20, ± 3 часа +14 */
+  const timeTo = (C['Время рождения'] && C['Время рождения'].to) || '';
+  const timeGain = /точное/.test(timeTo) ? 30 : /± 30/.test(timeTo) ? 20 : /± 3 час/.test(timeTo) ? 14 : 0;
+  const W = { 'Отчество': 5, 'Адрес': 3 };
+  const gain = Object.keys(C).reduce((a, k) => a + (k === 'Время рождения' ? timeGain : (W[k] || 0)), 0);
   const depth = 67 + gain;
   const affected = [];
   if (timeChanged || placeChanged) affected.push(['Западная и ведическая', 'Асцендент, дома, лагна и её накшатра']);
@@ -9932,25 +9937,40 @@ view.addEventListener('click', e => {
     if (ok.classList.contains('off')) return;
     const box = document.getElementById(ok.dataset.ok);
     const row = box.closest('.drow');
-    const isTime = ok.dataset.ok === 'tpick';
-    /* у времени поля — это <input> (значение в .value), у остального contenteditable (.textContent) */
+    const label = row.querySelector('u').textContent;
+    let b = row.querySelector(':scope > b');
+    const was = b ? b.textContent.trim() : 'не было';
+
+    if (ok.dataset.ok === 'tpick') {
+      /* время как в онбординге: выбор точности + часы/минуты */
+      const prec = TPREC || 'p';
+      if (prec === 'n') { box.classList.remove('show'); return; }   /* «Не знаю» — оставляем «не указано» */
+      const h = (box.querySelector('[data-num="h"]').value || '').trim();
+      const m = (box.querySelector('[data-num="m"]').value || '').trim();
+      if (!h || !m) { box.classList.remove('show'); return; }       /* нужны и час, и минуты */
+      const PWORD = { t: 'точное', p: '± 30 мин', r: '± 3 часа' };
+      const val = `${h}:${String(m).padStart(2, '0')}`;
+      if (!CHANGES[label]) CHANGES[label] = { from: was };
+      CHANGES[label].to = `${val} · ${PWORD[prec]}`;
+      if (!b) { b = document.createElement('b'); row.insertBefore(b, row.querySelector('.w-link')); }
+      b.style.color = ''; b.style.fontWeight = '';
+      b.innerHTML = `${val} <i class="tol">${PWORD[prec]}</i>`;
+      row.classList.add('done');
+      const lnk = row.querySelector('.w-link'); if (lnk) lnk.textContent = 'Изменить';
+      markDirty();
+      box.classList.remove('show');
+      return;
+    }
+
+    /* остальные поля (адрес) — contenteditable */
     const parts = [...box.querySelectorAll('.w-field')]
       .map(f => (f.tagName === 'INPUT' ? f.value : f.textContent).trim()).filter(Boolean);
-    const val = isTime ? (parts.length === 2 ? parts.join(':') : '') : parts.join(':');
+    const val = parts.join(':');
     if (val) {
-      let b = row.querySelector(':scope > b');
-      const label = row.querySelector('u').textContent;
-      const was = b ? b.textContent.trim() : 'не было';
       if (!CHANGES[label]) CHANGES[label] = { from: was };
-      CHANGES[label].to = isTime ? val + ' · точное' : val;
+      CHANGES[label].to = val;
       if (!b) { b = document.createElement('b'); row.insertBefore(b, row.querySelector('.w-link')); }
-      /* точное время заменяет «15:00 ± 30 мин» на «15:00 · точное» */
-      if (isTime) {
-        b.innerHTML = val + ' <i class="tol">точное</i>';
-        /* подсказка внутри пикера тоже перестаёт говорить про допуск ± 30 минут */
-        const hint = box.querySelector('p');
-        if (hint) hint.textContent = `Сейчас стоит ${val}, время точное. Можно изменить, если нужно.`;
-      } else b.textContent = val;
+      b.textContent = val;
       row.classList.add('done');
       const lnk = row.querySelector('.w-link');
       if (lnk) lnk.textContent = 'Изменить';
@@ -9966,6 +9986,15 @@ view.addEventListener('click', e => {
     box.querySelectorAll('.w-field[contenteditable]').forEach(f => f.textContent = '');
     box.classList.remove('show');
     const sug = box.querySelector('.sug'); if (sug) sug.classList.remove('show');
+    return;
+  }
+  /* выбор точности времени (как в онбординге): «Не знаю» прячет поля часа/минут */
+  const tp = e.target.closest('#tprec [data-tp]');
+  if (tp) {
+    TPREC = tp.dataset.tp;
+    tp.parentElement.querySelectorAll('i').forEach(i => i.classList.toggle('on', i === tp));
+    const hm = document.getElementById('tpickHM');
+    if (hm) hm.style.display = TPREC === 'n' ? 'none' : '';
     return;
   }
 });
@@ -10077,6 +10106,7 @@ const CHANGES = {};
 /* есть несохранённый пересчёт: человек сохранил данные, но нажал «Позже».
    При повторном входе в личные данные показываем кнопку «Пересчитать разборы». */
 let RECALC_PENDING = false;
+let TPREC = 'p';   /* выбранная точность времени в пикере личных данных */
 
 function markDirty() {
   const bar = document.getElementById('saveBar');
