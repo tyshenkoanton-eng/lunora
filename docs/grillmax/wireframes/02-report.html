@@ -710,8 +710,9 @@
   .ctable td:first-child { font-weight: 600; }
   .ctable td:last-child { text-align: right; color: var(--ink-faint); }
   .ctable.diff3 { table-layout: fixed; }
-  .ctable.diff3 th, .ctable.diff3 td { text-align: left; padding-right: 8px; word-break: break-word; }
-  .ctable.diff3 th:first-child, .ctable.diff3 td:first-child { width: 36%; }
+  .ctable.diff3 th, .ctable.diff3 td { text-align: left; padding-right: 8px; overflow-wrap: break-word; word-break: normal; hyphens: none; }
+  .ctable.diff3 th:first-child, .ctable.diff3 td:first-child { width: 34%; }
+  .ctable.diff3 th:nth-child(2), .ctable.diff3 td:nth-child(2) { width: 30%; }
   .ctable.diff3 td:last-child { color: var(--ink); }
   /* таблицы расчёта: колонки узкие, перенос по словам, последняя не прижимается вправо */
   .ctable.calc4 { table-layout: fixed; }
@@ -7089,7 +7090,7 @@ function buildConfirm() {
     <div><u>Место</u><b>${adr}</b></div>
   </div>
 
-  <div class="sec-label">Что изменилось</div>
+  <div class="sec-label">Изменения</div>
   <table class="ctable diff3">
     <tr><th>Что</th><th>Было</th><th>Стало</th></tr>
     ${ch.map(([k, v]) => `<tr><td>${k}</td><td>${v.from}</td><td><b>${v.to}</b></td></tr>`).join('')}
