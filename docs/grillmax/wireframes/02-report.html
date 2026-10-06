@@ -6223,7 +6223,7 @@ const HELP = {
 /* контекст обращения */
 
 const SUP = {
-  calc: ['Вопрос по расчёту', 'Ваши данные: Антон Тыщенко, 4 февраля 1984, 15:00, Волгоград<br>Глубина расчёта 82%'],
+  calc: ['Вопрос по расчёту', 'Ваши данные: Антон Тыщенко, 4 февраля 1984, 15:00, Волгоград<br>Глубина расчёта 67%'],
   pay: ['Вопрос по платежу', 'Последний платёж: 990 ₽ · 17 августа, 14:22 · Совместимость<br>Номер операции 2f4a91'],
   data: ['Вопрос по данным', 'Ваши данные: Тыщенко Антон Юрьевич, 4 февраля 1984, 15:00, Волгоград'],
   chat: ['Вопрос по чату и ленте', 'Вопросов в балансе: 3 · лента в 08:00 · записей в памяти: 5'],
@@ -6854,8 +6854,8 @@ Object.defineProperty(S, 'settings', { get: () => `<div class="pad">
   </div>
 
   <div class="dplate">
-    <div class="dplate-h"><span>Глубина расчёта</span><b>${DATAFULL ? '100%' : '82%'}</b></div>
-    <div class="bar"><i style="width:${DATAFULL ? 100 : 82}%"></i></div>
+    <div class="dplate-h"><span>Глубина расчёта</span><b>${DATAFULL ? '100%' : '67%'}</b></div>
+    <div class="bar"><i style="width:${DATAFULL ? 100 : 67}%"></i></div>
     <p>${DATAFULL ? 'Все данные внесены, четыре школы работают в полную силу.' : 'Можно повысить до 100%, если дополнить данные. <u data-go="persData">Дополнить</u>'}</p>
   </div>
 
@@ -6956,7 +6956,7 @@ S.delAll = `<div class="pad">
 
   <div class="drows" style="margin-top:12px">
     <div class="drow"><u>Дата рождения</u><b>4 февраля 1984</b></div>
-    <div class="drow"><u>Время рождения</u><b>15:00 <i class="tol">± 30 мин</i></b></div>
+    <div class="drow"><u>Время рождения</u><b style="color:var(--ink-faint);font-weight:400">не указано</b></div>
     <div class="drow"><u>Город рождения</u><b>Волгоград</b></div>
     <div class="drow"><u>Добавленные люди</u><b class="lnk" data-go="delete">3 человека</b></div>
     <div class="drow"><u>Заметки Луноры</u><b class="lnk" data-go="memory">5 записей</b></div>
@@ -7001,41 +7001,33 @@ Object.defineProperty(S, 'persData', { get: () => `<div class="pad">
     ${DATAFULL ? `
     <p>Глубина расчёта <b>100%</b>.</p>
     <p style="margin-top:13px">Все данные внесены.</p>` : `
-    <p>Сейчас глубина расчёта составляет <b>82%</b>.</p>
+    <p>Сейчас глубина расчёта составляет <b>67%</b>.</p>
     <p style="margin-top:13px">Её можно увеличить до 100%, добавив недостающие данные.</p>
     <p style="margin-top:13px">Мы пересчитаем карту и все купленные разборы бесплатно.</p>
     <div class="miss">
-      <div><span>Добавьте отчество</span><b>+5%</b></div>
-      <div><span>Укажите точное время рождения</span><b>+10%</b></div>
+      <div><span>Укажите время рождения</span><b>+30%</b></div>
       <div><span>Укажите адрес рождения</span><b>+3%</b></div>
     </div>`}
   </div>
 
   <div class="drows">
     <div class="drow"><u>Полное имя</u><b>Антон</b></div>
-    <div class="drow"><u>Отчество</u>${DATAFULL ? `<b>Юрьевич</b>` : `
-      <span class="w-link" data-open="fpick">Указать отчество</span>
-      <div class="pick" id="fpick">
-        <div class="w-field" contenteditable="true" data-ph="Введите ваше отчество"></div>
-        <div class="pick-act"><div class="w-btn" data-ok="fpick">Готово</div><span data-cancel="fpick">Отмена</span></div>
-        <p>Отчество нужно только нумерологии — оно откроет числа выражения, сердца и облика.</p>
-      </div>`}
-    </div>
+    <div class="drow"><u>Отчество</u><b>Юрьевич</b></div>
     <div class="drow"><u>Фамилия</u><b>Тыщенко</b></div>
     <div class="drow"><u>Дата рождения</u><b>4 февраля 1984</b></div>
 
     <div class="drow">
       <u>Время рождения</u>${DATAFULL ? `<b>15:00 <i class="tol">точное</i></b>` : `
-      <b>15:00 <i class="tol">± 30 мин</i></b>
-      <span class="w-link" data-open="tpick">Уточнить время рождения</span>
+      <b style="color:var(--ink-faint);font-weight:400">не указано</b>
+      <span class="w-link" data-open="tpick">Указать время рождения</span>
       <div class="pick" id="tpick">
-        <div class="pick-h">Введите точное время рождения</div>
+        <div class="pick-h">Введите время рождения</div>
         <div class="hm">
-          <div><div class="w-label">Час</div><input class="w-field" type="number" min="0" max="23" step="1" placeholder="15" value="15" data-num="h"></div>
-          <div><div class="w-label">Минуты</div><input class="w-field" type="number" min="0" max="59" step="1" placeholder="00" value="00" data-num="m"></div>
+          <div><div class="w-label">Час</div><input class="w-field" type="number" min="0" max="23" step="1" placeholder="чч" data-num="h"></div>
+          <div><div class="w-label">Минуты</div><input class="w-field" type="number" min="0" max="59" step="1" placeholder="мм" data-num="m"></div>
         </div>
         <div class="pick-act"><div class="w-btn" data-ok="tpick">Готово</div><span data-cancel="tpick">Отмена</span></div>
-        <p>Сейчас стоит 15:00 с допуском ± 30 минут. Если знаете точное время, введите его. Можно подтвердить и 15:00, если вы уверены в нём.</p>
+        <p>Укажите время рождения, если знаете его. Чем точнее, тем надёжнее дома, асцендент и столп часа.</p>
       </div>`}
     </div>
 
@@ -7064,18 +7056,18 @@ function buildConfirm() {
   /* В реальном потоке сюда попадают только после правки данных, поэтому CHANGES
      всегда непустой. При заходе из каталога правок нет — показываем пример. */
   const C = Object.keys(CHANGES).length ? CHANGES
-    : { 'Отчество': { from: '—', to: 'Юрьевич' }, 'Время рождения': { from: '15:00 · ± 30 мин', to: '15:00 · точное' } };
+    : { 'Время рождения': { from: 'не указано', to: '15:00 · точное' } };
   const ch = Object.entries(C);
   const has = k => Object.keys(C).some(x => x.toLowerCase().includes(k));
   const nameChanged = has('фамили') || has('отчеств') || has('имя');
   const timeChanged = has('врем');
   const placeChanged = has('адрес') || has('город');
   const pat = C['Отчество'] ? C['Отчество'].to : '—';
-  const tim = C['Время рождения'] ? C['Время рождения'].to : '15:00 · ± 30 мин';
+  const tim = C['Время рождения'] ? C['Время рождения'].to : 'не указано';
   const adr = C['Адрес'] ? C['Адрес'].to : 'Волгоград';
-  const W = { 'Отчество': 5, 'Время рождения': 10, 'Адрес': 3 };
+  const W = { 'Отчество': 5, 'Время рождения': 30, 'Адрес': 3 };
   const gain = Object.keys(C).reduce((a, k) => a + (W[k] || 0), 0);
-  const depth = 82 + gain;
+  const depth = 67 + gain;
   const affected = [];
   if (timeChanged || placeChanged) affected.push(['Западная и ведическая', 'Асцендент, дома, лагна и её накшатра']);
   if (nameChanged) affected.push(['Нумерология', 'Числа выражения, сердца и облика']);
@@ -7096,7 +7088,7 @@ function buildConfirm() {
     <tr><th>Что</th><th>Было</th><th>Стало</th></tr>
     ${ch.map(([k, v]) => `<tr><td>${k}</td><td>${v.from}</td><td><b>${v.to}</b></td></tr>`).join('')}
   </table>
-  ${gain ? `<div class="depth" style="cursor:default;margin-top:14px"><span>Глубина расчёта</span><div class="bar"><i style="left:0;width:${depth}%"></i></div><b>82% → ${depth}%</b></div>` : ''}
+  ${gain ? `<div class="depth" style="cursor:default;margin-top:14px"><span>Глубина расчёта</span><div class="bar"><i style="left:0;width:${depth}%"></i></div><b>67% → ${depth}%</b></div>` : ''}
 
   ${affected.length ? `<div class="sec-label">Что пересчитается</div>
   <div class="recalc-list">
@@ -7186,7 +7178,7 @@ Object.defineProperty(S, 'recalcDone', { get: () => `<div class="pad">
     <tr><td>Асцендент</td><td>Рак 11.20°</td><td><b>Рак 14.05°</b></td></tr>
     <tr><td>Лагна</td><td>Митхуна 17.56°</td><td><b>Митхуна 20.41°</b></td></tr>
     <tr><td>Столп часа</td><td>Цзи-Вэй</td><td>не изменился</td></tr>
-    <tr><td>Глубина</td><td>82%</td><td><b>92%</b></td></tr>
+    <tr><td>Глубина</td><td>67%</td><td><b>97%</b></td></tr>
   </table>
 
   <div class="luna-block">
@@ -7296,7 +7288,7 @@ const PROD = {
       ['По сферам','Работа, отношения, деньги, силы — по вашей карте, а не по знаку.']
     ],
     need:'Ничего вводить не нужно — всё уже есть в вашем профиле.',
-    fields:[], depth:'82%', depthNote:'Считаем по данным профиля. Если уточните данные о рождении, пересчитаем бесплатно.',
+    fields:[], depth:'67%', depthNote:'Считаем по данным профиля. Если уточните данные о рождении, пересчитаем бесплатно.',
     build:['Взяла вашу карту','Посчитала соляр — возврат Солнца','Проверила ведический варшапхал','Наложила годовой столп Ба-Цзы','Свожу три школы','Пишу разбор'],
     doc:`
 
@@ -7362,7 +7354,7 @@ const PROD = {
       ['Файл остаётся у вас','Можно распечатать, отправить, сохранить. Не зависит от того, работает ли приложение.']
     ],
     need:'Ничего вводить не нужно.',
-    fields:[], depth:'82%', depthNote:'Файл соберётся по тем данным, что есть сейчас. Уточните данные о рождении, и мы пересоберём его бесплатно.',
+    fields:[], depth:'67%', depthNote:'Файл соберётся по тем данным, что есть сейчас. Уточните данные о рождении, и мы пересоберём его бесплатно.',
     build:['Собираю чертежи','Верстаю одиннадцать тем','Готовлю файл'],
     doc:`<div class="sec-label">Что внутри</div><div class="cards"><div class="card-it"><div><div class="t">Четыре школы</div><span class="s">Каждая рассказывает о вас по-своему и в своём порядке</span></div><div class="chev">›</div></div><div class="card-it"><div><div class="t">Одиннадцать тем</div><span class="s">Характер, отношения, работа, деньги, периоды жизни и другие</span></div><div class="chev">›</div></div><div class="card-it"><div><div class="t">Чертежи и расчёты</div><span class="s">Четыре карты, таблицы положений и словарь — всё, на чём построен разбор</span></div><div class="chev">›</div></div></div>`,
     res:'Разбор личности', resPhrase:'Ваша карта по четырём школам — сорок страниц.',
@@ -7378,7 +7370,7 @@ const PROD = {
     ],
     need:'Повод — от него зависит, что смотреть. Для переговоров важно одно, для разговора с родителями другое.',
     fields:[['Что за событие','Переговоры по сделке',1,'Коротко — это станет заголовком разбора'],['Я выбираю день или он назначен','Выбираю из промежутка',1],['Промежуток','1 — 30 сентября',1]],
-    depth:'82%', depthNote:'Считаем по данным профиля.',
+    depth:'67%', depthNote:'Считаем по данным профиля.',
     build:['Взяла вашу карту','Посчитала транзиты на каждый день','Проверила дневные столпы Ба-Цзы','Посчитала личные дни','Сравниваю дни между собой','Пишу разбор'],
     doc:`<div class="luna-block"><div class="lab">Коротко</div><p>Из тридцати дней вам подходят четыре. Один-два абзаца о том, почему именно они, — и дальше разбор каждого.</p></div><div class="sec-label">Лучший день</div><div class="card-it"><div><div class="t">17 сентября, четверг</div><span class="s">Рыба · три-четыре абзаца: почему этот и что в нём для вас работает</span></div></div><div class="sec-label">Ещё три подходящих</div><div class="cards"><div class="card-it"><div><div class="t">4 сентября, пятница</div><span class="s">Рыба · абзац-два</span></div><div class="chev">›</div></div><div class="card-it"><div><div class="t">22 сентября, вторник</div><span class="s">Рыба</span></div><div class="chev">›</div></div><div class="card-it"><div><div class="t">29 сентября, вторник</div><span class="s">Рыба</span></div><div class="chev">›</div></div></div><div class="sec-label">Дни, которые стоит пропустить</div><div class="body-text"><p>Рыба · короткий список с датами и одной причиной на каждую. Без нагнетания: «в этот день вам будет труднее держать позицию», а не «день опасен».</p></div><div class="calc-h">Как это посчитано</div>
 <div class="calc"><div class="pr"><u>Западная</u><span>Транзиты к натальной карте на каждый день промежутка</span></div><div class="pr"><u>Ведическая</u><span>Панчанга · тити, накшатра, йога на каждый день</span></div><div class="pr"><u>Ба-Цзы</u><span>Дневной столп и его отношение к вашему дневному господину</span></div><div class="pr"><u>Нумерология</u><span>Личный день по дате</span></div><div class="pr"><u>Повод</u><span>Переговоры по сделке — от него зависит, какие показатели считаются главными</span></div></div>`,
@@ -7394,7 +7386,7 @@ const PROD = {
     ],
     need:'Повод — от него зависит, что смотреть. Для переговоров важно одно, для разговора с родителями другое.',
     fields:[['Что за событие','Переговоры по сделке',1,'Коротко — это станет заголовком разбора'],['Я выбираю день или он назначен','Дата уже назначена',1],['Дата','24 сентября 2026',1]],
-    depth:'82%', depthNote:'Считаем по данным профиля.',
+    depth:'67%', depthNote:'Считаем по данным профиля.',
     build:['Взяла вашу карту','Посчитала транзиты на эту дату','Проверила дневные столпы Ба-Цзы','Посчитала личные дни','Пишу разбор'],
     doc:`<div class="luna-block"><div class="lab">Каким вы будете в этот день</div><p>Три-четыре абзаца. День уже назначен — выбирать нечего, поэтому весь разбор о вашем состоянии: где легче настоять, где склонны уступить, на что не хватит терпения.</p></div><div class="sec-label">Что стоит учесть</div><div class="body-text"><p>Рыба · два-три абзаца. Где вам в этот день будет труднее обычного и что сделать заранее.</p></div><div class="sec-label">Чего лучше не делать именно вам</div><div class="body-text"><p>Рыба. Не общие запреты, а то, что при вашей карте в этот день выйдет хуже обычного.</p></div><div class="sec-label">К чему подготовиться заранее</div><div class="body-text"><p>Рыба · практический раздел. Он есть только в этой ветке: выбрать день нельзя, значит остаётся подготовка.</p></div><div class="calc-h">Как это посчитано</div>
 <div class="calc"><div class="pr"><u>Западная</u><span>Транзиты к натальной карте на 24 сентября</span></div><div class="pr"><u>Ведическая</u><span>Панчанга дня · тити, накшатра, йога, карана</span></div><div class="pr"><u>Ба-Цзы</u><span>Дневной столп 戊申 и его отношение к вашей карте</span></div><div class="pr"><u>Нумерология</u><span>Личный день</span></div><div class="pr"><u>Повод</u><span>Подписание договора</span></div></div>`,
