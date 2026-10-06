@@ -35,13 +35,15 @@
 | [dict-numerology.md](dict-numerology.md) | Словарь нумерологии, кириллическая таблица |
 | [engine-spec.md](engine-spec.md) | Движок написания блоков, к G10 |
 | [idempotency.md](idempotency.md) | Идемпотентность платежей |
+| [spec/README.md](spec/README.md) | **Спецификация для реализации:** по экранам, по мере согласования блоков |
+| [screen-codes.md](screen-codes.md) | **Каталог экранов** (генерируется из реестра прототипа) |
 
 ## Прототипы
 
 | | |
 |---|---|
 | `wireframes/01-onboarding.html` | Вход в приложение, 6 экранов |
-| `wireframes/02-report.html` | **Основной прототип, 109 экранов** |
+| `wireframes/02-report.html` | **Основной прототип, 206 экранов** (каталог: [screen-codes.md](screen-codes.md)) |
 | `wireframes/03-screen-map.html` | Схема экранов и зависимостей |
 
 ## Первоисточники
