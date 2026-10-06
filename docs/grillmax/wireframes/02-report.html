@@ -9879,8 +9879,12 @@ view.addEventListener('click', e => {
       CHANGES[label].to = isTime ? val + ' · точное' : val;
       if (!b) { b = document.createElement('b'); row.insertBefore(b, row.querySelector('.w-link')); }
       /* точное время заменяет «15:00 ± 30 мин» на «15:00 · точное» */
-      if (isTime) b.innerHTML = val + ' <i class="tol">точное</i>';
-      else b.textContent = val;
+      if (isTime) {
+        b.innerHTML = val + ' <i class="tol">точное</i>';
+        /* подсказка внутри пикера тоже перестаёт говорить про допуск ± 30 минут */
+        const hint = box.querySelector('p');
+        if (hint) hint.textContent = `Сейчас стоит ${val}, время точное. Можно изменить, если нужно.`;
+      } else b.textContent = val;
       row.classList.add('done');
       const lnk = row.querySelector('.w-link');
       if (lnk) lnk.textContent = 'Изменить';
