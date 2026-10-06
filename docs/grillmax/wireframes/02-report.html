@@ -710,10 +710,11 @@
   .ctable td:first-child { font-weight: 600; }
   .ctable td:last-child { text-align: right; color: var(--ink-faint); }
   .ctable.diff3 { table-layout: fixed; }
-  .ctable.diff3 th, .ctable.diff3 td { text-align: left; padding-right: 8px; overflow-wrap: break-word; word-break: normal; hyphens: none; }
-  .ctable.diff3 th:first-child, .ctable.diff3 td:first-child { width: 34%; }
-  .ctable.diff3 th:nth-child(2), .ctable.diff3 td:nth-child(2) { width: 30%; }
-  .ctable.diff3 td:last-child { color: var(--ink); }
+  .ctable.diff3 th, .ctable.diff3 td { text-align: left; padding: 7px 8px; overflow-wrap: break-word; word-break: normal; hyphens: none; vertical-align: top; border-right: 1px solid var(--rule); }
+  .ctable.diff3 th { padding-top: 0; }
+  .ctable.diff3 th:first-child, .ctable.diff3 td:first-child { width: 26%; padding-left: 0; }
+  .ctable.diff3 th:nth-child(2), .ctable.diff3 td:nth-child(2) { width: 32%; }
+  .ctable.diff3 th:last-child, .ctable.diff3 td:last-child { border-right: none; padding-right: 0; color: var(--ink); }
   /* таблицы расчёта: колонки узкие, перенос по словам, последняя не прижимается вправо */
   .ctable.calc4 { table-layout: fixed; }
   .ctable.calc4 th, .ctable.calc4 td { font-size: 11px; padding-right: 6px; word-break: normal;
