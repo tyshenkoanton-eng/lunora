@@ -27,7 +27,7 @@
 | | |
 |---|---|
 | [referral-model.md](referral-model.md) | **Реферальная программа:** модель, экономика, решения к принятию |
-| [screens.md](screens.md) | **Описание экранов:** состав, состояния, переходы, правила |
+| [screens.md](screens.md) | Описание экранов (⚠️ устарело → перенесено в [spec/](spec/README.md)) |
 | [product-flows.md](product-flows.md) | Флоу 11 продуктов от первого клика до документа |
 | [content-structure.md](content-structure.md) | 20 правил текста и тона |
 | [skeletons.md](skeletons.md) | Скелеты разборов четырёх школ |
