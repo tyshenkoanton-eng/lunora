@@ -858,6 +858,8 @@
   .card-it.ic { grid-template-columns: 22px 1fr auto; }
   .ticon { width: 20px; height: 20px; display: block; color: var(--ink-faint); }
   .card-it .t { font-size: 14px; font-weight: 620; letter-spacing: -.005em; }
+  /* точка «нужно действие» рядом с заголовком карточки — как у новых сообщений */
+  .nd { display: inline-block; width: 7px; height: 7px; border-radius: 999px; background: var(--note); vertical-align: middle; margin-left: 7px; position: relative; top: -1px; }
   .card-it .s { font-size: 12px; color: var(--ink-soft); line-height: 1.45; margin-top: 4px; display: block; font-weight: 400; }
   .card-it .chev { color: var(--ink-faint); font-size: 19px; font-weight: 300; }
   .card-it .price { font-size: 13px; font-weight: 700; color: var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
@@ -6846,7 +6848,7 @@ Object.defineProperty(S, 'settings', { get: () => `<div class="pad">
 
   <div class="sec-label" style="margin-top:16px">О вас</div>
   <div class="cards">
-    <div class="card-it" data-go="persData"><div><div class="t">Личные данные</div><span class="s">Имя, фамилия, отчество, дата и место рождения</span></div><div class="chev">›</div></div>
+    <div class="card-it" data-go="persData"><div><div class="t">Личные данные${RECALC_PENDING ? '<i class="nd"></i>' : ''}</div><span class="s">Имя, фамилия, отчество, дата и место рождения</span></div><div class="chev">›</div></div>
   </div>
 
   <div class="dplate">
@@ -8912,6 +8914,9 @@ function render(k, push = true, restore = 0) {
   if (k !== 'docView') DOCPREVIEW = false;
   /* листы не переживают смену экрана: иначе открытый шеринг висит поверх нового экрана */
   document.querySelectorAll('.sheet.show').forEach(s => s.classList.remove('show'));
+  /* смена экрана отменяет «экран под шторкой»: иначе наблюдатель за закрытием шторки
+     асинхронно вернёт прежний код в шапку поверх только что открытого экрана */
+  REG_UNDER = null;
   if (push && k !== cur) hist.push([cur, view.scrollTop]);
   cur = k;
   const payAlt = payStateFor(k);
