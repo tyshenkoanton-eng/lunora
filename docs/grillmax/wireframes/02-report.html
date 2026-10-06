@@ -7193,7 +7193,7 @@ Object.defineProperty(S, 'recalcDone', { get: () => `<div class="pad">
   </div>
 
   <div class="sec-label">Обновлённые документы</div>
-  <p style="font-size:11.5px;line-height:1.55;color:var(--ink-soft);margin:0 0 10px">Пересобрано ${RECALC_DOCS.length} из восьми. Непрочитанные помечены точкой, прежние версии остались доступны.</p>
+  <p style="font-size:11.5px;line-height:1.55;color:var(--ink-soft);margin:0 0 10px">Пересобрали ${RECALC_DOCS.length} документов. Любой можно открыть прямо здесь или позже в разделе «Мои разборы». Непрочитанные отмечены точкой.</p>
   <div class="cards">
     ${RECALC_DOCS.map(([res, t, sub]) => `<div class="card-it" data-res="${res}"><div><div class="t">${t}${RECALC_SEEN.has(res) ? '' : '<i class="nd"></i>'}</div><span class="s">${sub}</span></div><div class="chev">›</div></div>`).join('')}
   </div>
