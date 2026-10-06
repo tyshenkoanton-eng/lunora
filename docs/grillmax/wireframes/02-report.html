@@ -7132,6 +7132,7 @@ let RECALC_T = null;
 const RECALC_MS = 1050;
 function recalcRunPlay() {
   clearInterval(RECALC_T);
+  RECALC_SEEN.clear();   /* новая волна пересчёта — все документы снова непрочитанные */
   const bar = document.getElementById('recalcBar');
   if (!bar) return;
   let i = 0;
@@ -7160,7 +7161,21 @@ function recalcRunPlay() {
 
 /* ============ ПЕРЕСЧЁТ ПОСЛЕ ПРАВКИ ============ */
 
-S.recalcDone = `<div class="pad">
+/* документы, затронутые пересчётом: показываем списком, каждый отдельной карточкой.
+   Непрочитанные (ещё не открытые) помечаем точкой, как непрочитанный чат.
+   RECALC_SEEN помнит открытые, сбрасывается в начале новой анимации пересчёта.
+   Натальная карта ребёнка и выбор имени строятся по данным ребёнка — их пересчёт
+   данных родителя не затрагивает, поэтому в список не попадают. */
+const RECALC_DOCS = [
+  ['pdf', 'Разбор личности', 'PDF'],
+  ['year', 'Карта на год', '4 фев 2026 — 4 фев 2027'],
+  ['rename', 'Тыщенко → Ковалёва', 'Смена фамилии'],
+  ['compat', 'Дмитрий Сергеевич Ковалёв', 'Совместимость · любовь и отношения'],
+  ['date', 'Переговоры по сделке', '17 сентября 2026'],
+  ['dateB', 'Подписание договора', '24 сентября 2026']
+];
+const RECALC_SEEN = new Set();
+Object.defineProperty(S, 'recalcDone', { get: () => `<div class="pad">
   <div class="dochead" data-go="profile"><span>&lsaquo;</span><div>Назад · Профиль</div></div>
   <h2 class="t-title" style="font-size:21px">Пересчитали</h2>
   <p class="t-onephrase">Три школы из четырёх увидели вас иначе. Вот что изменилось.</p>
@@ -7181,12 +7196,13 @@ S.recalcDone = `<div class="pad">
   </div>
 
   <div class="sec-label">Обновлённые документы</div>
+  <p style="font-size:11.5px;line-height:1.55;color:var(--ink-soft);margin:0 0 10px">Пересобрано ${RECALC_DOCS.length} из восьми. Непрочитанные помечены точкой, прежние версии остались доступны.</p>
   <div class="cards">
-    <div class="card-it" data-res="year"><div><div class="t">Восемь документов пересобраны</div><span class="s">Включая PDF. Прежние версии остались доступны</span></div><div class="chev">›</div></div>
+    ${RECALC_DOCS.map(([res, t, sub]) => `<div class="card-it" data-res="${res}"><div><div class="t">${t}${RECALC_SEEN.has(res) ? '' : '<i class="nd"></i>'}</div><span class="s">${sub}</span></div><div class="chev">›</div></div>`).join('')}
   </div>
 
-  <div class="w-btn" data-go="profile" style="margin-top:18px">Открыть разбор</div>
-</div>`;
+  <div class="w-btn" data-godocs="1" style="margin-top:18px">Перейти к разборам</div>
+</div>` });
 
 /* ============ КОНФИГУРАЦИЯ ПРОДУКТОВ ============ */
 const PROD = {
@@ -9285,7 +9301,7 @@ view.addEventListener('click', e => {
   const pr2 = e.target.closest('[data-person]');
   if (pr2) { PERSON = pr2.dataset.person; render('delPerson'); return; }
   const rs = e.target.closest('[data-res]');
-  if (rs) { CUR = rs.dataset.res; SHOPTAB = 'docs'; render('prodResult'); return; }
+  if (rs) { RECALC_SEEN.add(rs.dataset.res); CUR = rs.dataset.res; SHOPTAB = 'docs'; render('prodResult'); return; }
   const ts = e.target.closest('[data-tset]');
   if (ts) TCUR = ts.dataset.tset;
   /* «Рассчитать» на пустом контуре имени: короткая анимация, потом раскрываем числа */
