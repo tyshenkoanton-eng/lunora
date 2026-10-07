@@ -6037,16 +6037,14 @@ const MEMS = ['Планирует подписать договор в авгу�
 S.memory = `<div class="pad">
   <div class="dochead" data-go="settings"><span>&lsaquo;</span><div>Назад · Настройки</div></div>
   <h2 class="t-title" style="font-size:21px">Что помнит Лунора</h2>
-  <div class="orient">
-    <span class="cl" data-close="1">✕</span>
-    <p>Эти заметки позволяют Луноре персонализировать ответы на основе знаний про вас.</p>
-    <p>Вы можете отключить сбор контекста, но тогда все ответы и прогноз на день будут строиться только на основе расчётов школ.</p>
+  <div class="body-text" style="margin-top:6px">
+    <p>Здесь собрано то, что Лунора запомнила о вас из общения. Эти заметки помогают ей отвечать точнее и вести прогноз на день с учётом вашего контекста.</p>
   </div>
 
   <div class="sec-label">Режим работы</div>
   <div class="cards" id="memModes">
-    <div class="card-it on" data-mode="on"><div><div class="t">Учёт контекста в ответах</div><span class="s">Делаю более персонализированные ответы и прогноз на день на основе знаний о вас</span></div><div class="chev">✓</div></div>
-    <div class="card-it" data-mode="off"><div><div class="t">Без учёта контекста</div><span class="s">Ответы и прогноз на день будет собираться только на основе расчётов школ без учёта знаний о вас</span></div><div class="chev">·</div></div>
+    <div class="card-it on" data-mode="on"><div><div class="t">Учёт контекста в ответах</div><span class="s">Лунора отвечает более персонализированно, учитывая контекст прошлого общения с вами</span></div><div class="chev">✓</div></div>
+    <div class="card-it" data-mode="off"><div><div class="t">Без учёта контекста</div><span class="s">Ответы и прогноз на день строятся только на расчётах школ, без учёта прошлого общения</span></div><div class="chev">·</div></div>
   </div>
   <div class="note-l" id="modeOff" style="display:none;grid-template-columns:16px 1fr;gap:9px;align-items:start;font-size:11.5px;color:var(--warn);line-height:1.55;background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:9px;padding:11px 12px;margin-top:10px">
     <i style="font-style:normal">⚠</i><div>Записи не удаляются при смене режима — они просто перестают участвовать в ответах. Включите учёт контекста обратно, и Лунора снова будет их использовать. Если записи больше не нужны, их можно удалить.</div></div>
@@ -6071,9 +6069,9 @@ S.memory = `<div class="pad">
     </div>`).join('')}
   </div>
 
-  <p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin-top:14px">Если вы нашли неточность, вы можете исправить пункт. Также вы можете удалить какое-то знание о вас — Лунора не будет это больше учитывать в своих ответах.</p>
+  <p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin-top:14px">Если заметили неточность, запись можно поправить. А если какое-то знание о вас больше не нужно, удалите его, и Лунора перестанет его учитывать.</p>
 
-  <div class="w-btn ghost" data-pop="mall" style="margin-top:16px">Удалить все записи</div>
+  <div class="w-btn danger" data-pop="mall" style="margin-top:16px">Удалить все записи</div>
 </div>`;
 
 
