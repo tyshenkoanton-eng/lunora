@@ -8938,14 +8938,17 @@ function refundScreen() {
     <span>9 августа, обычно за один–три рабочих дня</span>
   </div>
 
-  <p class="refnote">Разбор больше недоступен: доступ снят вместе с возвратом денег.</p>
-
   <div class="sec-label">${npd ? 'Чек аннулирован' : 'Чеки'}</div>
   ${receiptCard({ kind: 'void', num: '7b1e04-a2', name: 'Астрологический разбор «Карта на год»', sum: '1 990,00 ₽', date: '09.08.2026, 11:30', voidAt: '09.08.2026, 11:34' })}
-  ${npd ? '' : receiptCard({ kind: 'refund', num: '8c25fa-19', name: 'Астрологический разбор «Карта на год»', sum: '1 990,00 ₽', date: '09.08.2026, 11:34' })}
-  <p class="refnote">${npd
-    ? 'При возврате чек аннулируется в «Мой налог», новый не формируется.'
-    : 'При возврате касса пробивает второй чек с признаком «Возврат прихода». Исходный чек остаётся действительным.'}</p>
+  <div class="docfoot boxed">
+    <div class="w-btn ghost" data-save="receiptVoid">${ICO.down}Скачать</div>
+    <div class="w-btn ghost" data-share="receiptVoid">${ICO.share}Переслать</div>
+  </div>
+  ${npd ? '' : `${receiptCard({ kind: 'refund', num: '8c25fa-19', name: 'Астрологический разбор «Карта на год»', sum: '1 990,00 ₽', date: '09.08.2026, 11:34' })}
+  <div class="docfoot boxed">
+    <div class="w-btn ghost" data-save="receiptRefund">${ICO.down}Скачать</div>
+    <div class="w-btn ghost" data-share="receiptRefund">${ICO.share}Переслать</div>
+  </div>`}
 </div>`;
 }
 
@@ -9243,16 +9246,19 @@ view.addEventListener('click', e => {
   const sh = e.target.closest('[data-share]');
   if (sh) {
     /* и файл, и ссылка уходят через системный лист устройства — без нашего промежуточного превью */
-    const isFile = sh.dataset.share === 'receipt' || sh.dataset.share === 'prodResult';
+    const isFile = sh.dataset.share.startsWith('receipt') || sh.dataset.share === 'prodResult';
     document.getElementById('osFile').style.display = isFile ? '' : 'none';
     document.getElementById('osLink').style.display = isFile ? 'none' : '';
     document.getElementById('osSave').style.display = isFile ? '' : 'none';
     document.getElementById('osPrint').style.display = isFile ? '' : 'none';
     if (isFile) {
       const pf = (PROD[CUR] || {}).file;
-      const file = sh.dataset.share === 'receipt'
-        ? ['Чек LN-8412-DK.pdf', '84 КБ']
-        : pf ? [pf.name, pf.size] : ['Разбор личности.pdf', '6,4 МБ'];
+      const recFile = {
+        receipt: ['Чек LN-8412-DK.pdf', '84 КБ'],
+        receiptVoid: ['Чек аннулирован LN-7740-QM.pdf', '82 КБ'],
+        receiptRefund: ['Чек возврата LN-7740-QM.pdf', '84 КБ']
+      }[sh.dataset.share];
+      const file = recFile || (pf ? [pf.name, pf.size] : ['Разбор личности.pdf', '6,4 МБ']);
       document.getElementById('osName').textContent = file[0];
       document.querySelector('#osFile span').textContent = file[1];
     }
@@ -9608,6 +9614,8 @@ view.addEventListener('click', e => {
       all: ['Лунора — документы.zip', '8,2 МБ · все разборы и данные', 'ZIP'],
       person: ['Лунора — документы.zip', '2,1 МБ · разборы этого человека', 'ZIP'],
       receipt: ['Чек LN-8412-DK.pdf', '84 КБ · одна страница', 'PDF'],
+      receiptVoid: ['Чек аннулирован LN-7740-QM.pdf', '82 КБ · одна страница', 'PDF'],
+      receiptRefund: ['Чек возврата LN-7740-QM.pdf', '84 КБ · одна страница', 'PDF'],
       doc: pf ? [pf.name, pf.size + ' · ' + pf.pages, 'PDF']
               : ['Разбор личности.pdf', '6,4 МБ · 40 страниц', 'PDF']
     };
