@@ -43,7 +43,7 @@
 | | |
 |---|---|
 | `wireframes/01-onboarding.html` | Вход в приложение, 6 экранов |
-| `wireframes/02-report.html` | **Основной прототип, 206 экранов** (каталог: [screen-codes.md](screen-codes.md)) |
+| `wireframes/02-report.html` | **Основной прототип** (актуальное число экранов — в каталоге: [screen-codes.md](screen-codes.md)) |
 | `wireframes/03-screen-map.html` | Схема экранов и зависимостей |
 
 ## Первоисточники
