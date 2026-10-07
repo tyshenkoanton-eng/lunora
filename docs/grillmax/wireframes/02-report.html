@@ -6935,7 +6935,7 @@ function buildDelPerson() {
     ${p.docs.map(([t, sub, res]) => `<div class="card-it" data-res="${res}"><div><div class="t">${t}</div>${sub ? `<span class="s">${sub}</span>` : ''}</div><div class="chev">›</div></div>`).join('')}
   </div>` : ''}
 
-  <div class="w-btn danger solid" data-go="delPersonConfirm" style="margin-top:22px">Удалить данные</div>
+  <div class="w-btn danger" data-go="delPersonConfirm" style="margin-top:22px">Удалить данные</div>
 </div>`;
 }
 Object.defineProperty(S, 'delPerson', { get: buildDelPerson });
@@ -7089,7 +7089,7 @@ Object.defineProperty(S, 'persData', { get: () => `<div class="pad">
     </div>
   </div>
 
-  <div class="w-btn danger solid" data-go="delAll" style="margin-top:22px">Удалить все мои данные</div>
+  <div class="w-btn danger" data-go="delAll" style="margin-top:22px">Удалить все мои данные</div>
 
   <div style="height:66px"></div>
   <div class="savebar" id="saveBar">
