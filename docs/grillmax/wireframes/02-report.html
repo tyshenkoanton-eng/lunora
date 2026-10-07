@@ -6944,8 +6944,6 @@ Object.defineProperty(S, 'delPerson', { get: buildDelPerson });
    сохранение документов, финальная кнопка удаления (откат через undo). */
 function buildDelPersonConfirm() {
   const p = PEOPLE[PERSON];
-  const dw = n => n % 10 === 1 && n % 100 !== 11 ? 'разбор'
-    : ([2, 3, 4].includes(n % 10) && ![12, 13, 14].includes(n % 100) ? 'разбора' : 'разборов');
   return `<div class="pad">
   <div class="dochead" data-go="delPerson"><span>&lsaquo;</span><div>Назад · ${p.fio}</div></div>
   <h2 class="t-title" style="font-size:21px">Удаление данных</h2>
@@ -6963,8 +6961,12 @@ function buildDelPersonConfirm() {
   <div class="drows" style="margin-top:12px">
     ${p.born ? `<div class="drow"><u>Дата рождения</u><b>${p.born}</b></div>` : ''}
     ${p.city ? `<div class="drow"><u>Город рождения</u><b>${p.city}</b></div>` : ''}
-    ${p.docs.length ? `<div class="drow"><u>Связанные документы</u><b>${p.docs.length} ${dw(p.docs.length)}</b></div>` : ''}
   </div>
+
+  ${p.docs.length ? `<div class="sec-label">Связанные документы</div>
+  <div class="cards">
+    ${p.docs.map(([t, sub, res]) => `<div class="card-it" data-res="${res}"><div><div class="t">${t}</div>${sub ? `<span class="s">${sub}</span>` : ''}</div><div class="chev">›</div></div>`).join('')}
+  </div>` : ''}
 
   <div class="docfoot boxed" style="margin-top:16px">
     ${p.docs.length ? `<div class="w-btn ghost" data-save="person">Сохранить документы</div>` : ''}
