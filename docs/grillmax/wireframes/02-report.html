@@ -6952,8 +6952,7 @@ S.delAll = `<div class="pad">
   <div class="dochead" data-go="delete"><span>&lsaquo;</span><div>Назад · Удаление</div></div>
   <h2 class="t-title" style="font-size:21px">Удаление данных</h2>
 
-  <div class="warnbox" style="margin-top:14px">
-    <div class="wi">⚠</div>
+  <div class="warnbox" style="margin-top:14px;grid-template-columns:1fr">
     <div>
     <p>Мы удалим всё, что о вас знаем, и все созданные разборы. Восстановить их потом не получится, поэтому сохраните документы заранее, если хотите что-то оставить себе.</p>
     <p>Вместе с данными отзывается и ваше согласие на обработку персональных данных.</p>
@@ -6973,8 +6972,10 @@ S.delAll = `<div class="pad">
     <div class="drow"><u>Созданные документы</u><b class="lnk" data-godocs="1">8 разборов</b></div>
   </div>
 
-  <div class="docfoot boxed" style="margin-top:16px"><div class="w-btn ghost" data-save="all">${ICO.down}Сохранить документы</div></div>
-  <div class="w-btn danger solid" data-del="all" style="margin-top:8px"><i class="bi">✕</i>Удалить все мои данные</div>
+  <div class="docfoot boxed" style="margin-top:16px">
+    <div class="w-btn ghost" data-save="all">${ICO.down}Сохранить документы</div>
+    <div class="w-btn danger solid" data-del="all" style="margin-top:8px">Удалить все мои данные</div>
+  </div>
 </div>`;
 
 
