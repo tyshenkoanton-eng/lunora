@@ -178,7 +178,6 @@
                font-variant-numeric: tabular-nums; white-space: nowrap; }
   .payrow.ret b, .payrow.ret em { color: var(--ink-soft); }
   .payrow.ret em { font-weight: 560; }
-  .payrow.pend em { color: var(--ink-faint); font-weight: 560; }
 
   .receipt { border: 1px solid var(--rule); border-radius: 12px; background: var(--card);
              padding: 18px 18px 14px; margin-top: 14px; }
@@ -8961,7 +8960,7 @@ function paymentHistory() {
   <div class="dochead" data-go="docs"><span>&lsaquo;</span><div>Назад · Документы</div></div>
   <h2 class="t-title" style="font-size:21px">Платежи и чеки</h2>
   <div style="flex:1;display:flex;align-items:center;justify-content:center">
-    <div class="memempty show" style="width:100%"><b>Платежей пока не было</b><span>Здесь появятся ваши покупки и чеки — всё, что вы оплачивали в Луноре.</span></div>
+    <div class="memempty show" style="width:100%"><b>Платежей пока не было</b><span>Здесь появятся ваши покупки и чеки за всё, что вы оплачивали в Луноре.</span></div>
   </div>
 </div>`;
   return `<div class="pad">
@@ -8971,7 +8970,6 @@ function paymentHistory() {
 
   <div class="sec-label">Август 2026</div>
   <div class="paylist">
-    <div class="payrow pend" data-go="К-18"><div><b>Годовой прогноз</b><span>Сегодня, 10:14 · ждём подтверждения банка</span></div><em>1 490 ₽</em></div>
     <div class="payrow" data-go="К-10"><div><b>Совместимость</b><span>17 августа, 14:22 · СБП</span></div><em>990 ₽</em></div>
     <div class="payrow" data-go="К-10"><div><b>Разбор в PDF</b><span>12 августа, 21:04 · СБП</span></div><em>349 ₽</em></div>
     <div class="payrow ret" data-go="К-11"><div><b>Карта на год</b><span>9 августа, 11:30 · возвращено</span></div><em>−1 990 ₽</em></div>
