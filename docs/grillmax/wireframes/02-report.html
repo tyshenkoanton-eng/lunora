@@ -1182,8 +1182,10 @@
   .fq .q span::before { width: 16px; height: 2px; transform: translate(-50%, -50%); }
   .fq .q span::after  { width: 2px; height: 16px; transform: translate(-50%, -50%); }
   .fq.open .q span { transform: rotate(45deg); }
-  .fq .a { display: none; font-size: 12.5px; line-height: 1.6; color: var(--ink-soft); padding: 0 14px 14px; }
-  .fq.open .a { display: block; }
+  .fq .a { display: grid; grid-template-rows: 0fr; font-size: 12.5px; line-height: 1.6; color: var(--ink-soft);
+           transition: grid-template-rows .4s cubic-bezier(.4,0,.2,1); }
+  .fq .a .ai { overflow: hidden; padding: 0 14px 14px; }
+  .fq.open .a { grid-template-rows: 1fr; }
   .ctx { font-size: 11.5px; line-height: 1.55; color: var(--ink-soft); background: var(--card);
          border: 1px solid var(--rule); border-radius: 8px; padding: 10px 11px; margin-top: 10px; }
 
@@ -6316,7 +6318,7 @@ Object.keys(HELP).forEach(k => {
       <div class="dochead" data-go="support"><span>&lsaquo;</span><div>Назад · Поддержка</div></div>
       <h2 class="t-title" style="font-size:21px">${title}</h2>
       <div class="faq" style="margin-top:14px">
-        ${qs.map(q => `<div class="fq"><div class="q">${q[0]}<span>+</span></div><div class="a">${q[1]}</div></div>`).join('')}
+        ${qs.map(q => `<div class="fq"><div class="q">${q[0]}<span>+</span></div><div class="a"><div class="ai">${q[1]}</div></div></div>`).join('')}
       </div>
       <div class="sec-label">Не нашли ответ</div>
       <div class="w-btn" data-sup="${k}">Написать в поддержку</div>
