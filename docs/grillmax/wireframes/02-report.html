@@ -6922,8 +6922,8 @@ function buildDelPerson() {
   <h2 class="t-title" style="font-size:21px">${p.fio}</h2>
 
   <div class="drows" style="margin-top:14px">
-    <div class="drow"><u>Дата рождения</u><b>${p.born}</b></div>
-    <div class="drow"><u>Город рождения</u><b>${p.city}</b></div>
+    ${p.born ? `<div class="drow"><u>Дата рождения</u><b>${p.born}</b></div>` : ''}
+    ${p.city ? `<div class="drow"><u>Город рождения</u><b>${p.city}</b></div>` : ''}
   </div>
 
   ${p.docs.length ? `<div class="sec-label">Связанные документы</div>
