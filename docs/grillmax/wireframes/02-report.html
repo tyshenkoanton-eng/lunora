@@ -6896,17 +6896,22 @@ Object.defineProperty(S, 'settings', { get: () => `<div class="pad">
 let NOPEOPLE = false;
 function buildMyPeople() {
   const live = NOPEOPLE ? [] : Object.keys(PEOPLE).filter(k => GONE[k] !== 'gone');
+  if (!live.length) return `<div class="pad" style="min-height:100%;display:flex;flex-direction:column;box-sizing:border-box">
+  <div class="dochead" data-go="settings"><span>&lsaquo;</span><div>Назад · Настройки</div></div>
+  <h2 class="t-title" style="font-size:21px">Добавленные люди</h2>
+  <div style="flex:1;display:flex;align-items:center;justify-content:center">
+    <div class="memempty show" style="width:100%"><b>Пока вы никого не добавили</b><span>Люди появляются здесь, когда вы добавляете их для утренней ленты или совместного разбора.</span></div>
+  </div>
+</div>`;
   return `<div class="pad">
   <div class="dochead" data-go="settings"><span>&lsaquo;</span><div>Назад · Настройки</div></div>
   <h2 class="t-title" style="font-size:21px">Добавленные люди</h2>
-  ${live.length
-    ? `<p class="d-lede" style="border-bottom:none;padding-bottom:0">Здесь отображаются люди, которых вы добавили. Откройте любого, чтобы посмотреть данные или удалить их вместе со связанными документами.</p>
+  <p class="d-lede" style="border-bottom:none;padding-bottom:0">Здесь отображаются люди, которых вы добавили. Откройте любого, чтобы посмотреть данные или удалить их вместе со связанными документами.</p>
   <div class="cards">
     ${live.map(k => GONE[k] === 'undo'
       ? `<div class="undo"><div><b>${PEOPLE[k].fio}</b><span>Данные и документы удалены</span></div><u data-undo="${k}">Восстановить<em>${UNDO_LEFT[k] ?? 10}</em></u></div>`
       : `<div class="card-it" data-person="${k}"><div><div class="t">${PEOPLE[k].fio}</div></div><div class="chev">›</div></div>`).join('')}
-  </div>`
-    : `<div class="memempty show"><b>Пока вы никого не добавили</b><span>Люди появляются здесь, когда вы добавляете их для утренней ленты или совместного разбора.</span></div>`}
+  </div>
 </div>`;
 }
 Object.defineProperty(S, "myPeople", { get: buildMyPeople });
