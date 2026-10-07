@@ -27,7 +27,7 @@
 | | |
 |---|---|
 | [referral-model.md](referral-model.md) | **Реферальная программа:** модель, экономика, решения к принятию |
-| [screens.md](screens.md) | **Описание экранов:** состав, состояния, переходы, правила |
+| [screens.md](screens.md) | Описание экранов (⚠️ устарело → перенесено в [spec/](spec/README.md)) |
 | [product-flows.md](product-flows.md) | Флоу 11 продуктов от первого клика до документа |
 | [content-structure.md](content-structure.md) | 20 правил текста и тона |
 | [skeletons.md](skeletons.md) | Скелеты разборов четырёх школ |
@@ -35,13 +35,15 @@
 | [dict-numerology.md](dict-numerology.md) | Словарь нумерологии, кириллическая таблица |
 | [engine-spec.md](engine-spec.md) | Движок написания блоков, к G10 |
 | [idempotency.md](idempotency.md) | Идемпотентность платежей |
+| [spec/README.md](spec/README.md) | **Спецификация для реализации:** по экранам, по мере согласования блоков |
+| [screen-codes.md](screen-codes.md) | **Каталог экранов** (генерируется из реестра прототипа) |
 
 ## Прототипы
 
 | | |
 |---|---|
 | `wireframes/01-onboarding.html` | Вход в приложение, 6 экранов |
-| `wireframes/02-report.html` | **Основной прототип, 109 экранов** |
+| `wireframes/02-report.html` | **Основной прототип, 206 экранов** (каталог: [screen-codes.md](screen-codes.md)) |
 | `wireframes/03-screen-map.html` | Схема экранов и зависимостей |
 
 ## Первоисточники
@@ -69,6 +71,7 @@
 - [agreement-rules.md](agreement-rules.md) — карточки показа: три состояния школ, типы карточек, запреты
 - [thesis-catalog.md](thesis-catalog.md) — каталог тезисов, отбор карточек, словарь качеств периодов
 - [onboarding-flow.md](onboarding-flow.md) — весь флоу онбординга О-01…П-04: состав, тексты, решения
+- [recalc-flow.md](recalc-flow.md) — пересчёт после правки данных: Л-16-1…Л-18, что от чего пересчитывается, статус прототипа
 - [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md) — вопросы, отложенные до отдельного решения
 - [theme-matrix.md](theme-matrix.md) — матрица «тема × школа»: чем каждая школа считает каждую тему
 - [research/pdf-report.md](research/pdf-report.md) — PDF-отчёты конкурентов: объём, разделы, что выносят в приложение
