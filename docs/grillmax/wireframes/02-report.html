@@ -6926,7 +6926,16 @@ function buildDelPerson() {
   <div class="dochead" data-go="delete"><span>&lsaquo;</span><div>Назад · Удаление</div></div>
   <h2 class="t-title" style="font-size:21px">${p.fio}</h2>
 
-  <div class="drows" style="margin-top:14px">
+  <div class="warnbox" style="margin-top:14px;grid-template-columns:1fr">
+    <div>
+      <p>Вместе с данными этого человека будут удалены и все связанные с ними документы.</p>
+      ${p.docs.length
+        ? `<p>Купленные разборы можно сохранить, нажав на кнопку ниже. Документы сохранятся одним архивом. После удаления восстановить их будет нельзя.</p>`
+        : `<p>После удаления восстановить данные будет нельзя.</p>`}
+    </div>
+  </div>
+
+  <div class="drows" style="margin-top:16px">
     ${p.born ? `<div class="drow"><u>Дата рождения</u><b>${p.born}</b></div>` : ''}
     ${p.city ? `<div class="drow"><u>Город рождения</u><b>${p.city}</b></div>` : ''}
   </div>
@@ -6935,16 +6944,6 @@ function buildDelPerson() {
   <div class="cards">
     ${p.docs.map(([t, sub, res]) => `<div class="card-it" data-res="${res}"><div><div class="t">${t}</div>${sub ? `<span class="s">${sub}</span>` : ''}</div><div class="chev">›</div></div>`).join('')}
   </div>` : ''}
-
-  <div class="warnbox" style="grid-template-columns:1fr">
-    <div>
-      <p>Вместе с данными этого человека будут удалены и все связанные с ними документы.</p>
-      ${p.slot ? `<p>Этот человек пропадёт из утреннего прогноза. Слот при этом останется свободным, в него можно добавить другого человека.</p>` : ''}
-      ${p.docs.length
-        ? `<p>Купленные разборы можно сохранить, нажав на кнопку ниже. Документы сохранятся одним архивом. После удаления восстановить их будет нельзя.</p>`
-        : `<p>После удаления восстановить данные будет нельзя.</p>`}
-    </div>
-  </div>
 
   <div class="docfoot boxed" style="margin-top:16px">
     ${p.docs.length ? `<div class="w-btn ghost" data-save="person">Сохранить документы</div>` : ''}
