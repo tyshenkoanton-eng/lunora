@@ -1857,7 +1857,7 @@
           <div class="sheet-h" id="popH"></div>
           <p id="popT" style="font-size:13px;line-height:1.6;color:var(--ink-soft);margin:0"></p>
           <div id="popConfirm" style="display:none">
-            <p style="font-size:12.5px;line-height:1.55;color:var(--warn);margin:4px 0 8px">Это действие нельзя отменить. Чтобы подтвердить, введите слово <b>удалить</b>.</p>
+            <p style="font-size:12.5px;line-height:1.55;color:var(--warn);margin:4px 0 8px">Чтобы подтвердить, введите слово <b>удалить</b>.</p>
             <div class="w-field" contenteditable="true" data-ph="удалить" data-confword="1"></div>
           </div>
           <div class="w-btn" id="popOk"></div>
@@ -9665,7 +9665,7 @@ view.addEventListener('click', e => {
 /* удаление: подтверждение вводом слова */
 const DEL_CONF = {
   person: ['', 'Все данные этого человека и все связанные с ним документы будут удалены. Восстановить их будет нельзя.', 'Удалить', false],
-  all: ['Удалить все мои данные?', 'Все ваши данные и все созданные документы будут удалены. Восстановить их будет нельзя.', 'Удалить всё', true]
+  all: ['Удалить все ваши данные?', 'Мы удалим все ваши данные и созданные документы. Вернуть их потом не получится, отменить это действие нельзя.', 'Удалить всё', true]
 };
 
 view.addEventListener('click', e => {
