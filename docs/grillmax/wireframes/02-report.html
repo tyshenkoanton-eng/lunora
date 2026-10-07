@@ -7709,6 +7709,7 @@ function liveState(key) {
     case 'bal': return BAL;
     case 'nofio': return NAME_FULL ? 0 : 1;
     case 'nameready': return NAME_PHASE === 'ready' ? 1 : 0;
+    case 'del': return DEL.docs > 0 ? 'full' : 'free';
     default: return undefined;
   }
 }
