@@ -6907,8 +6907,6 @@ function buildMyPeople() {
       : `<div class="card-it" data-person="${k}"><div><div class="t">${PEOPLE[k].fio}</div></div><div class="chev">›</div></div>`).join('')}
   </div>`
     : `<div class="memempty show"><b>Пока вы никого не добавили</b><span>Люди появляются здесь, когда вы добавляете их для утренней ленты или совместного разбора.</span></div>`}
-
-  <div class="w-btn ghost" data-go="addPerson" style="margin-top:16px">Добавить человека</div>
 </div>`;
 }
 Object.defineProperty(S, "myPeople", { get: buildMyPeople });
