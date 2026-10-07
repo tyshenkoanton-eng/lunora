@@ -9545,7 +9545,7 @@ document.getElementById('pop').addEventListener('click', e => {
     const act = pok.dataset.popAct;
     document.getElementById('pop').classList.remove('show');
     if (act === 'delperson') { GONE[PERSON] = 'undo'; render('delete'); startUndo(PERSON); return; }
-    if (act === 'delall') { render('recalcDone'); return; }
+    if (act === 'delall') { render('Б-01'); return; }
   }
   const pop = document.getElementById('pop');
   if (e.target.id === 'pop' || e.target.closest('[data-pop-close]')) { pop.classList.remove('show'); return; }
@@ -10262,7 +10262,7 @@ document.getElementById('pop').addEventListener('click', e => {
     const act = pok.dataset.popAct;
     document.getElementById('pop').classList.remove('show');
     if (act === 'delperson') { GONE[PERSON] = 'undo'; render('delete'); startUndo(PERSON); return; }
-    if (act === 'delall') { render('recalcDone'); return; }
+    if (act === 'delall') { render('Б-01'); return; }
   }
   const pop = document.getElementById('pop');
   if (e.target.id === 'pop' || e.target.closest('[data-pop-close]')) { pop.classList.remove('show'); return; }
