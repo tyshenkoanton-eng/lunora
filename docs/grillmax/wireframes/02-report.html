@@ -1175,8 +1175,9 @@
   .fq { border: 1px solid var(--rule); border-radius: 10px; background: var(--card); }
   .fq .q { display: flex; align-items: flex-start; gap: 12px; justify-content: space-between;
            font-size: 13.5px; font-weight: 550; line-height: 1.45; padding: 13px 14px; cursor: pointer; }
-  .fq .q span { color: var(--ink-faint); font-size: 17px; font-weight: 300; line-height: 1; flex: 0 0 auto; }
-  .fq.open .q span { transform: rotate(45deg); display: inline-block; }
+  .fq .q span { color: var(--ink-faint); font-size: 22px; font-weight: 300; line-height: 1; flex: 0 0 auto;
+                display: inline-block; transform: rotate(0deg); transition: transform .24s cubic-bezier(.4,0,.2,1); }
+  .fq.open .q span { transform: rotate(135deg); }
   .fq .a { display: none; font-size: 12.5px; line-height: 1.6; color: var(--ink-soft); padding: 0 14px 14px; }
   .fq.open .a { display: block; }
   .ctx { font-size: 11.5px; line-height: 1.55; color: var(--ink-soft); background: var(--card);
