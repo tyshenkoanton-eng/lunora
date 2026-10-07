@@ -6936,17 +6936,20 @@ function buildDelPerson() {
     ${p.docs.map(([t, sub, res]) => `<div class="card-it" data-res="${res}"><div><div class="t">${t}</div>${sub ? `<span class="s">${sub}</span>` : ''}</div><div class="chev">›</div></div>`).join('')}
   </div>` : ''}
 
-  <div class="warnbox">
-    <div class="wi">⚠</div>
+  <div class="warnbox" style="grid-template-columns:1fr">
     <div>
-      <p>Вместе с данными ${p.name} будут удалены и все связанные с ${p.fio.startsWith('Ковалёв') ? 'ним' : 'ней'} документы.</p>
-      ${p.slot ? `<p>${p.name.replace(/я$/, 'й')} пропадёт из утреннего прогноза. Слот при этом останется свободным — в него можно добавить другого человека.</p>` : ''}
-      ${p.docs.length ? '<p>Документы можно сохранить — нажмите «Сохранить документы» ниже.</p>' : ''}
+      <p>Вместе с данными этого человека будут удалены и все связанные с ними документы.</p>
+      ${p.slot ? `<p>Этот человек пропадёт из утреннего прогноза. Слот при этом останется свободным, в него можно добавить другого человека.</p>` : ''}
+      ${p.docs.length
+        ? `<p>Купленные разборы можно сохранить, нажав на кнопку ниже. Документы сохранятся одним архивом. После удаления восстановить их будет нельзя.</p>`
+        : `<p>После удаления восстановить данные будет нельзя.</p>`}
     </div>
   </div>
 
-  ${p.docs.length ? '<div class="docfoot boxed" style="margin-top:16px"><div class="w-btn ghost" data-save="person">' + ICO.down + 'Сохранить документы</div></div>' : ''}
-  <div class="w-btn danger" data-del="person" style="margin-top:8px"><i class="bi">✕</i>Удалить данные</div>
+  <div class="docfoot boxed" style="margin-top:16px">
+    ${p.docs.length ? `<div class="w-btn ghost" data-save="person">Сохранить документы</div>` : ''}
+    <div class="w-btn danger solid" data-del="person"${p.docs.length ? ' style="margin-top:8px"' : ''}>Удалить данные</div>
+  </div>
 </div>`;
 }
 Object.defineProperty(S, 'delPerson', { get: buildDelPerson });
