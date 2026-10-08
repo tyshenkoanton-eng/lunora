@@ -997,10 +997,11 @@
   .school.silent { border-style: dashed; background: transparent; }
   .school.silent h4 { color: var(--ink-soft); }
   .school.silent p { color: var(--ink-faint); margin-top: 8px; }
-  .askchat { background: var(--wire-fill); border-radius: 12px; padding: 15px 14px; margin-top: 20px; }
+  .askchat { background: var(--wire-fill); border: 1px solid var(--wire-line); border-radius: 12px; padding: 15px 14px; margin-top: 20px; }
   .askchat b { display: block; font-size: 14px; font-weight: 620; margin-bottom: 5px; }
   .askchat p { font-size: 13px; line-height: 1.6; color: var(--ink-soft); margin: 0 0 13px; }
   .askchat .w-btn { min-height: 42px; }
+  .feednote { font-size: 12px; color: var(--ink-faint); line-height: 1.55; margin: 2px 0 11px; }
   .dd .r { display: grid; grid-template-columns: 17px 1fr auto; gap: 9px; align-items: start; font-size: 12px; }
   .dd .r u { text-decoration: none; width: 15px; height: 15px; border-radius: 999px; border: 1px solid var(--wire-line); display: grid; place-items: center; font-size: 9px; color: var(--ink-faint); margin-top: 2px; }
   .dd .r.has u { background: var(--good); border-color: var(--good); color: #fff; }
@@ -6554,7 +6555,24 @@ S.monthPick = `<div class="pad">
   <p class="mnote">До июня ленты нет — вы пришли 14 июня. Дни вперёд откроются, когда наступят.</p>
 </div>`;
 
-S.today = `<div class="pad" style="padding-top:0">
+/* Два состояния ленты людей:
+   — в ленте только вы (никто не добавлен): карточка «+ Добавить человека», первый бесплатно;
+   — один добавлен (Дмитрий): его карточка плюс добавление следующего, уже платным слотом.
+   Переключается общим тумблером состояний: «Норма» — один добавлен, «Пусто» — никого. */
+function todayNear(hasPerson) {
+  if (!hasPerson) return `
+  <p class="feednote">Пока в ленте только вы. Добавьте близкого, и каждое утро рядом с вашим днём будет и его.</p>
+  <div class="cards">
+    <div class="card-it" data-go="addPerson"><div><div class="t">+ Добавить человека</div><span class="s">Первый — бесплатно</span></div><div class="chev">›</div></div>
+  </div>`;
+  return `
+  <div class="cards">
+    <div class="card-it stub"><div><div class="t">Дмитрий Сергеевич</div><span class="s">У него сегодня день разгона — он будет предлагать начинать. Учтите, что у вас день противоположный</span></div><div class="chev">·</div></div>
+    <div class="card-it" data-go="slot"><div><div class="t">+ Добавить человека</div><span class="s">Ещё один рядом с вашим днём, навсегда</span></div><div class="chev">›</div></div>
+  </div>`;
+}
+
+function todayScreen(hasPerson) { return `<div class="pad" style="padding-top:0">
   <div class="monthpick" data-go="monthPick"><b>Август</b><span>2026</span><i>⌄</i></div>
   <div class="daystrip">
     ${DAYS.map(([d,w,st]) => `<div class="dcell${st===1?' now':''}"><u>${w}</u><b>${d}</b></div>`).join('')}
@@ -6579,17 +6597,18 @@ S.today = `<div class="pad" style="padding-top:0">
   </div>
 
   <div class="sec-label">Рядом с вами</div>
-  <div class="cards">
-    <div class="card-it stub"><div><div class="t">Дмитрий Сергеевич</div><span class="s">У него сегодня день разгона — он будет предлагать начинать. Учтите, что у вас день противоположный</span></div><div class="chev">·</div></div>
-    <div class="card-it" data-go="addPerson"><div><div class="t">+ Добавить человека</div><span class="s">Первый — бесплатно</span></div><div class="chev">›</div></div>
-  </div>
+  ${todayNear(hasPerson)}
 
-  <div class="nextrow">
-    <div data-go="chatList">Остались вопросы? Задайте их в чате ›</div>
+  <div class="askchat">
+    <b>Остались вопросы?</b>
+    <p>Задайте их в чате — Лунора отвечает, опираясь на вашу карту.</p>
+    <div class="w-btn ghost" data-go="chat">Перейти в чат</div>
   </div>
 
   <div class="docfoot boxed"><div class="w-btn ghost" data-share="today">${ICO.share}Поделиться</div></div>
-</div>`;
+</div>`; }
+
+Object.defineProperty(S, 'today', { get: () => todayScreen(STATE !== 'empty'), configurable: true });
 
 
 /* ============ БАЛАНС РАЗГОВОРА ============
@@ -8002,7 +8021,6 @@ let STATE = 'ok';
 
 /* пусто — только там, где список может быть пуст */
 const EMPTY_OF = {
-  today: ['◌','В ленте только вы','Добавьте близкого — и утром будете видеть не только свой день, но и его. Первый человек бесплатно.','Добавить человека','shop'],
   chatList: ['◌','Вы ещё ничего не спрашивали','Лунора отвечает по вашей карте, а не вообще. Три вопроса при знакомстве — бесплатно.','Задать вопрос','chat'],
   shop: ['◈','Здесь пока пусто','Купленные разборы остаются тут навсегда, и PDF можно скачать в любой момент.','Посмотреть, что считаем','shop'],
   peopleRel: ['◎','Никого не добавлено','Один человек — бесплатно. Дальше можно добавлять по мере надобности.','Добавить первого','shop'],
@@ -8105,7 +8123,9 @@ function syncSwitches(k) {
 function applyState(k) {
   const v = document.getElementById('view');
   v.classList.toggle('sk', STATE === 'load');
-  if (STATE === 'empty') { v.innerHTML = stEmpty(k); return true; }
+  /* «Сегодня» сам показывает пустую ленту (только вы) — свой день остаётся на экране,
+     а не подменяется общей заглушкой. Поэтому для него пустое состояние не перехватываем. */
+  if (STATE === 'empty' && k !== 'today') { v.innerHTML = stEmpty(k); return true; }
   if (STATE === 'err')   { v.innerHTML = stError(k); return true; }
   if (STATE === 'off')   { v.insertAdjacentHTML('afterbegin',
     `<div class="stbar off"><i>◍</i>Нет сети — показываем сохранённое. Всё, что нажмёте, отправим, когда связь вернётся</div>`); return false; }
