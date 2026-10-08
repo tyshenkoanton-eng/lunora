@@ -5,7 +5,7 @@
     --ink-faint: #8b929d; --rule: #d8dce2; --rule-soft: #e8eaee;
     --wire-fill: #e9ebef; --wire-fill-2: #dcdfe5; --wire-line: #c3c8d0; --chart-edge: #8f96a1;
     --note: #2f5d8a; --note-bg: #e8f0f7; --warn: #8a5a1f; --warn-bg: #f7efe2; --warn-line: #e2cfae;
-    --good: #3d6b4a; --bad: #a33b3b; --bad-bg: #f8e9e9; --bad-line: #e3bcbc;
+    --good: #3d6b4a; --bad: #a33b3b;
     --luna: #4a4d8a; --luna-bg: #eeeef7; --luna-line: #b9bbdb;
     --frame-shadow: 0 1px 2px rgba(27,31,38,.06), 0 8px 24px rgba(27,31,38,.05);
   }
@@ -15,7 +15,7 @@
       --ink-faint: #737b87; --rule: #2c323b; --rule-soft: #232830;
       --wire-fill: #262b33; --wire-fill-2: #2f353f; --wire-line: #3d444f; --chart-edge: rgba(255,255,255,.52);
       --note: #7fb0da; --note-bg: #1c2732; --warn: #d6a86a; --warn-bg: #2a2318; --warn-line: #4a3c26;
-      --good: #7fb694; --bad: #e08b8b; --bad-bg: #2a1a1b; --bad-line: #4c2e2f;
+      --good: #7fb694; --bad: #e08b8b;
       --luna: #a8aae0; --luna-bg: #1f2133; --luna-line: #3f4270;
       --frame-shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
     }
@@ -25,7 +25,7 @@
     --ink-faint: #737b87; --rule: #2c323b; --rule-soft: #232830;
     --wire-fill: #262b33; --wire-fill-2: #2f353f; --wire-line: #3d444f; --chart-edge: rgba(255,255,255,.52);
     --note: #7fb0da; --note-bg: #1c2732; --warn: #d6a86a; --warn-bg: #2a2318; --warn-line: #4a3c26;
-    --good: #7fb694; --bad: #e08b8b; --bad-bg: #2a1a1b; --bad-line: #4c2e2f;
+    --good: #7fb694; --bad: #e08b8b;
     --luna: #a8aae0; --luna-bg: #1f2133; --luna-line: #3f4270;
     --frame-shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.25);
   }
@@ -34,7 +34,7 @@
     --ink-faint: #8b929d; --rule: #d8dce2; --rule-soft: #e8eaee;
     --wire-fill: #e9ebef; --wire-fill-2: #dcdfe5; --wire-line: #c3c8d0; --chart-edge: #8f96a1;
     --note: #2f5d8a; --note-bg: #e8f0f7; --warn: #8a5a1f; --warn-bg: #f7efe2; --warn-line: #e2cfae;
-    --good: #3d6b4a; --bad: #a33b3b; --bad-bg: #f8e9e9; --bad-line: #e3bcbc;
+    --good: #3d6b4a; --bad: #a33b3b;
     --luna: #4a4d8a; --luna-bg: #eeeef7; --luna-line: #b9bbdb;
     --frame-shadow: 0 1px 2px rgba(27,31,38,.06), 0 8px 24px rgba(27,31,38,.05);
   }
@@ -1406,12 +1406,14 @@
   .payic.ok { background: var(--good); color: #fff; }
   .payic.bad { background: var(--bad); color: #fff; }
   .payic.wait { background: var(--wire-fill-2); color: var(--ink-soft); }
-  /* панель ошибки: тёплое красное на мягком красном фоне */
-  .errpanel { background: var(--bad-bg); border: 1px solid var(--bad-line); border-radius: 16px;
+  /* панель ошибки: яркое красное на тёмно-бордовом (по референсу).
+     Вид фиксированный в обеих темах — это «тревожная» карточка. */
+  .errpanel { background: #33030a; border: 1px solid #820d2e; border-radius: 16px;
               padding: 22px 18px 20px; text-align: center; }
-  .errpanel .payic.bad { background: transparent; color: var(--bad); border: 1.5px solid var(--bad); }
-  .errpanel .et { font-size: 18px; font-weight: 640; color: var(--bad); display: block; margin-bottom: 9px; }
-  .errpanel .em { font-size: 13px; color: var(--ink-soft); line-height: 1.6; }
+  .errpanel .payic.bad { background: transparent; color: #e31937; border: 1.5px solid #e31937; }
+  .errpanel .et { font-size: 18px; font-weight: 640; color: #e31937; display: block; margin-bottom: 9px; }
+  .errpanel .em { font-size: 13px; color: #ecb4bb; line-height: 1.6; }
+  .errpanel .em b { color: #f3c9ce; }
   .pdflink { display: block; text-align: center; font-size: 12.5px; color: var(--note);
              margin-top: 12px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
   .pdfprev { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
@@ -8605,7 +8607,7 @@ function docFailHTML() {
     <div class="payic bad">✕</div>
     <span class="et">Документ не создан</span>
     <p class="em">Во время создания документа возникла ошибка. Мы уже знаем о сбое и разбираемся. Попробуйте ещё раз или напишите в поддержку.</p>
-    <p class="em" style="margin-top:10px"><b style="color:var(--ink)">Деньги не списаны.</b> Оплата спишется только когда документ будет готов.</p>
+    <p class="em" style="margin-top:10px"><b>Деньги не списаны.</b> Оплата спишется только когда документ будет готов.</p>
   </div>
   <div class="w-btn" data-go="docBuild" style="margin-top:18px">Попробовать снова</div>
   <div class="w-btn ghost" data-go="support" style="margin-top:8px">Написать в поддержку</div>
