@@ -6674,17 +6674,25 @@ function buildShop() { return `<div class="pad">
 </div>`; }
 Object.defineProperty(S, "shop", { get: buildShop });
 
-S.shopMe = `<div class="pad">
+/* карточка PDF гаснет после покупки: купленное показываем как купленное, а не
+   с ценой; ведёт в «Мои разборы», где лежит файл (тогда на payConfirm по этому
+   пути уже не попасть повторно) */
+Object.defineProperty(S, 'shopMe', { get() {
+  const pdfCard = PDFST === 'bought'
+    ? `<div class="card-it" data-godocs="1"><div><div class="t">PDF вашей карты</div><span class="s">Куплен · в разделе «Мои разборы»</span></div><div class="chev">›</div></div>`
+    : `<div class="card-it" data-prod="pdf"><div><div class="t">PDF вашей карты</div><span class="s">Свёрстанный файл со всеми четырьмя чертежами. Сам разбор остаётся бесплатным</span></div><div class="price">149 ₽</div></div>`;
+  return `<div class="pad">
   <div class="dochead" data-go="shop"><span>&lsaquo;</span><div>Назад · Разборы</div></div>
   <h2 class="t-title" style="font-size:21px">Про меня</h2>
   <p class="d-lede">Всё, что считается по вашей собственной карте и по вашему имени.</p>
   <div class="cards">
     <div class="card-it" data-prod="year"><div><div class="t">Карта на год</div><span class="s">С 4 февраля по 4 февраля — ваш год начинается в день рождения</span></div><div class="price">1 990 ₽</div></div>
     <div class="card-it" data-prod="rename"><div><div class="t">Смена имени или фамилии</div><span class="s">Что изменится в числах: было и стало. Псевдоним и творческое имя тоже</span></div><div class="price">490 ₽</div></div>
-    <div class="card-it" data-prod="pdf"><div><div class="t">PDF вашей карты</div><span class="s">Свёрстанный файл со всеми четырьмя чертежами. Сам разбор остаётся бесплатным</span></div><div class="price">149 ₽</div></div>
+    ${pdfCard}
   </div>
   <div class="nextsec" data-go="shopPeople"><div><u>Дальше</u><b>Про людей</b></div><span>→</span></div>
 </div>`;
+}});
 
 function buildShopTalk() { return `<div class="pad">
   <div class="dochead" data-go="shop"><span>&lsaquo;</span><div>Назад · Разборы</div></div>
