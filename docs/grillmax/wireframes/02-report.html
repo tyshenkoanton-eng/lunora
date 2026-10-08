@@ -1729,8 +1729,8 @@
   /* карточка человека в ленте: строка-суть видна всегда, по тапу (плюс → крестик)
      раскрывается разбор в стиле основного, но в разрезе двух дней. Основа — .fq из FAQ. */
   .fq.pfq .q { align-items: flex-start; font-weight: 400; }
-  .fq.pfq .q > div:first-child { flex: 1; }
-  .fq.pfq .q .pt { font-size: 14px; font-weight: 620; letter-spacing: -.005em; }
+  .fq.pfq .q > div:first-child { flex: 1; min-width: 0; }
+  .fq.pfq .q .pt { font-size: 14px; font-weight: 620; letter-spacing: -.005em; overflow-wrap: anywhere; }
   .fq.pfq .q .ps { display: block; font-size: 12px; font-weight: 400; color: var(--ink-soft); line-height: 1.45; margin-top: 4px; }
   .fq.pfq .pbody .lab { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--luna); font-weight: 750; margin-bottom: 10px; }
   .fq.pfq .pbody p { font-size: 13px; line-height: 1.62; margin: 0 0 10px; color: var(--ink); }
