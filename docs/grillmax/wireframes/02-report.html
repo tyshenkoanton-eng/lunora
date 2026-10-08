@@ -1736,6 +1736,12 @@
   .fq.pfq .pbody p { font-size: 13px; line-height: 1.62; margin: 0 0 10px; color: var(--ink); }
   .fq.pfq .pbody p:last-child { margin-bottom: 0; }
   .fq.pfq .pbody .plead { font-weight: 600; }
+
+  /* добавление человека — свободный слот: пунктир, по центру, высотой с карточку человека */
+  .card-it.addslot { display: flex; flex-direction: column; align-items: center; justify-content: center;
+                     text-align: center; gap: 3px; min-height: 104px; border: 1px dashed var(--wire-line); background: transparent; }
+  .card-it.addslot .t { font-size: 14px; font-weight: 620; color: var(--ink-soft); }
+  .card-it.addslot .s { margin-top: 0; font-size: 12px; color: var(--ink-faint); }
   .stub-screen { padding: 60px 24px; text-align: center; }
   .stub-screen b { display: block; font-size: 17px; font-weight: 640; margin-bottom: 10px; }
   .stub-screen p { font-size: 13px; color: var(--ink-soft); line-height: 1.6; margin: 0 0 20px; }
@@ -6574,7 +6580,7 @@ function todayNear(hasPerson) {
   if (!hasPerson) return `
   <p class="feednote">Пока в ленте только вы. Добавьте близкого, и каждое утро рядом с вашим днём будет и его.</p>
   <div class="cards">
-    <div class="card-it" data-go="addPerson"><div><div class="t">+ Добавить человека</div><span class="s">Первый — бесплатно</span></div><div class="chev">›</div></div>
+    <div class="card-it addslot" data-go="addPerson"><div class="t">+ Добавить человека</div><div class="s">Первый бесплатно</div></div>
   </div>`;
   return `
   <div class="cards">
@@ -6595,7 +6601,7 @@ function todayNear(hasPerson) {
         </div>
       </div></div></div>
     </div>
-    <div class="card-it" data-go="slot"><div><div class="t">+ Добавить человека</div><span class="s">Ещё один рядом с вашим днём, навсегда</span></div><div class="chev">›</div></div>
+    <div class="card-it addslot" data-go="slot"><div class="t">+ Добавить ещё одного человека</div><div class="s">Рядом с вашим днём, навсегда</div></div>
   </div>`;
 }
 
