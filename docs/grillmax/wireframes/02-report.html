@@ -1088,7 +1088,8 @@
   .warnbox .wi { font-size: 14px; line-height: 1.5; }
   .w-btn .bi { font-style: normal; margin-right: 8px; font-size: 14px; opacity: .8; }
   .w-btn.danger { background: transparent; border-color: var(--bad); color: var(--bad); }
-  .w-btn.danger.solid { background: var(--bad); border-color: var(--bad); color: #fff; }
+  /* финальное необратимое действие (удаление) — яркий красный по референсу */
+  .w-btn.danger.solid { background: #e31937; border-color: #e31937; color: #fff; }
   .bigfile { cursor: pointer; color: var(--ink-soft); display: grid; grid-template-columns: 56px 1fr; gap: 14px; align-items: center;
              border: 1px solid var(--rule); border-radius: 12px; padding: 16px; background: var(--wire-fill); margin-top: 16px; }
   .bigfile .pdfico { display: block; }
@@ -1140,7 +1141,7 @@
   .warnbox { display: grid; grid-template-columns: 20px 1fr; gap: 11px; align-items: start; }
   .warnbox .wi { font-size: 14px; line-height: 1.5; }
   .w-btn .bi { font-style: normal; margin-right: 8px; font-size: 14px; opacity: .8; }
-  .w-btn.danger.solid { background: var(--bad); border-color: var(--bad); color: #fff; }
+  .w-btn.danger.solid { background: #e31937; border-color: #e31937; color: #fff; }
   .bigfile { cursor: pointer; color: var(--ink-soft); display: grid; grid-template-columns: 56px 1fr; gap: 14px; align-items: center;
              border: 1px solid var(--rule); border-radius: 12px; padding: 16px; background: var(--wire-fill); margin-top: 16px; }
   .bigfile .pdfico { display: block; }
@@ -1406,14 +1407,6 @@
   .payic.ok { background: var(--good); color: #fff; }
   .payic.bad { background: var(--bad); color: #fff; }
   .payic.wait { background: var(--wire-fill-2); color: var(--ink-soft); }
-  /* панель ошибки: яркое красное на тёмно-бордовом (по референсу).
-     Вид фиксированный в обеих темах — это «тревожная» карточка. */
-  .errpanel { background: #33030a; border: 1px solid #820d2e; border-radius: 16px;
-              padding: 22px 18px 20px; text-align: center; }
-  .errpanel .payic.bad { background: transparent; color: #e31937; border: 1.5px solid #e31937; }
-  .errpanel .et { font-size: 18px; font-weight: 640; color: #e31937; display: block; margin-bottom: 9px; }
-  .errpanel .em { font-size: 13px; color: #ecb4bb; line-height: 1.6; }
-  .errpanel .em b { color: #f3c9ce; }
   .pdflink { display: block; text-align: center; font-size: 12.5px; color: var(--note);
              margin-top: 12px; cursor: pointer; text-decoration: underline; text-underline-offset: 3px; }
   .pdfprev { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
@@ -8527,13 +8520,11 @@ Object.defineProperty(S, 'payOk', { get() {
 }});
 
 Object.defineProperty(S, 'payErr', { get() {
-  return `<div class="pad" style="min-height:500px;display:flex;flex-direction:column;justify-content:center">
-  <div class="errpanel">
-    <div class="payic bad">✕</div>
-    <span class="et">Оплата не прошла</span>
-    <p class="em">Платёж не завершён. Если деньги всё же списались, они вернутся автоматически в течение суток. Можно попробовать ещё раз.</p>
-  </div>
-  <div class="w-btn" data-go="payGate" style="margin-top:18px">Повторить оплату</div>
+  return `<div class="pad" style="min-height:500px;display:flex;flex-direction:column;justify-content:center;text-align:center">
+  <div class="payic bad">✕</div>
+  <b style="font-size:19px;font-weight:640;display:block;margin-bottom:10px">Оплата не прошла</b>
+  <p style="font-size:13px;color:var(--ink-soft);line-height:1.6;margin:0 0 22px">Платёж не завершён. Если деньги всё же списались, они вернутся автоматически в течение суток. Можно попробовать ещё раз.</p>
+  <div class="w-btn" data-go="payGate">Повторить оплату</div>
   <div class="w-btn ghost" data-go="${PAYKIND === 'pdf' ? 'pdfSell' : 'shop'}" style="margin-top:8px">Вернуться</div>
   <p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin:14px 0 0">Не получается? <span style="color:var(--note);cursor:pointer" data-go="help-pay">Напишите нам</span> — номер заказа LN-8412-DK.</p>
 </div>`;
@@ -8602,14 +8593,12 @@ function docRun() {
 }
 
 function docFailHTML() {
-  return `<div class="pad" style="min-height:500px;display:flex;flex-direction:column;justify-content:center">
-  <div class="errpanel">
-    <div class="payic bad">✕</div>
-    <span class="et">Документ не создан</span>
-    <p class="em">Во время создания документа возникла ошибка. Мы уже знаем о сбое и разбираемся. Попробуйте ещё раз или напишите в поддержку.</p>
-    <p class="em" style="margin-top:10px"><b>Деньги не списаны.</b> Оплата спишется только когда документ будет готов.</p>
-  </div>
-  <div class="w-btn" data-go="docBuild" style="margin-top:18px">Попробовать снова</div>
+  return `<div class="pad" style="min-height:500px;display:flex;flex-direction:column;justify-content:center;text-align:center">
+  <div class="payic bad">✕</div>
+  <b style="font-size:19px;font-weight:640;display:block;margin-bottom:10px">Документ не создан</b>
+  <p style="font-size:13px;color:var(--ink-soft);line-height:1.62;margin:0 0 10px">Во время создания документа возникла ошибка. Мы уже знаем о сбое и разбираемся. Попробуйте ещё раз или напишите в поддержку.</p>
+  <p style="font-size:12.5px;color:var(--ink);line-height:1.6;margin:0 0 22px"><b>Деньги не списаны.</b> Оплата спишется только когда документ будет готов.</p>
+  <div class="w-btn" data-go="docBuild">Попробовать снова</div>
   <div class="w-btn ghost" data-go="support" style="margin-top:8px">Написать в поддержку</div>
 </div>`;
 }
