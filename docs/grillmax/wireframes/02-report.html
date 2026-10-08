@@ -1725,6 +1725,15 @@
   /* заглушка недоступного в прототипе */
   .card-it.stub { opacity: .45; cursor: default; }
   .card-it.stub .chev { font-size: 10px; }
+
+  /* карточка человека в ленте: строка-суть видна всегда, по тапу раскрывается разбор */
+  .pcard { border: 1px solid var(--rule); border-radius: 10px; background: var(--card); }
+  .pcard > .card-it.exp { border: none; background: transparent; border-radius: 10px; align-items: start; }
+  .pcard > .card-it.exp .chev { font-size: 15px; transition: transform .15s ease; margin-top: 1px; }
+  .pcard.open > .card-it.exp .chev { transform: rotate(180deg); }
+  .pcard .pexp { display: none; padding: 0 14px 13px; }
+  .pcard.open .pexp { display: block; }
+  .pcard .pexp p { font-size: 12px; color: var(--ink-soft); line-height: 1.6; margin: 0; }
   .stub-screen { padding: 60px 24px; text-align: center; }
   .stub-screen b { display: block; font-size: 17px; font-weight: 640; margin-bottom: 10px; }
   .stub-screen p { font-size: 13px; color: var(--ink-soft); line-height: 1.6; margin: 0 0 20px; }
@@ -6567,7 +6576,10 @@ function todayNear(hasPerson) {
   </div>`;
   return `
   <div class="cards">
-    <div class="card-it stub"><div><div class="t">Дмитрий Сергеевич</div><span class="s">У него сегодня день разгона — он будет предлагать начинать. Учтите, что у вас день противоположный</span></div><div class="chev">·</div></div>
+    <div class="pcard">
+      <div class="card-it exp" data-exp><div><div class="t">Дмитрий Сергеевич</div><span class="s">У него сегодня день разгона — он будет предлагать начинать. Учтите, что у вас день противоположный</span></div><div class="chev">⌄</div></div>
+      <div class="pexp"><p>Сегодня его тянет разгонять, а вас закрывать начатое. Если он позовёт запускать что-то новое, лучше не втягиваться на его темпе: у вас сегодня выигрывает доделывание, а не старт. Если решать нужно вместе, спокойнее вернуться к этому завтра.</p></div>
+    </div>
     <div class="card-it" data-go="slot"><div><div class="t">+ Добавить человека</div><span class="s">Ещё один рядом с вашим днём, навсегда</span></div><div class="chev">›</div></div>
   </div>`;
 }
@@ -9779,6 +9791,8 @@ view.addEventListener('click', e => {
   if (w) { w.parentElement.classList.toggle('open'); return; }
   const a = e.target.closest('.acc-h');
   if (a) { a.parentElement.classList.toggle('open'); return; }
+  const pc = e.target.closest('.pcard > .card-it.exp');
+  if (pc) { pc.parentElement.classList.toggle('open'); return; }
 });
 
 /* утренняя лента: режим, время, пояс */
