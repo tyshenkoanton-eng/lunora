@@ -5890,7 +5890,7 @@ function addPersonScreen() {
   const first = SLOTFIRST;
   return `<div class="pad" style="padding-bottom:16px">
   <div class="dochead" data-go="today"><span>&lsaquo;</span><div>Назад · Сегодня</div></div>
-  <h2 class="t-title" style="font-size:21px">Добавление человека</h2>
+  <h2 class="t-title" style="font-size:21px">Добавление человека${first ? '' : ' · 290 ₽'}</h2>
   <p class="d-lede">Его прогноз будет рядом с вашим каждый день. Вы увидите, в чём совпадаете, где расходитесь и что с этим делать именно вам.</p>
   <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin:10px 0 0">Хватит имени и даты рождения. Остальное, если знаете; без него разбор выйдет короче, и мы честно покажем, насколько.</p>
 
@@ -5916,7 +5916,7 @@ function addPersonScreen() {
     ? `<div class="w-btn" data-go="today" style="margin-top:16px">Добавить человека</div>
   <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:12px;text-align:center">Первый человек — бесплатно. Данные можно удалить в любой момент, вместе со всем, что на них построено.</p>`
     : `<div class="w-btn" data-prod="slot" style="margin-top:16px">Добавить человека · 290 ₽</div>
-  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:12px;text-align:center">Разовый платёж 290 ₽. Данные можно удалить в любой момент, вместе со всем, что на них построено.</p>`}
+  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:12px;text-align:center">Разовый платёж, не подписка. Данные можно удалить в любой момент, вместе со всем, что на них построено.</p>`}
 </div>`;
 }
 Object.defineProperty(S, 'addPerson', { get: addPersonScreen });
@@ -6595,7 +6595,7 @@ function todayNear(hasPerson) {
         <div class="why"><b>Как это посчитано</b><span>У Дмитрия сегодня личный день 1. Личный год 8 (8+8+2026) → личный месяц 7 (8+8) → личный день 1 (7+12). Единица в нумерологии начало цикла: разгон, старт, инициатива. У вас сегодня девятка, завершение того же цикла. Начало и конец тянут в разные стороны, отсюда и противоположные дни.<br><br>⚠️ Пока только нумерология, как и в вашем дне. Ба-Цзы и транзиты добавят ещё линии сравнения позже.</span></div>
       </div></div></div>
     </div>
-    <div class="card-it addslot" data-openslot="next"><div class="t">+ Добавить человека</div><div class="s">Его прогноз рядом с вашим каждый день · 290 ₽</div></div>
+    <div class="card-it addslot" data-openslot="next"><div class="t">+ Добавить ещё человека · 290 ₽</div><div class="s">Его прогноз рядом с вашим каждый день</div></div>
   </div>`;
 }
 
