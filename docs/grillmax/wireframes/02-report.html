@@ -1724,6 +1724,8 @@
   /* заглушка недоступного в прототипе */
   .card-it.stub { opacity: .45; cursor: default; }
   .card-it.stub .chev { font-size: 10px; }
+  /* превью добавляемого человека: как заглушка, но пунктиром и без заливки */
+  .card-it.dash { border-style: dashed; background: transparent; opacity: .6; }
 
   /* карточка человека в ленте: строка-суть видна всегда, по тапу (плюс → крестик)
      раскрывается разбор в стиле основного, но в разрезе двух дней. Основа — .fq из FAQ. */
@@ -6542,14 +6544,14 @@ S.chatPaywall = `<div class="chatwrap">
    Отличаются тем, кто уже в ленте, текстом «что добавится», кнопкой и ценой. */
 function slotScreen() {
   const first = SLOTFIRST;
-  const inFeed = first
-    ? `<div class="card-it stub"><div><div class="t">Вы</div><span class="s">Ваш ежедневный прогноз на день</span></div><div class="chev">·</div></div>`
-    : `<div class="card-it stub"><div><div class="t">Вы</div><span class="s">Ваш ежедневный прогноз на день</span></div><div class="chev">·</div></div>
-    <div class="card-it stub"><div><div class="t">Дмитрий Сергеевич</div><span class="s">Его день рядом с вашим</span></div><div class="chev">·</div></div>`;
-  return `<div class="pad">
+  const youCard = `<div class="card-it stub"><div><div class="t">Вы</div><span class="s">Ваш ежедневный прогноз на день</span></div><div class="chev">·</div></div>`;
+  const dmCard = `<div class="card-it stub"><div><div class="t">Дмитрий Сергеевич</div><span class="s">Его день рядом с вашим</span></div><div class="chev">·</div></div>`;
+  const newCard = `<div class="card-it stub dash"><div><div class="t">Новый человек</div><span class="s">Его ежедневный прогноз и его влияние на вас</span></div><div class="chev">·</div></div>`;
+  const inFeed = first ? youCard + newCard : youCard + dmCard + newCard;
+  return `<div class="pad" style="padding-bottom:16px">
   <div class="dochead" data-go="today"><span>&lsaquo;</span><div>Назад · Сегодня</div></div>
   <h2 class="t-title" style="font-size:21px">Добавление человека</h2>
-  <p class="d-lede">${first
+  <p class="d-lede" style="border-bottom:none;padding-bottom:0">${first
     ? 'Добавьте близкого, и его прогноз будет рядом с вашим каждый день.'
     : 'Ещё один человек рядом с вашим днём, каждый день.'}</p>
 
