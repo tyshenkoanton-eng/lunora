@@ -6640,8 +6640,6 @@ function todayScreen(hasPerson) { return `<div class="pad" style="padding-top:0;
     <p>Задайте их в чате. Лунора отвечает, опираясь на вашу карту.</p>
     <div class="w-btn" data-go="chat">Перейти в чат</div>
   </div>
-
-  <div class="docfoot boxed" style="margin-top:16px"><div class="w-btn ghost" data-share="today">${ICO.share}Поделиться</div></div>
 </div>`; }
 
 Object.defineProperty(S, 'today', { get: () => todayScreen(STATE !== 'empty'), configurable: true });
