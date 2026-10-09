@@ -6995,7 +6995,7 @@ function buildMyPeople() {
   <div class="cards">
     ${live.map(k => GONE[k] === 'undo'
       ? `<div class="undo"><div><b>${PEOPLE[k].fio}</b><span>Данные и документы удалены</span></div><u data-undo="${k}">Восстановить<em>${UNDO_LEFT[k] ?? 10}</em></u></div>`
-      : `<div class="card-it" data-person="${k}"><div><div class="t">${PEOPLE[k].fio}</div></div><div class="chev">›</div></div>`).join('')}
+      : `<div class="card-it" data-person="${k}"><div><div class="t">${PEOPLE[k].fio}</div>${PEOPLE[k].slot ? '<span class="s">В ленте</span>' : ''}</div><div class="chev">›</div></div>`).join('')}
   </div>
 </div>`;
 }
@@ -7006,6 +7006,7 @@ Object.defineProperty(S, "myPeople", { get: buildMyPeople });
    так же как «Личные данные» → «Удаление данных» (Н-09). */
 function buildDelPerson() {
   const p = PEOPLE[PERSON];
+  const pr = PRON(p.sex);
   return `<div class="pad">
   <div class="dochead" data-go="myPeople"><span>&lsaquo;</span><div>Назад · Добавленные люди</div></div>
   <h2 class="t-title" style="font-size:21px">${p.fio}</h2>
@@ -7019,6 +7020,19 @@ function buildDelPerson() {
   <div class="cards">
     ${p.docs.map(([t, sub, res]) => `<div class="card-it" data-res="${res}"><div><div class="t">${t}</div>${sub ? `<span class="s">${sub}</span>` : ''}</div><div class="chev">›</div></div>`).join('')}
   </div>` : ''}
+
+  <div class="sec-label">Лента</div>
+  <div class="cards">
+    <div class="card-it stub"><div><div class="t">Прогноз рядом с вашим</div><span class="s">${p.slot ? 'Сейчас в вашей ленте' : 'Сейчас не в ленте'}</span></div><div class="chev">${p.slot ? '✓' : '·'}</div></div>
+  </div>
+  ${p.slot
+    ? `<div class="w-btn ghost" data-feedremove="${PERSON}" style="margin-top:12px">Убрать из ленты</div>
+  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:10px">${pr.Poss} день перестанет стоять рядом с вашим. Данные и купленные разборы сохранятся, место в ленте останется за вами, в него можно поставить другого человека.</p>`
+    : freeSlots() > 0
+      ? `<div class="w-btn" data-feedadd="${PERSON}" style="margin-top:12px">Добавить в ленту</div>
+  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:10px">В ленте есть свободное место, поэтому бесплатно. ${pr.Poss} прогноз встанет рядом с вашим каждый день.</p>`
+      : `<div class="w-btn" data-feedadd="${PERSON}" style="margin-top:12px">Добавить в ленту · 290 ₽</div>
+  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:10px">Свободных мест в ленте нет, поэтому добавление откроет ещё одно, разовым платежом 290 ₽. Потом человека в этом месте можно менять бесплатно.</p>`}
 
   <div class="w-btn danger" data-go="delPersonConfirm" style="margin-top:22px">Удалить данные</div>
 </div>`;
@@ -8580,24 +8594,26 @@ Object.defineProperty(S, 'payConfirm', { get() {
   /* добавление человека в ленту оплачивается в том же контуре, что PDF-документ:
      подтверждение → граница оператора → исход. Без подарочного сертификата —
      сертификат применяется только там, где покупку можно подарить (разборы). */
-  if (PAYKIND === 'slot') return `<div class="pad">
-  <div class="dochead" data-go="addPerson"><span>&lsaquo;</span><div>Назад</div></div>
+  if (PAYKIND === 'slot') { const addName = FEED_ADD ? (PEOPLE[FEED_ADD].fio.split(' ')[1] || 'человек') : 'Дмитрий';
+  const addP = PRON(FEED_ADD ? PEOPLE[FEED_ADD].sex : 'm');
+  return `<div class="pad">
+  <div class="dochead" data-go="${FEED_ADD ? 'delPerson' : 'addPerson'}"><span>&lsaquo;</span><div>Назад</div></div>
   <h2 class="t-title" style="font-size:21px">Переходим к оплате</h2>
 
   <div class="sumcard" style="margin-top:14px">
-    <div><u>Покупка</u><b>Ещё один человек в ленте</b></div>
+    <div><u>Покупка</u><b>Ещё одно место в ленте</b></div>
     <div class="ml"><u>Цена</u><b>290 ₽ · разовый платёж</b></div>
   </div>
 
   <div class="body-text" style="margin-top:16px">
-    <p>После оплаты Дмитрий появится в вашей ленте, и его прогноз встанет рядом с вашим. Человека в этом месте можно менять в любой момент.</p>
+    <p>После оплаты ${addName} появится в вашей ленте, и ${addP.poss} прогноз встанет рядом с вашим. Человека в этом месте можно менять в любой момент.</p>
   </div>
 
   <div class="docfoot boxed" style="margin-top:18px">
     <p class="payterms">Оплачивая, вы принимаете <u data-go="doc-offer">оферту</u>.</p>
     <div class="w-btn" data-go="payGate">Перейти к оплате · 290 ₽</div>
   </div>
-</div>`;
+</div>`; }
   PAYKIND = 'pdf';
   /* данные показываем те, что реально введены: адрес и точное время появляются,
      когда они есть, и это последняя точка, где ошибку ещё можно заметить */
@@ -8667,7 +8683,9 @@ Object.defineProperty(S, 'payOk', { get() {
   const pdf = PAYKIND === 'pdf';
   const slot = PAYKIND === 'slot';
   const p = PROD[CUR];
-  const line = slot ? 'Ещё один человек в ленте · 290 ₽'
+  const addName = FEED_ADD ? (PEOPLE[FEED_ADD].fio.split(' ')[1] || 'Человек') : 'Дмитрий';
+  const addP = PRON(FEED_ADD ? PEOPLE[FEED_ADD].sex : 'm');
+  const line = slot ? 'Ещё одно место в ленте · 290 ₽'
              : pdf ? 'Индивидуальный разбор личности · 149 ₽'
              : (p ? `${p.t} · ${p.price}` : 'Разбор');
   return `<div class="pad" style="min-height:500px;display:flex;flex-direction:column;justify-content:center;text-align:center">
@@ -8675,11 +8693,13 @@ Object.defineProperty(S, 'payOk', { get() {
   <b style="font-size:19px;font-weight:640;display:block;margin-bottom:10px">Оплата подтверждена</b>
   <p style="font-size:13px;color:var(--ink-soft);line-height:1.6;margin:0 0 6px">${line}</p>
   <p style="font-size:12.5px;color:var(--ink-faint);line-height:1.6;margin:0 0 22px">${slot
-    ? 'Дмитрий добавлен в вашу ленту. Его прогноз уже рядом с вашим.'
+    ? `${addName} ${addP.added} в вашу ленту. ${addP.Poss} прогноз уже рядом с вашим.`
     : 'Мы получили платёж. Готовы приступить к сборке, это займёт не более минуты.'}</p>
   <div class="docfoot boxed" style="margin-top:20px">
     ${slot
-      ? `<div class="w-btn ghost" data-go="personCalc">Рассчитать прогноз</div>`
+      ? (FEED_ADD
+          ? `<div class="w-btn ghost" data-go="delPerson">Готово</div>`
+          : `<div class="w-btn ghost" data-go="personCalc">Рассчитать прогноз</div>`)
       : `<div class="w-btn ghost" data-go="${pdf ? 'docBuild' : 'prodBuild'}">${ICO.down}Собрать ${pdf ? 'документ' : 'разбор'}</div>`}
     <div class="w-btn ghost" data-recopen="1">${ICO.mail}Открыть чек</div>
   </div>
@@ -9348,9 +9368,11 @@ view.addEventListener('click', e => {
   const py = e.target.closest('[data-payres]');
   if (py) {
     const r = py.dataset.payres;
+    /* оплата слота из карточки человека: открываем ещё одно место и занимаем его */
+    if (r === 'ok' && PAYKIND === 'slot' && FEED_ADD) { SLOTS_OWNED++; PEOPLE[FEED_ADD].slot = true; }
     if (r === 'ok') { render('payOk'); return; }
     if (r === 'wait') { render('payWait'); return; }
-    if (r === 'cancel') { render(PAYKIND === 'pdf' ? 'pdfSell' : PAYKIND === 'slot' ? 'addPerson' : 'shop'); return; }
+    if (r === 'cancel') { render(PAYKIND === 'pdf' ? 'pdfSell' : PAYKIND === 'slot' ? (FEED_ADD ? 'delPerson' : 'addPerson') : 'shop'); return; }
     render('payErr'); return;
   }
   /* «Перейти к документу» ведёт в Разборы → Мои разборы, где лежит файл */
@@ -9370,6 +9392,14 @@ view.addEventListener('click', e => {
   if (e.target.closest('.card-it[data-go="К-12"]')) { RECBACK = 'К-10'; RECKIND = 'pay'; }
   const pr2 = e.target.closest('[data-person]');
   if (pr2) { PERSON = pr2.dataset.person; render('delPerson'); return; }
+  const fr = e.target.closest('[data-feedremove]');
+  if (fr) { PEOPLE[fr.dataset.feedremove].slot = false; render('delPerson'); return; }
+  const fa = e.target.closest('[data-feedadd]');
+  if (fa) {
+    const k = fa.dataset.feedadd;
+    if (freeSlots() > 0) { PEOPLE[k].slot = true; render('delPerson'); return; }
+    FEED_ADD = k; PAYKIND = 'slot'; render('payConfirm'); return;
+  }
   const rs = e.target.closest('[data-res]');
   if (rs) { RECALC_SEEN.add(rs.dataset.res); CUR = rs.dataset.res; SHOPTAB = 'docs'; render('prodResult'); return; }
   const ts = e.target.closest('[data-tset]');
@@ -9384,7 +9414,7 @@ view.addEventListener('click', e => {
   }
   if (e.target.closest('[data-monthsheet]')) { setupMonths(false); popShow('monthSheet'); return; }
   const os = e.target.closest('[data-openslot]');
-  if (os) { SLOTFIRST = os.dataset.openslot === 'first'; render('addPerson'); return; }
+  if (os) { SLOTFIRST = os.dataset.openslot === 'first'; FEED_ADD = null; render('addPerson'); return; }
   const addd = e.target.closest('[data-added]');
   if (addd) { STATE = 'ok'; render('today'); popShow('addedSheet'); return; }
   const go = e.target.closest('[data-go]');
@@ -9646,15 +9676,28 @@ function memCheck() {
 
 /* люди для экранов удаления */
 const PEOPLE = {
-  d: { fio: 'Ковалёв Дмитрий Сергеевич', name: 'Дмитрия', born: '17 августа 1981', city: 'Ростов-на-Дону',
+  d: { fio: 'Ковалёв Дмитрий Сергеевич', name: 'Дмитрия', sex: 'm', born: '17 августа 1981', city: 'Ростов-на-Дону',
        slot: true, docs: [['Совместимость', 'Любовь и отношения', 'compat']] },
-  s: { fio: 'Тыщенко Софья Дмитриевна', name: 'Софьи', born: '9 мая 2019', city: 'Волгоград',
+  s: { fio: 'Тыщенко Софья Дмитриевна', name: 'Софьи', sex: 'f', born: '9 мая 2019', city: 'Волгоград',
        slot: false, docs: [['Натальная карта ребёнка', '', 'child'], ['Выбор имени', 'Ева · Мария · Анна', 'childName']] },
-  o: { fio: 'Тыщенко Ольга Николаевна', name: 'Ольги', born: '3 марта 1958', city: 'Камышин',
+  o: { fio: 'Тыщенко Ольга Николаевна', name: 'Ольги', sex: 'f', born: '3 марта 1958', city: 'Камышин',
        slot: false, docs: [] }
 };
+/* местоимения/причастия по полу — чтобы «Ольга добавлена», «её прогноз» звучали верно */
+const PRON = s => s === 'f'
+  ? { poss: 'её', Poss: 'Её', added: 'добавлена' }
+  : { poss: 'его', Poss: 'Его', added: 'добавлен' };
 let PERSON = 'd';
 let GONE = {};
+
+/* Экономика ленты: платим за СЛОТ, человека в нём меняем свободно.
+   Первый слот бесплатный; по умолчанию его занимает Дмитрий (slot:true).
+   Добавить человека в ленту бесплатно, если есть свободный слот; иначе
+   покупка нового слота (290 ₽). Убрать из ленты — бесплатно, слот остаётся. */
+let SLOTS_OWNED = 1;
+let FEED_ADD = null;   /* кого добавляем в ленту через оплату слота (из карточки Н-08) */
+function feedCount() { return Object.keys(PEOPLE).filter(k => PEOPLE[k].slot && GONE[k] !== 'gone').length; }
+function freeSlots() { return SLOTS_OWNED - feedCount(); }
 
 const UNDO_T = {};
 const UNDO_LEFT = {};
