@@ -6562,15 +6562,13 @@ const DAYS = [
 
 S.monthPick = `<div class="pad">
   <div class="dochead" data-go="today"><span>&lsaquo;</span><div>Назад · Сегодня</div></div>
-  <h2 class="t-title" style="font-size:21px">Выбрать месяц</h2>
-  <p class="d-lede">Лента ведётся с того дня, как вы получили карту. Раньше её просто не было.</p>
+  <h2 class="t-title" style="font-size:21px">Выберите месяц</h2>
 
   <div class="yearrow"><i class="off">‹</i><b>2026</b><i class="off">›</i></div>
   <div class="mgrid">
     ${['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'].map((m,i)=>
       `<div class="mcell${i===7?' now':''}${i<5?' off':''}${i>7?' off':''}">${m}</div>`).join('')}
   </div>
-  <p class="mnote">До июня ленты нет — вы пришли 14 июня. Дни вперёд откроются, когда наступят.</p>
 </div>`;
 
 /* Два состояния ленты людей:
