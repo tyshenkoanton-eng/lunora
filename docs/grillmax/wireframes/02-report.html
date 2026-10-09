@@ -6543,8 +6543,8 @@ S.chatPaywall = `<div class="chatwrap">
 function slotScreen() {
   const first = SLOTFIRST;
   const inFeed = first
-    ? `<div class="card-it stub"><div><div class="t">Вы</div><span class="s">Ваш день, всегда</span></div><div class="chev">·</div></div>`
-    : `<div class="card-it stub"><div><div class="t">Вы</div><span class="s">Ваш день, всегда</span></div><div class="chev">·</div></div>
+    ? `<div class="card-it stub"><div><div class="t">Вы</div><span class="s">Ваш ежедневный прогноз на день</span></div><div class="chev">·</div></div>`
+    : `<div class="card-it stub"><div><div class="t">Вы</div><span class="s">Ваш ежедневный прогноз на день</span></div><div class="chev">·</div></div>
     <div class="card-it stub"><div><div class="t">Дмитрий Сергеевич</div><span class="s">Его день рядом с вашим</span></div><div class="chev">·</div></div>`;
   return `<div class="pad">
   <div class="dochead" data-go="today"><span>&lsaquo;</span><div>Назад · Сегодня</div></div>
@@ -6553,18 +6553,17 @@ function slotScreen() {
     ? 'Добавьте близкого, и его прогноз будет рядом с вашим каждый день.'
     : 'Ещё один человек рядом с вашим днём, каждый день.'}</p>
 
-  <div class="sec-label">Сейчас в ленте</div>
-  <div class="cards">${inFeed}</div>
-
   <div class="sec-label">Что добавится</div>
   <div class="body-text">
     <p>Ещё одна строка в ленте каждый день: чей-то день рядом с вашим, и главное, <b>как это касается вас.</b> Не сводка о человеке, а то, где вы сегодня совпадаете, а где тянете в разные стороны.</p>
     ${first ? '' : '<p>Место остаётся за вами: человека в нём можно менять в любой момент.</p>'}
   </div>
 
+  <div class="sec-label">Сейчас в ленте</div>
+  <div class="cards">${inFeed}</div>
+
   ${first
-    ? `<div class="w-btn" data-go="addPerson" style="margin-top:20px">Добавить человека</div>
-  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:12px;text-align:center">Первый человек бесплатно. Данные можно удалить в любой момент.</p>`
+    ? `<div class="w-btn" data-go="addPerson" style="margin-top:20px">Добавить человека бесплатно</div>`
     : `<div class="w-btn" data-go="prodPay" style="margin-top:20px">Добавить человека · 290 ₽</div>`}
 </div>`;
 }
