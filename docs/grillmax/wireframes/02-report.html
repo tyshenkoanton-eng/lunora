@@ -5873,7 +5873,7 @@ Object.defineProperty(S, 'pdfSell', { get: () => `<div class="pad">
 S.addPerson = `<div class="pad">
   <div class="dochead" data-go="today"><span>&lsaquo;</span><div>Назад</div></div>
   <h2 class="t-title" style="font-size:21px">Кого добавляем</h2>
-  <p class="d-lede">Каждое утро рядом с вашим днём будет и его прогноз. Вы увидите, в чём совпадаете, где расходитесь и что с этим делать именно вам.</p>
+  <p class="d-lede">Его прогноз будет рядом с вашим каждый день. Вы увидите, в чём совпадаете, где расходитесь и что с этим делать именно вам.</p>
   <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin:10px 0 0">Хватит имени и даты рождения. Остальное, если знаете; без него разбор выйдет короче, и мы честно покажем, насколько.</p>
 
   <div style="display:flex;flex-direction:column;gap:11px;margin-top:16px">
@@ -6582,7 +6582,7 @@ function todayNear(hasPerson) {
      живут на экране добавления (Л-14), чтобы «Сегодня» не нагружать приглашением. */
   if (!hasPerson) return `
   <div class="cards">
-    <div class="card-it addslot" data-go="addPerson"><div class="t">+ Добавить человека</div><div class="s">первый бесплатно</div></div>
+    <div class="card-it addslot" data-go="addPerson"><div class="t">+ Добавить человека</div><div class="s">Его прогноз рядом с вашим каждый день. Первый бесплатно</div></div>
   </div>`;
   return `
   <div class="cards">
