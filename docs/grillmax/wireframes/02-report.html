@@ -6544,10 +6544,15 @@ S.chatPaywall = `<div class="chatwrap">
    Отличаются тем, кто уже в ленте, текстом «что добавится», кнопкой и ценой. */
 function slotScreen() {
   const first = SLOTFIRST;
-  const youCard = `<div class="card-it stub"><div><div class="t">Вы</div><span class="s">Ваш ежедневный прогноз на день</span></div><div class="chev">·</div></div>`;
-  const dmCard = `<div class="card-it stub"><div><div class="t">Дмитрий Сергеевич</div><span class="s">Его день рядом с вашим</span></div><div class="chev">·</div></div>`;
-  const newCard = `<div class="card-it stub dash"><div><div class="t">Новый человек</div><span class="s">Его ежедневный прогноз и его влияние на вас</span></div><div class="chev">·</div></div>`;
-  const inFeed = first ? youCard + newCard : youCard + dmCard + newCard;
+  /* «Сейчас в ленте» показываем только в платном состоянии: там он осмыслен
+     (видно, что расширяешь уже существующую ленту). В бесплатном это филлер. */
+  const feedBlock = first ? '' : `
+  <div class="sec-label">Сейчас в ленте</div>
+  <div class="cards">
+    <div class="card-it stub"><div><div class="t">Вы</div><span class="s">Ваш ежедневный прогноз на день</span></div><div class="chev">·</div></div>
+    <div class="card-it stub"><div><div class="t">Дмитрий Сергеевич</div><span class="s">Его день рядом с вашим</span></div><div class="chev">·</div></div>
+    <div class="card-it stub dash"><div><div class="t">Новый человек</div><span class="s">Его ежедневный прогноз и его влияние на вас</span></div><div class="chev">·</div></div>
+  </div>`;
   return `<div class="pad" style="padding-bottom:16px">
   <div class="dochead" data-go="today"><span>&lsaquo;</span><div>Назад · Сегодня</div></div>
   <h2 class="t-title" style="font-size:21px">Добавление человека</h2>
@@ -6560,9 +6565,7 @@ function slotScreen() {
     <p>Каждый день рядом с вашим прогнозом появляется прогноз добавленного человека. Его особенность в том, что он всегда показан в привязке к вашему дню: <b>как день близкого отзывается на вашем</b> и что это значит для вас.</p>
     ${first ? '' : '<p>Место остаётся за вами: человека в нём можно менять в любой момент.</p>'}
   </div>
-
-  <div class="sec-label">Сейчас в ленте</div>
-  <div class="cards">${inFeed}</div>
+${feedBlock}
 
   ${first
     ? `<div class="w-btn" data-go="addPerson" style="margin-top:20px">Добавить человека бесплатно</div>`
