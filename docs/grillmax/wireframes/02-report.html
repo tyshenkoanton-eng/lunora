@@ -5898,26 +5898,32 @@ function addPersonScreen() {
   <div class="dochead" data-go="today"><span>&lsaquo;</span><div>Назад · Сегодня</div></div>
   <h2 class="t-title" style="font-size:21px">Добавление человека${first ? '' : ' · 290 ₽'}</h2>
   <p class="d-lede">Его прогноз будет рядом с вашим каждый день. Вы увидите, в чём совпадаете, где расходитесь и что с этим делать именно вам.</p>
-  <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin:10px 0 0">Для ежедневного прогноза хватает имени и даты рождения.</p>
+  <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin:10px 0 0">Чтобы добавить человека в ленту, укажите его данные.</p>
 
-  <div style="display:flex;flex-direction:column;gap:11px;margin-top:16px">
-    <div><div class="w-label">Как его зовут</div><div class="w-field filled">Дмитрий</div></div>
-    <div><div class="w-label">Кем приходится</div><div class="w-field filled">Партнёр</div>
-      <p style="font-size:11px;color:var(--ink-faint);margin:5px 0 0">От этого зависит, что читать первым</p></div>
-    <div><div class="w-label">Дата рождения</div><div class="w-field filled">17 августа 1981</div>
-      <p style="font-size:11px;color:var(--ink-faint);margin:5px 0 0">На ней строится его ежедневный прогноз</p></div>
+  <div class="fields" style="margin-top:16px">
+    <div><div class="w-label">Полное имя</div><div class="w-field filled">Дмитрий</div></div>
+    <div><div class="w-label">Отчество</div><div class="w-field filled">Сергеевич</div></div>
+    <div><div class="w-label">Фамилия</div><div class="w-field filled">Ковалёв</div>
+      <p class="obhint">Фамилию и отчество можно не заполнять. Но с ними нумерология расскажет о нём подробнее.</p></div>
+    <div>
+      <div class="w-label">Пол</div>
+      <div class="segtabs" style="margin-bottom:0"><i>Женский</i><i class="on">Мужской</i></div>
+    </div>
   </div>
 
-  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:14px">Время и место рождения нужны только для совместимости и глубоких разборов. Спросим их, когда дойдёт до покупки, не раньше.</p>
+  <div class="w-label" style="margin-top:16px">Дата рождения</div>
+  <div class="hm3">
+    <div class="w-field filled">17</div><div class="w-field filled">авг</div><div class="w-field filled">1981</div>
+  </div>
+  <div class="dlab"><span>день</span><span>месяц</span><span>год</span></div>
 
-  <div class="w-check" style="margin-top:14px"><div class="w-box"></div>
+  <div class="w-check" style="margin-top:18px"><div class="w-box"></div>
     <div>Я имею право передать эти данные и понимаю, что они будут использованы только для расчёта</div></div>
 
   ${first
-    ? `<div class="w-btn" data-added="free" style="margin-top:16px">Добавить человека</div>
-  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:12px;text-align:center">Первый человек — бесплатно. Данные можно удалить в любой момент, вместе со всем, что на них построено.</p>`
-    : `<div class="w-btn" data-prod="slot" style="margin-top:16px">Добавить человека · 290 ₽</div>
-  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:12px;text-align:center">Разовый платёж, не подписка. Данные можно удалить в любой момент, вместе со всем, что на них построено.</p>`}
+    ? `<div class="w-btn" data-added="free" style="margin-top:18px">Добавить человека бесплатно</div>`
+    : `<div class="w-btn" data-prod="slot" style="margin-top:18px">Добавить человека · 290 ₽</div>
+  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:12px;text-align:center">Разовый платёж, не подписка.</p>`}
 </div>`;
 }
 Object.defineProperty(S, 'addPerson', { get: addPersonScreen });
