@@ -5899,10 +5899,10 @@ function addPersonScreen() {
   <h2 class="t-title" style="font-size:21px">Добавление человека${first ? '' : ' · 290 ₽'}</h2>
   <p class="d-lede" style="border-bottom:none;padding-bottom:0">«Сегодня» это ваш ежедневный прогноз по вашей карте: какой складывается день и что с ним делать. Сюда же можно добавить близкого человека.</p>
   <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin:10px 0 0">Его прогноз будет рядом с вашим каждый день. Вы увидите, в чём совпадаете, где расходитесь и что с этим делать именно вам.</p>
-  <div style="font-size:15.5px;font-weight:650;color:var(--ink);line-height:1.4;margin-top:24px">Чтобы добавить человека в ленту, укажите его данные</div>
+  <div style="border-top:1px solid var(--rule);margin-top:22px;padding-top:22px;font-size:15.5px;font-weight:650;color:var(--ink);line-height:1.4">Чтобы добавить человека в ленту, укажите его данные</div>
 
   <div class="fields" style="margin-top:16px">
-    <div><div class="w-label">Полное имя</div><div class="w-field" contenteditable="true" data-ph="Введите имя"></div></div>
+    <div><div class="w-label">Полное имя</div><div class="w-field" contenteditable="true" data-ph="Введите имя" data-addname></div></div>
     <div><div class="w-label">Отчество</div><div class="w-field" contenteditable="true" data-ph="Введите отчество"></div></div>
     <div><div class="w-label">Фамилия</div><div class="w-field" contenteditable="true" data-ph="Введите фамилию"></div>
       <p class="obhint">Фамилию и отчество можно не заполнять. Но с ними нумерология расскажет о нём подробнее.</p></div>
@@ -5915,7 +5915,7 @@ function addPersonScreen() {
 
   <div style="margin-top:24px">
     <div class="w-label">Дата рождения</div>
-    <div class="hm3">
+    <div class="hm3" data-adddate>
       <div class="w-field">—</div><div class="w-field">—</div><div class="w-field">—</div>
     </div>
     <div class="dlab"><span>день</span><span>месяц</span><span>год</span></div>
@@ -5932,6 +5932,20 @@ function addPersonScreen() {
 </div>`;
 }
 Object.defineProperty(S, 'addPerson', { get: addPersonScreen });
+
+/* Проверка обязательных полей формы добавления: кнопка активна, только когда
+   заполнено имя, выбрана дата рождения и отмечено согласие. */
+function addGate() {
+  const btn = view.querySelector('.docfoot .w-btn');
+  if (!btn) return;
+  const nameEl = view.querySelector('[data-addname]');
+  const dd = view.querySelector('[data-adddate] .w-field');
+  const consent = view.querySelector('.w-check[data-consent="add"]');
+  const nameOk = !!(nameEl && nameEl.textContent.trim());
+  const dateOk = !!(dd && dd.textContent.trim() && dd.textContent.trim() !== '—');
+  const consentOk = !!(consent && consent.classList.contains('on'));
+  btn.classList.toggle('off', !(nameOk && dateOk && consentOk));
+}
 
 /* ============ РАСЧЁТ ПРОГНОЗА ДОБАВЛЕННОГО ЧЕЛОВЕКА ============
    Короткая анимация после добавления: считаем день человека и его разрез
@@ -9421,6 +9435,8 @@ view.addEventListener('click', e => {
   if (e.target.closest('[data-monthsheet]')) { setupMonths(false); popShow('monthSheet'); return; }
   const os = e.target.closest('[data-openslot]');
   if (os) { SLOTFIRST = os.dataset.openslot === 'first'; FEED_ADD = null; render('addPerson'); return; }
+  const dd = e.target.closest('[data-adddate]');
+  if (dd) { const v = ['17', 'авг', '1981']; dd.querySelectorAll('.w-field').forEach((f, i) => { f.textContent = v[i]; f.classList.add('filled'); }); addGate(); return; }
   const addd = e.target.closest('[data-added]');
   if (addd) { STATE = 'ok'; render('today'); popShow('addedSheet'); return; }
   const go = e.target.closest('[data-go]');
@@ -9966,16 +9982,17 @@ view.addEventListener('click', e => {
   if (!ch) return;
   const on = ch.classList.toggle('on');
   if (ch.dataset.consent === 'add') {
-    /* согласие на добавление человека: гейтит кнопку в том же боксе */
-    const box = ch.closest('.docfoot');
-    const btn = box && box.querySelector('.w-btn');
-    if (btn) btn.classList.toggle('off', !on);
+    /* согласие — одно из условий; кнопку включает общая проверка формы */
+    addGate();
   } else if (ch.dataset.consent) {
     OB.consent = on;
     const btn = document.getElementById('obConsentGo');
     if (btn) btn.classList.toggle('off', !on);
   }
 });
+
+/* имя в форме добавления заполняется вручную — пересчитываем доступность кнопки */
+view.addEventListener('input', e => { if (e.target.closest('[data-addname]')) addGate(); });
 
 /* поддержка: раскрытие вопросов и переход в бота поддержки */
 view.addEventListener('click', e => {
