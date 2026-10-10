@@ -5902,9 +5902,9 @@ function addPersonScreen() {
   <div style="border-top:1px solid var(--rule);margin-top:22px;padding-top:22px;font-size:15.5px;font-weight:650;color:var(--ink);line-height:1.4">Чтобы добавить человека в ленту, укажите его данные</div>
 
   <div class="fields" style="margin-top:16px">
-    <div><div class="w-label">Полное имя</div><div class="w-field" contenteditable="true" data-ph="Введите имя" data-addname></div></div>
-    <div><div class="w-label">Отчество</div><div class="w-field" contenteditable="true" data-ph="Введите отчество"></div></div>
-    <div><div class="w-label">Фамилия</div><div class="w-field" contenteditable="true" data-ph="Введите фамилию"></div>
+    <div><div class="w-label">Полное имя</div><div class="w-field" data-addfill="name" data-fillval="Дмитрий">Введите имя</div></div>
+    <div><div class="w-label">Отчество</div><div class="w-field" data-addfill="pat" data-fillval="Сергеевич">Введите отчество</div></div>
+    <div><div class="w-label">Фамилия</div><div class="w-field" data-addfill="fam" data-fillval="Ковалёв">Введите фамилию</div>
       <p class="obhint">Фамилию и отчество можно не заполнять. Но с ними нумерология расскажет о нём подробнее.</p></div>
   </div>
 
@@ -5915,8 +5915,8 @@ function addPersonScreen() {
 
   <div style="margin-top:24px">
     <div class="w-label">Дата рождения</div>
-    <div class="hm3" data-adddate>
-      <div class="w-field">—</div><div class="w-field">—</div><div class="w-field">—</div>
+    <div class="hm3">
+      <div class="w-field" data-adddob="d">—</div><div class="w-field" data-adddob="m">—</div><div class="w-field" data-adddob="y">—</div>
     </div>
     <div class="dlab"><span>день</span><span>месяц</span><span>год</span></div>
   </div>
@@ -5938,13 +5938,27 @@ Object.defineProperty(S, 'addPerson', { get: addPersonScreen });
 function addGate() {
   const btn = view.querySelector('.docfoot .w-btn');
   if (!btn) return;
-  const nameEl = view.querySelector('[data-addname]');
-  const dd = view.querySelector('[data-adddate] .w-field');
   const consent = view.querySelector('.w-check[data-consent="add"]');
-  const nameOk = !!(nameEl && nameEl.textContent.trim());
-  const dateOk = !!(dd && dd.textContent.trim() && dd.textContent.trim() !== '—');
+  const nameOk = !!view.querySelector('[data-addfill="name"].filled');
+  const dobs = [...view.querySelectorAll('[data-adddob]')];
+  const dateOk = dobs.length === 3 && dobs.every(f => { const t = f.textContent.trim(); return t && t !== '—'; });
   const consentOk = !!(consent && consent.classList.contains('on'));
   btn.classList.toggle('off', !(nameOk && dateOk && consentOk));
+}
+
+/* выбор даты рождения в форме добавления — переиспользуем шторку pickSheet,
+   но пишем в поля формы, не в данные владельца (OB) */
+let ADD_DOB = null;
+function openAddDob(key) {
+  ADD_DOB = key; PICK_KEY = null;
+  const [title, list] = PICKS[key];
+  const cur = (view.querySelector(`[data-adddob="${key}"]`)?.textContent || '').trim().replace('—', '');
+  document.getElementById('pickH').textContent = title;
+  const wheel = document.getElementById('pickWheel');
+  wheel.innerHTML = list().map(x => `<div data-wv="${x}"${x === cur ? ' class="on"' : ''}>${x}</div>`).join('');
+  document.getElementById('pickSheet').classList.add('show');
+  const on = wheel.querySelector('.on');
+  if (on) wheel.scrollTop = on.offsetTop - wheel.clientHeight / 2 + on.clientHeight / 2;
 }
 
 /* ============ РАСЧЁТ ПРОГНОЗА ДОБАВЛЕННОГО ЧЕЛОВЕКА ============
@@ -9435,8 +9449,10 @@ view.addEventListener('click', e => {
   if (e.target.closest('[data-monthsheet]')) { setupMonths(false); popShow('monthSheet'); return; }
   const os = e.target.closest('[data-openslot]');
   if (os) { SLOTFIRST = os.dataset.openslot === 'first'; FEED_ADD = null; render('addPerson'); return; }
-  const dd = e.target.closest('[data-adddate]');
-  if (dd) { const v = ['17', 'авг', '1981']; dd.querySelectorAll('.w-field').forEach((f, i) => { f.textContent = v[i]; f.classList.add('filled'); }); addGate(); return; }
+  const af = e.target.closest('[data-addfill]');
+  if (af) { af.textContent = af.dataset.fillval; af.classList.add('filled'); addGate(); return; }
+  const dob = e.target.closest('[data-adddob]');
+  if (dob) { openAddDob(dob.dataset.adddob); return; }
   const addd = e.target.closest('[data-added]');
   if (addd) { STATE = 'ok'; render('today'); popShow('addedSheet'); return; }
   const go = e.target.closest('[data-go]');
@@ -9965,10 +9981,19 @@ view.addEventListener('click', e => {
 
 document.getElementById('pickSheet').addEventListener('click', e => {
   if (e.target.id === 'pickSheet' || e.target.closest('[data-pickclose]')) {
-    e.currentTarget.classList.remove('show'); return;
+    e.currentTarget.classList.remove('show'); ADD_DOB = null; return;
   }
   const v = e.target.closest('[data-wv]');
-  if (!v || !PICK_KEY) return;
+  if (!v) return;
+  if (ADD_DOB) {   /* дата рождения в форме добавления человека */
+    const f = view.querySelector(`[data-adddob="${ADD_DOB}"]`);
+    if (f) { f.textContent = v.dataset.wv; f.classList.add('filled'); }
+    ADD_DOB = null;
+    document.getElementById('pickSheet').classList.remove('show');
+    addGate();
+    return;
+  }
+  if (!PICK_KEY) return;
   OB[PICK_KEY] = v.dataset.wv;
   const f = view.querySelector(`[data-wheel="${PICK_KEY}"]`);
   if (f) { f.textContent = v.dataset.wv; f.classList.add('filled'); }
@@ -9991,8 +10016,6 @@ view.addEventListener('click', e => {
   }
 });
 
-/* имя в форме добавления заполняется вручную — пересчитываем доступность кнопки */
-view.addEventListener('input', e => { if (e.target.closest('[data-addname]')) addGate(); });
 
 /* поддержка: раскрытие вопросов и переход в бота поддержки */
 view.addEventListener('click', e => {
