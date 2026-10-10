@@ -5898,24 +5898,19 @@ function addPersonScreen() {
   <div class="dochead" data-go="today"><span>&lsaquo;</span><div>Назад · Сегодня</div></div>
   <h2 class="t-title" style="font-size:21px">Добавление человека${first ? '' : ' · 290 ₽'}</h2>
   <p class="d-lede">Его прогноз будет рядом с вашим каждый день. Вы увидите, в чём совпадаете, где расходитесь и что с этим делать именно вам.</p>
-  <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin:10px 0 0">Хватит имени и даты рождения. Остальное, если знаете; без него разбор выйдет короче, и мы честно покажем, насколько.</p>
+  <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin:10px 0 0">Для ежедневного прогноза хватает имени и даты рождения.</p>
 
   <div style="display:flex;flex-direction:column;gap:11px;margin-top:16px">
     <div><div class="w-label">Как его зовут</div><div class="w-field filled">Дмитрий</div></div>
     <div><div class="w-label">Кем приходится</div><div class="w-field filled">Партнёр</div>
       <p style="font-size:11px;color:var(--ink-faint);margin:5px 0 0">От этого зависит, что читать первым</p></div>
-    <div><div class="w-label">Дата рождения</div><div class="w-field filled">17 августа 1981</div></div>
-    <div><div class="w-label">Время рождения <span style="color:var(--ink-faint);font-weight:400">— если знаете</span></div>
-      <div class="w-field">не знаю</div></div>
-    <div><div class="w-label">Город рождения <span style="color:var(--ink-faint);font-weight:400">— если знаете</span></div>
-      <div class="w-field filled" contenteditable="true" data-ph="Укажите город рождения" data-sug="city">Ростов-на-Дону</div>
-      <div class="sug"></div></div>
+    <div><div class="w-label">Дата рождения</div><div class="w-field filled">17 августа 1981</div>
+      <p style="font-size:11px;color:var(--ink-faint);margin:5px 0 0">На ней строится его ежедневный прогноз</p></div>
   </div>
 
-  <div class="depth" style="cursor:default;margin-top:18px"><span>Что получится посчитать</span><div class="bar"><i style="left:0;width:50%"></i></div><b>50%</b></div>
-  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:8px">Без времени рождения не считаются дома и восходящий знак. Если время найдётся — пересчитаем бесплатно, хоть через год.</p>
+  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:14px">Время и место рождения нужны только для совместимости и глубоких разборов. Спросим их, когда дойдёт до покупки, не раньше.</p>
 
-  <div class="w-check" style="margin-top:16px"><div class="w-box"></div>
+  <div class="w-check" style="margin-top:14px"><div class="w-box"></div>
     <div>Я имею право передать эти данные и понимаю, что они будут использованы только для расчёта</div></div>
 
   ${first
