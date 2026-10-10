@@ -2628,6 +2628,9 @@ S.obStart = `<div class="pad" style="min-height:520px;display:flex;flex-directio
 /* объяснения у полей: первый уровень — человеческий, второй — для тех, кто знает астрологию */
 const INFO = {
   depth: ['Глубина расчёта', ''],
+  consent: ['Зачем это согласие',
+    `<p>Вы вводите данные другого человека, а не только свои. Закон о персональных данных просит убедиться, что вы вправе их передать, поэтому мы и спрашиваем подтверждение.</p>
+     <p>Данные нужны только для расчёта его прогноза. Их можно удалить в любой момент, вместе со всем, что на них построено.</p>`],
   name: ['Зачем вводить полное имя',
     `<p>Нумерология учитывает каждую букву, и даже Аня вместо Анны меняет результат.</p>
      <p>Именно поэтому мы просим вводить имя в полной форме.</p>`],
@@ -5910,7 +5913,7 @@ function addPersonScreen() {
 
   <div style="margin-top:24px">
     <div class="w-label">Пол</div>
-    <div class="segtabs" style="margin-bottom:0"><i class="on">Мужской</i><i>Женский</i></div>
+    <div class="segtabs" style="margin-bottom:0"><i class="on" data-addsex="m">Мужской</i><i data-addsex="f">Женский</i></div>
   </div>
 
   <div style="margin-top:24px">
@@ -5923,11 +5926,11 @@ function addPersonScreen() {
 
   <div class="docfoot boxed" style="margin-top:30px">
     <div class="w-check" data-consent="add"><div class="w-box"></div>
-      <div style="font-size:11.5px;color:var(--ink-soft);line-height:1.5">Подтверждаю, что имею право передать данные этого человека.</div></div>
+      <div style="font-size:11.5px;color:var(--ink-soft);line-height:1.5">Подтверждаю, что имею право передать данные этого человека. <u class="ihint" data-info="consent">i</u></div></div>
     ${first
       ? `<div class="w-btn off" data-added="free" style="margin-top:12px">Добавить человека бесплатно</div>`
       : `<div class="w-btn off" data-prod="slot" style="margin-top:12px">Добавить человека · 290 ₽</div>
-    <p style="font-size:11px;color:var(--ink-faint);line-height:1.5;margin:10px 0 0;text-align:center">Разовый платёж, не подписка.</p>`}
+    <p style="font-size:11px;color:var(--ink-faint);line-height:1.5;margin:10px 0 0;text-align:center">Это разовый платёж</p>`}
   </div>
 </div>`;
 }
@@ -9453,6 +9456,8 @@ view.addEventListener('click', e => {
   if (af) { af.textContent = af.dataset.fillval; af.classList.add('filled'); addGate(); return; }
   const dob = e.target.closest('[data-adddob]');
   if (dob) { openAddDob(dob.dataset.adddob); return; }
+  const asx = e.target.closest('[data-addsex]');
+  if (asx) { asx.parentElement.querySelectorAll('i').forEach(i => i.classList.toggle('on', i === asx)); return; }
   const addd = e.target.closest('[data-added]');
   if (addd) { STATE = 'ok'; render('today'); popShow('addedSheet'); return; }
   const go = e.target.closest('[data-go]');
@@ -10005,6 +10010,7 @@ document.getElementById('pickSheet').addEventListener('click', e => {
 view.addEventListener('click', e => {
   const ch = e.target.closest('.w-check');
   if (!ch) return;
+  if (e.target.closest('[data-info]')) return;   /* тап по «i» открывает подсказку, а не ставит галочку */
   const on = ch.classList.toggle('on');
   if (ch.dataset.consent === 'add') {
     /* согласие — одно из условий; кнопку включает общая проверка формы */
