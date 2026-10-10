@@ -5899,26 +5899,29 @@ function addPersonScreen() {
   <h2 class="t-title" style="font-size:21px">Добавление человека${first ? '' : ' · 290 ₽'}</h2>
   <p class="d-lede" style="border-bottom:none;padding-bottom:0">«Сегодня» это ваш ежедневный прогноз по вашей карте: какой складывается день и что с ним делать. Сюда же можно добавить близкого человека.</p>
   <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin:10px 0 0">Его прогноз будет рядом с вашим каждый день. Вы увидите, в чём совпадаете, где расходитесь и что с этим делать именно вам.</p>
-  <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.6;margin:10px 0 0">Чтобы добавить человека в ленту, укажите его данные.</p>
+  <div style="font-size:15.5px;font-weight:650;color:var(--ink);line-height:1.4;margin-top:24px">Чтобы добавить человека в ленту, укажите его данные</div>
 
   <div class="fields" style="margin-top:16px">
-    <div><div class="w-label">Полное имя</div><div class="w-field filled">Дмитрий</div></div>
-    <div><div class="w-label">Отчество</div><div class="w-field filled">Сергеевич</div></div>
-    <div><div class="w-label">Фамилия</div><div class="w-field filled">Ковалёв</div>
+    <div><div class="w-label">Полное имя</div><div class="w-field" contenteditable="true" data-ph="Введите имя"></div></div>
+    <div><div class="w-label">Отчество</div><div class="w-field" contenteditable="true" data-ph="Введите отчество"></div></div>
+    <div><div class="w-label">Фамилия</div><div class="w-field" contenteditable="true" data-ph="Введите фамилию"></div>
       <p class="obhint">Фамилию и отчество можно не заполнять. Но с ними нумерология расскажет о нём подробнее.</p></div>
-    <div>
-      <div class="w-label">Пол</div>
-      <div class="segtabs" style="margin-bottom:0"><i>Женский</i><i class="on">Мужской</i></div>
+  </div>
+
+  <div style="margin-top:24px">
+    <div class="w-label">Пол</div>
+    <div class="segtabs" style="margin-bottom:0"><i class="on">Мужской</i><i>Женский</i></div>
+  </div>
+
+  <div style="margin-top:24px">
+    <div class="w-label">Дата рождения</div>
+    <div class="hm3">
+      <div class="w-field">—</div><div class="w-field">—</div><div class="w-field">—</div>
     </div>
+    <div class="dlab"><span>день</span><span>месяц</span><span>год</span></div>
   </div>
 
-  <div class="w-label" style="margin-top:16px">Дата рождения</div>
-  <div class="hm3">
-    <div class="w-field filled">17</div><div class="w-field filled">авг</div><div class="w-field filled">1981</div>
-  </div>
-  <div class="dlab"><span>день</span><span>месяц</span><span>год</span></div>
-
-  <div class="docfoot boxed" style="margin-top:20px">
+  <div class="docfoot boxed" style="margin-top:30px">
     <div class="w-check" data-consent="add"><div class="w-box"></div>
       <div style="font-size:11.5px;color:var(--ink-soft);line-height:1.5">Подтверждаю, что имею право передать данные этого человека.</div></div>
     ${first
