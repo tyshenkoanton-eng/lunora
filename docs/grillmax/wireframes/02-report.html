@@ -1498,6 +1498,8 @@
            border: 1px solid var(--ink); cursor: pointer; user-select: none; }
   .w-btn.quiet { background: var(--card); color: var(--ink-soft); border-color: var(--rule); font-weight: 600; }
   .w-btn.ghost { background: transparent; color: var(--ink); border-color: var(--rule); font-weight: 600; }
+  /* белая кнопка в обе темы: не зависит от --card (в тёмной теме он тёмный) */
+  .w-btn.white { background: #fff; color: #1b1f26; border-color: #d8dce2; font-weight: 640; }
   .w-btn:active { opacity: .8; }
   /* отклик на нажатие для всего нажимаемого внутри телефона */
   .phone .press { opacity: .68; transition: opacity .05s linear; }
@@ -7068,7 +7070,7 @@ function buildDelPerson() {
       <div style="font-size:12px;color:var(--ink-soft);margin-top:3px">${p.slot ? 'Прогнозы приходят в разделе «Сегодня»' : 'Добавьте этого человека в ежедневные прогнозы'}</div>
     </div>
     ${p.slot
-      ? `<div class="w-btn ghost" data-feedremove="${PERSON}" style="margin-top:12px">Убрать из ленты</div>
+      ? `<div class="w-btn white" data-feedremove="${PERSON}" style="margin-top:12px">Убрать из ленты</div>
     <p style="font-size:11px;color:var(--ink-faint);line-height:1.5;margin:10px 0 0;text-align:center">Прогнозы этого человека перестанут показываться в разделе «Сегодня». Слот останется и не удалится.</p>`
       : `<div class="w-btn" data-feedadd="${PERSON}" style="margin-top:12px">Добавить в ленту</div>
     <p style="font-size:11px;color:var(--ink-faint);line-height:1.5;margin:10px 0 0;text-align:center">Вам будут приходить ежедневные прогнозы этого человека в разделе «Сегодня».</p>`}
