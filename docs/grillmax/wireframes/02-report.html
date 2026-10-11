@@ -7063,13 +7063,15 @@ function buildDelPerson() {
 
   <div class="sec-label">Лента</div>
   <div class="cards">
-    <div class="card-it stub"><div><div class="t">Прогноз рядом с вашим</div><span class="s">${p.slot ? 'Сейчас в вашей ленте' : 'Сейчас не в ленте'}</span></div><div class="chev">${p.slot ? '✓' : '·'}</div></div>
+    ${p.slot
+      ? `<div class="card-it stub"><div><div class="t">Прогноз рядом с вашим</div><span class="s">Сейчас в вашей ленте</span></div><div class="chev">✓</div></div>`
+      : `<div class="card-it stub"><div><div class="t">Сейчас не в ленте</div><span class="s">Добавьте этого человека в ежедневные прогнозы</span></div><div class="chev">·</div></div>`}
   </div>
   ${p.slot
     ? `<div class="w-btn ghost" data-feedremove="${PERSON}" style="margin-top:12px">Убрать из ленты</div>
   <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:10px">Прогнозы этого человека перестанут показываться в разделе «Сегодня». Слот останется и не удалится.</p>`
     : `<div class="w-btn" data-feedadd="${PERSON}" style="margin-top:12px">Добавить в ленту</div>
-  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:10px">${pr.Poss} день встанет рядом с вашим в ежедневном прогнозе.</p>`}
+  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:10px">Вам будут приходить ежедневные прогнозы этого человека в разделе «Сегодня».</p>`}
 
   <div class="w-btn danger" data-go="delPersonConfirm" style="margin-top:22px">Удалить данные</div>
 </div>`;
