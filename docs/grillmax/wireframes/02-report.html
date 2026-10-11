@@ -7120,7 +7120,6 @@ function feedConfirm(action, key) {
     document.getElementById('popH').textContent = 'Убрать из ленты?';
     document.getElementById('popT').textContent = `Мы уберём ${PEOPLE[key].acc} из раздела «Сегодня». Ежедневные прогнозы перестанут приходить. Слот останется и не удалится.`;
     ok.textContent = 'Убрать';
-    ok.className = 'w-btn ghost';   /* убирание не деструктивно — кнопка белая, не тёмная */
   } else {
     document.getElementById('popH').textContent = 'Заменить человека в ленте?';
     document.getElementById('popT').textContent = `${fio(key)} выйдет из ленты, место займёт ${fio(PERSON)}.`;
