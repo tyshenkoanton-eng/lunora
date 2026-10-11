@@ -7111,7 +7111,7 @@ function feedConfirm(action, key) {
   ok.dataset.popAct = 'feed' + action;
   if (action === 'add') {
     document.getElementById('popH').textContent = 'Добавить в ленту?';
-    document.getElementById('popT').textContent = `${fio(key)} появится в вашей ленте и каждый день будет рядом с вашим прогнозом.`;
+    document.getElementById('popT').textContent = `${fio(key)} появится в вашей ленте. Вы будете получать ${PRON(PEOPLE[key].sex).poss} ежедневный прогноз вместе с вашим.`;
     ok.textContent = 'Добавить';
   } else if (action === 'remove') {
     document.getElementById('popH').textContent = 'Убрать из ленты?';
