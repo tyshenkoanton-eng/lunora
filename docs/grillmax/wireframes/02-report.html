@@ -8631,19 +8631,17 @@ Object.defineProperty(S, 'payConfirm', { get() {
   /* добавление человека в ленту оплачивается в том же контуре, что PDF-документ:
      подтверждение → граница оператора → исход. Без подарочного сертификата —
      сертификат применяется только там, где покупку можно подарить (разборы). */
-  if (PAYKIND === 'slot') { const addName = FEED_ADD ? (PEOPLE[FEED_ADD].fio.split(' ')[1] || 'человек') : 'Дмитрий';
-  const addP = PRON(FEED_ADD ? PEOPLE[FEED_ADD].sex : 'm');
-  return `<div class="pad">
+  if (PAYKIND === 'slot') { return `<div class="pad">
   <div class="dochead" data-go="${FEED_ADD ? 'delPerson' : 'addPerson'}"><span>&lsaquo;</span><div>Назад</div></div>
-  <h2 class="t-title" style="font-size:21px">Переходим к оплате</h2>
+  <h2 class="t-title" style="font-size:21px">Подтверждение оплаты</h2>
 
   <div class="sumcard" style="margin-top:14px">
-    <div><u>Покупка</u><b>Ещё одно место в ленте</b></div>
-    <div class="ml"><u>Цена</u><b>290 ₽ · разовый платёж</b></div>
+    <div><u>Покупка</u><b>Дополнительный слот в ленте</b></div>
+    <div class="ml"><u>Цена</u><b>290 ₽</b></div>
   </div>
 
   <div class="body-text" style="margin-top:16px">
-    <p>После оплаты ${addName} появится в вашей ленте, и ${addP.poss} прогноз встанет рядом с вашим. Человека в этом месте можно менять в любой момент.</p>
+    <p>После оплаты в вашей ленте откроется дополнительный слот. Добавленного человека можно менять в любой момент в настройках приложения.</p>
   </div>
 
   <div class="docfoot boxed" style="margin-top:18px">
