@@ -7099,6 +7099,32 @@ function buildSlotPick() {
 }
 Object.defineProperty(S, 'slotPick', { get: buildSlotPick });
 
+/* шторка подтверждения для действий с лентой (добавить / убрать / заменить).
+   Переиспользуем общий #pop; имена берём в именительном, без склонений и
+   местоимений, чтобы «Ольга»/«Дмитрий» звучали одинаково верно. */
+function feedConfirm(action, key) {
+  const fio = k => (PEOPLE[k].fio.split(' ')[1] || PEOPLE[k].fio);
+  const ok = document.getElementById('popOk');
+  document.getElementById('popConfirm').style.display = 'none';
+  ok.className = 'w-btn'; ok.style.background = ''; ok.style.borderColor = '';
+  ok.dataset.popKey = key;
+  ok.dataset.popAct = 'feed' + action;
+  if (action === 'add') {
+    document.getElementById('popH').textContent = 'Добавить в ленту?';
+    document.getElementById('popT').textContent = `${fio(key)} появится в вашей ленте и каждый день будет рядом с вашим прогнозом.`;
+    ok.textContent = 'Добавить';
+  } else if (action === 'remove') {
+    document.getElementById('popH').textContent = 'Убрать из ленты?';
+    document.getElementById('popT').textContent = `${fio(key)} выйдет из ленты. Данные и разборы сохранятся, место останется за вами.`;
+    ok.textContent = 'Убрать';
+  } else {
+    document.getElementById('popH').textContent = 'Заменить человека в ленте?';
+    document.getElementById('popT').textContent = `${fio(key)} выйдет из ленты, место займёт ${fio(PERSON)}.`;
+    ok.textContent = 'Заменить';
+  }
+  popShow('pop');
+}
+
 /* Подтверждение удаления человека — экран как Н-09: предупреждение, сводка,
    сохранение документов, финальная кнопка удаления (откат через undo). */
 function buildDelPersonConfirm() {
@@ -9448,17 +9474,17 @@ view.addEventListener('click', e => {
   const pr2 = e.target.closest('[data-person]');
   if (pr2) { PERSON = pr2.dataset.person; render('delPerson'); return; }
   const fr = e.target.closest('[data-feedremove]');
-  if (fr) { PEOPLE[fr.dataset.feedremove].slot = false; render('delPerson'); return; }
+  if (fr) { feedConfirm('remove', fr.dataset.feedremove); return; }
   const fa = e.target.closest('[data-feedadd]');
   if (fa) {
     const k = fa.dataset.feedadd;
-    /* есть свободный слот — добавляем сразу бесплатно; нет — экран выбора (заменить/докупить) */
-    if (freeSlots() > 0) { PEOPLE[k].slot = true; render('delPerson'); return; }
+    /* есть свободный слот — подтверждаем и добавляем бесплатно; нет — экран выбора */
+    if (freeSlots() > 0) { feedConfirm('add', k); return; }
     render('slotPick'); return;
   }
-  /* замена человека в ленте: выбранный выходит, текущий (PERSON) занимает слот — бесплатно */
+  /* замена человека в ленте: выбранный выходит, текущий (PERSON) занимает слот — через подтверждение */
   const frp = e.target.closest('[data-feedreplace]');
-  if (frp) { PEOPLE[frp.dataset.feedreplace].slot = false; PEOPLE[PERSON].slot = true; render('delPerson'); return; }
+  if (frp) { feedConfirm('replace', frp.dataset.feedreplace); return; }
   /* докупить слот: платёжный контур, после оплаты открывается новое место */
   const fbuy = e.target.closest('[data-feedbuy]');
   if (fbuy) { FEED_ADD = fbuy.dataset.feedbuy; PAYKIND = 'slot'; render('payConfirm'); return; }
@@ -9685,6 +9711,9 @@ document.getElementById('pop').addEventListener('click', e => {
     document.getElementById('pop').classList.remove('show');
     if (act === 'delperson') { GONE[PERSON] = 'undo'; render('myPeople'); startUndo(PERSON); return; }
     if (act === 'delall') { render('Б-01'); return; }
+    if (act === 'feedadd') { PEOPLE[pok.dataset.popKey].slot = true; render('delPerson'); return; }
+    if (act === 'feedremove') { PEOPLE[pok.dataset.popKey].slot = false; render('delPerson'); return; }
+    if (act === 'feedreplace') { PEOPLE[pok.dataset.popKey].slot = false; PEOPLE[PERSON].slot = true; render('delPerson'); return; }
   }
   const pop = document.getElementById('pop');
   if (e.target.id === 'pop' || e.target.closest('[data-pop-close]')) { pop.classList.remove('show'); return; }
@@ -10432,6 +10461,9 @@ document.getElementById('pop').addEventListener('click', e => {
     document.getElementById('pop').classList.remove('show');
     if (act === 'delperson') { GONE[PERSON] = 'undo'; render('myPeople'); startUndo(PERSON); return; }
     if (act === 'delall') { render('Б-01'); return; }
+    if (act === 'feedadd') { PEOPLE[pok.dataset.popKey].slot = true; render('delPerson'); return; }
+    if (act === 'feedremove') { PEOPLE[pok.dataset.popKey].slot = false; render('delPerson'); return; }
+    if (act === 'feedreplace') { PEOPLE[pok.dataset.popKey].slot = false; PEOPLE[PERSON].slot = true; render('delPerson'); return; }
   }
   const pop = document.getElementById('pop');
   if (e.target.id === 'pop' || e.target.closest('[data-pop-close]')) { pop.classList.remove('show'); return; }
