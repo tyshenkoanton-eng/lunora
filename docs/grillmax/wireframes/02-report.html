@@ -7115,7 +7115,7 @@ function feedConfirm(action, key) {
     ok.textContent = 'Добавить';
   } else if (action === 'remove') {
     document.getElementById('popH').textContent = 'Убрать из ленты?';
-    document.getElementById('popT').textContent = `${fio(key)} выйдет из ленты. Данные и разборы сохранятся, место останется за вами.`;
+    document.getElementById('popT').textContent = `Мы уберём ${PEOPLE[key].acc} из раздела «Сегодня». Ежедневные прогнозы перестанут приходить. Слот останется и не удалится.`;
     ok.textContent = 'Убрать';
   } else {
     document.getElementById('popH').textContent = 'Заменить человека в ленте?';
@@ -9776,11 +9776,11 @@ function memCheck() {
 
 /* люди для экранов удаления */
 const PEOPLE = {
-  d: { fio: 'Ковалёв Дмитрий Сергеевич', name: 'Дмитрия', sex: 'm', born: '17 августа 1981', city: 'Ростов-на-Дону',
+  d: { fio: 'Ковалёв Дмитрий Сергеевич', name: 'Дмитрия', acc: 'Дмитрия', sex: 'm', born: '17 августа 1981', city: 'Ростов-на-Дону',
        slot: true, docs: [['Совместимость', 'Любовь и отношения', 'compat']] },
-  s: { fio: 'Тыщенко Софья Дмитриевна', name: 'Софьи', sex: 'f', born: '9 мая 2019', city: 'Волгоград',
+  s: { fio: 'Тыщенко Софья Дмитриевна', name: 'Софьи', acc: 'Софью', sex: 'f', born: '9 мая 2019', city: 'Волгоград',
        slot: false, docs: [['Натальная карта ребёнка', '', 'child'], ['Выбор имени', 'Ева · Мария · Анна', 'childName']] },
-  o: { fio: 'Тыщенко Ольга Николаевна', name: 'Ольги', sex: 'f', born: '3 марта 1958', city: 'Камышин',
+  o: { fio: 'Тыщенко Ольга Николаевна', name: 'Ольги', acc: 'Ольгу', sex: 'f', born: '3 марта 1958', city: 'Камышин',
        slot: false, docs: [] }
 };
 /* местоимения/причастия по полу — чтобы «Ольга добавлена», «её прогноз» звучали верно */
