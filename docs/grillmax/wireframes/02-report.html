@@ -5974,11 +5974,12 @@ const PCALC_STEPS = [
   'Собираю, как это касается вас'
 ];
 S.personCalc = `<div class="pad" style="min-height:520px;display:flex;flex-direction:column;justify-content:center">
-  <div class="kicker" style="margin-bottom:10px">Рассчитываю прогноз Дмитрия</div>
+  <div class="kicker" id="pcalcKick" style="margin-bottom:10px">Рассчитываю прогноз Дмитрия</div>
   <div class="bar" style="margin:0 0 18px"><i id="pcalcBar" style="left:0;width:0%;transition:width 1.1s linear"></i></div>
   <div id="pcalcSteps" style="display:flex;flex-direction:column;gap:11px;font-size:12.5px">
     ${PCALC_STEPS.map((t, i) => `<div class="cstep" data-cs="${i}" style="display:flex;gap:9px;align-items:flex-start;color:var(--ink-faint)"><span style="width:13px;flex:0 0 auto">·</span><div>${t}</div></div>`).join('')}
   </div>
+  <div class="w-btn off" id="pcalcGo" data-pcalcgo="1" style="margin-top:24px">Посмотреть прогноз</div>
 </div>`;
 
 let PCALC_T = null;
@@ -6003,8 +6004,11 @@ function personCalcPlay() {
       view.querySelectorAll('#pcalcSteps .cstep').forEach(s => { s.style.color = 'var(--good)'; s.firstElementChild.textContent = '✓'; });
       bar.style.width = '100%';
       clearInterval(PCALC_T);
-      /* прогноз собран — человек встаёт в ленту полноценно */
-      setTimeout(() => { if (cur === 'personCalc') { JUST_ADDED = true; STATE = 'ok'; render('today'); } }, 600);
+      /* прогноз собран — останавливаемся на готовом состоянии, дальше по кнопке */
+      const kick = document.getElementById('pcalcKick');
+      if (kick) kick.textContent = 'Прогноз готов';
+      const go = document.getElementById('pcalcGo');
+      if (go) go.classList.remove('off');
       return;
     }
     paint();
@@ -9454,6 +9458,8 @@ view.addEventListener('click', e => {
   if (asx) { asx.parentElement.querySelectorAll('i').forEach(i => i.classList.toggle('on', i === asx)); return; }
   const addd = e.target.closest('[data-added]');
   if (addd) { STATE = 'ok'; render('today'); popShow('addedSheet'); return; }
+  const pcg = e.target.closest('[data-pcalcgo]');
+  if (pcg) { JUST_ADDED = true; STATE = 'ok'; render('today'); return; }
   const go = e.target.closest('[data-go]');
   if (go) {
     /* разбор школы по теме открывается из двух мест: из темы и из вкладки школы.
