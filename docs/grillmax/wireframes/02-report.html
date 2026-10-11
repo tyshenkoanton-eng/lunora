@@ -7062,20 +7062,17 @@ function buildDelPerson() {
   </div>` : ''}
 
   <div class="sec-label">Лента</div>
-  ${p.slot
-    ? `<div class="cards">
-    <div class="card-it stub"><div><div class="t">Прогноз рядом с вашим</div><span class="s">Сейчас в вашей ленте</span></div><div class="chev">✓</div></div>
-  </div>
-  <div class="w-btn ghost" data-feedremove="${PERSON}" style="margin-top:12px">Убрать из ленты</div>
-  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:10px">Прогнозы этого человека перестанут показываться в разделе «Сегодня». Слот останется и не удалится.</p>`
-    : `<div class="docfoot boxed" style="margin-top:10px">
+  <div class="docfoot boxed" style="margin-top:10px">
     <div style="text-align:center">
-      <div style="font-size:14px;font-weight:640;color:var(--ink)">Сейчас не в ленте</div>
-      <div style="font-size:12px;color:var(--ink-soft);margin-top:3px">Добавьте этого человека в ежедневные прогнозы</div>
+      <div style="font-size:14px;font-weight:640;color:var(--ink)">${p.slot ? 'Сейчас в ленте' : 'Сейчас не в ленте'}</div>
+      <div style="font-size:12px;color:var(--ink-soft);margin-top:3px">${p.slot ? 'Прогнозы приходят в разделе «Сегодня»' : 'Добавьте этого человека в ежедневные прогнозы'}</div>
     </div>
-    <div class="w-btn" data-feedadd="${PERSON}" style="margin-top:12px">Добавить в ленту</div>
-    <p style="font-size:11px;color:var(--ink-faint);line-height:1.5;margin:10px 0 0;text-align:center">Вам будут приходить ежедневные прогнозы этого человека в разделе «Сегодня».</p>
-  </div>`}
+    ${p.slot
+      ? `<div class="w-btn ghost" data-feedremove="${PERSON}" style="margin-top:12px">Убрать из ленты</div>
+    <p style="font-size:11px;color:var(--ink-faint);line-height:1.5;margin:10px 0 0;text-align:center">Прогнозы этого человека перестанут показываться в разделе «Сегодня». Слот останется и не удалится.</p>`
+      : `<div class="w-btn" data-feedadd="${PERSON}" style="margin-top:12px">Добавить в ленту</div>
+    <p style="font-size:11px;color:var(--ink-faint);line-height:1.5;margin:10px 0 0;text-align:center">Вам будут приходить ежедневные прогнозы этого человека в разделе «Сегодня».</p>`}
+  </div>
 
   <div class="w-btn danger" data-go="delPersonConfirm" style="margin-top:22px">Удалить данные</div>
 </div>`;
