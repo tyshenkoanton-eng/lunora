@@ -5945,8 +5945,8 @@ function addPersonScreen() {
   </div>
 
   ${edit
-    ? `<div class="docfoot boxed" style="margin-top:30px">
-    <div class="w-btn off" data-saveperson="${EDIT_PERSON}">Сохранить</div>
+    ? `<div class="docfoot boxed" id="editSaveBox" style="margin-top:30px;display:none">
+    <div class="w-btn" data-saveperson="${EDIT_PERSON}">Сохранить</div>
   </div>`
     : `<div class="docfoot boxed" style="margin-top:30px">
     <div class="w-check" data-consent="add"><div class="w-box"></div>
@@ -5977,8 +5977,8 @@ function addGate() {
 /* в режиме правки «Сохранить» активна только если форма отличается от исходных
    данных человека (сравниваем имя/отчество/фамилию, пол и дату) */
 function editGate() {
-  const btn = view.querySelector('.docfoot .w-btn[data-saveperson]');
-  if (!btn || !PEOPLE[EDIT_PERSON]) return;
+  const box = document.getElementById('editSaveBox');
+  if (!box || !PEOPLE[EDIT_PERSON]) return;
   const p = PEOPLE[EDIT_PERSON];
   const parts = p.fio.split(' ');
   const dp = (p.born || '').split(' ');
@@ -5992,7 +5992,7 @@ function editGate() {
     cur('[data-adddob="d"]') !== (dp[0] || '') ||
     cur('[data-adddob="m"]') !== (dp[1] || '') ||
     cur('[data-adddob="y"]') !== (dp[2] || '');
-  btn.classList.toggle('off', !dirty);
+  box.style.display = dirty ? '' : 'none';   /* кнопка появляется только при изменении */
 }
 
 /* выбор даты рождения в форме добавления — переиспользуем шторку pickSheet,
