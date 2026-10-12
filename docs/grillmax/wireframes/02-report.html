@@ -1883,8 +1883,8 @@
         </div></div>
         <div class="sheet" id="pop"><div class="sheet-in">
           <div class="sheet-h" id="popH"></div>
-          <p id="popT" style="font-size:13px;line-height:1.6;color:var(--ink-soft);margin:0"></p>
           <div id="popBody" style="display:none"></div>
+          <p id="popT" style="font-size:13px;line-height:1.6;color:var(--ink-soft);margin:0"></p>
           <div id="popConfirm" style="display:none">
             <p style="font-size:12.5px;line-height:1.55;color:var(--warn);margin:4px 0 8px">Чтобы подтвердить, введите слово <b>удалить</b>.</p>
             <div class="w-field" contenteditable="true" data-ph="удалить" data-confword="1"></div>
@@ -7125,7 +7125,7 @@ function feedConfirm(action, key) {
     ok.textContent = 'Добавить';
   } else if (action === 'remove') {
     document.getElementById('popH').textContent = 'Убрать из ленты?';
-    document.getElementById('popT').textContent = `Мы уберём ${PEOPLE[key].acc} из раздела «Сегодня». Ежедневные прогнозы перестанут приходить. Слот останется и не удалится.`;
+    document.getElementById('popT').textContent = 'Мы уберём этого человека из раздела «Сегодня». Ежедневные прогнозы перестанут приходить. Слот останется и не удалится.';
     ok.textContent = 'Убрать';
   } else {
     document.getElementById('popH').textContent = 'Заменить человека в ленте?';
@@ -7133,6 +7133,12 @@ function feedConfirm(action, key) {
     ok.textContent = 'Заменить';
   }
   popShow('pop');
+  /* для «убрать» — блок человека (как на Н-22) между заголовком и текстом */
+  if (action === 'remove') {
+    const pb = document.getElementById('popBody');
+    pb.innerHTML = `<div class="card-it flat" style="margin:14px 0 12px;cursor:default"><div><div class="t">${PEOPLE[key].fio}</div><span class="s">Сейчас в ленте</span></div></div>`;
+    pb.style.display = '';
+  }
   /* для замены вместо строки текста — два блока (как на Н-22): старый → новый, значок замены между ними */
   if (action === 'replace') {
     document.getElementById('popT').style.display = 'none';
