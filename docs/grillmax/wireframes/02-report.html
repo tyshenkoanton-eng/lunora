@@ -7155,7 +7155,6 @@ function feedConfirm(action, key) {
 /* добавление в ленту, когда есть свободный слот: без вопроса — сразу добавляем
    и показываем подтверждение (не диалог). Имя в именительном, без склонений и рода. */
 function feedAdded(key) {
-  const fio = k => (PEOPLE[k].fio.split(' ')[1] || PEOPLE[k].fio);
   PEOPLE[key].slot = true;     /* действие уже выполнено */
   render('delPerson');         /* карточка под шторкой — уже «в ленте» */
   const ok = document.getElementById('popOk');
@@ -7165,9 +7164,13 @@ function feedAdded(key) {
   ok.dataset.popKey = key;
   ok.textContent = 'Хорошо';
   document.getElementById('popH').textContent = 'Человек в ленте';
-  document.getElementById('popT').textContent = `${fio(key)} теперь в вашей ленте. Ежедневные прогнозы будут приходить в разделе «Сегодня» вместе с вашим.`;
+  document.getElementById('popT').textContent = 'Этот человек теперь в вашей ленте. Ежедневные прогнозы будут приходить в разделе «Сегодня» вместе с вашим.';
   popShow('pop');
   document.getElementById('popCancel').style.display = 'none';   /* подтверждение, без «Отмены» */
+  /* блок человека между заголовком и текстом — как на Ф-17/Н-22 */
+  const pb = document.getElementById('popBody');
+  pb.innerHTML = `<div class="card-it flat" style="margin:14px 0 12px;cursor:default"><div><div class="t">${PEOPLE[key].fio}</div><span class="s">Сейчас в ленте</span></div></div>`;
+  pb.style.display = '';
 }
 
 /* Подтверждение удаления человека — экран как Н-09: предупреждение, сводка,
