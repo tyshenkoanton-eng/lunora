@@ -5946,7 +5946,7 @@ function addPersonScreen() {
 
   ${edit
     ? `<div class="docfoot boxed" style="margin-top:30px">
-    <div class="w-btn" data-saveperson="${EDIT_PERSON}">Сохранить</div>
+    <div class="w-btn off" data-saveperson="${EDIT_PERSON}">Сохранить</div>
   </div>`
     : `<div class="docfoot boxed" style="margin-top:30px">
     <div class="w-check" data-consent="add"><div class="w-box"></div>
@@ -5963,7 +5963,7 @@ Object.defineProperty(S, 'addPerson', { get: addPersonScreen });
 /* Проверка обязательных полей формы добавления: кнопка активна, только когда
    заполнено имя, выбрана дата рождения и отмечено согласие. */
 function addGate() {
-  if (EDIT_PERSON) return;   /* в режиме правки кнопка «Сохранить» активна всегда */
+  if (EDIT_PERSON) { editGate(); return; }   /* в режиме правки «Сохранить» активна только при изменении */
   const btn = view.querySelector('.docfoot .w-btn');
   if (!btn) return;
   const consent = view.querySelector('.w-check[data-consent="add"]');
@@ -5972,6 +5972,27 @@ function addGate() {
   const dateOk = dobs.length === 3 && dobs.every(f => { const t = f.textContent.trim(); return t && t !== '—'; });
   const consentOk = !!(consent && consent.classList.contains('on'));
   btn.classList.toggle('off', !(nameOk && dateOk && consentOk));
+}
+
+/* в режиме правки «Сохранить» активна только если форма отличается от исходных
+   данных человека (сравниваем имя/отчество/фамилию, пол и дату) */
+function editGate() {
+  const btn = view.querySelector('.docfoot .w-btn[data-saveperson]');
+  if (!btn || !PEOPLE[EDIT_PERSON]) return;
+  const p = PEOPLE[EDIT_PERSON];
+  const parts = p.fio.split(' ');
+  const dp = (p.born || '').split(' ');
+  const cur = sel => (view.querySelector(sel)?.textContent || '').trim();
+  const sexOn = view.querySelector('[data-addsex].on')?.dataset.addsex || 'm';
+  const dirty =
+    cur('[data-addfill="name"]') !== (parts[1] || '') ||
+    cur('[data-addfill="pat"]')  !== (parts[2] || '') ||
+    cur('[data-addfill="fam"]')  !== (parts[0] || '') ||
+    sexOn !== (p.sex || 'm') ||
+    cur('[data-adddob="d"]') !== (dp[0] || '') ||
+    cur('[data-adddob="m"]') !== (dp[1] || '') ||
+    cur('[data-adddob="y"]') !== (dp[2] || '');
+  btn.classList.toggle('off', !dirty);
 }
 
 /* выбор даты рождения в форме добавления — переиспользуем шторку pickSheet,
@@ -9671,7 +9692,7 @@ view.addEventListener('click', e => {
   const dob = e.target.closest('[data-adddob]');
   if (dob) { openAddDob(dob.dataset.adddob); return; }
   const asx = e.target.closest('[data-addsex]');
-  if (asx) { asx.parentElement.querySelectorAll('i').forEach(i => i.classList.toggle('on', i === asx)); return; }
+  if (asx) { asx.parentElement.querySelectorAll('i').forEach(i => i.classList.toggle('on', i === asx)); addGate(); return; }
   const addd = e.target.closest('[data-added]');
   if (addd) { STATE = 'ok'; render('today'); popShow('addedSheet'); return; }
   const pcg = e.target.closest('[data-pcalcgo]');
