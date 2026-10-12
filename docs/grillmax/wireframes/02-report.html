@@ -873,7 +873,7 @@
   .card-it .s { font-size: 12px; color: var(--ink-soft); line-height: 1.45; margin-top: 4px; display: block; font-weight: 400; }
   .card-it .chev { color: var(--ink-faint); font-size: 19px; font-weight: 300; }
   /* значок корзины вместо шеврона: показывает, что человек убирается из ленты */
-  .card-it .trash { color: var(--ink-faint); flex: 0 0 auto; }
+  .card-it .trash { color: var(--bad); opacity: .85; flex: 0 0 auto; }
   /* у переключателей чев меняется ✓↔· — фиксируем ширину, иначе колонка текста
      пересчитывается и подпись перескакивает по строкам при переключении */
   #memModes .card-it .chev { width: 16px; text-align: center; }
@@ -7100,8 +7100,10 @@ function buildSlotPick() {
   <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:10px">Мы удалим указанного человека из ленты и добавим нового.</p>
 
   <div class="sec-label">Или докупить слот</div>
-  <div class="w-btn" data-feedbuy="${PERSON}">Докупить слот · 290 ₽</div>
-  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:10px">Это разовый платёж</p>
+  <div class="docfoot boxed" style="margin-top:10px">
+    <div class="w-btn" data-feedbuy="${PERSON}">Докупить слот · 290 ₽</div>
+    <p style="font-size:11px;color:var(--ink-faint);line-height:1.5;margin:10px 0 0;text-align:center">Это разовый платёж</p>
+  </div>
 </div>`;
 }
 Object.defineProperty(S, 'slotPick', { get: buildSlotPick });
