@@ -10633,6 +10633,10 @@ function regGo(n) {
   if (r.ob) Object.assign(OB, r.ob);
   /* карточка человека/выбор слота зависят от текущего человека — запись может его задать */
   if (r.person) PERSON = r.person;
+  /* «в ленте / не в ленте» — часть адреса карточки: приводим слот человека в нужное
+     состояние, иначе добавление/удаление из прошлой записи протекает в следующую
+     (напр. Ф-16 выставляет o.slot=true, после чего Н-08-2 «не в ленте» не открывалась) */
+  if ('infeed' in st && PEOPLE[PERSON]) PEOPLE[PERSON].slot = st.infeed === 1;
   /* шторка от прошлой записи не должна оставаться поверх нового экрана */
   document.querySelectorAll('.sheet.show').forEach(el => { if (el.id !== r.sheet) el.classList.remove('show'); });
   if (!r.sheet && !r.info) REG_UNDER = null;
