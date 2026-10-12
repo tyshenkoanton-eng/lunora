@@ -7087,7 +7087,7 @@ function buildSlotPick() {
   const p = PEOPLE[PERSON];
   const occ = Object.keys(PEOPLE).filter(k => PEOPLE[k].slot && GONE[k] !== 'gone');
   return `<div class="pad">
-  <div class="dochead" data-go="delPerson"><span>&lsaquo;</span><div>Назад · ${p.fio}</div></div>
+  <div class="dochead" data-go="delPerson"><span>&lsaquo;</span><div>Назад</div></div>
   <h2 class="t-title" style="font-size:21px">Добавить в ленту</h2>
   <p class="d-lede">Все места в ленте сейчас заняты. Можно освободить одно, убрав другого человека, или докупить дополнительный слот.</p>
 
@@ -7095,11 +7095,11 @@ function buildSlotPick() {
   <div class="cards">
     ${occ.map(k => `<div class="card-it" data-feedreplace="${k}"><div><div class="t">${PEOPLE[k].fio}</div><span class="s">Сейчас в ленте</span></div><div class="chev">›</div></div>`).join('')}
   </div>
-  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:10px">Выбранный человек выйдет из ленты и освободит место. Его данные и разборы сохранятся. Бесплатно.</p>
+  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:10px">Мы удалим указанного человека из ленты и добавим нового.</p>
 
   <div class="sec-label">Или докупить слот</div>
   <div class="w-btn" data-feedbuy="${PERSON}">Докупить слот · 290 ₽</div>
-  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:10px">Откроется ещё одно место в ленте, и никого не придётся убирать. Это разовый платёж.</p>
+  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:10px">Это разовый платёж</p>
 </div>`;
 }
 Object.defineProperty(S, 'slotPick', { get: buildSlotPick });
