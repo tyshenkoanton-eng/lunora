@@ -166,7 +166,7 @@
 | `Н-08-1` | Человек · в ленте | `delPerson` | infeed=1 |
 | `Н-08-2` | Человек · не в ленте | `delPerson` | infeed=0 |
 | `Н-22` | Добавить в ленту · слот занят | `slotPick` |  |
-| `Ф-16` | Шторка · добавить в ленту | `delPerson` | шторка; popact=feedadd |
+| `Ф-16` | Шторка · человек добавлен в ленту | `delPerson` | шторка; popact=feedadded |
 | `Ф-17` | Шторка · убрать из ленты | `delPerson` | шторка; popact=feedremove |
 | `Ф-18` | Шторка · заменить человека в ленте | `slotPick` | шторка; popact=feedreplace |
 | `Н-20` | Удаление человека · подтверждение | `delPersonConfirm` |  |
