@@ -872,6 +872,8 @@
   .nd { display: inline-block; width: 7px; height: 7px; border-radius: 999px; background: var(--note); vertical-align: middle; margin-left: 7px; position: relative; top: -1px; }
   .card-it .s { font-size: 12px; color: var(--ink-soft); line-height: 1.45; margin-top: 4px; display: block; font-weight: 400; }
   .card-it .chev { color: var(--ink-faint); font-size: 19px; font-weight: 300; }
+  /* значок корзины вместо шеврона: показывает, что человек убирается из ленты */
+  .card-it .trash { color: var(--ink-faint); flex: 0 0 auto; }
   /* у переключателей чев меняется ✓↔· — фиксируем ширину, иначе колонка текста
      пересчитывается и подпись перескакивает по строкам при переключении */
   #memModes .card-it .chev { width: 16px; text-align: center; }
@@ -7093,7 +7095,7 @@ function buildSlotPick() {
 
   <div class="sec-label">Кого убрать из ленты</div>
   <div class="cards">
-    ${occ.map(k => `<div class="card-it" data-feedreplace="${k}"><div><div class="t">${PEOPLE[k].fio}</div><span class="s">Сейчас в ленте</span></div><div class="chev">›</div></div>`).join('')}
+    ${occ.map(k => `<div class="card-it" data-feedreplace="${k}"><div><div class="t">${PEOPLE[k].fio}</div><span class="s">Сейчас в ленте</span></div><svg class="trash" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path><path d="M10 11v6M14 11v6"></path><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"></path></svg></div>`).join('')}
   </div>
   <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:10px">Мы удалим указанного человека из ленты и добавим нового.</p>
 
