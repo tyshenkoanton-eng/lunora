@@ -5974,25 +5974,31 @@ function addGate() {
   btn.classList.toggle('off', !(nameOk && dateOk && consentOk));
 }
 
-/* в режиме правки «Сохранить» активна только если форма отличается от исходных
-   данных человека (сравниваем имя/отчество/фамилию, пол и дату) */
-function editGate() {
-  const box = document.getElementById('editSaveBox');
-  if (!box || !PEOPLE[EDIT_PERSON]) return;
-  const p = PEOPLE[EDIT_PERSON];
+/* что именно изменилось в форме правки относительно исходных данных человека */
+function editChanges(key) {
+  const p = PEOPLE[key];
+  if (!p) return { name: false, sex: false, date: false };
   const parts = p.fio.split(' ');
   const dp = (p.born || '').split(' ');
   const cur = sel => (view.querySelector(sel)?.textContent || '').trim();
   const sexOn = view.querySelector('[data-addsex].on')?.dataset.addsex || 'm';
-  const dirty =
-    cur('[data-addfill="name"]') !== (parts[1] || '') ||
-    cur('[data-addfill="pat"]')  !== (parts[2] || '') ||
-    cur('[data-addfill="fam"]')  !== (parts[0] || '') ||
-    sexOn !== (p.sex || 'm') ||
-    cur('[data-adddob="d"]') !== (dp[0] || '') ||
-    cur('[data-adddob="m"]') !== (dp[1] || '') ||
-    cur('[data-adddob="y"]') !== (dp[2] || '');
-  box.style.display = dirty ? '' : 'none';   /* кнопка появляется только при изменении */
+  return {
+    name: cur('[data-addfill="name"]') !== (parts[1] || '') ||
+          cur('[data-addfill="pat"]')  !== (parts[2] || '') ||
+          cur('[data-addfill="fam"]')  !== (parts[0] || ''),
+    sex: sexOn !== (p.sex || 'm'),
+    date: cur('[data-adddob="d"]') !== (dp[0] || '') ||
+          cur('[data-adddob="m"]') !== (dp[1] || '') ||
+          cur('[data-adddob="y"]') !== (dp[2] || '')
+  };
+}
+
+/* в режиме правки «Сохранить» появляется, только если форма отличается от исходных данных */
+function editGate() {
+  const box = document.getElementById('editSaveBox');
+  if (!box || !EDIT_PERSON) return;
+  const c = editChanges(EDIT_PERSON);
+  box.style.display = (c.name || c.sex || c.date) ? '' : 'none';
 }
 
 /* выбор даты рождения в форме добавления — переиспользуем шторку pickSheet,
@@ -7253,13 +7259,17 @@ function feedConfirm(action, key) {
 /* подтверждение после сохранения правок (у человека есть купленные разборы):
    предлагаем пересчёт разборов (Пересчитать / Позже). «Позже» оставляет
    напоминание на карточке (флаг RECALC_PEND ставится при сохранении). */
-function savedConfirm(key) {
+function savedConfirm(key, kind) {
   const ok = document.getElementById('popOk');
   document.getElementById('popConfirm').style.display = 'none';
   ok.className = 'w-btn'; ok.style.background = ''; ok.style.borderColor = '';
   document.getElementById('popH').textContent = 'Данные сохранены';
   popShow('pop');
-  document.getElementById('popT').textContent = 'Дата рождения изменилась, поэтому связанные разборы стоит пересчитать по новым данным. Прогноз в ленте обновится сам.';
+  /* текст зависит от того, что изменилось: только дата / только имя / остальные случаи */
+  const what = kind === 'date' ? 'Дата рождения изменилась'
+             : kind === 'name' ? 'Имя изменилось'
+             : 'Данные изменились';
+  document.getElementById('popT').textContent = `${what}, поэтому связанные разборы стоит пересчитать по новым данным. Прогноз в ленте обновится сам.`;
   ok.textContent = 'Пересчитать разборы';
   ok.dataset.popAct = 'prerecalc';
   ok.dataset.popKey = key;
@@ -9679,8 +9689,13 @@ view.addEventListener('click', e => {
      нет разборов — пересчитывать в разборном смысле нечего, сразу показываем, что изменилось */
   const sp = e.target.closest('[data-saveperson]');
   if (sp) {
-    const key = sp.dataset.saveperson; PERSON = key; EDIT_PERSON = null;
-    if (PEOPLE[key].docs.length) { RECALC_PEND.add(key); render('delPerson'); savedConfirm(key); }
+    const key = sp.dataset.saveperson;
+    const c = editChanges(key);   /* считаем до сброса EDIT_PERSON и ре-рендера формы */
+    const kind = (c.date && !c.name && !c.sex) ? 'date'
+               : (c.name && !c.date && !c.sex) ? 'name'
+               : 'both';
+    PERSON = key; EDIT_PERSON = null;
+    if (PEOPLE[key].docs.length) { RECALC_PEND.add(key); render('delPerson'); savedConfirm(key, kind); }
     else { PCALC_BACK = 'recalcDone'; render('personCalc'); }
     return;
   }
@@ -10789,7 +10804,7 @@ function regGo(n) {
     if (r.sheet === 'pop') {
       const pa = r.s && r.s.popact;
       if (pa === 'feedadded') { feedAdded(r.feedkey || PERSON); return; }
-      if (pa === 'prerecalc') { savedConfirm(r.person || PERSON); return; }
+      if (pa === 'prerecalc') { savedConfirm(r.person || PERSON, 'date'); return; }
       if (pa && pa.indexOf('feed') === 0) { feedConfirm(pa.slice(4), r.feedkey || PERSON); return; }
       popMemDelAll();
     }
