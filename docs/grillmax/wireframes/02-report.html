@@ -9900,7 +9900,7 @@ document.getElementById('pop').addEventListener('click', e => {
     if (act === 'delall') { render('Б-01'); return; }
     if (act === 'feedadd') { PEOPLE[pok.dataset.popKey].slot = true; render('delPerson'); return; }
     if (act === 'feedremove') { PEOPLE[pok.dataset.popKey].slot = false; render('delPerson'); return; }
-    if (act === 'feedreplace') { PEOPLE[pok.dataset.popKey].slot = false; PEOPLE[PERSON].slot = true; render('delPerson'); return; }
+    if (act === 'feedreplace') { PEOPLE[pok.dataset.popKey].slot = false; feedAdded(PERSON); return; }
     if (act === 'prerecalc') { PCALC_BACK = 'recalcDone'; render('personCalc'); return; }
   }
   const pop = document.getElementById('pop');
@@ -10649,27 +10649,6 @@ view.addEventListener('click', e => {
 
 
 
-document.getElementById('pop').addEventListener('click', e => {
-  const pok = e.target.closest('#popOk');
-  if (pok && !pok.classList.contains('off')) {
-    const act = pok.dataset.popAct;
-    document.getElementById('pop').classList.remove('show');
-    if (act === 'delperson') { GONE[PERSON] = 'undo'; render('myPeople'); startUndo(PERSON); return; }
-    if (act === 'delall') { render('Б-01'); return; }
-    if (act === 'feedadd') { PEOPLE[pok.dataset.popKey].slot = true; render('delPerson'); return; }
-    if (act === 'feedremove') { PEOPLE[pok.dataset.popKey].slot = false; render('delPerson'); return; }
-    if (act === 'feedreplace') { PEOPLE[pok.dataset.popKey].slot = false; PEOPLE[PERSON].slot = true; render('delPerson'); return; }
-    if (act === 'prerecalc') { PCALC_BACK = 'recalcDone'; render('personCalc'); return; }
-  }
-  const pop = document.getElementById('pop');
-  if (e.target.id === 'pop' || e.target.closest('[data-pop-close]')) { pop.classList.remove('show'); return; }
-  const ok = e.target.closest('#popOk');
-  if (ok && ok.dataset.popAct === 'mall') {
-    view.querySelectorAll('.mem').forEach(r => r.classList.add('gone'));
-    memCheck();
-    pop.classList.remove('show');
-  }
-});
 
 
 /* листы прижаты к низу телефона: подкручиваем страницу, чтобы низ был виден */
