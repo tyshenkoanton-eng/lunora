@@ -170,7 +170,7 @@
 | `Ф-16` | Шторка · человек добавлен в ленту | `delPerson` | шторка; popact=feedadded |
 | `Ф-17` | Шторка · убрать из ленты | `delPerson` | шторка; popact=feedremove |
 | `Ф-18` | Шторка · заменить человека в ленте | `slotPick` | шторка; popact=feedreplace |
-| `Ф-19` | Шторка · данные сохранены (пересчёт) | `delPerson` | шторка; popact=prerecalc |
+| `Ф-19` | Шторка · сохранить изменения (пересчёт) | `delPerson` | шторка; popact=prerecalc |
 | `Л-24-1` | Пересчёт человека · один разбор | `personRecalcDone` | hasdocs=1, onedoc=1 |
 | `Л-24-3` | Пересчёт человека · несколько разборов | `personRecalcDone` | hasdocs=1, onedoc=0 |
 | `Л-24-2` | Пересчёт человека · без разборов | `personRecalcDone` | hasdocs=0 |
