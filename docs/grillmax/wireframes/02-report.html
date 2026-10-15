@@ -6088,7 +6088,7 @@ Object.defineProperty(S, 'personRecalcDone', { get() {
   const p = PEOPLE[PERSON];
   const hasDocs = p.docs.length;
   return `<div class="pad">
-  <div class="dochead" data-go="delPerson"><span>&lsaquo;</span><div>Назад · ${p.fio}</div></div>
+  <div class="dochead" data-go="delPerson"><span>&lsaquo;</span><div>Назад · ${p.fio.split(' ')[1] || p.fio}</div></div>
   <h2 class="t-title" style="font-size:21px">Пересчитали</h2>
   <p class="t-onephrase">Новые данные изменили карту человека. Вот что поменялось.</p>
 
@@ -7292,7 +7292,7 @@ function feedAdded(key) {
 function buildDelPersonConfirm() {
   const p = PEOPLE[PERSON];
   return `<div class="pad">
-  <div class="dochead" data-go="delPerson"><span>&lsaquo;</span><div>Назад · ${p.fio}</div></div>
+  <div class="dochead" data-go="delPerson"><span>&lsaquo;</span><div>Назад · ${p.fio.split(' ')[1] || p.fio}</div></div>
   <h2 class="t-title" style="font-size:21px">Удаление человека</h2>
 
   <div class="warnbox" style="margin-top:14px;grid-template-columns:1fr">
