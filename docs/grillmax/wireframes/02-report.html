@@ -7007,7 +7007,7 @@ Object.defineProperty(S, 'settings', { get: () => `<div class="pad">
 
   <div class="sec-label">Ответы Луноры</div>
   <div class="cards">
-    <div class="card-it" data-go="answerTone"><div><div class="t">Тон ответов</div><span class="s">${TONE === 'soft' ? 'Бережно, со смягчением' : 'Как говорят школы, без смягчения'}</span></div><div class="chev">›</div></div>
+    <div class="card-it" data-go="answerTone"><div><div class="t">Тон ответов</div><span class="s">${TONE === 'soft' ? 'Бережно, со смягчением' : 'Прямо, без смягчения'}</span></div><div class="chev">›</div></div>
   </div>
 
   <div class="sec-label">Помощь</div>
@@ -7041,10 +7041,10 @@ Object.defineProperty(S, 'answerTone', { get: () => `<div class="pad">
   <div class="sec-label">Как отвечать</div>
   <div class="cards" id="toneModes">
     <div class="card-it${TONE === 'soft' ? ' on' : ''}" data-tone="soft"><div><div class="t">Бережно</div><span class="s">Лунора смягчает тяжёлые места и подбирает слова аккуратно. Сложное подаётся как то, что можно понять и обойти.</span></div><div class="chev">${TONE === 'soft' ? '✓' : '·'}</div></div>
-    <div class="card-it${TONE === 'raw' ? ' on' : ''}" data-tone="raw"><div><div class="t">Как говорят школы</div><span class="s">Лунора передаёт то, что показывает расчёт, без смягчения. Прямее и жёстче, зато ближе к первоисточнику.</span></div><div class="chev">${TONE === 'raw' ? '✓' : '·'}</div></div>
+    <div class="card-it${TONE === 'raw' ? ' on' : ''}" data-tone="raw"><div><div class="t">Прямо</div><span class="s">Лунора передаёт то, что показывает расчёт, без смягчения. Прямее и жёстче, зато ближе к тому, что говорят школы.</span></div><div class="chev">${TONE === 'raw' ? '✓' : '·'}</div></div>
   </div>
 
-  <div class="note-l" style="font-size:11.5px;color:var(--warn);line-height:1.55;background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:9px;padding:11px 12px;margin-top:12px">Здоровье, энергию и тему детей Лунора обсуждает, в том числе прямо. Но вердикт по событию не выносит никогда: не называет дату смерти и не обещает бесплодие или рождение. О таком говорит как о периодах и вероятностях, на которые можно повлиять.</div>
+  <div class="note-l" style="font-size:11.5px;color:var(--warn);line-height:1.55;background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:9px;padding:11px 12px;margin-top:12px">Даже в прямом режиме есть черта, за которую Лунора не заходит. Она не называет дату смерти и не выносит приговор о детях и других необратимых вещах. О таком она говорит как о периодах и вероятностях, на которые можно повлиять, а не как о решённой судьбе.</div>
 </div>` });
 
 
