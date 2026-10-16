@@ -518,6 +518,15 @@
   .p-head { display: flex; flex-direction: column; gap: 3px; padding-bottom: 14px; border-bottom: 1px solid var(--rule-soft); margin-bottom: 18px; }
   .p-head b { font-size: 19px; font-weight: 650; letter-spacing: -.01em; }
   .p-head span { font-size: 12px; color: var(--ink-faint); }
+  /* таблетка «Пригласить друга» в шапке профиля, рядом с настройками */
+  .invpill { display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto; position: relative;
+             font-size: 12px; font-weight: 560; color: var(--ink-soft); cursor: pointer; white-space: nowrap;
+             padding: 7px 13px; border: 1px solid var(--rule); border-radius: 999px; background: var(--card); }
+  .invpill:active { color: var(--ink); }
+  .invpill svg { width: 14px; height: 14px; display: block; }
+  .invpill .invdot { position: absolute; top: -2px; right: -2px; margin: 0; width: 7px; height: 7px; }
+  /* линия, отделяющая верх шапки от крутилки цитат */
+  .phrule { height: 1px; background: var(--rule-soft); margin: 13px 0 2px; }
   /* полные данные под именем: по строке на смысловую группу */
   /* вывод о человеке под именем — связка с показом, а не навигация */
   /* тезисы — цитата с кавычками, точки по центру под ней */
@@ -928,7 +937,7 @@
   .navarr > i.off { opacity: .3; }
 
   /* ФИО */
-  .fio { font-size: 17px; font-weight: 650; letter-spacing: -.01em; line-height: 1.25;
+  .fio { font-size: 15px; font-weight: 650; letter-spacing: -.01em; line-height: 1.25;
          overflow: hidden; text-overflow: ellipsis; white-space: nowrap; min-width: 0; }
   /* стрелка стоит вплотную к имени: она про имя, а не про строку целиком */
   .fioline { display: flex; align-items: center; gap: 1px; min-width: 0; flex: 1; }
@@ -1851,7 +1860,7 @@
         <div class="sheet" id="invSheet"><div class="sheet-in">
           <div class="sheet-h">Пригласите того, кому это тоже интересно</div>
           <p class="introp">Как только друг построит свою карту, вы оба получите вопросы в чате: 10 вам и 5 другу. Покупать ничего не нужно.</p>
-          <p class="introp" style="color:var(--ink-faint)">Вернуться к приглашениям можно в любой момент: значок подарка в чате или «Пригласить друзей» в настройках.</p>
+          <p class="introp" style="color:var(--ink-faint)">Вернуться к приглашениям можно в любой момент: кнопка «Пригласить друга» в профиле или «Пригласить друзей» в настройках.</p>
           <div class="w-btn" data-invgo="1">Пригласить друга</div>
           <div class="w-btn ghost" data-invok="1">Напомнить позже</div>
         </div></div>
@@ -2820,6 +2829,9 @@ let PROF_SEEN = false;
 /* приглашение показываем не сразу: сначала человек читает карту и пробует чат */
 let INV_SEEN = (() => { try { return localStorage.getItem('lunora_inv') === '1'; } catch (e) { return false; } })();
 const invMark = () => { INV_SEEN = true; try { localStorage.setItem('lunora_inv', '1'); } catch (e) {} };
+/* непросмотренные события рефералки (приглашённый вошёл, начислены вопросы) —
+   точка на таблетке «Пригласить друга» в шапке профиля, гаснет при открытии */
+let INV_EVENT = true;
 const THEME_KEYS = ['tCharacter','tLove','tWork','tPurpose','tMoney','tEnergy','tFamily','tTalent'];
 function invMaybe(k) {
   if (INV_SEEN || k !== 'chat') return;
@@ -2993,13 +3005,15 @@ const SCHOOLS = [
 
 function buildProfile() { return `<div class="pad">
   <div class="p-head">
-    <div style="display:flex;align-items:flex-start;gap:8px">
+    <div style="display:flex;align-items:center;gap:8px">
       <div class="ava" title="Аватар из Telegram">А</div>
       <div class="fioline">
         <div class="fio">Антон</div>
       </div>
-      <span style="font-size:19px;color:var(--ink-soft);cursor:pointer;width:44px;height:44px;display:grid;place-items:center;margin:-10px 0 0 0;flex:0 0 auto" data-go="settings">⚙</span>
+      <span class="invpill" data-go="invite">${ICO_GIFT}Пригласить друга${INV_EVENT ? '<em class="invdot"></em>' : ''}</span>
+      <span style="font-size:19px;color:var(--ink-soft);cursor:pointer;width:40px;height:40px;display:grid;place-items:center;flex:0 0 auto;margin-right:-6px" data-go="settings">⚙</span>
     </div>
+    <div class="phrule"></div>
     <div class="pclaims" id="pclaims">
       <div class="pcstage"><p class="p-claim" aria-hidden="true">${PCLAIMS[PCLAIMS.length - 1]}</p>${PCLAIMS.map(t => `<p class="p-claim">${t}</p>`).join('')}<p class="p-claim" aria-hidden="true">${PCLAIMS[0]}</p></div>
       <div class="pcdots">${PCLAIMS.map((_, i) => `<i class="${i ? '' : 'on'}" data-pcd="${i}"></i>`).join('')}</div>
@@ -6552,9 +6566,11 @@ function МЕТКА() {
 
 function chatBar() {
   const q = BARS[BAL].q;
-  const inv = `<span class="chatinv" data-go="invite"><u>${ICO_GIFT}</u>Пригласить друга${INV_SEEN ? '' : '<em class="invdot"></em>'}</span>`;
-  if (!q) return `<div class="chatbar empty">${inv}<b data-go="shopTalk">Баланс пуст · Купить →</b></div>`;
-  return `<div class="chatbar">${inv}<b>Баланс: ${МЕТКА()}</b></div>`;
+  /* приглашение из полосы чата убрано: рефералка живёт в Профиле и Настройках,
+     в диалоге ей не место. Левый слот остаётся пустым распоркой, баланс — справа. */
+  const sp = '<span></span>';
+  if (!q) return `<div class="chatbar empty">${sp}<b data-go="shopTalk">Баланс пуст · Купить →</b></div>`;
+  return `<div class="chatbar">${sp}<b>Баланс: ${МЕТКА()}</b></div>`;
 }
 
 /* Низ экрана всегда один: поле ввода. Подпись про списание вопроса. */
@@ -7003,6 +7019,11 @@ Object.defineProperty(S, 'settings', { get: () => `<div class="pad">
   <div class="sec-label">Уведомления</div>
   <div class="cards">
     <div class="card-it" data-go="feedTime"><div><div class="t">Ежедневный прогноз</div><span class="s">Каждый день в 8:00</span></div><div class="chev">›</div></div>
+  </div>
+
+  <div class="sec-label">Приглашения</div>
+  <div class="cards">
+    <div class="card-it" data-go="invite"><div><div class="t">Пригласить друзей</div><span class="s">Вопросы в подарок вам и другу за каждого, кто получит свою карту</span></div><div class="chev">›</div></div>
   </div>
 
   <div class="sec-label">Ответы Луноры</div>
@@ -9632,6 +9653,7 @@ view.addEventListener('click', e => {
     /* если уходим туда, откуда пришли, — это возврат: отдаём прежнюю прокрутку,
        иначе человек каждый раз падает в начало длинного списка */
     const back = hist.length && hist[hist.length - 1][0] === go.dataset.go;
+    if (go.dataset.go === 'invite') INV_EVENT = false;
     if (back) { const [k, y] = hist.pop(); render(k, false, y); return; }
     render(go.dataset.go); return;
   }
