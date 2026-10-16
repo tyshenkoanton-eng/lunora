@@ -524,6 +524,8 @@
              padding: 5px 11px; border: 1px solid var(--rule); border-radius: 999px; background: var(--card); }
   .invpill:active { color: var(--ink); }
   .invpill .invdot { margin: 0 0 0 1px; width: 6px; height: 6px; }
+  /* строка с таблеткой приглашения под именем */
+  .invrow { margin-top: 10px; }
   /* линия, отделяющая верх шапки от крутилки цитат */
   .phrule { height: 1px; background: var(--rule-soft); margin: 13px 0 2px; }
   /* полные данные под именем: по строке на смысловую группу */
@@ -3009,9 +3011,9 @@ function buildProfile() { return `<div class="pad">
       <div class="fioline">
         <div class="fio">Антон</div>
       </div>
-      <span class="invpill" data-go="invite">Пригласить друга${INV_EVENT ? '<em class="invdot"></em>' : ''}</span>
-      <span style="font-size:19px;color:var(--ink-soft);cursor:pointer;width:40px;height:40px;display:grid;place-items:center;flex:0 0 auto;margin:0 -6px 0 -4px" data-go="settings">⚙</span>
+      <span style="font-size:19px;color:var(--ink-soft);cursor:pointer;width:40px;height:40px;display:grid;place-items:center;flex:0 0 auto;margin-right:-6px" data-go="settings">⚙</span>
     </div>
+    <div class="invrow"><span class="invpill" data-go="invite">Пригласить друга${INV_EVENT ? '<em class="invdot"></em>' : ''}</span></div>
     <div class="phrule"></div>
     <div class="pclaims" id="pclaims">
       <div class="pcstage"><p class="p-claim" aria-hidden="true">${PCLAIMS[PCLAIMS.length - 1]}</p>${PCLAIMS.map(t => `<p class="p-claim">${t}</p>`).join('')}<p class="p-claim" aria-hidden="true">${PCLAIMS[0]}</p></div>
