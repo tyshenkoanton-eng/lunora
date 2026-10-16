@@ -383,9 +383,6 @@
   .qrcard.fill { background: var(--wire-fill); border-color: transparent; }
   /* разделитель «или» между кодом и ссылкой */
   .rfor { text-align: center; font-size: 12.5px; color: var(--ink-faint); margin: 10px 0; }
-  /* блок «Как это работает» — всегда раскрыт, без аккордеона */
-  .rfsteps { border: 1px solid var(--rule); border-radius: 12px; background: var(--card); padding: 15px; margin-top: 22px; display: flex; flex-direction: column; gap: 12px; }
-  .rfsteps-h { font-size: 14px; font-weight: 640; letter-spacing: -.01em; }
   .linkrow { display: flex; align-items: center; gap: 10px; border: 1px solid var(--rule); border-radius: 9px;
              padding: 10px 12px; text-align: left; }
   .linkrow span { flex: 1; font-size: 12.5px; font-variant-numeric: tabular-nums; }
@@ -6184,8 +6181,9 @@ S.invite = `<div class="pad">
 
   <div id="rfGive">
     <div class="utp">
-      <b style="font-size:15px">Пригласите друга и спрашивайте Лунору чаще <u class="ihint" data-info="chat">i</u></b>
-      <div class="utp-row" style="margin-top:12px">
+      <b style="font-size:15px">Приглашайте друга в Лунору</b>
+      <p>Друг получит свой расчёт по четырём школам, а вы оба получите вопросы Луноре в чате. <u class="ihint" data-info="chat">i</u></p>
+      <div class="utp-row">
         <div><i>10</i>вопросов вам</div>
         <div><i>5</i>вопросов другу</div>
       </div>
@@ -6206,18 +6204,16 @@ S.invite = `<div class="pad">
       <div class="w-btn" data-share="invite" style="margin-top:12px"><i class="bi">↗</i>Отправить ссылку</div>
     </div>
 
-    <div class="rfsteps">
-      <div class="rfsteps-h">Как это работает</div>
-      <div class="stp"><u>1</u>Отправьте ссылку или покажите код</div>
-      <div class="stp"><u>2</u>Друг введёт данные и получит свою карту</div>
-      <div class="stp"><u>3</u>Вам начислят 10 вопросов, другу 5</div>
-    </div>
-
-    <div class="calc-h">Правила</div>
+    <div class="calc-h">Как это работает</div>
     <div class="faq" style="margin-top:10px">
-      <div class="fq"><div class="q">Когда начисляется<span>+</span></div><div class="a"><div class="ai"><div class="at">Когда друг введёт свои данные и получит карту. Переход по ссылке без ввода не считается.</div></div></div></div>
-      <div class="fq"><div class="q">Сколько раз можно пригласить<span>+</span></div><div class="a"><div class="ai"><div class="at">Сколько угодно. Вопросы начисляются за каждого приглашённого друга.</div></div></div></div>
-      <div class="fq"><div class="q">Срок действия<span>+</span></div><div class="a"><div class="ai"><div class="at">Начисленные вопросы не сгорают и ждут сколько угодно.</div></div></div></div>
+      <div class="fq"><div class="q">Как получить награду<span>+</span></div><div class="a"><div class="ai"><div class="at"><div style="display:flex;flex-direction:column;gap:12px">
+        <div class="stp"><u>1</u>Отправьте другу реферальную ссылку или покажите код</div>
+        <div class="stp"><u>2</u>Друг регистрируется и получает свой расчёт по 4 школам</div>
+        <div class="stp"><u>3</u>Оба получаете награду: вам начислят 10 вопросов, другу 5</div>
+      </div></div></div></div></div>
+      <div class="fq"><div class="q">Когда начисляется награда<span>+</span></div><div class="a"><div class="ai"><div class="at">Награда начисляется сразу после того, как друг ввёл данные и его карта рассчитана.</div></div></div></div>
+      <div class="fq"><div class="q">Сколько раз можно пригласить<span>+</span></div><div class="a"><div class="ai"><div class="at">Количество приглашённых друзей не ограничено.</div></div></div></div>
+      <div class="fq"><div class="q">Срок действия вопросов<span>+</span></div><div class="a"><div class="ai"><div class="at">Полученные вопросы не сгорают. Воспользуйтесь ими, когда вам удобно.</div></div></div></div>
     </div>
 
     <div style="height:12px"></div>
