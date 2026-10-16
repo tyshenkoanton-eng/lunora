@@ -377,6 +377,15 @@
   .qrcard p { font-size: 11.5px; color: var(--ink-faint); margin: 12px 0 10px; }
   /* заголовок блока на экране приглашений (код / ссылка) */
   .rfh { display: block; font-size: 14px; font-weight: 640; letter-spacing: -.01em; line-height: 1.35; margin-bottom: 13px; }
+  /* общий заголовок над блоками код/ссылка */
+  .rfsec-h { font-size: 15px; font-weight: 640; letter-spacing: -.01em; line-height: 1.35; margin: 24px 0 12px; }
+  /* заливка блоков код/ссылка */
+  .qrcard.fill { background: var(--wire-fill); border-color: transparent; }
+  /* разделитель «или» между кодом и ссылкой */
+  .rfor { text-align: center; font-size: 12.5px; color: var(--ink-faint); margin: 10px 0; }
+  /* блок «Как это работает» — всегда раскрыт, без аккордеона */
+  .rfsteps { border: 1px solid var(--rule); border-radius: 12px; background: var(--card); padding: 15px; margin-top: 22px; display: flex; flex-direction: column; gap: 12px; }
+  .rfsteps-h { font-size: 14px; font-weight: 640; letter-spacing: -.01em; }
   .linkrow { display: flex; align-items: center; gap: 10px; border: 1px solid var(--rule); border-radius: 9px;
              padding: 10px 12px; text-align: left; }
   .linkrow span { flex: 1; font-size: 12.5px; font-variant-numeric: tabular-nums; }
@@ -6172,40 +6181,40 @@ S.invite = `<div class="pad">
 
   <div id="rfGive">
     <div class="utp">
-      <b>Пригласите друга и получите вопросы в чате</b>
-      <div class="utp-row" style="margin-top:13px">
+      <b style="font-size:15px">Пригласите друга и получите вопросы в чате</b>
+      <div class="utp-row" style="margin-top:12px">
         <div><i>10</i>вопросов вам</div>
         <div><i>5</i>вопросов другу</div>
       </div>
     </div>
 
-    <div class="qrcard">
-      <b class="rfh">Дайте другу отсканировать ваш код</b>
+    <div class="rfsec-h">Как просто пригласить человека в Лунору</div>
+
+    <div class="qrcard fill">
+      <b class="rfh">Дайте ему отсканировать ваш код</b>
       ${qrSVG()}
     </div>
 
-    <div class="qrcard" style="text-align:left">
-      <b class="rfh">Перешлите другу вашу личную ссылку</b>
+    <div class="rfor">или</div>
+
+    <div class="qrcard fill" style="text-align:left">
+      <b class="rfh">Перешлите ему вашу личную ссылку</b>
       <div class="linkrow"><span>lunora.ru/r/A4F21C</span><u>Копировать</u></div>
-      <div class="w-btn" data-share="invite" style="margin-top:12px"><i class="bi">↗</i>Отправить приглашение</div>
+      <div class="w-btn" data-share="invite" style="margin-top:12px"><i class="bi">↗</i>Отправить ссылку</div>
     </div>
 
-    <div class="acc" data-acc="how">
-      <div class="acc-h">Как это работает<span>3 шага<i>⌄</i></span></div>
-      <div class="acc-b">
-        <div class="stp"><u>1</u>Отправьте ссылку или покажите код</div>
-        <div class="stp"><u>2</u>Друг введёт данные и получит свою карту</div>
-        <div class="stp"><u>3</u>Вам начислят 10 вопросов, другу — 5</div>
-      </div>
+    <div class="rfsteps">
+      <div class="rfsteps-h">Как это работает</div>
+      <div class="stp"><u>1</u>Отправьте ссылку или покажите код</div>
+      <div class="stp"><u>2</u>Друг введёт данные и получит свою карту</div>
+      <div class="stp"><u>3</u>Вам начислят 10 вопросов, другу 5</div>
     </div>
 
     <div class="calc-h">Правила</div>
-    <div class="calc">
-      <div class="pr"><u>Что засчитывается</u><span>Друг прошёл ввод данных и получил карту. Переход по ссылке без ввода не считается</span></div>
-      <div class="pr"><u>Глубина</u><span>Один уровень. Приглашённые приглашённых не приносят ничего</span></div>
-      <div class="pr"><u>Себя пригласить</u><span>Один аккаунт — одна активация</span></div>
-      <div class="pr"><u>Сколько раз</u><span>Вопросы начисляются за каждого приглашённого</span></div>
-      <div class="pr"><u>Срок</u><span>Начисленные вопросы не сгорают и ждут сколько угодно</span></div>
+    <div class="faq" style="margin-top:10px">
+      <div class="fq"><div class="q">Когда начисляется<span>+</span></div><div class="a"><div class="ai"><div class="at">Когда друг введёт свои данные и получит карту. Переход по ссылке без ввода не считается.</div></div></div></div>
+      <div class="fq"><div class="q">Сколько раз можно пригласить<span>+</span></div><div class="a"><div class="ai"><div class="at">Сколько угодно. Вопросы начисляются за каждого приглашённого друга.</div></div></div></div>
+      <div class="fq"><div class="q">Срок действия<span>+</span></div><div class="a"><div class="ai"><div class="at">Начисленные вопросы не сгорают и ждут сколько угодно.</div></div></div></div>
     </div>
 
     <div style="height:12px"></div>
