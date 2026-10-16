@@ -518,15 +518,6 @@
   .p-head { display: flex; flex-direction: column; gap: 3px; padding-bottom: 14px; border-bottom: 1px solid var(--rule-soft); margin-bottom: 18px; }
   .p-head b { font-size: 19px; font-weight: 650; letter-spacing: -.01em; }
   .p-head span { font-size: 12px; color: var(--ink-faint); }
-  /* таблетка «Пригласить друга» в шапке профиля, рядом с настройками */
-  .invpill { display: inline-flex; align-items: center; gap: 5px; flex: 0 0 auto;
-             font-size: 12px; font-weight: 560; color: var(--ink-soft); cursor: pointer; white-space: nowrap;
-             padding: 5px 11px; border: 1px solid var(--rule); border-radius: 999px; background: var(--card); }
-  .invpill:active { color: var(--ink); }
-  .invpill svg { width: 14px; height: 14px; display: block; }
-  .invpill .invdot { margin: 0 0 0 1px; width: 6px; height: 6px; }
-  /* строка аватара и имени — под строкой с таблеткой */
-  .phname { margin-top: 8px; }
   /* линия, отделяющая верх шапки от крутилки цитат */
   .phrule { height: 1px; background: var(--rule-soft); margin: 13px 0 2px; }
   /* полные данные под именем: по строке на смысловую группу */
@@ -3008,14 +2999,11 @@ const SCHOOLS = [
 function buildProfile() { return `<div class="pad">
   <div class="p-head">
     <div style="display:flex;align-items:center;gap:8px">
-      <span class="invpill" data-go="invite" style="margin-left:auto">${ICO_GIFT}Пригласить друга${INV_EVENT ? '<em class="invdot"></em>' : ''}</span>
-      <span style="font-size:19px;color:var(--ink-soft);cursor:pointer;width:40px;height:40px;display:grid;place-items:center;flex:0 0 auto;margin-right:-6px" data-go="settings">⚙</span>
-    </div>
-    <div class="phname" style="display:flex;align-items:center;gap:8px">
       <div class="ava" title="Аватар из Telegram">А</div>
       <div class="fioline">
         <div class="fio">Антон Тыщенко</div>
       </div>
+      <span style="font-size:19px;color:var(--ink-soft);cursor:pointer;width:40px;height:40px;display:grid;place-items:center;flex:0 0 auto;margin-right:-6px" data-go="settings">⚙</span>
     </div>
     <div class="phrule"></div>
     <div class="pclaims" id="pclaims">
@@ -3061,6 +3049,7 @@ function buildProfile() { return `<div class="pad">
       ? `<div class="w-btn ghost" data-go="docBuild">${ICO.down}Обновить PDF — бесплатно</div>`
       : `<div class="w-btn ghost" data-go="pdfSell">${ICO.down}Скачать PDF</div>`}
     <div class="w-btn ghost" data-share="profile"><svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13.6V3.6M6.6 7l3.4-3.4L13.4 7M4.4 11.6v4.2a1 1 0 0 0 1 1h9.2a1 1 0 0 0 1-1v-4.2"/></svg>Поделиться картой</div>
+    <div class="w-btn ghost" data-go="invite">${ICO_GIFT}Пригласить друга${INV_EVENT ? '<em class="invdot"></em>' : ''}</div>
   </div>
 </div>`; }
 Object.defineProperty(S, "profile", { get: buildProfile });
