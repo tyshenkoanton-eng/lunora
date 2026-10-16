@@ -375,6 +375,8 @@
             background: var(--card); text-align: center; }
   .qr { width: 148px; height: 148px; display: block; margin: 0 auto; }
   .qrcard p { font-size: 11.5px; color: var(--ink-faint); margin: 12px 0 10px; }
+  /* заголовок блока на экране приглашений (код / ссылка) */
+  .rfh { display: block; font-size: 14px; font-weight: 640; letter-spacing: -.01em; line-height: 1.35; margin-bottom: 13px; }
   .linkrow { display: flex; align-items: center; gap: 10px; border: 1px solid var(--rule); border-radius: 9px;
              padding: 10px 12px; text-align: left; }
   .linkrow span { flex: 1; font-size: 12.5px; font-variant-numeric: tabular-nums; }
@@ -6170,18 +6172,22 @@ S.invite = `<div class="pad">
 
   <div id="rfGive">
     <div class="utp">
-      <b>Пригласите друга — вы оба получите вопросы в чате</b>
-      <p>Вопросы начисляются, когда друг введёт свои данные и получит карту. Покупать ничего не нужно.</p>
-      <div class="utp-row">
+      <b>Пригласите друга и получите вопросы в чате</b>
+      <div class="utp-row" style="margin-top:13px">
         <div><i>10</i>вопросов вам</div>
         <div><i>5</i>вопросов другу</div>
       </div>
     </div>
 
     <div class="qrcard">
+      <b class="rfh">Дайте другу отсканировать ваш код</b>
       ${qrSVG()}
-      <p>Покажите код или отправьте ссылку</p>
+    </div>
+
+    <div class="qrcard" style="text-align:left">
+      <b class="rfh">Перешлите другу вашу личную ссылку</b>
       <div class="linkrow"><span>lunora.ru/r/A4F21C</span><u>Копировать</u></div>
+      <div class="w-btn" data-share="invite" style="margin-top:12px"><i class="bi">↗</i>Отправить приглашение</div>
     </div>
 
     <div class="acc" data-acc="how">
@@ -6202,10 +6208,7 @@ S.invite = `<div class="pad">
       <div class="pr"><u>Срок</u><span>Начисленные вопросы не сгорают и ждут сколько угодно</span></div>
     </div>
 
-    <div style="height:66px"></div>
-    <div class="savebar show" style="position:sticky">
-      <div class="w-btn" data-share="invite" style="flex:1"><i class="bi">↗</i>Отправить приглашение</div>
-    </div>
+    <div style="height:12px"></div>
   </div>
 
   <div id="rfGot" style="display:none">
