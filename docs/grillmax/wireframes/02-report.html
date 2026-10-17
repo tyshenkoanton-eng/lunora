@@ -10665,6 +10665,12 @@ document.getElementById('addedSheet').addEventListener('click', e => {
     document.getElementById('addedSheet').classList.remove('show');
 });
 
+document.getElementById('bonusSheet').addEventListener('click', e => {
+  if (e.target.closest('[data-go="chatList"]')) { document.getElementById('bonusSheet').classList.remove('show'); render('chatList'); return; }
+  if (e.target.id === 'bonusSheet' || e.target.closest('[data-sheet]'))
+    document.getElementById('bonusSheet').classList.remove('show');
+});
+
 /* Отклик на нажатие. Кликабельного в прототипе около сотни мест, а отзывались
    единицы: человек нажимал и не понимал, попал ли. Правило общее — подсвечиваем
    ближайший элемент, который сам объявил себя нажимаемым курсором-указателем,
