@@ -412,10 +412,10 @@
   .stp u { width: 22px; height: 22px; border-radius: 999px; background: var(--wire-fill); display: grid;
            place-items: center; font-size: 11px; font-weight: 700; text-decoration: none; color: var(--ink-soft); }
   .statrow { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-  .statrow > div { border: 1px solid var(--rule); border-radius: 11px; padding: 13px 14px; background: var(--card); }
-  .statrow u { display: block; font-style: normal; text-decoration: none; font-size: 15px; color: var(--ink-faint); }
-  .statrow b { display: block; font-size: 20px; font-weight: 650; letter-spacing: -.02em; margin-top: 6px; }
-  .statrow span { display: block; font-size: 11.5px; color: var(--ink-faint); margin-top: 2px; }
+  .statrow > div { border: 1px solid var(--rule); border-radius: 11px; padding: 15px 14px; background: var(--card); text-align: center; }
+  .statrow u { display: block; font-style: normal; text-decoration: none; font-size: 10.5px; letter-spacing: .1em; text-transform: uppercase; font-weight: 700; color: var(--ink-faint); }
+  .statrow b { display: block; font-size: 30px; font-weight: 680; letter-spacing: -.02em; margin: 8px 0 2px; }
+  .statrow span { display: block; font-size: 12px; color: var(--ink-faint); }
   .reflist { display: flex; flex-direction: column; }
   .ref { display: grid; grid-template-columns: 28px 1fr auto; gap: 11px; align-items: center;
          padding: 13px 0; border-bottom: 1px solid var(--rule-soft); }
@@ -6228,14 +6228,14 @@ Object.defineProperty(S, 'invite', { get: () => `<div class="pad">
   <div id="rfGot" style="display:none">
   ${REF_EMPTY ? `
     <div class="memempty show" style="width:100%">
-      <b>Пока никого не пригласили</b>
+      <b>Вы пока никого не приглашали</b>
       <span>Поделитесь ссылкой или QR-кодом на вкладке «Пригласить». Как только друг перейдёт по ней, он появится здесь.</span>
     </div>
     <div class="w-btn" data-rfgo="give" style="margin-top:16px"><i class="bi">↗</i>Пригласить друга</div>
   ` : `
     <div class="statrow">
-      <div><u>◍</u><b>30 вопросов</b><span>получено</span></div>
-      <div><u>◌</u><b>1</b><span>ожидает</span></div>
+      <div><u>Получено</u><b>30</b><span>вопросов</span></div>
+      <div><u>Ожидает</u><b>10</b><span>вопросов</span></div>
     </div>
 
     <div class="sec-label">Приглашённые</div>
@@ -6247,8 +6247,8 @@ Object.defineProperty(S, 'invite', { get: () => `<div class="pad">
     </div>
 
     <div class="grow">
-      <b>Зовите друзей дальше</b>
-      <span>За каждого нового друга вам приходит 10 вопросов, другу 5. Они копятся и не сгорают.</span>
+      <b>Приглашайте больше друзей</b>
+      <span>Чем больше друзей вы позовёте, тем больше вопросов будет на вашем балансе.</span>
     </div>
   `}
   </div>
