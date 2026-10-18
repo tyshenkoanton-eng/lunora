@@ -1575,6 +1575,15 @@
 
   .cnote { position: sticky; bottom: 52px; z-index: 3; font-size: 10.5px; color: var(--ink-faint);
            padding: 6px 16px 0; background: var(--wire-fill); text-align: right; }
+  /* вводная плашка про механику чата — закрывается крестиком, показывается один раз */
+  .chatinfo { display: flex; gap: 10px; align-items: flex-start; margin: 10px 16px 0;
+              padding: 11px 12px; background: var(--wire-fill); border-radius: 10px; }
+  .chatinfo .ci-body b { display: block; font-size: 12.5px; font-weight: 620; margin-bottom: 3px; }
+  .chatinfo .ci-body span { font-size: 12px; color: var(--ink-soft); line-height: 1.5; }
+  .chatinfo .ci-x { margin-left: auto; flex: 0 0 auto; width: 22px; height: 22px; display: grid;
+                    place-items: center; color: var(--ink-faint); cursor: pointer; font-size: 17px;
+                    line-height: 1; border-radius: 50%; }
+  .chatinfo .ci-x:hover { background: var(--wire-fill-2); color: var(--ink-soft); }
   .chatbar.empty { background: var(--warn-bg); }
   .chatbar.empty span, .chatbar.empty b { color: var(--warn); }
 
@@ -2850,6 +2859,8 @@ let INV_EVENT = true;
 let REF_EMPTY = false;
 /* для каталога: список диалогов Ч-01 в пустом состоянии (ещё ничего не спрашивали) */
 let CHAT_EMPTY = false;
+/* вводная плашка про механику чата: показывается один раз, гаснет по крестику */
+let CHAT_INFO = true;
 const THEME_KEYS = ['tCharacter','tLove','tWork','tPurpose','tMoney','tEnergy','tFamily','tTalent'];
 function invMaybe(k) {
   if (INV_SEEN || k !== 'chat') return;
@@ -6597,10 +6608,23 @@ function chatBar() {
   return `<div class="chatbar"><b>Баланс: ${МЕТКА()}</b></div>`;
 }
 
-/* Низ экрана всегда один: поле ввода. Подпись про списание вопроса. */
+/* вводная плашка про механику чата: объясняет списание один раз, человек закрывает крестиком.
+   В реальном приложении отметка «закрыто» хранится (как шторка приглашения), повторно не поднимается. */
+function chatInfo() {
+  return `<div class="chatinfo" id="chatInfo">
+    <div class="ci-body">
+      <b>Как устроен чат</b>
+      <span>Каждый ответ Луноры стоит один вопрос из баланса. Три уже начислены при знакомстве, дальше можно пополнить пачкой или пригласить друга. Перечитывать прежние ответы можно без списания.</span>
+    </div>
+    <div class="ci-x" data-chatinfo="close" aria-label="Закрыть">×</div>
+  </div>`;
+}
+
+/* Низ экрана: поле ввода. Подсказку про списание вынесли в верхнюю плашку (chatInfo),
+   снизу осталась только ситуативная строка на случай пустого баланса. */
 function composer(ph, go) {
-  const сп = BARS[BAL].q ? 'Спишется один вопрос' : 'Вопрос сохраним — дальше предложим варианты';
-  return `<div class="cnote">${сп}</div>
+  const note = BARS[BAL].q ? '' : '<div class="cnote">Вопрос сохраним, дальше предложим варианты</div>';
+  return `${note}
   <div class="composer" data-go="${go}"><div class="cfield">${ph}</div><div class="send">↑</div></div>`;
 }
 
@@ -6610,6 +6634,7 @@ const LUNALOGO = `<svg class="luna-logo" viewBox="0 0 20 20" stroke-linejoin="ro
 
 function buildChatList() { return `<div class="chatwrap">
   ${chatBar()}
+  ${CHAT_INFO ? chatInfo() : ''}
   ${CHAT_EMPTY ? `<div class="threads" style="display:grid;place-items:center">
     <div style="max-width:300px;margin:0 16px;text-align:center">
       <b style="display:block;font-size:13.5px;font-weight:620;margin-bottom:6px">Вы ещё ничего не спрашивали</b>
@@ -6638,6 +6663,7 @@ Object.defineProperty(S, "chatList", { get: buildChatList });
 
 function buildChat() { return `<div class="chatwrap">
   ${chatBar()}
+  ${CHAT_INFO ? chatInfo() : ''}
   <div class="stream">
     <div class="bq">Стоит ли мне менять работу в сентябре?</div>
 
@@ -9502,6 +9528,8 @@ view.addEventListener('click', e => {
   if (cl) { cl.parentElement.remove(); return; }
   const pb = e.target.closest('[data-proof]');
   if (pb) { pb.nextElementSibling.classList.toggle('show'); return; }
+  const ci = e.target.closest('[data-chatinfo]');
+  if (ci) { CHAT_INFO = false; const n = document.getElementById('chatInfo'); if (n) n.remove(); return; }
   const ex = e.target.closest('[data-explain]');
   if (ex) { ex.classList.toggle('open'); return; }
   const ev = e.target.closest('#evTabs i');
