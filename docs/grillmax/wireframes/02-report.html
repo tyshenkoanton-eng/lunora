@@ -6611,9 +6611,9 @@ const LUNALOGO = `<svg class="luna-logo" viewBox="0 0 20 20" stroke-linejoin="ro
 function buildChatList() { return `<div class="chatwrap">
   ${chatBar()}
   ${CHAT_EMPTY ? `<div class="threads" style="display:grid;place-items:center">
-    <div class="memempty show" style="width:100%;margin:0 16px">
-      <b>Вы ещё ничего не спрашивали</b>
-      <span>Лунора отвечает по вашей карте, а не вообще. Три вопроса уже на балансе, спросите о себе, об отношениях или о том, что происходит сейчас.</span>
+    <div style="max-width:300px;margin:0 16px;text-align:center">
+      <b style="display:block;font-size:13.5px;font-weight:620;margin-bottom:6px">Вы ещё ничего не спрашивали</b>
+      <span style="font-size:12.5px;color:var(--ink-soft);line-height:1.55">В этом чате Лунора отвечает, опираясь на расчёты школ. Вы получаете персонализированные ответы на разные темы.</span>
     </div>
   </div>` : `<div class="threads">
     <div class="thr new" data-go="chat">
