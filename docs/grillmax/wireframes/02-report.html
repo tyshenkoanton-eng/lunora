@@ -62,9 +62,7 @@
     display: flex; flex-direction: column; height: min(700px, calc(100vh - 56px));
   }
   .tg-bar { display: flex; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid var(--rule-soft); background: var(--wire-fill); flex: 0 0 auto; }
-  .tg-bar .back { font-size: 22px; color: var(--ink); cursor: pointer; min-width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; gap: 2px; padding: 0 6px; margin: -10px 0 -10px -8px; }
-  .tg-bar .back .bk-ar { font-size: 22px; line-height: 1; }
-  .tg-bar .back .bk-lb { font-size: 12.5px; font-weight: 600; letter-spacing: .01em; }
+  .tg-bar .back { font-size: 22px; color: var(--ink); cursor: pointer; width: 44px; height: 44px; display: grid; place-items: center; margin: -10px 0 -10px -8px; }
   .tg-bar b { font-size: 13px; font-weight: 620; }
   /* адрес экрана — клик копирует полную строку для обратной связи */
   .scode { font: 600 10.5px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -1527,6 +1525,9 @@
 
   /* чат — телеграмный вид */
   .chatwrap { display: flex; flex-direction: column; min-height: 600px; min-width: 0; }
+  /* «назад · Чаты» в контенте над балансом (как dochead в темах и на рефе) */
+  .chatcrumb { padding: 12px 16px 0; flex: 0 0 auto; }
+  .chatcrumb .dochead { margin-bottom: 0; }
   .chatbar { position: sticky; top: 0; z-index: 4; display: flex;
              align-items: center; justify-content: space-between; gap: 10px;
              padding: 10px 16px; background: var(--wire-fill);
@@ -6663,7 +6664,14 @@ function buildChatList() { return `<div class="chatwrap">
 </div>`; }
 Object.defineProperty(S, "chatList", { get: buildChatList });
 
+/* назад к списку «Чаты» + хлебная крошка — в самом контенте над балансом (как на рефе/в темах),
+   а не в техническом хедере Telegram */
+function chatCrumb() {
+  return `<div class="chatcrumb"><div class="dochead" data-go="chatList"><span>&lsaquo;</span><div>Назад · Чаты</div></div></div>`;
+}
+
 function buildChat() { return `<div class="chatwrap">
+  ${chatCrumb()}
   ${chatBar()}
   <div class="stream">
     <div class="bq">Стоит ли мне менять работу в сентябре?</div>
@@ -6693,6 +6701,7 @@ Object.defineProperty(S, "chat", { get: buildChat });
 /* новый пустой диалог: открывается, когда человек отправил вопрос из списка «Чаты».
    История пустая — вопрос печатается по словам, идёт расчёт, затем появляется ответ. */
 function buildChatNew() { return `<div class="chatwrap">
+  ${chatCrumb()}
   ${chatBar()}
   <div class="stream"></div>
   ${composerSend()}
@@ -6708,63 +6717,68 @@ function composerSend() {
 const CHAT_STAGES = ['Смотрю вашу карту', 'Сверяю, что говорит каждая школа', 'Ищу, где школы сходятся', 'Собираю ответ'];
 let CHAT_TIMERS = [];
 function chatScroll() { const v = document.getElementById('view'); if (v) v.scrollTop = v.scrollHeight; }
-/* вопрос появляется не сразу, а печатается по словам */
-function typeWords(el, text, done) {
-  const words = text.split(' ');
-  let i = 0;
+/* ответ Луноры печатается по буквам, абзац за абзацем; затем появляется блок опоры */
+function typeAnswer(btext, paras, proof) {
+  btext.innerHTML = '';
+  const pel = paras.map(() => { const p = document.createElement('p'); btext.appendChild(p); return p; });
+  let pi = 0, ci = 0;
   const tick = () => {
-    el.textContent = words.slice(0, ++i).join(' '); chatScroll();
-    if (i < words.length) CHAT_TIMERS.push(setTimeout(tick, 70));
-    else if (done) CHAT_TIMERS.push(setTimeout(done, 240));
+    if (pi >= paras.length) {
+      if (proof) { const d = document.createElement('div'); d.innerHTML = proof; while (d.firstChild) btext.appendChild(d.firstChild); }
+      chatScroll(); return;
+    }
+    pel[pi].textContent = paras[pi].slice(0, ++ci); chatScroll();
+    if (ci < paras[pi].length) CHAT_TIMERS.push(setTimeout(tick, 16));
+    else { pi++; ci = 0; CHAT_TIMERS.push(setTimeout(tick, 240)); }
   };
   tick();
 }
-/* добавить вопрос в ленту, проиграть расчёт (~2 c) и показать ответ */
-function playAsk(stream, question, answerHTML) {
+/* вопрос добавляется сразу, затем расчёт (2 c на шаг), затем ответ печатается по буквам */
+function playAsk(stream, question, paras, proof) {
   if (!stream) return;
-  const bq = document.createElement('div'); bq.className = 'bq'; stream.appendChild(bq); chatScroll();
-  typeWords(bq, question, () => {
-    const ba = document.createElement('div'); ba.className = 'ba';
-    ba.innerHTML = `<div class="av">${LUNALOGO}</div><div class="btext"><div class="thinking">` +
-      CHAT_STAGES.map(s => `<div class="tk">${s}</div>`).join('') + `</div></div>`;
-    stream.appendChild(ba); chatScroll();
-    const tks = [...ba.querySelectorAll('.tk')];
-    let i = 0;
-    const step = () => {
-      if (i > 0) { tks[i - 1].className = 'tk done'; tks[i - 1].textContent = '✓ ' + CHAT_STAGES[i - 1]; }
-      if (i < tks.length) {
-        tks[i].className = 'tk now'; tks[i].textContent = '◷ ' + CHAT_STAGES[i];
-        i++; CHAT_TIMERS.push(setTimeout(step, 500));       /* 4 этапа × 0.5 c = ~2 c */
-      } else {
-        CHAT_TIMERS.push(setTimeout(() => { ba.querySelector('.btext').innerHTML = answerHTML; chatScroll(); }, 300));
-      }
-    };
-    step();
-  });
+  const bq = document.createElement('div'); bq.className = 'bq'; bq.textContent = question; stream.appendChild(bq); chatScroll();
+  const ba = document.createElement('div'); ba.className = 'ba';
+  ba.innerHTML = `<div class="av">${LUNALOGO}</div><div class="btext"><div class="thinking">` +
+    CHAT_STAGES.map(s => `<div class="tk">${s}</div>`).join('') + `</div></div>`;
+  stream.appendChild(ba); chatScroll();
+  const tks = [...ba.querySelectorAll('.tk')];
+  let i = 0;
+  const step = () => {
+    if (i > 0) { tks[i - 1].className = 'tk done'; tks[i - 1].textContent = '✓ ' + CHAT_STAGES[i - 1]; }
+    if (i < tks.length) {
+      tks[i].className = 'tk now'; tks[i].textContent = '◷ ' + CHAT_STAGES[i];
+      i++; CHAT_TIMERS.push(setTimeout(step, 2000));         /* 2 секунды на шаг */
+    } else {
+      CHAT_TIMERS.push(setTimeout(() => typeAnswer(ba.querySelector('.btext'), paras, proof), 300));
+    }
+  };
+  step();
 }
+const CHAT_NEW_PROOF = `<div class="proofbtn" data-proof="1"><span>◈</span> На чём это построено</div>
+  <div class="proofbox">
+    <div class="pr"><u>Западная</u><span>Солнце в напряжении — недооценка сделанного</span></div>
+    <div class="pr"><u>Ба-Цзы</u><span>Нет стихии выхода — результат не присваивается</span></div>
+    <div class="pr"><u>Нумерология</u><span>Личный год 7 — углубление, не запуск</span></div>
+  </div>`;
 /* первый вопрос нового диалога — запускается при входе на chatNew */
 function chatNewPlay() {
   const stream = document.querySelector('.chatwrap .stream');
   if (!stream || stream.children.length) return;
-  playAsk(stream, 'Что мне сейчас важно понять про себя?', `<p>Коротко: вы привыкли мерить себя по тому, что ещё не сделано, а не по тому, что уже сделали.</p>
-    <p>Три школы из четырёх сходятся: ваша сила в том, чтобы доводить и углублять, а не хвататься за новое. Сейчас период, когда полезнее закрепить начатое, чем начинать с нуля.</p>
-    <div class="proofbtn" data-proof="1"><span>◈</span> На чём это построено</div>
-    <div class="proofbox">
-      <div class="pr"><u>Западная</u><span>Солнце в напряжении — недооценка сделанного</span></div>
-      <div class="pr"><u>Ба-Цзы</u><span>Нет стихии выхода — результат не присваивается</span></div>
-      <div class="pr"><u>Нумерология</u><span>Личный год 7 — углубление, не запуск</span></div>
-    </div>`);
+  playAsk(stream, 'Что мне сейчас важно понять про себя?',
+    ['Коротко: вы привыкли мерить себя по тому, что ещё не сделано, а не по тому, что уже сделали.',
+     'Три школы из четырёх сходятся: ваша сила в том, чтобы доводить и углублять, а не хвататься за новое. Сейчас период, когда полезнее закрепить начатое, чем начинать с нуля.'],
+    CHAT_NEW_PROOF);
 }
 /* отправка в уже открытом диалоге (follow-up) */
 function chatSendNow() {
   if (!BARS[BAL].q) { render('chatPaywall'); return; }
-  playAsk(document.querySelector('.chatwrap .stream'),
-    'А что с этим делать прямо сейчас?',
-    `<p>Начните с малого: выпишите три дела, которые уже довели до конца в этом году. Это снимает ощущение «ничего не добился».</p>
-     <p>И не беритесь прямо сейчас за новый крупный старт: период про то, чтобы углубить и закрепить, а не распыляться.</p>`);
+  playAsk(document.querySelector('.chatwrap .stream'), 'А что с этим делать прямо сейчас?',
+    ['Начните с малого: выпишите три дела, которые уже довели до конца в этом году. Это снимает ощущение «ничего не добился».',
+     'И не беритесь прямо сейчас за новый крупный старт: период про то, чтобы углубить и закрепить, а не распыляться.']);
 }
 
 S.chatPaywall = `<div class="chatwrap">
+  ${chatCrumb()}
   <div class="chatbar empty"><b>Баланс пуст</b></div>
   <div class="stream">
     <div class="bq faded">А если я уйду в своё?</div>
@@ -9413,10 +9427,6 @@ function render(k, push = true, restore = 0) {
     (DTITLE_SCH[k] && TDATA[TCUR]) ? (TDATA[TCUR].title + ' · ' + DTITLE_SCH[k]) :
     (TITLES[k] || 'Лунора');
   document.getElementById('scode').textContent = codeOf(k);
-  /* в диалоге кнопка «назад» подписана «Чаты», на остальных экранах — просто стрелка */
-  const bb = document.getElementById('backBtn');
-  if (bb) bb.innerHTML = ['chat', 'chatNew', 'chatPaywall'].includes(k)
-    ? '<span class="bk-ar">‹</span><span class="bk-lb">Чаты</span>' : '‹';
   const shell = shellOf(k);
   document.querySelector('.phone').classList.toggle('inbot', shell === 'bot');
   document.querySelector('.phone').classList.toggle('inweb', shell === 'web' || shell === 'bank');
@@ -10810,8 +10820,6 @@ document.getElementById('tabbar').addEventListener('click', e => {
 });
 
 document.getElementById('backBtn').addEventListener('click', () => {
-  /* из любого диалога назад ведём к списку «Чаты», а не в прежнюю вкладку */
-  if (['chat', 'chatNew', 'chatPaywall'].includes(cur)) { render('chatList'); return; }
   if (hist.length) { const [k, y] = hist.pop(); render(k, false, y); }
 });
 /* запись реестра сама ставит состояние: иначе список был бы просто оглавлением */
