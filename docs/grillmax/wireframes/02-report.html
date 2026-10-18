@@ -6705,10 +6705,10 @@ function buildChatNew() { return `<div class="chatwrap">
   <div class="stream">
     <div class="bq">Что мне сейчас важно понять про себя?</div>
     <div class="ba"><div class="av">${LUNALOGO}</div><div class="btext">
-      <div class="thinking">
-        <div class="tk done">✓ Посмотрела вашу карту</div>
-        <div class="tk done">✓ Сверила, что говорит каждая школа</div>
-        <div class="tk now">◷ Ищу, где школы сходятся</div>
+      <div class="thinking" id="newThink">
+        <div class="tk">Смотрю вашу карту</div>
+        <div class="tk">Сверяю, что говорит каждая школа</div>
+        <div class="tk">Ищу, где школы сходятся</div>
         <div class="tk">Собираю ответ</div>
       </div>
     </div></div>
@@ -6716,6 +6716,38 @@ function buildChatNew() { return `<div class="chatwrap">
   ${composer('Напишите ваш вопрос','chatNew')}
 </div>`; }
 Object.defineProperty(S, "chatNew", { get: buildChatNew });
+
+/* анимация расчёта в новом диалоге: этапы проверки проходят по очереди,
+   затем вместо них появляется ответ. Таймеры чистятся на следующем переходе. */
+let CHAT_TIMERS = [];
+function chatNewPlay() {
+  const think = document.getElementById('newThink');
+  if (!think) return;
+  const STAGES = ['Смотрю вашу карту', 'Сверяю, что говорит каждая школа', 'Ищу, где школы сходятся', 'Собираю ответ'];
+  const ANSWER = `<p>Коротко: вы привыкли мерить себя по тому, что ещё не сделано, а не по тому, что уже сделали.</p>
+    <p>Три школы из четырёх сходятся: ваша сила в том, чтобы доводить и углублять, а не хвататься за новое. Сейчас период, когда полезнее закрепить начатое, чем начинать с нуля.</p>
+    <div class="proofbtn" data-proof="1"><span>◈</span> На чём это построено</div>
+    <div class="proofbox">
+      <div class="pr"><u>Западная</u><span>Солнце в напряжении — недооценка сделанного</span></div>
+      <div class="pr"><u>Ба-Цзы</u><span>Нет стихии выхода — результат не присваивается</span></div>
+      <div class="pr"><u>Нумерология</u><span>Личный год 7 — углубление, не запуск</span></div>
+    </div>`;
+  const tks = [...think.children];
+  let i = 0;
+  const advance = () => {
+    if (i > 0) { tks[i - 1].className = 'tk done'; tks[i - 1].textContent = '✓ ' + STAGES[i - 1]; }
+    if (i < tks.length) {
+      tks[i].className = 'tk now'; tks[i].textContent = '◷ ' + STAGES[i];
+      i++; CHAT_TIMERS.push(setTimeout(advance, 820));
+    } else {
+      CHAT_TIMERS.push(setTimeout(() => {
+        const bt = think.closest('.btext');
+        if (bt) bt.innerHTML = ANSWER;
+      }, 480));
+    }
+  };
+  advance();
+}
 
 S.chatPaywall = `<div class="chatwrap">
   <div class="chatbar empty"><b>Баланс пуст</b></div>
@@ -9390,6 +9422,8 @@ function render(k, push = true, restore = 0) {
   if (typeof DOC_T !== 'undefined' && DOC_T) clearInterval(DOC_T);
   if (typeof PC_T !== 'undefined' && PC_T) clearInterval(PC_T);
   if (k.startsWith('ob') && typeof obRestore === 'function') obRestore(k);
+  CHAT_TIMERS.forEach(clearTimeout); CHAT_TIMERS = [];
+  if (k === 'chatNew' && typeof chatNewPlay === 'function') chatNewPlay();
   if (k === 'obRun' && typeof calcRun === 'function') calcRun();
   if (k === 'recalcRun' && typeof recalcRunPlay === 'function') recalcRunPlay();
   if (k === 'personCalc' && typeof personCalcPlay === 'function') personCalcPlay();
@@ -10756,6 +10790,8 @@ document.getElementById('tabbar').addEventListener('click', e => {
 });
 
 document.getElementById('backBtn').addEventListener('click', () => {
+  /* из любого диалога назад ведём к списку «Чаты», а не в прежнюю вкладку */
+  if (['chat', 'chatNew', 'chatPaywall'].includes(cur)) { render('chatList'); return; }
   if (hist.length) { const [k, y] = hist.pop(); render(k, false, y); }
 });
 /* запись реестра сама ставит состояние: иначе список был бы просто оглавлением */
