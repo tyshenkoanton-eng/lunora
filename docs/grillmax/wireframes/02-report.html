@@ -1525,14 +1525,14 @@
 
   /* чат — телеграмный вид */
   .chatwrap { display: flex; flex-direction: column; min-height: 600px; min-width: 0; }
-  .chatbar { position: sticky; top: 0; z-index: 4; display: grid;
-             grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 10px;
+  .chatbar { position: sticky; top: 0; z-index: 4; display: flex;
+             align-items: center; justify-content: center; gap: 10px;
              padding: 10px 16px; background: var(--wire-fill);
              border-bottom: 1px solid var(--rule-soft); width: 100%; box-sizing: border-box; }
-  /* полоса всегда в одну строку — она метка, а не блок */
+  /* полоса всегда в одну строку — она метка, а не блок; баланс по центру */
   .chatbar span { font-size: 11.5px; color: var(--ink-soft); white-space: nowrap;
                   overflow: hidden; text-overflow: ellipsis; }
-  .chatbar b { font-size: 12.5px; font-variant-numeric: tabular-nums; white-space: nowrap; justify-self: end; }
+  .chatbar b { font-size: 12.5px; font-variant-numeric: tabular-nums; white-space: nowrap; }
   .chatbar b[data-go] { cursor: pointer; }
   .chatbar.running b { color: var(--ink); font-variant-numeric: tabular-nums; }
   /* селектор валюты — раскрывает меню выбора */
@@ -6592,10 +6592,9 @@ function МЕТКА() {
 function chatBar() {
   const q = BARS[BAL].q;
   /* приглашение из полосы чата убрано: рефералка живёт в Профиле и Настройках,
-     в диалоге ей не место. Левый слот остаётся пустым распоркой, баланс — справа. */
-  const sp = '<span></span>';
-  if (!q) return `<div class="chatbar empty">${sp}<b data-go="shopTalk">Баланс пуст · Купить →</b></div>`;
-  return `<div class="chatbar">${sp}<b>Баланс: ${МЕТКА()}</b></div>`;
+     в диалоге ей не место. Баланс — одна метка по центру полосы. */
+  if (!q) return `<div class="chatbar empty"><b data-go="shopTalk">Баланс пуст · Купить →</b></div>`;
+  return `<div class="chatbar"><b>Баланс: ${МЕТКА()}</b></div>`;
 }
 
 /* Низ экрана всегда один: поле ввода. Подпись про списание вопроса. */
@@ -6607,7 +6606,7 @@ function composer(ph, go) {
 
 /* временный лого-аватар Луноры: треугольник и вписанная в него окружность.
    Концепция с фазами луны убрана — одна марка на все ветки. */
-const LUNALOGO = `<svg class="luna-logo" viewBox="0 0 20 20" stroke-linejoin="round"><path d="M10 3 L17 15.12 L3 15.12 Z"/><circle cx="10" cy="11.08" r="4.04"/></svg>`;
+const LUNALOGO = `<svg class="luna-logo" viewBox="0 0 20 20" stroke-linejoin="round"><path d="M10 3 L17 15.12 L3 15.12 Z"/><circle cx="10" cy="11.08" r="3.2"/></svg>`;
 
 function buildChatList() { return `<div class="chatwrap">
   ${chatBar()}
@@ -6675,7 +6674,7 @@ function buildChat() { return `<div class="chatwrap">
 Object.defineProperty(S, "chat", { get: buildChat });
 
 S.chatPaywall = `<div class="chatwrap">
-  <div class="chatbar empty"><span></span><b>Баланс пуст</b></div>
+  <div class="chatbar empty"><b>Баланс пуст</b></div>
   <div class="stream">
     <div class="bq faded">А если я уйду в своё?</div>
 
