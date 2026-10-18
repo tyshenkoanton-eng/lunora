@@ -62,7 +62,9 @@
     display: flex; flex-direction: column; height: min(700px, calc(100vh - 56px));
   }
   .tg-bar { display: flex; align-items: center; gap: 8px; padding: 9px 14px; border-bottom: 1px solid var(--rule-soft); background: var(--wire-fill); flex: 0 0 auto; }
-  .tg-bar .back { font-size: 22px; color: var(--ink); cursor: pointer; width: 44px; height: 44px; display: grid; place-items: center; margin: -10px 0 -10px -8px; }
+  .tg-bar .back { font-size: 22px; color: var(--ink); cursor: pointer; min-width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; gap: 2px; padding: 0 6px; margin: -10px 0 -10px -8px; }
+  .tg-bar .back .bk-ar { font-size: 22px; line-height: 1; }
+  .tg-bar .back .bk-lb { font-size: 12.5px; font-weight: 600; letter-spacing: .01em; }
   .tg-bar b { font-size: 13px; font-weight: 620; }
   /* адрес экрана — клик копирует полную строку для обратной связи */
   .scode { font: 600 10.5px/1 ui-monospace, SFMono-Regular, Menlo, monospace;
@@ -6683,70 +6685,83 @@ function buildChat() { return `<div class="chatwrap">
       </div>
     </div>
 
-    <div class="bq" data-go="chatPaywall">А если я уйду в своё?</div>
-    <div class="ba"><div class="av">${LUNALOGO}</div><div class="btext">
-      <div class="thinking">
-        <div class="tk done">✓ Посмотрела вашу карту</div>
-        <div class="tk done">✓ Сверила, что говорит каждая школа</div>
-        <div class="tk done">✓ Нашла, где они расходятся</div>
-        <div class="tk now">◷ Проверяю, что у вас с периодом</div>
-        <div class="tk">Собираю ответ</div>
-      </div>
-    </div></div>
   </div>
-  ${composer('Напишите ваш вопрос','chatPaywall')}
+  ${composerSend()}
 </div>`; }
 Object.defineProperty(S, "chat", { get: buildChat });
 
 /* новый пустой диалог: открывается, когда человек отправил вопрос из списка «Чаты».
-   Истории нет — только что заданный вопрос и Лунора собирает ответ по карте. */
+   История пустая — вопрос печатается по словам, идёт расчёт, затем появляется ответ. */
 function buildChatNew() { return `<div class="chatwrap">
   ${chatBar()}
-  <div class="stream">
-    <div class="bq">Что мне сейчас важно понять про себя?</div>
-    <div class="ba"><div class="av">${LUNALOGO}</div><div class="btext">
-      <div class="thinking" id="newThink">
-        <div class="tk">Смотрю вашу карту</div>
-        <div class="tk">Сверяю, что говорит каждая школа</div>
-        <div class="tk">Ищу, где школы сходятся</div>
-        <div class="tk">Собираю ответ</div>
-      </div>
-    </div></div>
-  </div>
-  ${composer('Напишите ваш вопрос','chatNew')}
+  <div class="stream"></div>
+  ${composerSend()}
 </div>`; }
 Object.defineProperty(S, "chatNew", { get: buildChatNew });
 
-/* анимация расчёта в новом диалоге: этапы проверки проходят по очереди,
-   затем вместо них появляется ответ. Таймеры чистятся на следующем переходе. */
+/* композер в диалоге: отправка не уводит на другой экран, а добавляет вопрос прямо
+   в ленту и запускает анимацию расчёта (при пустом балансе — пейвол Ч-03). */
+function composerSend() {
+  return `<div class="composer" data-chatsend="1"><div class="cfield">Напишите ваш вопрос</div><div class="send">↑</div></div>`;
+}
+
+const CHAT_STAGES = ['Смотрю вашу карту', 'Сверяю, что говорит каждая школа', 'Ищу, где школы сходятся', 'Собираю ответ'];
 let CHAT_TIMERS = [];
+function chatScroll() { const v = document.getElementById('view'); if (v) v.scrollTop = v.scrollHeight; }
+/* вопрос появляется не сразу, а печатается по словам */
+function typeWords(el, text, done) {
+  const words = text.split(' ');
+  let i = 0;
+  const tick = () => {
+    el.textContent = words.slice(0, ++i).join(' '); chatScroll();
+    if (i < words.length) CHAT_TIMERS.push(setTimeout(tick, 70));
+    else if (done) CHAT_TIMERS.push(setTimeout(done, 240));
+  };
+  tick();
+}
+/* добавить вопрос в ленту, проиграть расчёт (~2 c) и показать ответ */
+function playAsk(stream, question, answerHTML) {
+  if (!stream) return;
+  const bq = document.createElement('div'); bq.className = 'bq'; stream.appendChild(bq); chatScroll();
+  typeWords(bq, question, () => {
+    const ba = document.createElement('div'); ba.className = 'ba';
+    ba.innerHTML = `<div class="av">${LUNALOGO}</div><div class="btext"><div class="thinking">` +
+      CHAT_STAGES.map(s => `<div class="tk">${s}</div>`).join('') + `</div></div>`;
+    stream.appendChild(ba); chatScroll();
+    const tks = [...ba.querySelectorAll('.tk')];
+    let i = 0;
+    const step = () => {
+      if (i > 0) { tks[i - 1].className = 'tk done'; tks[i - 1].textContent = '✓ ' + CHAT_STAGES[i - 1]; }
+      if (i < tks.length) {
+        tks[i].className = 'tk now'; tks[i].textContent = '◷ ' + CHAT_STAGES[i];
+        i++; CHAT_TIMERS.push(setTimeout(step, 500));       /* 4 этапа × 0.5 c = ~2 c */
+      } else {
+        CHAT_TIMERS.push(setTimeout(() => { ba.querySelector('.btext').innerHTML = answerHTML; chatScroll(); }, 300));
+      }
+    };
+    step();
+  });
+}
+/* первый вопрос нового диалога — запускается при входе на chatNew */
 function chatNewPlay() {
-  const think = document.getElementById('newThink');
-  if (!think) return;
-  const STAGES = ['Смотрю вашу карту', 'Сверяю, что говорит каждая школа', 'Ищу, где школы сходятся', 'Собираю ответ'];
-  const ANSWER = `<p>Коротко: вы привыкли мерить себя по тому, что ещё не сделано, а не по тому, что уже сделали.</p>
+  const stream = document.querySelector('.chatwrap .stream');
+  if (!stream || stream.children.length) return;
+  playAsk(stream, 'Что мне сейчас важно понять про себя?', `<p>Коротко: вы привыкли мерить себя по тому, что ещё не сделано, а не по тому, что уже сделали.</p>
     <p>Три школы из четырёх сходятся: ваша сила в том, чтобы доводить и углублять, а не хвататься за новое. Сейчас период, когда полезнее закрепить начатое, чем начинать с нуля.</p>
     <div class="proofbtn" data-proof="1"><span>◈</span> На чём это построено</div>
     <div class="proofbox">
       <div class="pr"><u>Западная</u><span>Солнце в напряжении — недооценка сделанного</span></div>
       <div class="pr"><u>Ба-Цзы</u><span>Нет стихии выхода — результат не присваивается</span></div>
       <div class="pr"><u>Нумерология</u><span>Личный год 7 — углубление, не запуск</span></div>
-    </div>`;
-  const tks = [...think.children];
-  let i = 0;
-  const advance = () => {
-    if (i > 0) { tks[i - 1].className = 'tk done'; tks[i - 1].textContent = '✓ ' + STAGES[i - 1]; }
-    if (i < tks.length) {
-      tks[i].className = 'tk now'; tks[i].textContent = '◷ ' + STAGES[i];
-      i++; CHAT_TIMERS.push(setTimeout(advance, 820));
-    } else {
-      CHAT_TIMERS.push(setTimeout(() => {
-        const bt = think.closest('.btext');
-        if (bt) bt.innerHTML = ANSWER;
-      }, 480));
-    }
-  };
-  advance();
+    </div>`);
+}
+/* отправка в уже открытом диалоге (follow-up) */
+function chatSendNow() {
+  if (!BARS[BAL].q) { render('chatPaywall'); return; }
+  playAsk(document.querySelector('.chatwrap .stream'),
+    'А что с этим делать прямо сейчас?',
+    `<p>Начните с малого: выпишите три дела, которые уже довели до конца в этом году. Это снимает ощущение «ничего не добился».</p>
+     <p>И не беритесь прямо сейчас за новый крупный старт: период про то, чтобы углубить и закрепить, а не распыляться.</p>`);
 }
 
 S.chatPaywall = `<div class="chatwrap">
@@ -9398,6 +9413,10 @@ function render(k, push = true, restore = 0) {
     (DTITLE_SCH[k] && TDATA[TCUR]) ? (TDATA[TCUR].title + ' · ' + DTITLE_SCH[k]) :
     (TITLES[k] || 'Лунора');
   document.getElementById('scode').textContent = codeOf(k);
+  /* в диалоге кнопка «назад» подписана «Чаты», на остальных экранах — просто стрелка */
+  const bb = document.getElementById('backBtn');
+  if (bb) bb.innerHTML = ['chat', 'chatNew', 'chatPaywall'].includes(k)
+    ? '<span class="bk-ar">‹</span><span class="bk-lb">Чаты</span>' : '‹';
   const shell = shellOf(k);
   document.querySelector('.phone').classList.toggle('inbot', shell === 'bot');
   document.querySelector('.phone').classList.toggle('inweb', shell === 'web' || shell === 'bank');
@@ -9585,6 +9604,7 @@ view.addEventListener('click', e => {
   if (cl) { cl.parentElement.remove(); return; }
   const pb = e.target.closest('[data-proof]');
   if (pb) { pb.nextElementSibling.classList.toggle('show'); return; }
+  if (e.target.closest('[data-chatsend]')) { chatSendNow(); return; }
   const ex = e.target.closest('[data-explain]');
   if (ex) { ex.classList.toggle('open'); return; }
   const ev = e.target.closest('#evTabs i');
