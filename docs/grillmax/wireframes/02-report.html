@@ -1585,29 +1585,20 @@
   .chatbar.empty { background: var(--warn-bg); }
   .chatbar.empty span, .chatbar.empty b { color: var(--warn); }
 
-  /* список диалогов — строки, не карточки: кружок слева, разделитель, без рамок */
-  .threads { flex: 1; padding: 4px 0 4px; }
-  .thr { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 12px; align-items: start;
-         padding: 12px 16px; cursor: pointer; position: relative; }
-  .thr + .thr::before { content: ''; position: absolute; top: 0; left: 68px; right: 16px;
-                        height: 1px; background: var(--rule-soft); }
-  .thr-av { width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
-            background: var(--wire-fill); border: 1px solid var(--rule); }
-  .thr-av svg { width: 32px; height: 32px; }
-  .thr-av svg circle { fill: none; stroke: var(--wire-line); stroke-width: 1.4; }
-  .thr-av svg path { fill: var(--wire-line); stroke: none; }
-  .thr-av svg.luna-logo path { fill: none; stroke: var(--ink-soft); stroke-width: 2.2; }
-  .thr-av svg.luna-logo circle { fill: none; stroke: var(--ink-soft); stroke-width: 2.2; }
-  .thr-h { display: flex; align-items: baseline; gap: 8px; }
-  .thr-h b { font-size: 14.5px; font-weight: 620; letter-spacing: -.005em; flex: 1; min-width: 0;
+  /* список диалогов — отдельные карточки без аватара (аватар Луноры одинаков на всех,
+     смысла не несёт): текст занимает всю ширину, время и точка — под текстом */
+  .threads { flex: 1; padding: 12px 16px; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; }
+  .thr { background: var(--card); border: 1px solid var(--rule-soft); border-radius: 12px;
+         padding: 12px 14px; cursor: pointer; }
+  .thr-h { display: flex; align-items: center; gap: 7px; }
+  .thr-h b { font-size: 14.5px; font-weight: 620; letter-spacing: -.005em; min-width: 0;
              overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-  .thr-h em { font-style: normal; font-size: 11.5px; color: var(--ink-faint); white-space: nowrap; }
-  .thr-l { font-size: 13px; color: var(--ink-soft); line-height: 1.4; margin-top: 3px;
+  .thr-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--note); flex: 0 0 auto; }
+  .thr-l { font-size: 13px; color: var(--ink-soft); line-height: 1.45; margin-top: 4px;
            display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
   .thr-l i { font-style: normal; color: var(--ink-faint); }
+  .thr-meta { font-size: 11.5px; color: var(--ink-faint); margin-top: 7px; }
   .thr.new .thr-h b { font-weight: 680; }
-  .thr.new .thr-h em { color: var(--note); }
-  .thr-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--note); flex: none; }
 
   .stream { flex: 1; min-width: 0; padding: 14px 16px 8px; display: flex; flex-direction: column; gap: 14px; }
   .bq { background: var(--wire-fill-2); border-radius: 13px 13px 4px 13px; padding: 10px 13px; font-size: 13.5px; line-height: 1.5; margin-left: auto; max-width: 84%; box-sizing: border-box; overflow-wrap: anywhere; }
@@ -6643,22 +6634,22 @@ function buildChatList() { return `<div class="chatwrap">
     </div>
   </div>` : `<div class="threads">
     <div class="thr new" data-go="chat">
-      <div class="thr-av">${LUNALOGO}</div>
-      <div><div class="thr-h"><b>Разговор про Дмитрия</b><em>14:20</em><span class="thr-dot"></span></div>
-      <div class="thr-l">Ссоры повторяются не из-за характеров, а из-за того, что вы оба ждёте первого шага…</div></div>
+      <div class="thr-h"><b>Разговор про Дмитрия</b><span class="thr-dot"></span></div>
+      <div class="thr-l">Ссоры повторяются не из-за характеров, а из-за того, что вы оба ждёте первого шага…</div>
+      <div class="thr-meta">14:20</div>
     </div>
     <div class="thr" data-go="chat">
-      <div class="thr-av">${LUNALOGO}</div>
-      <div><div class="thr-h"><b>Почему я не могу закончить начатое</b><em>вчера</em></div>
-      <div class="thr-l">Внешний срок обязателен. Сами вы не выпустите — у вас нет внутреннего дедлайна…</div></div>
+      <div class="thr-h"><b>Почему я не могу закончить начатое</b></div>
+      <div class="thr-l">Внешний срок обязателен. Сами вы не выпустите — у вас нет внутреннего дедлайна…</div>
+      <div class="thr-meta">вчера</div>
     </div>
     <div class="thr" data-go="chat">
-      <div class="thr-av">${LUNALOGO}</div>
-      <div><div class="thr-h"><b>Что со мной происходит последний год</b><em>9 авг</em></div>
-      <div class="thr-l"><i>Вы:</i> То есть это закончится только в 2031?</div></div>
+      <div class="thr-h"><b>Что со мной происходит последний год</b></div>
+      <div class="thr-l"><i>Вы:</i> То есть это закончится только в 2031?</div>
+      <div class="thr-meta">9 авг</div>
     </div>
   </div>`}
-  ${composer('Новый вопрос…','chat')}
+  ${composer('Напишите ваш вопрос','chat')}
 </div>`; }
 Object.defineProperty(S, "chatList", { get: buildChatList });
 
