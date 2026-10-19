@@ -1654,8 +1654,8 @@
   .send { width: 42px; height: 42px; border-radius: 999px; background: var(--ink-soft); border: none; flex: 0 0 auto;
           display: grid; place-items: center; font-size: 17px; color: var(--paper); cursor: pointer; }
   .send.off { background: var(--wire-fill-2); color: var(--ink-faint); cursor: default; }
-  /* счётчик символов — внутри блока, под полем ввода (слева, не у правого края) */
-  .climit { font-size: 10.5px; color: var(--ink-faint); padding: 0 4px 2px 14px;
+  /* счётчик символов — внутри блока, под полем, по правому краю самого поля */
+  .climit { text-align: right; font-size: 10.5px; color: var(--ink-faint); padding: 0 13px 2px;
             font-variant-numeric: tabular-nums; }
   .climit.near { color: var(--warn); }
   .climit.full { color: var(--warn); font-weight: 700; }
