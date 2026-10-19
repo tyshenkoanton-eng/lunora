@@ -892,6 +892,12 @@
   #memModes .card-it .chev { width: 16px; text-align: center; }
   .card-it .price { font-size: 13px; font-weight: 700; color: var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
   .card-it.locked { opacity: .55; }
+  /* пакеты запросов: число цифрами, выгода и «Популярное» */
+  .card-it .pc .t { display: inline-flex; align-items: center; gap: 7px; }
+  .card-it .save { display: block; font-size: 11.5px; font-weight: 600; color: var(--note); margin-top: 3px; }
+  .poptag { font-size: 9.5px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase;
+            color: var(--paper); background: var(--note); border-radius: 999px; padding: 2px 7px; }
+  .card-it.pop { border-color: var(--note); background: var(--note-bg); }
   .card-it.flat { cursor: default; background: var(--wire-fill); border-color: transparent; }
   .card-it.flat .chev { display: none; }
   .secn { display: inline-block; min-width: 15px; margin-right: 5px; font-size: 10.5px; color: var(--ink-faint); font-weight: 700; font-variant-numeric: tabular-nums; }
@@ -1550,9 +1556,10 @@
   .chatbar .bal u { font-size: 12.5px; font-weight: 400; color: var(--ink-soft); text-decoration: none; }
   .chatbar .bal b { font-size: 12.5px; font-weight: 650; color: var(--ink); font-variant-numeric: tabular-nums; }
   .chatbar.empty .bal u, .chatbar.empty .bal b { color: var(--warn); }
-  .chatbar .topup { flex: 0 0 auto; font-size: 12px; font-weight: 600; color: var(--note);
-                    white-space: nowrap; cursor: pointer; padding: 6px 13px; border-radius: 999px;
-                    border: 1px solid var(--note); line-height: 1; }
+  .chatbar .topup { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+                    font-size: 12px; font-weight: 600; color: var(--note);
+                    white-space: nowrap; cursor: pointer; padding: 7px 14px; border-radius: 999px;
+                    border: 1px solid var(--note); line-height: 1.1; }
   .chatbar .topup:hover { background: var(--luna-bg); }
   .chatbar.empty .topup { color: var(--warn); border-color: var(--warn); }
   .chatbar b[data-go] { cursor: pointer; }
@@ -1919,7 +1926,7 @@
         <div class="sheet" id="chatInfoSheet"><div class="sheet-in">
           <div class="sheet-h">Как устроен чат</div>
           <p class="introp">В этом чате Лунора отвечает по вашей карте, опираясь на расчёты четырёх школ.</p>
-          <p class="introp">На старте дарим три запроса. Каждая отправка списывает один запрос с баланса, даже если в сообщении несколько вопросов.</p>
+          <p class="introp">На старте дарим три запроса. Каждая отправка сообщения Луноре списывает один запрос с баланса.</p>
           <p class="introp">Когда они закончатся, запросы можно докупить или пригласить друга: каждый приглашённый добавляет на баланс ещё 10.</p>
           <div class="w-btn" data-chatinfook="1" style="margin-top:6px">Понятно</div>
         </div></div>
@@ -1931,15 +1938,15 @@
           <div class="w-btn ghost" data-sheet="close">Отмена</div>
         </div></div>
         <div class="sheet" id="topupSheet"><div class="sheet-in">
-          <div class="sheet-h">Пополнить баланс</div>
+          <div class="sheet-h">Пополнение баланса</div>
           <div class="cards">
-            <div class="card-it" data-prod="q3" style="border-color:var(--ink-faint)"><div><div class="t">Три запроса</div><span class="s">Лежат без срока — расходуются, когда спросите</span></div><div class="price">149 ₽</div></div>
-            <div class="card-it" data-prod="q10"><div><div class="t">Десять запросов</div><span class="s">Выгоднее — тоже лежат без срока</span></div><div class="price">349 ₽</div></div>
+            <div class="card-it" data-prod="q3"><div class="pc"><div class="t">3 запроса</div></div><div class="price">149 ₽</div></div>
+            <div class="card-it pop" data-prod="q10"><div class="pc"><div class="t">10 запросов <span class="poptag">Популярное</span></div><span class="save">выгоднее на 30%</span></div><div class="price">349 ₽</div></div>
+            <div class="card-it" data-prod="q50"><div class="pc"><div class="t">50 запросов</div><span class="save">выгоднее на 50%</span></div><div class="price">1 240 ₽</div></div>
           </div>
           <div class="orfree" data-go="invite">
-            <div><b>Или пригласите</b><span>Запросы в подарок обоим — как только друг получит свою карту</span></div><span class="ch">›</span>
+            <div><b>Или пригласите друга</b><span>Запросы в подарок обоим — как только друг получит свою карту</span></div><span class="ch">›</span>
           </div>
-          <p class="introp" style="font-size:11px;color:var(--ink-faint);margin-top:10px;text-align:center">Всё, что вы уже прочитали о себе, остаётся бесплатным навсегда.</p>
           <div class="w-btn ghost" data-sheet="close">Закрыть</div>
         </div></div>
         <div class="sheet" id="pickSheet"><div class="sheet-in">
@@ -7804,8 +7811,8 @@ const PROD = {
     res:'Три запроса', resPhrase:'Счётчик пополнен — спрашивайте.'
   },
   q10: {
-    t:'Десять вопросов', price:'349 ₽', crumb:'Чат', access:'запросы',
-    lead:'Выгоднее на вопрос. Запросы не сгорают — задавайте когда угодно.',
+    t:'Десять запросов', price:'349 ₽', crumb:'Чат', access:'запросы',
+    lead:'Выгоднее на 30% на запрос. Запросы не сгорают — задавайте когда угодно.',
     sell:[
       ['Ответ по вашей карте','Не общий совет, а разбор вашей ситуации через четыре школы.'],
       ['Лунора помнит контекст','Внутри одной темы можно уточнять и спорить — она держит нить разговора.'],
@@ -7815,8 +7822,23 @@ const PROD = {
     fields:[], depth:'—', depthNote:'Отвечаем по данным профиля. Если уточните данные о рождении, ответы станут точнее.',
     build:['Открываю вашу карту','Готова отвечать'],
     doc:`
-<div class="body-text"><p>Десять вопросов добавлены. Счётчик в чате обновлён.</p></div>`,
-    res:'Десять вопросов', resPhrase:'Счётчик пополнен — спрашивайте.'
+<div class="body-text"><p>Десять запросов добавлены. Счётчик в чате обновлён.</p></div>`,
+    res:'Десять запросов', resPhrase:'Счётчик пополнен — спрашивайте.'
+  },
+  q50: {
+    t:'Пятьдесят запросов', price:'1 240 ₽', crumb:'Чат', access:'запросы',
+    lead:'Самый выгодный пакет — на 50% дешевле на запрос. Запросы не сгорают.',
+    sell:[
+      ['Ответ по вашей карте','Не общий совет, а разбор вашей ситуации через четыре школы.'],
+      ['Лунора помнит контекст','Внутри одной темы можно уточнять и спорить — она держит нить разговора.'],
+      ['Не сгорают','Лежат, пока не спросите. Срока нет.']
+    ],
+    need:'Ничего вводить не нужно — всё есть в вашем профиле.',
+    fields:[], depth:'—', depthNote:'Отвечаем по данным профиля. Если уточните данные о рождении, ответы станут точнее.',
+    build:['Открываю вашу карту','Готова отвечать'],
+    doc:`
+<div class="body-text"><p>Пятьдесят запросов добавлены. Счётчик в чате обновлён.</p></div>`,
+    res:'Пятьдесят запросов', resPhrase:'Счётчик пополнен — спрашивайте.'
   },
   compat: {
     t:'Совместимость', price:'990 ₽', crumb:'Разборы · про людей',
@@ -9560,6 +9582,7 @@ function render(k, push = true, restore = 0) {
     } else if (typeof chatNewPlay === 'function') chatNewPlay();
     CHAT_SEND_PENDING = '';
   }
+  if (k === 'chat' && typeof chatScroll === 'function') chatScroll();   /* открываем диалог на последнем сообщении */
   if (k === 'chatPaywall') {
     if (typeof chatEmptyNotice === 'function') chatEmptyNotice();
     const ta = document.querySelector('.chatwrap .composer .cfield');     /* демонстрируем состояние «уже упёрлись»: черновик в поле */
