@@ -6701,7 +6701,7 @@ function buildChat() { return `<div class="chatwrap">
         <p>Три школы из четырёх говорят одно: <b>вы систематически недооцениваете сделанное.</b> Если вы уходите, потому что «здесь я ничего не добился» — проверьте это отдельно. Скорее всего добились, просто не присвоили.</p>
         <p>А про сентябрь: вы в периоде Будхи, он идёт с 2021 по 2038 и весь про обмен — связи, договорённости, работу через других. Новое дело в нём заводится легче, чем в одиночку. Не «получится», а «в паре или по договору пойдёт быстрее, чем самому».</p>
         <p>Главное, что я бы проверил на вашем месте: вы уходите <b>от</b> или <b>к</b>? Если от — карта говорит, что дело может быть не в работе.</p>
-        <div class="proofbtn" data-proof="1"><span>◈</span> На чём это построено</div>
+        <div class="proofbtn" data-proof="1"><span>◈</span> На чём построен ответ</div>
         <div class="proofbox">
           <div class="pr"><u>Западная</u><span>Солнце 0 баллов, квадратуры к Марсу и Сатурну — недооценка сделанного</span></div>
           <div class="pr"><u>Ба-Цзы</u><span>Металл 0 — нет стихии выхода, результат не присваивается</span></div>
@@ -6749,6 +6749,7 @@ function typeAnswer(btext, paras, proof) {
 /* вопрос добавляется сразу, затем расчёт (2 c на шаг), затем ответ печатается по буквам */
 function playAsk(stream, question, paras, proof) {
   if (!stream) return;
+  if (!proof) proof = CHAT_NEW_PROOF;   /* блок опоры в конце каждого ответа */
   const bq = document.createElement('div'); bq.className = 'bq'; bq.textContent = question; stream.appendChild(bq); chatScroll();
   const ba = document.createElement('div'); ba.className = 'ba';
   ba.innerHTML = `<div class="av">${LUNALOGO}</div><div class="btext"><div class="thinking">` +
@@ -6767,7 +6768,7 @@ function playAsk(stream, question, paras, proof) {
   };
   step();
 }
-const CHAT_NEW_PROOF = `<div class="proofbtn" data-proof="1"><span>◈</span> На чём это построено</div>
+const CHAT_NEW_PROOF = `<div class="proofbtn" data-proof="1"><span>◈</span> На чём построен ответ</div>
   <div class="proofbox">
     <div class="pr"><u>Западная</u><span>Солнце в напряжении — недооценка сделанного</span></div>
     <div class="pr"><u>Ба-Цзы</u><span>Нет стихии выхода — результат не присваивается</span></div>
@@ -6786,9 +6787,15 @@ function chatNewPlay() {
    ответ в прототипе заглушка. */
 const CHAT_FOLLOWUP_A = ['Начните с малого: выпишите три дела, которые уже довели до конца в этом году. Это снимает ощущение «ничего не добился».',
   'И не беритесь прямо сейчас за новый крупный старт: период про то, чтобы углубить и закрепить, а не распыляться.'];
+const CHAT_FOLLOWUP_PROOF = `<div class="proofbtn" data-proof="1"><span>◈</span> На чём построен ответ</div>
+  <div class="proofbox">
+    <div class="pr"><u>Западная</u><span>Сатурн в соединении с управителем — тема «сначала закрепить»</span></div>
+    <div class="pr"><u>Ба-Цзы</u><span>Сильный день, слабый выход — результат копится, но не присваивается</span></div>
+    <div class="pr"><u>Нумерология</u><span>Личный год 7 — углубление, не запуск нового</span></div>
+  </div>`;
 function chatSendNow(text) {
   if (!BARS[BAL].q) { render('chatPaywall'); return; }
-  playAsk(document.querySelector('.chatwrap .stream'), text, CHAT_FOLLOWUP_A);
+  playAsk(document.querySelector('.chatwrap .stream'), text, CHAT_FOLLOWUP_A, CHAT_FOLLOWUP_PROOF);
 }
 /* обновление композера при вводе: счётчик, лимит, активность кнопки, авто-высота */
 function chatComposerUpdate(ta) {
