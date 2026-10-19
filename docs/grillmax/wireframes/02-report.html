@@ -1677,6 +1677,8 @@
   .emptybar p + p { margin-top: 10px; }
   .emptybtns { display: flex; flex-direction: column; gap: 8px; margin-top: 13px; }
   .emptybtns .w-btn { margin: 0; min-height: 42px; font-size: 13.5px; }
+  /* вторичная кнопка — на фоне плашки, с чёткой обводкой (читается в обеих темах) */
+  .emptybtns .w-btn.ghost { background: transparent; color: var(--ink); border-color: var(--ink); }
   /* недоставленное сообщение: тот же бабл, но с красной точкой слева */
   .bqrow.und { display: flex; align-items: center; justify-content: flex-end; gap: 7px; }
   .bqrow.und .bq { margin-left: 0; }
@@ -6866,7 +6868,7 @@ let CHAT_SEND_PENDING = '';
 const CHAT_EMPTYBAR = `<div class="emptybar">
   <p>На вашем балансе не осталось доступных запросов. Чтобы продолжить общение, пополните баланс.</p>
   <p>Вы также можете пригласить друзей: каждый приглашённый добавит 10 запросов на баланс.</p>
-  <div class="emptybtns"><button class="w-btn" data-topup="1">Пополнить баланс</button><button class="w-btn" data-go="invite">Пригласить друга</button></div>
+  <div class="emptybtns"><button class="w-btn" data-topup="1">Пополнить баланс</button><button class="w-btn ghost" data-go="invite">Пригласить друга</button></div>
 </div>`;
 function chatEmptyNotice(text) {
   const stream = document.querySelector('.chatwrap .stream');
