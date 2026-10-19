@@ -1643,13 +1643,21 @@
   .paywall b { font-size: 15px; font-weight: 640; display: block; margin-bottom: 6px; }
   .paywall p { font-size: 12.5px; color: var(--ink-soft); line-height: 1.55; margin: 0; }
 
-  .composer { position: sticky; bottom: 0; display: flex; gap: 8px; align-items: center;
-              margin: 8px 16px 12px; padding: 8px; background: var(--wire-fill); border-radius: 16px; }
+  .composer { position: sticky; bottom: 0; display: flex; flex-direction: column; gap: 4px;
+              margin: 8px 16px 12px; padding: 8px 8px 6px; background: var(--wire-fill); border-radius: 16px; }
   .composer.dim { opacity: .45; }
-  .cfield { flex: 1; min-height: 42px; display: flex; align-items: center; padding: 0 13px; background: var(--card);
-            border-radius: 21px; font-size: 13.5px; color: var(--ink-faint); }
-  .send { width: 42px; height: 42px; border-radius: 999px; background: var(--ink-soft); border: none;
-          display: grid; place-items: center; font-size: 17px; color: var(--paper); }
+  .composer .crow { display: flex; gap: 8px; align-items: flex-end; }
+  .cfield { flex: 1; min-height: 42px; max-height: 110px; padding: 11px 13px; background: var(--card);
+            border: none; outline: none; resize: none; border-radius: 18px; font: inherit; font-size: 13.5px;
+            line-height: 1.35; color: var(--ink); box-sizing: border-box; overflow-y: auto; }
+  .cfield::placeholder { color: var(--ink-faint); }
+  .send { width: 42px; height: 42px; border-radius: 999px; background: var(--ink-soft); border: none; flex: 0 0 auto;
+          display: grid; place-items: center; font-size: 17px; color: var(--paper); cursor: pointer; }
+  .send.off { background: var(--wire-fill-2); color: var(--ink-faint); cursor: default; }
+  .climit { align-self: flex-end; font-size: 10.5px; color: var(--ink-faint); padding: 0 8px;
+            font-variant-numeric: tabular-nums; }
+  .climit.near { color: var(--warn); }
+  .climit.full { color: var(--warn); font-weight: 700; }
 
   /* чат */
   .counter { display: flex; align-items: center; justify-content: space-between; padding: 10px 12px; background: var(--wire-fill); border-radius: 9px; margin-bottom: 16px; }
@@ -1869,7 +1877,7 @@
         <div class="view" id="view"></div>
         <div class="sheet" id="invSheet"><div class="sheet-in">
           <div class="sheet-h">Пригласите того, кому это тоже интересно</div>
-          <p class="introp">Как только друг построит свою карту, вы оба получите вопросы в чате: 10 вам и 5 другу. Покупать ничего не нужно.</p>
+          <p class="introp">Как только друг построит свою карту, вы оба получите запросы в чате: 10 вам и 5 другу. Покупать ничего не нужно.</p>
           <p class="introp" style="color:var(--ink-faint)">Вернуться к приглашениям можно в любой момент: кнопка «Пригласить друга» в профиле или «Пригласить друзей» в настройках.</p>
           <div class="w-btn" data-invgo="1">Пригласить друга</div>
           <div class="w-btn ghost" data-invok="1">Напомнить позже</div>
@@ -1884,8 +1892,8 @@
         <div class="sheet" id="chatInfoSheet"><div class="sheet-in">
           <div class="sheet-h">Как устроен чат</div>
           <p class="introp">В этом чате Лунора отвечает по вашей карте, опираясь на расчёты четырёх школ.</p>
-          <p class="introp">На старте дарим три вопроса. Каждый ваш запрос списывает один вопрос с баланса.</p>
-          <p class="introp">Когда они закончатся, вопросы можно докупить или пригласить друга: каждый приглашённый добавляет на баланс ещё 10.</p>
+          <p class="introp">На старте дарим три запроса. Каждая отправка списывает один запрос с баланса, даже если в сообщении несколько вопросов.</p>
+          <p class="introp">Когда они закончатся, запросы можно докупить или пригласить друга: каждый приглашённый добавляет на баланс ещё 10.</p>
           <div class="w-btn" data-chatinfook="1" style="margin-top:6px">Понятно</div>
         </div></div>
         <div class="sheet" id="pickSheet"><div class="sheet-in">
@@ -1960,7 +1968,7 @@
         </div></div>
         <div class="sheet" id="bonusSheet"><div class="sheet-in">
           <div class="sheet-h">Ваш друг рассчитал свою карту</div>
-          <p style="font-size:13px;line-height:1.6;color:var(--ink-soft);margin:0">Условия получения награды выполнены, поэтому вы оба получаете бонус в виде 10 вопросов на баланс чата вам и 5 вопросов для <a style="color:var(--note);cursor:pointer">@maria</a>.</p>
+          <p style="font-size:13px;line-height:1.6;color:var(--ink-soft);margin:0">Условия получения награды выполнены, поэтому вы оба получаете бонус в виде 10 запросов на баланс чата вам и 5 запросов для <a style="color:var(--note);cursor:pointer">@maria</a>.</p>
           <div class="w-btn" data-go="chatList" style="margin-top:14px">Перейти в чат</div>
           <div class="w-btn ghost" data-sheet="close">Закрыть</div>
         </div></div>
@@ -2664,7 +2672,7 @@ const INFO = {
   chat: ['Что такое чат с Лунорой',
     `<p>В чате Лунора отвечает, опираясь на расчёты школ. Вы получаете персонализированные ответы на разные темы.</p>
      <p>Можно спросить о себе, об отношениях, о выборе или о периоде жизни, и она ответит по вашей карте.</p>
-     <p>После того, как друг выполнит все условия, вы получите 10 вопросов на баланс чата.</p>`],
+     <p>После того, как друг выполнит все условия, вы получите 10 запросов на баланс чата.</p>`],
   consent: ['Зачем нужно согласие',
     `<p>По закону мы не вправе обрабатывать персональные данные без согласия. Нам нужно убедиться, что вы можете передать данные этого человека.</p>
      <p>Данные нужны только для расчёта его прогноза. Их можно удалить в любой момент, вместе со всем, что на них построено.</p>`],
@@ -5860,7 +5868,7 @@ S.numSynth = `<div class="pad">
 
 
 
-const SHARE_OF = {"receipt": ["Чек LN-8412-DK", "Чек об оплате — реквизиты продавца видны получателю"], "invite": ["Лунора считает карту по четырём школам сразу", "Приглашение · вопросы в подарок обоим"], "giftCard": ["Подарочный сертификат Луноры", "Сертификат на выбранный разбор"], "prodResult": ["Разбор готов", "Полный разбор"], "today": ["Сегодня у меня день завершения, а не начала.", "Ваш день целиком"], "pay6": ["Вы оба выдерживаете подолгу — и оба не говорите, когда стало тяжело.", "Платный документ — ссылка не передаётся"], "profile": ["У вас больше внутри, чем снаружи.", `профиль целиком: ${scopeProse()}`], "dWest": ["Снаружи вас читают мягче, чем вы себя чувствуете.", "Разбор западной школы целиком"], "dVedic": ["Внутри у вас напряжение, которое не разряжается.", "Разбор ведической школы целиком"], "dBazi": ["У вас есть всё, кроме канала, чтобы это выпускать.", "Разбор Ба-Цзы целиком"], "dNum": ["Вы верите в труд, а не в удачу.", "Разбор нумерологии целиком"], "schWest": ["Западная астрология о вас", "западная астрология целиком: карта и все разделы"], "schVedic": ["Ведическая астрология о вас", "ведическая астрология целиком: карта и все разделы"], "schBazi": ["Ба-Цзы о вас", "Ба-Цзы целиком: столпы и все разделы"], "schNum": ["Нумерология о вас", "нумерология целиком: квадрат и все разделы"]};
+const SHARE_OF = {"receipt": ["Чек LN-8412-DK", "Чек об оплате — реквизиты продавца видны получателю"], "invite": ["Лунора считает карту по четырём школам сразу", "Приглашение · запросы в подарок обоим"], "giftCard": ["Подарочный сертификат Луноры", "Сертификат на выбранный разбор"], "prodResult": ["Разбор готов", "Полный разбор"], "today": ["Сегодня у меня день завершения, а не начала.", "Ваш день целиком"], "pay6": ["Вы оба выдерживаете подолгу — и оба не говорите, когда стало тяжело.", "Платный документ — ссылка не передаётся"], "profile": ["У вас больше внутри, чем снаружи.", `профиль целиком: ${scopeProse()}`], "dWest": ["Снаружи вас читают мягче, чем вы себя чувствуете.", "Разбор западной школы целиком"], "dVedic": ["Внутри у вас напряжение, которое не разряжается.", "Разбор ведической школы целиком"], "dBazi": ["У вас есть всё, кроме канала, чтобы это выпускать.", "Разбор Ба-Цзы целиком"], "dNum": ["Вы верите в труд, а не в удачу.", "Разбор нумерологии целиком"], "schWest": ["Западная астрология о вас", "западная астрология целиком: карта и все разделы"], "schVedic": ["Ведическая астрология о вас", "ведическая астрология целиком: карта и все разделы"], "schBazi": ["Ба-Цзы о вас", "Ба-Цзы целиком: столпы и все разделы"], "schNum": ["Нумерология о вас", "нумерология целиком: квадрат и все разделы"]};
 
 
 
@@ -6217,10 +6225,10 @@ Object.defineProperty(S, 'invite', { get: () => `<div class="pad">
   <div id="rfGive">
     <div class="utp">
       <b style="font-size:15px">Приглашайте друга в Лунору</b>
-      <p>Советуйте Лунору друзьям и получайте в подарок вопросы на баланс чата за каждого приглашённого. <u class="ihint" data-info="chat">i</u></p>
+      <p>Советуйте Лунору друзьям и получайте в подарок запросы на баланс чата за каждого приглашённого. <u class="ihint" data-info="chat">i</u></p>
       <div class="utp-row">
-        <div><i>10</i>вопросов вам</div>
-        <div><i>5</i>вопросов другу</div>
+        <div><i>10</i>запросов вам</div>
+        <div><i>5</i>запросов другу</div>
       </div>
     </div>
 
@@ -6244,7 +6252,7 @@ Object.defineProperty(S, 'invite', { get: () => `<div class="pad">
       <div class="fq"><div class="q">Как получить награду<span>+</span></div><div class="a"><div class="ai"><div class="at"><div style="display:flex;flex-direction:column;gap:12px">
         <div class="stp"><u>1</u>Отправьте другу реферальную ссылку или дайте отсканировать ваш QR-код</div>
         <div class="stp"><u>2</u>Друг регистрируется, вводит данные и получает свой расчёт по 4 школам</div>
-        <div class="stp"><u>3</u>Вы оба получаете награду: вам начислят 10 вопросов, другу 5</div>
+        <div class="stp"><u>3</u>Вы оба получаете награду: вам начислят 10 запросов, другу 5</div>
       </div></div></div></div></div>
       <div class="fq"><div class="q">Когда начисляется награда<span>+</span></div><div class="a"><div class="ai"><div class="at">Награда начисляется сразу после того, как друг введёт данные и получит свою рассчитанную карту.</div></div></div></div>
       <div class="fq"><div class="q">Сколько раз можно пригласить<span>+</span></div><div class="a"><div class="ai"><div class="at">Количество приглашённых друзей не ограничено.</div></div></div></div>
@@ -6263,15 +6271,15 @@ Object.defineProperty(S, 'invite', { get: () => `<div class="pad">
     <div class="w-btn" data-rfgo="give" style="margin-top:16px"><i class="bi">↗</i>Пригласить друга</div>
   ` : `
     <div class="statrow">
-      <div><u>Получено</u><b>30</b><span>вопросов</span></div>
-      <div><u>Ожидает</u><b>10</b><span>вопросов</span></div>
+      <div><u>Получено</u><b>30</b><span>запросов</span></div>
+      <div><u>Ожидает</u><b>10</b><span>запросов</span></div>
     </div>
 
     <div class="sec-label">Приглашённые</div>
     <div class="reflist">
-      <div class="ref"><span class="refav">М</span><a>@maria</a><em class="ok">+10 вопросов</em></div>
-      <div class="ref"><span class="refav">О</span><a>@olga_k</a><em class="ok">+10 вопросов</em></div>
-      <div class="ref"><span class="refav">П</span><span>Пользователь 3</span><em class="ok">+10 вопросов</em></div>
+      <div class="ref"><span class="refav">М</span><a>@maria</a><em class="ok">+10 запросов</em></div>
+      <div class="ref"><span class="refav">О</span><a>@olga_k</a><em class="ok">+10 запросов</em></div>
+      <div class="ref"><span class="refav">П</span><span>Пользователь 3</span><em class="ok">+10 запросов</em></div>
       <div class="ref"><span class="refav">П</span><span>Пользователь 4</span><em>Не закончил ввод</em></div>
     </div>
 
@@ -6511,7 +6519,7 @@ const HELP = {
   ], 'Как уточнить и исправить данные, роль имени'],
   chat: ['Чат и лента', [
     ['Сколько вопросов можно задать',
-     'Три вопроса даём при знакомстве. Дальше пачками: 149 ₽ за три или 349 ₽ за десять. Вопросы не сгорают.'],
+     'Три запроса даём при знакомстве. Дальше пачками: 149 ₽ за три или 349 ₽ за десять. Запросы не сгорают.'],
     ['Что Лунора обо мне помнит',
      'То, что вы сами рассказали в чате. Список открыт в настройках, любую запись можно поправить или удалить, а сбор контекста — выключить.'],
     ['Когда приходит ежедневный прогноз',
@@ -6519,7 +6527,7 @@ const HELP = {
   ], 'Лимит вопросов, память Луноры, время прогноза'],
   invite: ['Приглашения и бонусы', [
     ['Что я получу за приглашение',
-     'За каждого друга — вопросы в чате: 10 вам и 5 другу. Вопросы не сгорают и лежат без срока.'],
+     'За каждого друга — вопросы в чате: 10 вам и 5 другу. Запросы не сгорают и лежат без срока.'],
     ['Когда начисляется бонус',
      'Как только приглашённый введёт свои данные и получит карту. Вопросы приходят вам обоим, покупать для этого ничего не нужно.'],
     ['Где взять ссылку и как позвать друга',
@@ -6607,7 +6615,7 @@ const BARS = {
 
 function МЕТКА() {
   const q = BARS[BAL].q;
-  return `${q} ${q === 1 ? 'вопрос' : q % 10 >= 2 && q % 10 <= 4 && (q < 10 || q > 20) ? 'вопроса' : 'вопросов'}`;
+  return `${q} ${q === 1 ? 'запрос' : q % 10 >= 2 && q % 10 <= 4 && (q < 10 || q > 20) ? 'запроса' : 'запросов'}`;
 }
 
 function chatBar() {
@@ -6619,12 +6627,21 @@ function chatBar() {
   return `<div class="${cls}"><span class="bal"><u>Баланс</u><b>${value}</b></span><a class="topup" data-go="shopTalk">Пополнить</a></div>`;
 }
 
-/* Низ экрана: поле ввода. Подсказку про списание вынесли в шторку первого входа (chatInfoSheet),
-   снизу осталась только ситуативная строка на случай пустого баланса. */
-function composer(ph, go) {
-  const note = BARS[BAL].q ? '' : '<div class="cnote">Вопрос сохраним, дальше предложим варианты</div>';
+/* Низ экрана: реальное поле ввода (в прототипе можно печатать). Кнопка отправки
+   неактивна, пока поле пустое. Есть счётчик символов и лимит на один запрос.
+   mode='list' — отправка открывает новый диалог; mode='send' — добавляет запрос в ленту. */
+const CHAT_MAXLEN = 500;
+function composerBar(mode) {
+  const attr = mode === 'list' ? 'data-chatgo="chatNew"' : 'data-chatsend="1"';
+  const note = (mode === 'send' && !BARS[BAL].q) ? '<div class="cnote">Запрос сохраним, дальше предложим варианты</div>' : '';
   return `${note}
-  <div class="composer" data-go="${go}"><div class="cfield">${ph}</div><div class="send">↑</div></div>`;
+  <div class="composer" ${attr}>
+    <div class="crow">
+      <textarea class="cfield" rows="1" maxlength="${CHAT_MAXLEN}" placeholder="Напишите ваш запрос"></textarea>
+      <div class="send off">↑</div>
+    </div>
+    <div class="climit"><span class="cl-num">0</span> / ${CHAT_MAXLEN}</div>
+  </div>`;
 }
 
 /* временный лого-аватар Луноры: треугольник и вписанная в него окружность.
@@ -6642,7 +6659,7 @@ function buildChatList() { return `<div class="chatwrap">
     <h2 class="t-title" style="font-size:21px;margin:0 0 2px">Чаты</h2>
     ${!BARS[BAL].q ? `<div class="thr draft" data-go="chatPaywall">
       <div class="thr-h"><b>А если я уйду в своё?</b><span class="thr-draft">Черновик</span></div>
-      <div class="thr-l">Вопрос сохранён. Ответ придёт, как пополните баланс.</div>
+      <div class="thr-l">Запрос сохранён. Ответ придёт, как пополните баланс.</div>
     </div>` : ''}
     <div class="thr new" data-go="chat">
       <div class="thr-h"><b>Разговор про Дмитрия</b><span class="thr-dot"></span></div>
@@ -6660,7 +6677,7 @@ function buildChatList() { return `<div class="chatwrap">
       <div class="thr-meta">23 сентября в 12:32</div>
     </div>
   </div>`}
-  ${composer('Напишите ваш вопрос','chatNew')}
+  ${composerBar('list')}
 </div>`; }
 Object.defineProperty(S, "chatList", { get: buildChatList });
 
@@ -6694,7 +6711,7 @@ function buildChat() { return `<div class="chatwrap">
     </div>
 
   </div>
-  ${composerSend()}
+  ${composerBar('send')}
 </div>`; }
 Object.defineProperty(S, "chat", { get: buildChat });
 
@@ -6704,15 +6721,10 @@ function buildChatNew() { return `<div class="chatwrap">
   ${chatCrumb()}
   ${chatBar()}
   <div class="stream"></div>
-  ${composerSend()}
+  ${composerBar('send')}
 </div>`; }
 Object.defineProperty(S, "chatNew", { get: buildChatNew });
 
-/* композер в диалоге: отправка не уводит на другой экран, а добавляет вопрос прямо
-   в ленту и запускает анимацию расчёта (при пустом балансе — пейвол Ч-03). */
-function composerSend() {
-  return `<div class="composer" data-chatsend="1"><div class="cfield">Напишите ваш вопрос</div><div class="send">↑</div></div>`;
-}
 
 const CHAT_STAGES = ['Смотрю вашу карту', 'Сверяю, что говорит каждая школа', 'Ищу, где школы сходятся', 'Собираю ответ'];
 let CHAT_TIMERS = [];
@@ -6769,12 +6781,24 @@ function chatNewPlay() {
      'Три школы из четырёх сходятся: ваша сила в том, чтобы доводить и углублять, а не хвататься за новое. Сейчас период, когда полезнее закрепить начатое, чем начинать с нуля.'],
     CHAT_NEW_PROOF);
 }
-/* отправка в уже открытом диалоге (follow-up) */
-function chatSendNow() {
+/* отправка запроса в уже открытом диалоге: сам текст пользователя попадает в ленту,
+   ответ в прототипе заглушка. */
+const CHAT_FOLLOWUP_A = ['Начните с малого: выпишите три дела, которые уже довели до конца в этом году. Это снимает ощущение «ничего не добился».',
+  'И не беритесь прямо сейчас за новый крупный старт: период про то, чтобы углубить и закрепить, а не распыляться.'];
+function chatSendNow(text) {
   if (!BARS[BAL].q) { render('chatPaywall'); return; }
-  playAsk(document.querySelector('.chatwrap .stream'), 'А что с этим делать прямо сейчас?',
-    ['Начните с малого: выпишите три дела, которые уже довели до конца в этом году. Это снимает ощущение «ничего не добился».',
-     'И не беритесь прямо сейчас за новый крупный старт: период про то, чтобы углубить и закрепить, а не распыляться.']);
+  playAsk(document.querySelector('.chatwrap .stream'), text, CHAT_FOLLOWUP_A);
+}
+/* обновление композера при вводе: счётчик, лимит, активность кнопки, авто-высота */
+function chatComposerUpdate(ta) {
+  const box = ta.closest('.composer'); if (!box) return;
+  const len = ta.value.length;
+  box.querySelector('.send').classList.toggle('off', len === 0);
+  const num = box.querySelector('.cl-num'); if (num) num.textContent = len;
+  const cl = box.querySelector('.climit');
+  if (cl) { cl.classList.toggle('full', len >= CHAT_MAXLEN); cl.classList.toggle('near', len >= CHAT_MAXLEN - 40 && len < CHAT_MAXLEN); }
+  ta.style.height = 'auto';
+  ta.style.height = Math.min(ta.scrollHeight, 110) + 'px';
 }
 
 S.chatPaywall = `<div class="chatwrap">
@@ -6785,20 +6809,19 @@ S.chatPaywall = `<div class="chatwrap">
 
     <div class="paywall">
       <b>Продолжим?</b>
-      <p>Ваш вопрос сохранён — уйдёт сразу, как только продолжите.</p>
+      <p>Ваш запрос сохранён — уйдёт сразу, как только продолжите.</p>
       <div class="cards" style="margin-top:14px">
-        <div class="card-it" data-prod="q3" style="border-color:var(--ink-faint)"><div><div class="t">Три вопроса</div><span class="s">Лежат без срока — расходуются, когда спросите</span></div><div class="price">149 ₽</div></div>
-        <div class="card-it" data-prod="q10"><div><div class="t">Десять вопросов</div><span class="s">Выгоднее — тоже лежат без срока</span></div><div class="price">349 ₽</div></div>
+        <div class="card-it" data-prod="q3" style="border-color:var(--ink-faint)"><div><div class="t">Три запроса</div><span class="s">Лежат без срока — расходуются, когда спросите</span></div><div class="price">149 ₽</div></div>
+        <div class="card-it" data-prod="q10"><div><div class="t">Десять запросов</div><span class="s">Выгоднее — тоже лежат без срока</span></div><div class="price">349 ₽</div></div>
       </div>
       <div class="orfree" data-go="invite">
-        <div><b>Или пригласите</b><span>Вопросы в подарок обоим — как только друг получит свою карту</span></div><span class="ch">›</span>
+        <div><b>Или пригласите</b><span>Запросы в подарок обоим — как только друг получит свою карту</span></div><span class="ch">›</span>
       </div>
       <p style="margin-top:12px;font-size:11px">Всё, что вы уже прочитали о себе, остаётся бесплатным навсегда.</p>
     </div>
   </div>
-  <div class="composer dim" data-go="chatList">
-    <div class="cfield">Напишите ваш вопрос</div>
-    <div class="send">↑</div>
+  <div class="composer dim">
+    <div class="crow"><div class="cfield" style="color:var(--ink-faint)">Напишите ваш запрос</div><div class="send off">↑</div></div>
   </div>
 </div>`;
 
@@ -6971,7 +6994,7 @@ function buildShopTalk() { return `<div class="pad">
 
   <div class="sec-label" style="margin-top:20px">Что можно купить</div>
   <div class="cards">
-    <div class="card-it" data-prod="q3"><div><div class="t">Ещё три вопроса</div><span class="s">Столько же, сколько дали на знакомство. Лежат без срока — расходуются, когда спросите</span></div><div class="price">149 ₽</div></div>
+    <div class="card-it" data-prod="q3"><div><div class="t">Ещё три запроса</div><span class="s">Столько же, сколько дали на знакомство. Лежат без срока — расходуются, когда спросите</span></div><div class="price">149 ₽</div></div>
     <div class="card-it" data-prod="q10"><div><div class="t">Десять вопросов</div><span class="s">Выгоднее на вопрос. Тоже лежат без срока</span></div><div class="price">349 ₽</div></div>
   </div>
 
@@ -7689,23 +7712,23 @@ Object.defineProperty(S, 'recalcDone', { get: () => `<div class="pad">
 /* ============ КОНФИГУРАЦИЯ ПРОДУКТОВ ============ */
 const PROD = {
   q3: {
-    t:'Три вопроса', price:'149 ₽', crumb:'Чат', access:'вопросы',
-    lead:'Столько же, сколько дали на знакомство. Вопросы не сгорают — задавайте когда угодно.',
+    t:'Три запроса', price:'149 ₽', crumb:'Чат', access:'запросы',
+    lead:'Столько же, сколько дали на знакомство. Запросы не сгорают — задавайте когда угодно.',
     sell:[
       ['Ответ по вашей карте','Не общий совет, а разбор вашей ситуации через четыре школы.'],
       ['Лунора помнит контекст','Внутри одной темы можно уточнять и спорить — она держит нить разговора.'],
-      ['Не сгорают','Три вопроса лежат, пока не спросите. Срока нет.']
+      ['Не сгорают','Три запроса лежат, пока не спросите. Срока нет.']
     ],
     need:'Ничего вводить не нужно — всё есть в вашем профиле.',
     fields:[], depth:'—', depthNote:'Отвечаем по данным профиля. Если уточните данные о рождении, ответы станут точнее.',
     build:['Открываю вашу карту','Готова отвечать'],
     doc:`
-<div class="body-text"><p>Три вопроса добавлены. Счётчик в чате обновлён.</p></div>`,
-    res:'Три вопроса', resPhrase:'Счётчик пополнен — спрашивайте.'
+<div class="body-text"><p>Три запроса добавлены. Счётчик в чате обновлён.</p></div>`,
+    res:'Три запроса', resPhrase:'Счётчик пополнен — спрашивайте.'
   },
   q10: {
-    t:'Десять вопросов', price:'349 ₽', crumb:'Чат', access:'вопросы',
-    lead:'Выгоднее на вопрос. Вопросы не сгорают — задавайте когда угодно.',
+    t:'Десять вопросов', price:'349 ₽', crumb:'Чат', access:'запросы',
+    lead:'Выгоднее на вопрос. Запросы не сгорают — задавайте когда угодно.',
     sell:[
       ['Ответ по вашей карте','Не общий совет, а разбор вашей ситуации через четыре школы.'],
       ['Лунора помнит контекст','Внутри одной темы можно уточнять и спорить — она держит нить разговора.'],
@@ -8510,7 +8533,7 @@ function fillMonths() {
 
 /* пусто — только там, где список может быть пуст */
 const EMPTY_OF = {
-  chatList: ['◌','Вы ещё ничего не спрашивали','Лунора отвечает по вашей карте, а не вообще. Три вопроса при знакомстве — бесплатно.','Задать вопрос','chat'],
+  chatList: ['◌','Вы ещё ничего не спрашивали','Лунора отвечает по вашей карте, а не вообще. Три запроса при знакомстве — бесплатно.','Задать вопрос','chat'],
   shop: ['◈','Здесь пока пусто','Купленные разборы остаются тут навсегда, и PDF можно скачать в любой момент.','Посмотреть, что считаем','shop'],
   peopleRel: ['◎','Никого не добавлено','Один человек — бесплатно. Дальше можно добавлять по мере надобности.','Добавить первого','shop'],
   invite: ['◌','Вы ещё никого не приглашали','Ссылка ниже — по ней человек получит свой разбор бесплатно, как получили вы. Пять вопросов в чате он получит сразу, вы — десять, когда он введёт данные и получит карту.','Скопировать ссылку','invite'],
@@ -8797,7 +8820,7 @@ const B = {
 ]],
 
 'Б-11': ['Вопросы за друга', 'Реферальное начисление', [
-  msg('<span class="lead">Мария получила свою карту — вам начислены вопросы в чате.</span>Они лежат без срока, спросите когда будет что.', '19:40', ['Перейти в чат', 'Позвать ещё']),
+  msg('<span class="lead">Мария получила свою карту — вам начислены запросы в чате.</span>Они лежат без срока, спросите когда будет что.', '19:40', ['Перейти в чат', 'Позвать ещё']),
 ], [
   ['Без уведомления рефералка не работает',
    'Человек отправил ссылку и забыл. Если он не узнает о начислении, механика мертва — а мы за неё уже заплатили.'],
@@ -9555,6 +9578,12 @@ document.getElementById('balsw').addEventListener('click', e => {
   render(cur, false);
 });
 
+/* ввод в композере чата: счётчик символов, лимит, активность кнопки отправки */
+view.addEventListener('input', e => {
+  const ta = e.target.closest('.cfield');
+  if (ta && ta.tagName === 'TEXTAREA') chatComposerUpdate(ta);
+});
+
 view.addEventListener('click', e => {
   const opener = e.target.closest('[data-botgo]');
   if (opener && isBot(cur)) BOTBACK = cur;
@@ -9614,7 +9643,19 @@ view.addEventListener('click', e => {
   if (cl) { cl.parentElement.remove(); return; }
   const pb = e.target.closest('[data-proof]');
   if (pb) { pb.nextElementSibling.classList.toggle('show'); return; }
-  if (e.target.closest('[data-chatsend]')) { chatSendNow(); return; }
+  const sendBtn = e.target.closest('.composer .send');
+  if (sendBtn) {
+    if (sendBtn.classList.contains('off')) return;
+    const box = sendBtn.closest('.composer');
+    const ta = box.querySelector('.cfield');
+    const text = (ta && ta.value || '').trim();
+    if (!text) return;
+    if (!BARS[BAL].q) { render('chatPaywall'); return; }
+    if (box.hasAttribute('data-chatgo')) { render(box.dataset.chatgo); return; }  /* список → новый диалог */
+    chatSendNow(text);                                                             /* диалог → добавить запрос */
+    ta.value = ''; chatComposerUpdate(ta);
+    return;
+  }
   const ex = e.target.closest('[data-explain]');
   if (ex) { ex.classList.toggle('open'); return; }
   const ev = e.target.closest('#evTabs i');
