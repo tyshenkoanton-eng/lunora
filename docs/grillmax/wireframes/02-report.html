@@ -893,11 +893,12 @@
   .card-it .price { font-size: 13px; font-weight: 700; color: var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
   .card-it.locked { opacity: .55; }
   /* пакеты запросов: число цифрами, выгода и «Популярное» */
-  .card-it .pc .t { display: inline-flex; align-items: center; gap: 7px; }
   .card-it .save { display: block; font-size: 11.5px; font-weight: 600; color: var(--note); margin-top: 3px; }
-  .poptag { font-size: 9.5px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase;
-            color: var(--paper); background: var(--note); border-radius: 999px; padding: 2px 7px; }
-  .card-it.pop { border-color: var(--note); background: var(--note-bg); }
+  .card-it.pop { position: relative; border-color: var(--note); background: var(--note-bg); margin-top: 7px; }
+  /* «Популярное» — по центру верхней линии карточки (бейдж на границе) */
+  .poptag { position: absolute; top: 0; left: 50%; transform: translate(-50%, -50%);
+            font-size: 9.5px; font-weight: 700; letter-spacing: .03em; text-transform: uppercase; white-space: nowrap;
+            color: var(--paper); background: var(--note); border-radius: 999px; padding: 3px 9px; }
   .card-it.flat { cursor: default; background: var(--wire-fill); border-color: transparent; }
   .card-it.flat .chev { display: none; }
   .secn { display: inline-block; min-width: 15px; margin-right: 5px; font-size: 10.5px; color: var(--ink-faint); font-weight: 700; font-variant-numeric: tabular-nums; }
@@ -1672,8 +1673,13 @@
   /* плашка пустого баланса: системное уведомление на всю ширину ленты (не реплика Луноры) */
   .emptybar { background: var(--warn-bg); border: 1px solid var(--warn-line); border-radius: 12px; padding: 14px 15px; }
   .emptybar p { margin: 0; font-size: 13px; line-height: 1.55; color: var(--ink); }
+  .emptybar p + p { margin-top: 10px; }
   .emptybtns { display: flex; flex-direction: column; gap: 8px; margin-top: 13px; }
   .emptybtns .w-btn { margin: 0; min-height: 42px; font-size: 13.5px; }
+  /* недоставленное сообщение: тот же бабл, но с красной точкой слева */
+  .bqrow.und { display: flex; align-items: center; justify-content: flex-end; gap: 7px; }
+  .bqrow.und .bq { margin-left: 0; }
+  .undot { width: 7px; height: 7px; border-radius: 50%; background: var(--bad); flex: 0 0 auto; }
 
   /* статичный футер: не прокручивается с лентой; отступ до меню равен боковым (16px) */
   .composer { flex: 0 0 auto; display: flex; gap: 8px; align-items: flex-start;
@@ -1941,7 +1947,7 @@
           <div class="sheet-h">Пополнение баланса</div>
           <div class="cards">
             <div class="card-it" data-prod="q3"><div class="pc"><div class="t">3 запроса</div></div><div class="price">149 ₽</div></div>
-            <div class="card-it pop" data-prod="q10"><div class="pc"><div class="t">10 запросов <span class="poptag">Популярное</span></div><span class="save">выгоднее на 30%</span></div><div class="price">349 ₽</div></div>
+            <div class="card-it pop" data-prod="q10"><span class="poptag">Популярное</span><div class="pc"><div class="t">10 запросов</div><span class="save">выгоднее на 30%</span></div><div class="price">349 ₽</div></div>
             <div class="card-it" data-prod="q50"><div class="pc"><div class="t">50 запросов</div><span class="save">выгоднее на 50%</span></div><div class="price">1 240 ₽</div></div>
           </div>
           <div class="orfree" data-go="invite">
@@ -6866,21 +6872,27 @@ const CHAT_FOLLOWUP_PROOF = `<div class="proofbtn" data-proof="1"><span>◈</spa
     <div class="pr"><u>Нумерология</u><span>Личный год 7 — углубление, не запуск нового</span></div>
   </div>`;
 function chatSendNow(text) {
-  if (!BARS[BAL].q) { chatEmptyNotice(); return; }
+  if (!BARS[BAL].q) { chatEmptyNotice(text); return; }
   playAsk(document.querySelector('.chatwrap .stream'), text, CHAT_FOLLOWUP_A, CHAT_FOLLOWUP_PROOF);
 }
-/* пустой баланс: вместо пейвола — плашка-уведомление на всю ширину прямо в ленте (как в Claude Code).
-   Это биллинговый статус, а не реплика Луноры, поэтому без аватара и бабла.
-   Введённый текст не публикуется, а остаётся черновиком в поле ввода. */
+/* пустой баланс: вместо пейвола — недоставленное сообщение (с красной точкой) и ниже
+   плашка-уведомление на всю ширину (биллинговый статус, без аватара и бабла). */
 let CHAT_SEND_PENDING = '';
 const CHAT_EMPTYBAR = `<div class="emptybar">
-  <p>На вашем балансе не осталось доступных запросов. Чтобы продолжить общение, пополните баланс. Вы также можете пригласить друзей: каждый приглашённый добавит 10 запросов на баланс.</p>
+  <p>На вашем балансе не осталось доступных запросов. Чтобы продолжить общение, пополните баланс.</p>
+  <p>Вы также можете пригласить друзей: каждый приглашённый добавит 10 запросов на баланс.</p>
   <div class="emptybtns"><button class="w-btn" data-topup="1">Пополнить баланс</button><button class="w-btn ghost" data-go="invite">Пригласить друга</button></div>
 </div>`;
-function chatEmptyNotice() {
+function chatEmptyNotice(text) {
   const stream = document.querySelector('.chatwrap .stream');
   if (!stream) return;
-  if (stream.querySelector('.emptybar')) { chatScroll(); return; }   /* плашка уже показана — не дублируем */
+  if (stream.querySelector('.emptybar')) { chatScroll(); return; }   /* уже показано — не дублируем */
+  if (text) {
+    const row = document.createElement('div'); row.className = 'bqrow und';
+    const dot = document.createElement('span'); dot.className = 'undot'; dot.title = 'Не отправлено';
+    const bq = document.createElement('div'); bq.className = 'bq'; bq.textContent = text;
+    row.appendChild(dot); row.appendChild(bq); stream.appendChild(row);   /* недоставленное сообщение */
+  }
   stream.insertAdjacentHTML('beforeend', CHAT_EMPTYBAR);
   chatScroll();
 }
@@ -9576,17 +9588,13 @@ function render(k, push = true, restore = 0) {
   CHAT_TIMERS.forEach(clearTimeout); CHAT_TIMERS = [];
   if (k === 'chatNew') {
     if (!BARS[BAL].q) {
-      if (typeof chatEmptyNotice === 'function') chatEmptyNotice();
-      const ta = document.querySelector('.chatwrap .composer .cfield');   /* отправленный текст остаётся черновиком в поле */
-      if (ta && CHAT_SEND_PENDING) { ta.value = CHAT_SEND_PENDING; chatComposerUpdate(ta); }
+      if (typeof chatEmptyNotice === 'function') chatEmptyNotice(CHAT_SEND_PENDING || 'А если я уйду в своё?');
     } else if (typeof chatNewPlay === 'function') chatNewPlay();
     CHAT_SEND_PENDING = '';
   }
   if (k === 'chat' && typeof chatScroll === 'function') chatScroll();   /* открываем диалог на последнем сообщении */
-  if (k === 'chatPaywall') {
-    if (typeof chatEmptyNotice === 'function') chatEmptyNotice();
-    const ta = document.querySelector('.chatwrap .composer .cfield');     /* демонстрируем состояние «уже упёрлись»: черновик в поле */
-    if (ta) { ta.value = 'А если я уйду в своё?'; chatComposerUpdate(ta); }
+  if (k === 'chatPaywall') {   /* состояние «уже упёрлись»: недоставленное сообщение + плашка */
+    if (typeof chatEmptyNotice === 'function') chatEmptyNotice('А если я уйду в своё?');
   }
   if (k === 'obRun' && typeof calcRun === 'function') calcRun();
   if (k === 'recalcRun' && typeof recalcRunPlay === 'function') recalcRunPlay();
@@ -9771,7 +9779,7 @@ view.addEventListener('click', e => {
     const text = (ta && ta.value || '').trim();
     if (!text) return;
     if (box.hasAttribute('data-chatgo')) { CHAT_SEND_PENDING = text; render(box.dataset.chatgo); return; }  /* список → новый диалог */
-    if (!BARS[BAL].q) { chatEmptyNotice(); return; }  /* пустой баланс → плашка в ленте, текст остаётся черновиком в поле */
+    if (!BARS[BAL].q) { chatEmptyNotice(text); ta.value = ''; chatComposerUpdate(ta); return; }  /* пустой баланс → недоставленное сообщение + плашка */
     chatSendNow(text);                                                             /* диалог → добавить запрос */
     ta.value = ''; chatComposerUpdate(ta);
     return;
