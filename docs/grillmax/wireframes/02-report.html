@@ -1617,9 +1617,10 @@
   .thr-draft { margin-left: auto; flex: 0 0 auto; font-size: 10.5px; font-weight: 600; color: var(--warn);
                background: var(--warn-bg); border: 1px solid var(--warn-line); border-radius: 5px; padding: 1px 6px; }
   .thr.draft { border-color: var(--warn-line); }
-  /* черновик — подписью на второй строке; плашка плывёт слева, текст обтекает её */
-  .thr-draftline { display: block; -webkit-line-clamp: unset; overflow: visible; }
-  .thr-draftline .thr-draft { float: left; margin: 1px 7px 0 0; }
+  /* черновик — как в Telegram: слово в начале строки, без плашки, текст идёт следом и обтекает */
+  .thr-draftline { display: block; -webkit-line-clamp: unset; }
+  .thr-draftline .thr-draft { margin: 0 5px 0 0; padding: 0; border: 0; background: none;
+                              font-size: 13px; font-weight: 650; color: var(--warn); }
 
   .stream { flex: 1 1 auto; min-height: 0; min-width: 0; overflow-y: auto; padding: 14px 16px 8px; display: flex; flex-direction: column; gap: 14px; }
   /* разделитель даты разговора — по центру, появляется только при смене дня */
