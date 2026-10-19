@@ -10473,7 +10473,14 @@ view.addEventListener('click', e => {
 /* поддержка: раскрытие вопросов и переход в бота поддержки */
 view.addEventListener('click', e => {
   const fq = e.target.closest('.fq .q');
-  if (fq) { fq.parentElement.classList.toggle('open'); return; }
+  if (fq) {
+    const item = fq.parentElement;
+    const opening = !item.classList.contains('open');
+    item.classList.toggle('open');
+    /* при раскрытии подтягиваем ответ в зону видимости, иначе он уходит под нижний край */
+    if (opening) setTimeout(() => item.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 420);
+    return;
+  }
   const sp = e.target.closest('[data-sup]');
   if (sp) {
     /* тема уходит стартовым параметром deep-link; здесь просто помним её для приветствия */
