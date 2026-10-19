@@ -1662,10 +1662,11 @@
   .paywall { background: var(--wire-fill); border-radius: 12px; padding: 16px 15px; }
   .paywall b { font-size: 15px; font-weight: 640; display: block; margin-bottom: 6px; }
   .paywall p { font-size: 12.5px; color: var(--ink-soft); line-height: 1.55; margin: 0; }
-  /* плашка пустого баланса в ленте: две кликабельные надписи под текстом Луноры */
-  .emptyacts { display: flex; flex-wrap: wrap; gap: 8px 18px; margin-top: 10px; }
-  .emptyacts a { font-size: 13px; font-weight: 600; color: var(--note); cursor: pointer; }
-  .emptyacts a + a { color: var(--ink-soft); }
+  /* плашка пустого баланса: системное уведомление на всю ширину ленты (не реплика Луноры) */
+  .emptybar { background: var(--warn-bg); border: 1px solid var(--warn-line); border-radius: 12px; padding: 14px 15px; }
+  .emptybar p { margin: 0; font-size: 13px; line-height: 1.55; color: var(--ink); }
+  .emptybtns { display: flex; flex-direction: column; gap: 8px; margin-top: 13px; }
+  .emptybtns .w-btn { margin: 0; min-height: 42px; font-size: 13.5px; }
 
   /* статичный футер: не прокручивается с лентой; отступ до меню равен боковым (16px) */
   .composer { flex: 0 0 auto; display: flex; gap: 8px; align-items: flex-start;
@@ -6690,8 +6691,7 @@ function chatBar() {
 const CHAT_MAXLEN = 300;
 function composerBar(mode) {
   const attr = mode === 'list' ? 'data-chatgo="chatNew"' : 'data-chatsend="1"';
-  const note = (mode === 'send' && !BARS[BAL].q) ? '<div class="cnote">Запрос сохраним, дальше предложим варианты</div>' : '';
-  return `${note}
+  return `
   <div class="composer" ${attr}>
     <div class="cinput">
       <textarea class="cfield" rows="1" maxlength="${CHAT_MAXLEN}" placeholder="Напишите ваш запрос"></textarea>
@@ -6859,23 +6859,23 @@ const CHAT_FOLLOWUP_PROOF = `<div class="proofbtn" data-proof="1"><span>◈</spa
     <div class="pr"><u>Нумерология</u><span>Личный год 7 — углубление, не запуск нового</span></div>
   </div>`;
 function chatSendNow(text) {
-  if (!BARS[BAL].q) { chatEmptyNotice(text); return; }
+  if (!BARS[BAL].q) { chatEmptyNotice(); return; }
   playAsk(document.querySelector('.chatwrap .stream'), text, CHAT_FOLLOWUP_A, CHAT_FOLLOWUP_PROOF);
 }
-/* пустой баланс: вместо пейвола — сообщение Луноры прямо в ленте (как в Claude Code).
-   Сам запрос пользователя остаётся виден, ниже — плашка с двумя кликабельными путями. */
+/* пустой баланс: вместо пейвола — плашка-уведомление на всю ширину прямо в ленте (как в Claude Code).
+   Это биллинговый статус, а не реплика Луноры, поэтому без аватара и бабла.
+   Введённый текст не публикуется, а остаётся черновиком в поле ввода. */
 let CHAT_SEND_PENDING = '';
-function chatEmptyNotice(text) {
+const CHAT_EMPTYBAR = `<div class="emptybar">
+  <p>На вашем балансе не осталось доступных запросов. Чтобы продолжить общение, пополните баланс. Вы также можете пригласить друзей: каждый приглашённый добавит 10 запросов на баланс.</p>
+  <div class="emptybtns"><button class="w-btn" data-topup="1">Пополнить баланс</button><button class="w-btn ghost" data-go="invite">Пригласить друга</button></div>
+</div>`;
+function chatEmptyNotice() {
   const stream = document.querySelector('.chatwrap .stream');
   if (!stream) return;
-  if (!stream.children.length) stream.insertAdjacentHTML('beforeend', chatDay('Сегодня'));
-  const bq = document.createElement('div'); bq.className = 'bq'; bq.textContent = text; stream.appendChild(bq);
-  const ba = document.createElement('div'); ba.className = 'ba';
-  ba.innerHTML = `<div class="av">${LUNALOGO}</div><div class="btext">` +
-    `<p>Запросы закончились. Ваш запрос сохранён в черновике — отвечу сразу, как пополните баланс.</p>` +
-    `<div class="emptyacts"><a data-topup="1">Пополнить баланс</a><a data-go="invite">Пригласить друга</a></div>` +
-    `</div>`;
-  stream.appendChild(ba); chatScroll();
+  if (stream.querySelector('.emptybar')) { chatScroll(); return; }   /* плашка уже показана — не дублируем */
+  stream.insertAdjacentHTML('beforeend', CHAT_EMPTYBAR);
+  chatScroll();
 }
 /* обновление композера при вводе: счётчик, лимит, активность кнопки, авто-высота */
 function chatComposerUpdate(ta) {
@@ -6892,20 +6892,12 @@ function chatComposerUpdate(ta) {
   ta.style.height = ta.scrollHeight + 'px';
 }
 
+/* Ч-03 — состояние «уже упёрлись в пустой баланс»: плашка в ленте и черновик в поле
+   добавляются хуком рендера (render: k === 'chatPaywall'). */
 function buildChatPaywall() { return `<div class="chatwrap">
   ${chatCrumb()}
   ${chatBar()}
-  <div class="stream">
-    ${chatDay('Сегодня')}
-    <div class="bq">А если я уйду в своё?</div>
-    <div class="ba">
-      <div class="av">${LUNALOGO}</div>
-      <div class="btext">
-        <p>Запросы закончились. Ваш запрос сохранён в черновике — отвечу сразу, как пополните баланс.</p>
-        <div class="emptyacts"><a data-topup="1">Пополнить баланс</a><a data-go="invite">Пригласить друга</a></div>
-      </div>
-    </div>
-  </div>
+  <div class="stream"></div>
   ${composerBar('send')}
 </div>`; }
 Object.defineProperty(S, "chatPaywall", { get: buildChatPaywall });
@@ -9561,9 +9553,17 @@ function render(k, push = true, restore = 0) {
   if (k.startsWith('ob') && typeof obRestore === 'function') obRestore(k);
   CHAT_TIMERS.forEach(clearTimeout); CHAT_TIMERS = [];
   if (k === 'chatNew') {
-    if (!BARS[BAL].q) { if (typeof chatEmptyNotice === 'function') chatEmptyNotice(CHAT_SEND_PENDING || 'А если я уйду в своё?'); }
-    else if (typeof chatNewPlay === 'function') chatNewPlay();
+    if (!BARS[BAL].q) {
+      if (typeof chatEmptyNotice === 'function') chatEmptyNotice();
+      const ta = document.querySelector('.chatwrap .composer .cfield');   /* отправленный текст остаётся черновиком в поле */
+      if (ta && CHAT_SEND_PENDING) { ta.value = CHAT_SEND_PENDING; chatComposerUpdate(ta); }
+    } else if (typeof chatNewPlay === 'function') chatNewPlay();
     CHAT_SEND_PENDING = '';
+  }
+  if (k === 'chatPaywall') {
+    if (typeof chatEmptyNotice === 'function') chatEmptyNotice();
+    const ta = document.querySelector('.chatwrap .composer .cfield');     /* демонстрируем состояние «уже упёрлись»: черновик в поле */
+    if (ta) { ta.value = 'А если я уйду в своё?'; chatComposerUpdate(ta); }
   }
   if (k === 'obRun' && typeof calcRun === 'function') calcRun();
   if (k === 'recalcRun' && typeof recalcRunPlay === 'function') recalcRunPlay();
@@ -9748,7 +9748,7 @@ view.addEventListener('click', e => {
     const text = (ta && ta.value || '').trim();
     if (!text) return;
     if (box.hasAttribute('data-chatgo')) { CHAT_SEND_PENDING = text; render(box.dataset.chatgo); return; }  /* список → новый диалог */
-    if (!BARS[BAL].q) { chatEmptyNotice(text); ta.value = ''; chatComposerUpdate(ta); return; }  /* пустой баланс → плашка в ленте */
+    if (!BARS[BAL].q) { chatEmptyNotice(); return; }  /* пустой баланс → плашка в ленте, текст остаётся черновиком в поле */
     chatSendNow(text);                                                             /* диалог → добавить запрос */
     ta.value = ''; chatComposerUpdate(ta);
     return;
