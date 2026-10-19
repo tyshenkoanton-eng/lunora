@@ -9693,7 +9693,13 @@ view.addEventListener('click', e => {
   const cl = e.target.closest('[data-close]');
   if (cl) { cl.parentElement.remove(); return; }
   const pb = e.target.closest('[data-proof]');
-  if (pb) { pb.nextElementSibling.classList.toggle('show'); return; }
+  if (pb) {
+    const box = pb.nextElementSibling;
+    const opening = !box.classList.contains('show');
+    box.classList.toggle('show');
+    if (opening) setTimeout(() => box.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 30);
+    return;
+  }
   if (e.target.closest('[data-chatdel]')) { popShow('chatDelSheet'); return; }
   const sendBtn = e.target.closest('.composer .send');
   if (sendBtn) {
