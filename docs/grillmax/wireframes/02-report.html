@@ -1617,6 +1617,10 @@
   .thr-draft { margin-left: auto; flex: 0 0 auto; font-size: 10.5px; font-weight: 600; color: var(--warn);
                background: var(--warn-bg); border: 1px solid var(--warn-line); border-radius: 5px; padding: 1px 6px; }
   .thr.draft { border-color: var(--warn-line); }
+  /* черновик теперь подписью на второй строке, перед «Запрос сохранён» */
+  .thr-draftline { display: flex; align-items: center; gap: 7px; -webkit-line-clamp: unset; }
+  .thr-draftline .thr-draft { margin-left: 0; }
+  .thr-draftline > span:last-child { min-width: 0; flex: 1; }
 
   .stream { flex: 1 1 auto; min-height: 0; min-width: 0; overflow-y: auto; padding: 14px 16px 8px; display: flex; flex-direction: column; gap: 14px; }
   /* разделитель даты разговора — по центру, появляется только при смене дня */
@@ -6652,7 +6656,7 @@ function chatBar() {
   const q = BARS[BAL].q;
   /* приглашение из полосы чата убрано: рефералка живёт в Профиле и Настройках.
      Слева остаток баланса, справа всегда действие «Пополнить» (→ раздел «Разговор»). */
-  const value = q ? МЕТКА() : 'пуст';
+  const value = q ? МЕТКА() : 'ноль запросов';
   const cls = q ? 'chatbar' : 'chatbar empty';
   return `<div class="${cls}"><span class="bal"><u>Баланс</u><b>${value}</b></span><a class="topup" data-go="shopTalk">Пополнить баланс</a></div>`;
 }
@@ -6688,8 +6692,8 @@ function buildChatList() { return `<div class="chatwrap">
   </div>` : `<div class="threads">
     <h2 class="t-title" style="font-size:21px;margin:0 0 2px">Чаты</h2>
     ${!BARS[BAL].q ? `<div class="thr draft" data-go="chatPaywall">
-      <div class="thr-h"><b>А если я уйду в своё?</b><span class="thr-draft">Черновик</span></div>
-      <div class="thr-l">Запрос сохранён. Ответ придёт, как пополните баланс.</div>
+      <div class="thr-h"><b>А если я уйду в своё?</b></div>
+      <div class="thr-l thr-draftline"><span class="thr-draft">Черновик</span><span>Запрос сохранён. Ответ придёт, как пополните баланс.</span></div>
     </div>` : ''}
     <div class="thr new" data-go="chat">
       <div class="thr-h"><b>Разговор про Дмитрия</b><span class="thr-dot"></span></div>
