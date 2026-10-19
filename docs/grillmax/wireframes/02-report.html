@@ -1643,18 +1643,18 @@
   .paywall b { font-size: 15px; font-weight: 640; display: block; margin-bottom: 6px; }
   .paywall p { font-size: 12.5px; color: var(--ink-soft); line-height: 1.55; margin: 0; }
 
-  .composer { position: sticky; bottom: 0; display: flex; flex-direction: column; gap: 4px;
-              margin: 8px 16px 12px; padding: 8px 8px 6px; background: var(--wire-fill); border-radius: 16px; }
+  .composer { position: sticky; bottom: 0; display: flex; gap: 8px; align-items: flex-end;
+              margin: 8px 16px 0; padding: 8px; background: var(--wire-fill); border-radius: 16px; }
   .composer.dim { opacity: .45; }
-  .composer .crow { display: flex; gap: 8px; align-items: flex-end; }
-  .cfield { flex: 1; min-height: 42px; max-height: 110px; padding: 11px 13px; background: var(--card);
+  .cfield { flex: 1; min-height: 42px; padding: 11px 13px; background: var(--card);
             border: none; outline: none; resize: none; border-radius: 18px; font: inherit; font-size: 13.5px;
-            line-height: 1.35; color: var(--ink); box-sizing: border-box; overflow-y: auto; }
+            line-height: 1.35; color: var(--ink); box-sizing: border-box; overflow: hidden; }
   .cfield::placeholder { color: var(--ink-faint); }
   .send { width: 42px; height: 42px; border-radius: 999px; background: var(--ink-soft); border: none; flex: 0 0 auto;
           display: grid; place-items: center; font-size: 17px; color: var(--paper); cursor: pointer; }
   .send.off { background: var(--wire-fill-2); color: var(--ink-faint); cursor: default; }
-  .climit { align-self: flex-end; font-size: 10.5px; color: var(--ink-faint); padding: 0 8px;
+  /* счётчик символов — под блоком ввода, по правому краю */
+  .climit { text-align: right; font-size: 10.5px; color: var(--ink-faint); margin: 4px 20px 10px;
             font-variant-numeric: tabular-nums; }
   .climit.near { color: var(--warn); }
   .climit.full { color: var(--warn); font-weight: 700; }
@@ -6630,23 +6630,21 @@ function chatBar() {
 /* Низ экрана: реальное поле ввода (в прототипе можно печатать). Кнопка отправки
    неактивна, пока поле пустое. Есть счётчик символов и лимит на один запрос.
    mode='list' — отправка открывает новый диалог; mode='send' — добавляет запрос в ленту. */
-const CHAT_MAXLEN = 500;
+const CHAT_MAXLEN = 300;
 function composerBar(mode) {
   const attr = mode === 'list' ? 'data-chatgo="chatNew"' : 'data-chatsend="1"';
   const note = (mode === 'send' && !BARS[BAL].q) ? '<div class="cnote">Запрос сохраним, дальше предложим варианты</div>' : '';
   return `${note}
   <div class="composer" ${attr}>
-    <div class="crow">
-      <textarea class="cfield" rows="1" maxlength="${CHAT_MAXLEN}" placeholder="Напишите ваш запрос"></textarea>
-      <div class="send off">↑</div>
-    </div>
-    <div class="climit"><span class="cl-num">0</span> / ${CHAT_MAXLEN}</div>
-  </div>`;
+    <textarea class="cfield" rows="1" maxlength="${CHAT_MAXLEN}" placeholder="Напишите ваш запрос"></textarea>
+    <div class="send off">↑</div>
+  </div>
+  <div class="climit"><span class="cl-num">0</span> / ${CHAT_MAXLEN}</div>`;
 }
 
 /* временный лого-аватар Луноры: треугольник и вписанная в него окружность.
    Концепция с фазами луны убрана — одна марка на все ветки. */
-const LUNALOGO = `<svg class="luna-logo" viewBox="0 0 20 20" stroke-linejoin="round"><path d="M10 3 L17 15.12 L3 15.12 Z"/><circle cx="10" cy="11.08" r="2.7"/></svg>`;
+const LUNALOGO = `<svg class="luna-logo" viewBox="0 0 20 20" stroke-linejoin="round"><path d="M10 3 L17 15.12 L3 15.12 Z"/></svg>`;
 
 function buildChatList() { return `<div class="chatwrap">
   ${chatBar()}
@@ -6794,11 +6792,14 @@ function chatComposerUpdate(ta) {
   const box = ta.closest('.composer'); if (!box) return;
   const len = ta.value.length;
   box.querySelector('.send').classList.toggle('off', len === 0);
-  const num = box.querySelector('.cl-num'); if (num) num.textContent = len;
-  const cl = box.querySelector('.climit');
-  if (cl) { cl.classList.toggle('full', len >= CHAT_MAXLEN); cl.classList.toggle('near', len >= CHAT_MAXLEN - 40 && len < CHAT_MAXLEN); }
-  ta.style.height = 'auto';
-  ta.style.height = Math.min(ta.scrollHeight, 110) + 'px';
+  const cl = box.nextElementSibling;   /* счётчик — отдельный блок под композером */
+  if (cl && cl.classList.contains('climit')) {
+    const num = cl.querySelector('.cl-num'); if (num) num.textContent = len;
+    cl.classList.toggle('full', len >= CHAT_MAXLEN);
+    cl.classList.toggle('near', len >= CHAT_MAXLEN - 30 && len < CHAT_MAXLEN);
+  }
+  ta.style.height = 'auto';            /* поле растёт по содержимому, без внутреннего скролла */
+  ta.style.height = ta.scrollHeight + 'px';
 }
 
 S.chatPaywall = `<div class="chatwrap">
@@ -6821,7 +6822,7 @@ S.chatPaywall = `<div class="chatwrap">
     </div>
   </div>
   <div class="composer dim">
-    <div class="crow"><div class="cfield" style="color:var(--ink-faint)">Напишите ваш запрос</div><div class="send off">↑</div></div>
+    <div class="cfield" style="color:var(--ink-faint)">Напишите ваш запрос</div><div class="send off">↑</div>
   </div>
 </div>`;
 
