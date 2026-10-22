@@ -6881,13 +6881,18 @@ function chatEmptyNotice(text) {
     row.appendChild(dot); row.appendChild(bq); stream.appendChild(row);   /* недоставленное сообщение */
   }
   stream.insertAdjacentHTML('beforeend', CHAT_EMPTYBAR);
+  const ta = document.querySelector('.chatwrap .composer .cfield');   /* плашка показана → кнопка отправки гаснет */
+  if (ta) chatComposerUpdate(ta);
   chatScroll();
 }
 /* обновление композера при вводе: счётчик, лимит, активность кнопки, авто-высота */
 function chatComposerUpdate(ta) {
   const box = ta.closest('.composer'); if (!box) return;
   const len = ta.value.length;
-  box.querySelector('.send').classList.toggle('off', len === 0);
+  /* упёрлись в пустой баланс (плашка уже показана) — кнопка отправки неактивна */
+  const wrap = box.closest('.chatwrap');
+  const hitWall = !BARS[BAL].q && wrap && wrap.querySelector('.emptybar');
+  box.querySelector('.send').classList.toggle('off', len === 0 || !!hitWall);
   const cl = box.querySelector('.climit');   /* счётчик внутри блока, под полем */
   if (cl) {
     const num = cl.querySelector('.cl-num'); if (num) num.textContent = len;
@@ -9530,6 +9535,9 @@ function render(k, push = true, restore = 0) {
   REG_UNDER = null;
   if (push && k !== cur) hist.push([cur, view.scrollTop]);
   cur = k;
+  /* на пейволе баланс всегда пуст: иначе прямой переход (карточка-черновик) мог оставить
+     баланс «free», и отправка запускала расчёт вместо плашки */
+  if (k === 'chatPaywall') { BAL = 'empty'; document.querySelectorAll('#balsw b').forEach(x => x.classList.toggle('on', x.dataset.bal === 'empty')); }
   const payAlt = payStateFor(k);
   view.innerHTML = payAlt !== null ? payAlt : (k === 'К-12') ? receiptHTML() : (k === 'К-11') ? refundScreen() : (k === 'К-10') ? paymentScreen() : (k === 'К-09') ? paymentHistory() : S[k];
   view.querySelectorAll('.card-it').forEach(c => {
