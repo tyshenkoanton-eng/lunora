@@ -7041,18 +7041,18 @@ function buildShop() { return `<div class="pad">
       </div>
       <div class="shopcat" data-go="shopChild">
         <svg class="ci" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.35"><circle cx="10" cy="6.3" r="3"/><path d="M4.6 16.4c0-3 2.4-5.2 5.4-5.2s5.4 2.2 5.4 5.2"/></svg>
-        <div><h3>Ребёнок</h3><ul><li>Натальная карта ребёнка</li><li>Выбор имени ребёнка</li></ul></div>
+        <div><h3>Ребёнок</h3><ul><li>Разбор личности ребёнка</li><li>Выбор имени ребёнка</li></ul></div>
         <div class="chev">›</div>
       </div>
       <div class="shopcat" data-prod="date">
         <svg class="ci" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.35"><rect x="3.3" y="4.5" width="13.4" height="12.2" rx="2"/><path d="M3.3 8h13.4M7 4.5V2.7M13 4.5V2.7"/></svg>
-        <div><h3>Разбор даты</h3><p class="catdesc">Разбираем конкретный день по вашей карте: чего от него ждать и подходит ли он для важного шага.</p></div>
+        <div><h3>Разбор даты</h3><p class="catdesc">Выбрать удачный день для важного события или разобрать уже назначенную дату — по вашей карте, а не по общему календарю.</p></div>
         <div class="chev">›</div>
       </div>
     </div>
 
     <div class="giftsep">
-      <p class="gift-lede">Вы можете подарить любой разбор другому человеку.</p>
+      <p class="gift-lede">Вы можете подарить разбор другому человеку.</p>
       <div class="shopcat gift" data-go="shopGift">
         <svg class="ci" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.35"><rect x="3.3" y="8.6" width="13.4" height="7.9" rx="1.3"/><path d="M3.3 11.6h13.4M10 8.6v7.9M10 8.6C8.3 5.4 4.6 7.3 10 8.6M10 8.6C11.7 5.4 15.4 7.3 10 8.6"/></svg>
         <div><h3>Подарить разбор</h3><ul><li>Полный разбор личности</li><li>Прогноз на год</li></ul></div>
@@ -7072,7 +7072,7 @@ function buildShop() { return `<div class="pad">
     <div class="sec-label">Про людей</div>
     <div class="cards">
       <div class="doc" data-res="compat"><b>Дмитрий Сергеевич Ковалёв</b><span>Совместимость · любовь и отношения</span></div>
-      <div class="doc" data-res="child"><b>Софья Дмитриевна Тыщенко</b><span>Натальная карта ребёнка</span></div>
+      <div class="doc" data-res="child"><b>Софья Дмитриевна Тыщенко</b><span>Разбор личности ребёнка</span></div>
       <div class="doc" data-res="childName"><b>Ева · Мария · Анна</b><span>Выбор имени</span></div>
     </div>
 
@@ -7139,7 +7139,7 @@ S.shopPeople = `<div class="pad">
 
   <div class="sec-label">Мой ребёнок</div>
   <div class="cards">
-    <div class="card-it" data-prod="child"><div><div class="t">Натальная карта ребёнка</div><span class="s">Его карта, что с этим делать вам и где вы не совпадаете</span></div><div class="price">1 490 ₽</div></div>
+    <div class="card-it" data-prod="child"><div><div class="t">Разбор личности ребёнка</div><span class="s">Его карта, что с этим делать вам и где вы не совпадаете</span></div><div class="price">1 490 ₽</div></div>
     <div class="card-it" data-prod="childName"><div><div class="t">Выбор имени ребёнка</div><span class="s">Проверим ваши варианты и предложим свои</span></div><div class="price">990 ₽</div></div>
   </div>
 
@@ -7152,7 +7152,7 @@ S.shopChild = `<div class="pad">
   <h2 class="t-title" style="font-size:21px">Ребёнок</h2>
   <p class="d-lede">Карта ребёнка по его дате рождения и помощь с выбором имени.</p>
   <div class="cards">
-    <div class="card-it" data-prod="child"><div><div class="t">Натальная карта ребёнка</div><span class="s">Его карта, что с этим делать вам и где вы не совпадаете</span></div><div class="price">1 490 ₽</div></div>
+    <div class="card-it" data-prod="child"><div><div class="t">Разбор личности ребёнка</div><span class="s">Его карта, что с этим делать вам и где вы не совпадаете</span></div><div class="price">1 490 ₽</div></div>
     <div class="card-it" data-prod="childName"><div><div class="t">Выбор имени ребёнка</div><span class="s">Проверим ваши варианты и предложим свои</span></div><div class="price">990 ₽</div></div>
   </div>
 </div>`;
@@ -7820,7 +7820,7 @@ function recalcRunPlay() {
 /* документы, затронутые пересчётом: показываем списком, каждый отдельной карточкой.
    Непрочитанные (ещё не открытые) помечаем точкой, как непрочитанный чат.
    RECALC_SEEN помнит открытые, сбрасывается в начале новой анимации пересчёта.
-   Натальная карта ребёнка и выбор имени строятся по данным ребёнка — их пересчёт
+   Разбор личности ребёнка и выбор имени строятся по данным ребёнка — их пересчёт
    данных родителя не затрагивает, поэтому в список не попадают. */
 const RECALC_DOCS = [
   ['pdf', 'Разбор личности', 'PDF'],
@@ -7925,7 +7925,7 @@ const PROD = {
     res:'Антон и Дмитрий', resPhrase:'Вы оба выдерживаете подолгу — и оба не говорите, когда стало тяжело.'
   },
   child: {
-    t:'Натальная карта ребёнка', price:'1 490 ₽', crumb:'Разборы · про людей',
+    t:'Разбор личности ребёнка', price:'1 490 ₽', crumb:'Разборы · про людей',
     lead:'Его карта целиком плюс то, что с этим делать вам. И где вы с ним не совпадаете — этого нельзя получить, заведя ему отдельный аккаунт.',
     sell:[
       ['Какой он на самом деле','Не «спокойный» или «трудный», а как устроен: что его успокаивает, от чего он закрывается, чего от него бесполезно требовать.'],
@@ -10392,7 +10392,7 @@ const PEOPLE = {
   d: { fio: 'Ковалёв Дмитрий Сергеевич', name: 'Дмитрия', acc: 'Дмитрия', sex: 'm', born: '17 августа 1981', city: 'Ростов-на-Дону',
        slot: true, docs: [['Совместимость', 'Любовь и отношения', 'compat']] },
   s: { fio: 'Тыщенко Софья Дмитриевна', name: 'Софьи', acc: 'Софью', sex: 'f', born: '9 мая 2019', city: 'Волгоград',
-       slot: false, docs: [['Натальная карта ребёнка', '', 'child'], ['Выбор имени', 'Ева · Мария · Анна', 'childName']] },
+       slot: false, docs: [['Разбор личности ребёнка', '', 'child'], ['Выбор имени', 'Ева · Мария · Анна', 'childName']] },
   o: { fio: 'Тыщенко Ольга Николаевна', name: 'Ольги', acc: 'Ольгу', sex: 'f', born: '3 марта 1958', city: 'Камышин',
        slot: false, docs: [] }
 };
