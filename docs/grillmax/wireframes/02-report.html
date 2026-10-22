@@ -1764,6 +1764,11 @@
   .doc b { grid-column: 1; }
 
   /* плитки витрины */
+  /* витрина «Что считаем»: горизонтальные блоки с иконкой и расшифровкой */
+  .shoprows { display: flex; flex-direction: column; gap: 9px; margin-top: 4px; }
+  .giftsep { margin-top: 20px; padding-top: 17px; border-top: 1px solid var(--rule-soft); }
+  .gift-lede { font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; margin: 0 0 11px; }
+  .card-it.gift { background: var(--wire-fill); border-style: dashed; }
   .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
   .tile { border: 1px solid var(--rule); border-radius: 14px; padding: 16px 12px 12px; aspect-ratio: 0.72;
           display: flex; flex-direction: column; cursor: pointer; background: var(--card); }
@@ -7012,20 +7017,36 @@ function buildShop() { return `<div class="pad">
   <div class="segtabs" id="plTabs"><i class="${SHOPTAB==='list'?'on':''}" data-ptab="list">Что считаем</i><i class="${SHOPTAB==='docs'?'on':''}" data-ptab="docs">Мои разборы</i></div>
 
   <div id="plList" style="display:${SHOPTAB==='list'?'block':'none'}">
-    <div class="talkcard" data-topup="1">
-      <div class="tc-top"><b>Разговор с Лунорой</b><em>от 149 ₽</em></div>
-      <div class="tc-foot"><span>Спросить о том, что происходит прямо сейчас — она отвечает по вашей карте, а не общими словами</span></div>
+    <div class="shoprows">
+      <div class="card-it ic" data-go="shopMe">
+        <svg class="ticon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="2.3"/></svg>
+        <div><div class="t">Про меня</div><span class="s">Карта на год, смена имени или фамилии, PDF вашей карты</span></div>
+        <div class="chev">›</div>
+      </div>
+      <div class="card-it ic" data-go="shopPeople">
+        <svg class="ticon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7.6" cy="10" r="5.3"/><circle cx="12.4" cy="10" r="5.3"/></svg>
+        <div><div class="t">Про людей</div><span class="s">Совместимость, натальная карта ребёнка, выбор имени</span></div>
+        <div class="chev">›</div>
+      </div>
+      <div class="card-it ic" data-prod="date">
+        <svg class="ticon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3.5" y="4.5" width="13" height="12" rx="2"/><path d="M3.5 8h13M7 4.5V2.8M13 4.5V2.8"/></svg>
+        <div><div class="t">Разбор даты</div><span class="s">Чего ждать от конкретного дня по вашей карте</span></div>
+        <div class="chev">›</div>
+      </div>
+      <div class="card-it ic" data-topup="1">
+        <svg class="ticon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 5.6A1.6 1.6 0 0 1 5.6 4h8.8a1.6 1.6 0 0 1 1.6 1.6v5.2a1.6 1.6 0 0 1-1.6 1.6H8l-3 2.6v-2.6H5.6A1.6 1.6 0 0 1 4 10.8z"/></svg>
+        <div><div class="t">Разговор с Лунорой</div><span class="s">Спросить о том, что происходит прямо сейчас</span></div>
+        <div class="price">от 149 ₽</div>
+      </div>
     </div>
 
-    <div class="tiles">
-      <div class="tile" data-go="shopMe"><b>Про меня</b>
-        <svg viewBox="0 0 100 80" class="til"><circle cx="50" cy="38" r="22" fill="none"/><circle cx="50" cy="38" r="7" fill="none"/></svg></div>
-      <div class="tile" data-go="shopPeople"><b>Про людей</b>
-        <svg viewBox="0 0 100 80" class="til"><circle cx="38" cy="38" r="20" fill="none"/><circle cx="62" cy="38" r="20" fill="none"/></svg></div>
-      <div class="tile" data-prod="date"><b>Разбор даты</b>
-        <svg viewBox="0 0 100 80" class="til"><rect x="27" y="18" width="46" height="42" rx="4" fill="none"/><line x1="27" y1="30" x2="73" y2="30"/><line x1="43" y1="30" x2="43" y2="60"/><line x1="58" y1="30" x2="58" y2="60"/><line x1="27" y1="45" x2="73" y2="45"/></svg></div>
-      <div class="tile" data-go="shopGift"><b>Подарить разбор</b>
-        <svg viewBox="0 0 100 80" class="til"><rect x="28" y="30" width="44" height="30" rx="3" fill="none"/><line x1="28" y1="40" x2="72" y2="40"/><line x1="50" y1="30" x2="50" y2="60"/><path d="M50 30 C 42 18, 34 22, 50 30 C 58 18, 66 22, 50 30" fill="none"/></svg></div>
+    <div class="giftsep">
+      <p class="gift-lede">Любой разбор можно подарить тому, кому он будет интересен: человек введёт свои данные сам, вы их не увидите.</p>
+      <div class="card-it ic gift" data-go="shopGift">
+        <svg class="ticon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3.5" y="8.5" width="13" height="8" rx="1.2"/><path d="M3.5 11.5h13M10 8.5v8M10 8.5C8.4 5.4 4.8 7.2 10 8.5M10 8.5C11.6 5.4 15.2 7.2 10 8.5"/></svg>
+        <div><div class="t">Подарить разбор</div><span class="s">Полный разбор, карта на год или карта ребёнка</span></div>
+        <div class="chev">›</div>
+      </div>
     </div>
   </div>
 
