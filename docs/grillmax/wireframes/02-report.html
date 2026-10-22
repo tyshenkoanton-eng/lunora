@@ -1774,6 +1774,8 @@
   .shopcat li { font-size: 13px; color: var(--ink-soft); line-height: 1.35; padding-left: 15px; position: relative; }
   .shopcat li::before { content: ""; position: absolute; left: 1px; top: 6px; width: 4px; height: 4px; border-radius: 50%; background: var(--ink-faint); }
   .shopcat .catdesc { font-size: 13px; color: var(--ink-soft); line-height: 1.45; margin: 0; }
+  /* строка периода на карточке выбора школы: видно, с какого по какое число считает школа */
+  .card-it .perline { display: block; font-size: 11px; color: var(--ink-faint); margin-top: 5px; font-variant-numeric: tabular-nums; }
   .shopcat .chev { color: var(--ink-faint); font-size: 20px; font-weight: 300; align-self: center; }
   .giftsep { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--rule-soft); }
   .gift-lede { font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; margin: 0 0 12px; }
@@ -7159,14 +7161,14 @@ S.shopChild = `<div class="pad">
 S.shopYear = `<div class="pad">
   <div class="dochead" data-go="shopMe"><span>&lsaquo;</span><div>Назад · Про меня</div></div>
   <h2 class="t-title" style="font-size:21px">Прогноз на год</h2>
-  <p class="d-lede">Единого прогноза на год не бывает: каждая школа считает год по-своему и с разной глубиной. Поэтому прогноз мы строим по одной школе на ваш выбор, а не склеиваем в усреднённое.</p>
+  <p class="d-lede">Единого прогноза на год не бывает: школы считают год по-разному и даже начинают его с разных дат. Поэтому прогноз строим по одной школе на ваш выбор, а не склеиваем в усреднённое. У каждой карточки указан период — видно, с какого числа по какое она считает.</p>
 
   <div class="sec-label">По какой школе построить</div>
   <div class="cards">
-    <div class="card-it" data-prod="yearWest"><div><div class="t">Западная астрология</div><span class="s">Соляр и ключевые транзиты года — самый подробный годовой срез</span></div><div class="price">1 990 ₽</div></div>
-    <div class="card-it" data-prod="yearVedic"><div><div class="t">Ведическая астрология</div><span class="s">Периоды даш и варшапхала — какой этап идёт и чем он окрашен</span></div><div class="price">1 990 ₽</div></div>
-    <div class="card-it" data-prod="yearBazi"><div><div class="t">Ба-Цзы</div><span class="s">Годовой столп: как год взаимодействует с вашей картой</span></div><div class="price">1 490 ₽</div></div>
-    <div class="card-it" data-prod="yearNum"><div><div class="t">Нумерология</div><span class="s">Личный год — короткий контур темы и настроя года</span></div><div class="price">990 ₽</div></div>
+    <div class="card-it" data-prod="yearWest"><div><div class="t">Западная астрология</div><span class="s">Соляр и ключевые транзиты года — самый подробный годовой срез</span><span class="perline">От дня рождения · 4 фев 2026 — 4 фев 2027</span></div><div class="price">1 990 ₽</div></div>
+    <div class="card-it" data-prod="yearVedic"><div><div class="t">Ведическая астрология</div><span class="s">Периоды даш и варшапхала — какой этап идёт и чем он окрашен</span><span class="perline">От дня рождения · 4 фев 2026 — 4 фев 2027 (даши идут непрерывно)</span></div><div class="price">1 990 ₽</div></div>
+    <div class="card-it" data-prod="yearBazi"><div><div class="t">Ба-Цзы</div><span class="s">Годовой столп: как год взаимодействует с вашей картой</span><span class="perline">От начала весны · 4 фев 2026 — 3 фев 2027</span></div><div class="price">1 490 ₽</div></div>
+    <div class="card-it" data-prod="yearNum"><div><div class="t">Нумерология</div><span class="s">Личный год — короткий контур темы и настроя года</span><span class="perline">Календарный год · 1 янв — 31 дек 2026</span></div><div class="price">990 ₽</div></div>
   </div>
 
   <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:14px">Школы честно расходятся в том, как видят год. Можно взять одну сейчас и добрать другую позже — они дополняют друг друга.</p>
@@ -8009,7 +8011,7 @@ const PROD = {
   },
   yearWest: {
     t:'Прогноз на год · западная', price:'1 990 ₽', crumb:'Разборы · прогноз на год',
-    lead:'Соляр на 4 февраля 2026 и ключевые транзиты года. Самый подробный годовой срез из четырёх школ.',
+    lead:'Соляр на 4 февраля 2026 и ключевые транзиты года. Самый подробный годовой срез из четырёх школ.', period:'от дня рождения, 4 фев 2026 — 4 фев 2027',
     sell:[
       ['Соляр','Карта на момент возврата Солнца — с каким характером приходит год именно к вам.'],
       ['Транзиты по датам','Где разгон, где спад, когда лучше не начинать — с периодами, а не «во второй половине».'],
@@ -8035,7 +8037,7 @@ const PROD = {
   },
   yearVedic: {
     t:'Прогноз на год · ведическая', price:'1 990 ₽', crumb:'Разборы · прогноз на год',
-    lead:'Варшапхала на новый солнечный год и период даши, который вы сейчас проходите.',
+    lead:'Варшапхала на новый солнечный год и период даши, который вы сейчас проходите.', period:'от дня рождения, 4 фев 2026 — 4 фев 2027 (даши идут непрерывно)',
     sell:[
       ['Какой период идёт','Антардаша внутри большой махадаши — какой этап жизни проходится и чем он окрашен.'],
       ['Варшапхала','Отдельная карта на год: куда смещается акцент по сравнению с прошлым годом.'],
@@ -8055,7 +8057,7 @@ const PROD = {
   },
   yearBazi: {
     t:'Прогноз на год · Ба-Цзы', price:'1 490 ₽', crumb:'Разборы · прогноз на год',
-    lead:'Годовой столп 2026 поверх вашей карты рождения: как энергия года взаимодействует с вами.',
+    lead:'Годовой столп 2026 поверх вашей карты рождения: как энергия года взаимодействует с вами.', period:'от начала весны, 4 фев 2026 — 3 фев 2027',
     sell:[
       ['Стихия года','С какой стихией приходит год и в ладу ли она с вашей картой.'],
       ['Взаимодействия','Где год поддерживает, а где создаёт напряжение — по столпам вашей карты.'],
@@ -8075,7 +8077,7 @@ const PROD = {
   },
   yearNum: {
     t:'Прогноз на год · нумерология', price:'990 ₽', crumb:'Разборы · прогноз на год',
-    lead:'Личный год по вашей дате рождения: короткий, но точный контур темы и настроя года.',
+    lead:'Личный год по вашей дате рождения: короткий, но точный контур темы и настроя года.', period:'календарный год, 1 янв — 31 дек 2026',
     sell:[
       ['Число личного года','Какая цифра у года и что она про него говорит.'],
       ['Тема года','Одна основная тема, под которую стоит подстроить планы.'],
@@ -8168,6 +8170,7 @@ function prodPage() { const p = PROD[CUR]; return `<div class="pad">
   <div class="d-crumb">${p.crumb}</div>
   <h2 class="t-title" style="font-size:21px">${p.t}</h2>
   <p class="d-lede">${p.lead}</p>
+  ${p.period ? `<p style="font-size:11.5px;color:var(--ink-faint);margin:7px 0 0;font-variant-numeric:tabular-nums">Период: ${p.period}</p>` : ''}
   <div class="sec-label">Что внутри</div>
   <div class="body-text">${p.sell.map(([h,t])=>`<p><b>${h}.</b> ${t}</p>`).join('')}</div>
   <div class="sec-label">Что понадобится</div>
