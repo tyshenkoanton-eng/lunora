@@ -1764,11 +1764,19 @@
   .doc b { grid-column: 1; }
 
   /* плитки витрины */
-  /* витрина «Что считаем»: горизонтальные блоки с иконкой и расшифровкой */
-  .shoprows { display: flex; flex-direction: column; gap: 9px; margin-top: 4px; }
-  .giftsep { margin-top: 20px; padding-top: 17px; border-top: 1px solid var(--rule-soft); }
-  .gift-lede { font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; margin: 0 0 11px; }
-  .card-it.gift { background: var(--wire-fill); border-style: dashed; }
+  /* витрина «Что считаем»: крупные блоки с иконкой, названием и буллетами разборов */
+  .shoprows { display: flex; flex-direction: column; gap: 11px; margin-top: 6px; }
+  .shopcat { display: grid; grid-template-columns: 38px 1fr auto; gap: 15px; align-items: start;
+             border: 1px solid var(--rule); border-radius: 15px; padding: 18px 17px; cursor: pointer; background: var(--card); }
+  .shopcat .ci { width: 34px; height: 34px; color: var(--ink-soft); align-self: start; margin-top: 1px; }
+  .shopcat h3 { font-size: 16.5px; font-weight: 650; letter-spacing: -.01em; margin: 1px 0 10px; }
+  .shopcat ul { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px; }
+  .shopcat li { font-size: 13px; color: var(--ink-soft); line-height: 1.35; padding-left: 15px; position: relative; }
+  .shopcat li::before { content: ""; position: absolute; left: 1px; top: 6px; width: 4px; height: 4px; border-radius: 50%; background: var(--ink-faint); }
+  .shopcat .chev { color: var(--ink-faint); font-size: 20px; font-weight: 300; align-self: center; }
+  .giftsep { margin-top: 20px; padding-top: 18px; border-top: 1px solid var(--rule-soft); }
+  .gift-lede { font-size: 12.5px; color: var(--ink-soft); line-height: 1.5; margin: 0 0 12px; }
+  .shopcat.gift { background: var(--wire-fill); border-style: dashed; }
   .tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 9px; }
   .tile { border: 1px solid var(--rule); border-radius: 14px; padding: 16px 12px 12px; aspect-ratio: 0.72;
           display: flex; flex-direction: column; cursor: pointer; background: var(--card); }
@@ -7018,33 +7026,28 @@ function buildShop() { return `<div class="pad">
 
   <div id="plList" style="display:${SHOPTAB==='list'?'block':'none'}">
     <div class="shoprows">
-      <div class="card-it ic" data-go="shopMe">
-        <svg class="ticon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="10" cy="10" r="7"/><circle cx="10" cy="10" r="2.3"/></svg>
-        <div><div class="t">Про меня</div><span class="s">Карта на год, смена имени или фамилии, PDF вашей карты</span></div>
+      <div class="shopcat" data-go="shopMe">
+        <svg class="ci" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.35"><circle cx="10" cy="10" r="7.2"/><circle cx="10" cy="10" r="2.4"/></svg>
+        <div><h3>Про меня</h3><ul><li>Карта на год</li><li>Смена имени или фамилии</li><li>PDF вашей карты</li></ul></div>
         <div class="chev">›</div>
       </div>
-      <div class="card-it ic" data-go="shopPeople">
-        <svg class="ticon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="7.6" cy="10" r="5.3"/><circle cx="12.4" cy="10" r="5.3"/></svg>
-        <div><div class="t">Про людей</div><span class="s">Совместимость, натальная карта ребёнка, выбор имени</span></div>
+      <div class="shopcat" data-go="shopPeople">
+        <svg class="ci" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.35"><circle cx="7.6" cy="10" r="5.4"/><circle cx="12.4" cy="10" r="5.4"/></svg>
+        <div><h3>Про людей</h3><ul><li>С кем вам легко, а с кем трудно</li><li>Совместимость</li><li>Натальная карта ребёнка</li><li>Выбор имени</li></ul></div>
         <div class="chev">›</div>
       </div>
-      <div class="card-it ic" data-prod="date">
-        <svg class="ticon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3.5" y="4.5" width="13" height="12" rx="2"/><path d="M3.5 8h13M7 4.5V2.8M13 4.5V2.8"/></svg>
-        <div><div class="t">Разбор даты</div><span class="s">Чего ждать от конкретного дня по вашей карте</span></div>
+      <div class="shopcat" data-prod="date">
+        <svg class="ci" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.35"><rect x="3.3" y="4.5" width="13.4" height="12.2" rx="2"/><path d="M3.3 8h13.4M7 4.5V2.7M13 4.5V2.7"/></svg>
+        <div><h3>Разбор даты</h3><ul><li>Удачный день для важного события</li><li>Что несёт конкретная дата</li></ul></div>
         <div class="chev">›</div>
-      </div>
-      <div class="card-it ic" data-topup="1">
-        <svg class="ticon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M4 5.6A1.6 1.6 0 0 1 5.6 4h8.8a1.6 1.6 0 0 1 1.6 1.6v5.2a1.6 1.6 0 0 1-1.6 1.6H8l-3 2.6v-2.6H5.6A1.6 1.6 0 0 1 4 10.8z"/></svg>
-        <div><div class="t">Разговор с Лунорой</div><span class="s">Спросить о том, что происходит прямо сейчас</span></div>
-        <div class="price">от 149 ₽</div>
       </div>
     </div>
 
     <div class="giftsep">
       <p class="gift-lede">Любой разбор можно подарить тому, кому он будет интересен: человек введёт свои данные сам, вы их не увидите.</p>
-      <div class="card-it ic gift" data-go="shopGift">
-        <svg class="ticon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3.5" y="8.5" width="13" height="8" rx="1.2"/><path d="M3.5 11.5h13M10 8.5v8M10 8.5C8.4 5.4 4.8 7.2 10 8.5M10 8.5C11.6 5.4 15.2 7.2 10 8.5"/></svg>
-        <div><div class="t">Подарить разбор</div><span class="s">Полный разбор, карта на год или карта ребёнка</span></div>
+      <div class="shopcat gift" data-go="shopGift">
+        <svg class="ci" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.35"><rect x="3.3" y="8.6" width="13.4" height="7.9" rx="1.3"/><path d="M3.3 11.6h13.4M10 8.6v7.9M10 8.6C8.3 5.4 4.6 7.3 10 8.6M10 8.6C11.7 5.4 15.4 7.3 10 8.6"/></svg>
+        <div><h3>Подарить разбор</h3><ul><li>Полный разбор личности</li><li>Карта на год</li><li>Натальная карта ребёнка</li></ul></div>
         <div class="chev">›</div>
       </div>
     </div>
