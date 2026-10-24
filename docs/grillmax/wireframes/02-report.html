@@ -7044,7 +7044,7 @@ function buildShop() { return `<div class="pad">
         <div><h3>Ребёнок</h3><ul><li>Полный разбор личности</li><li>Подбор имени</li></ul></div>
         <div class="chev">›</div>
       </div>
-      <div class="shopcat" data-prod="date">
+      <div class="shopcat" data-go="shopDate">
         <svg class="ci" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.35"><rect x="3.3" y="4.5" width="13.4" height="12.2" rx="2"/><path d="M3.3 8h13.4M7 4.5V2.7M13 4.5V2.7"/></svg>
         <div><h3>Разбор даты</h3><ul><li>Выбрать день для события</li><li>Проверить назначенную дату</li></ul></div>
         <div class="chev">›</div>
@@ -7114,8 +7114,9 @@ function buildShopTalk() { return `<div class="pad">
 
   <div class="sec-label" style="margin-top:20px">Что можно купить</div>
   <div class="cards">
-    <div class="card-it" data-prod="q3"><div><div class="t">Ещё три запроса</div><span class="s">Столько же, сколько дали на знакомство. Лежат без срока — расходуются, когда спросите</span></div><div class="price">149 ₽</div></div>
+    <div class="card-it" data-prod="q3"><div><div class="t">Ещё три запроса</div><span class="s">Столько же, сколько дали на знакомство. Лежат без срока \u2014 расходуются, когда спросите</span></div><div class="price">149 ₽</div></div>
     <div class="card-it" data-prod="q10"><div><div class="t">Десять вопросов</div><span class="s">Выгоднее на вопрос. Тоже лежат без срока</span></div><div class="price">349 ₽</div></div>
+    <div class="card-it" data-prod="q50"><div><div class="t">Пятьдесят вопросов</div><span class="s">Самый выгодный пакет \u2014 вдвое дешевле на вопрос</span></div><div class="price">1 240 ₽</div></div>
   </div>
 
   <div class="sec-label">Или позовите знакомого</div>
@@ -7143,7 +7144,7 @@ S.shopPeople = `<div class="pad">
     <div class="card-it" data-prod="childName"><div><div class="t">Подбор имени</div><span class="s">Проверим ваши варианты и предложим свои</span></div><div class="price">990 ₽</div></div>
   </div>
 
-  <div class="nextsec" data-prod="date"><div><u>Дальше</u><b>Разбор даты</b></div><span>→</span></div>
+  <div class="nextsec" data-go="shopDate"><div><u>Дальше</u><b>Разбор даты</b></div><span>→</span></div>
 </div>`;
 
 /* Ребёнок — отдельная категория витрины: карта ребёнка и выбор имени */
@@ -7174,6 +7175,20 @@ S.shopYear = `<div class="pad">
   <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:14px">Школы честно расходятся в том, как видят год. Можно взять одну сейчас и добрать другую позже — они дополняют друг друга.</p>
 </div>`;
 
+S.shopDate = `<div class="pad">
+  <div class="dochead" data-go="shop"><span>&lsaquo;</span><div>Назад \u00b7 Разборы</div></div>
+  <h2 class="t-title" style="font-size:21px">Разбор даты</h2>
+  <p class="d-lede">Каким вы будете в этот день: где легче настоять, где склонны уступить, на что не хватит терпения. Считается по вашей карте, а не по общему гороскопу.</p>
+
+  <div class="sec-label">Что вам нужно</div>
+  <div class="cards">
+    <div class="card-it" data-prod="date"><div><div class="t">Выбрать лучший день</div><span class="s">Укажете промежуток и повод, мы найдём окна, когда вы будете в лучшей форме</span></div><div class="price">390 \u20bd</div></div>
+    <div class="card-it" data-prod="dateB"><div><div class="t">Проверить назначенную дату</div><span class="s">День уже выбран: разберём, каким вы в него войдёте и к чему подготовиться</span></div><div class="price">390 \u20bd</div></div>
+  </div>
+
+  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:14px">Оба варианта считаются по четырём школам одновременно. Разница только в том, выбираете вы день или он уже назначен.</p>
+</div>`;
+
 S.shopGift = `<div class="pad">
   <div class="dochead" data-go="shop"><span>&lsaquo;</span><div>Назад · Разборы</div></div>
   <h2 class="t-title" style="font-size:21px">Подарить разбор</h2>
@@ -7181,8 +7196,8 @@ S.shopGift = `<div class="pad">
 
   <div class="sec-label">Что можно подарить</div>
   <div class="cards">
-    <div class="card-it" data-go="prodPay"><div><div class="t">Полный разбор личности</div><span class="s">${scopeProse().charAt(0).toUpperCase() + scopeProse().slice(1)}</span></div><div class="price">990 ₽</div></div>
-    <div class="card-it" data-go="prodPay"><div><div class="t">Прогноз на год</div><span class="s">От его дня рождения до следующего</span></div><div class="price">1 990 ₽</div></div>
+    <div class="card-it" data-gift="giftPerson"><div><div class="t">Полный разбор личности</div><span class="s">${scopeProse().charAt(0).toUpperCase() + scopeProse().slice(1)}</span></div><div class="price">990 ₽</div></div>
+    <div class="card-it" data-gift="giftYear"><div><div class="t">Прогноз на год</div><span class="s">От его дня рождения до следующего</span></div><div class="price">1 990 ₽</div></div>
   </div>
 
   <div class="orient" style="margin-top:18px">
@@ -7638,9 +7653,9 @@ S.compat = `<div class="pad">
   </div>
   <div class="sec-label">По дате рождения конкретного человека</div>
   <div class="cards">
-    <div class="card-it" data-prod="compat"><div><div class="t">Любовь и отношения</div><span class="s">Близость, притяжение, из-за чего ссоритесь</span></div><div class="chev">›</div></div>
-    <div class="card-it" data-prod="compat"><div><div class="t">Дружба</div><span class="s">Совпадение по мышлению и по темпу</span></div><div class="chev">›</div></div>
-    <div class="card-it" data-prod="compat"><div><div class="t">Деловое партнёрство</div><span class="s">Надёжность, распределение труда, где подведёт</span></div><div class="chev">›</div></div>
+    <div class="card-it" data-prod="compat" data-ctype="Любовь и отношения"><div><div class="t">Любовь и отношения</div><span class="s">Близость, притяжение, из-за чего ссоритесь</span></div><div class="chev">›</div></div>
+    <div class="card-it" data-prod="compat" data-ctype="Дружба"><div><div class="t">Дружба</div><span class="s">Совпадение по мышлению и по темпу</span></div><div class="chev">›</div></div>
+    <div class="card-it" data-prod="compat" data-ctype="Деловое партнёрство"><div><div class="t">Деловое партнёрство</div><span class="s">Надёжность, распределение труда, где подведёт</span></div><div class="chev">›</div></div>
   </div>
 </div>`;
 
@@ -8655,6 +8670,18 @@ const PROD = {
     res:'Подписание договора', resPhrase:'День назначен, выбирать нечего. Значит, разбор о том, каким вы в него войдёте.'
   },
 
+  giftPerson: {
+    t:'Полный разбор личности (подарок)', price:'990 \u20bd', crumb:'Подарить',
+    lead:'', sell:[], need:'', fields:[], depth:'\u2014',
+    depthNote:'Подарочный сертификат. Получатель введёт свои данные сам.',
+    build:['Формирую сертификат'], doc:'', res:'Подарочный сертификат', resPhrase:''
+  },
+  giftYear: {
+    t:'Прогноз на год (подарок)', price:'1 990 \u20bd', crumb:'Подарить',
+    lead:'', sell:[], need:'', fields:[], depth:'\u2014',
+    depthNote:'Подарочный сертификат. Получатель введёт свои данные сам.',
+    build:['Формирую сертификат'], doc:'', res:'Подарочный сертификат', resPhrase:''
+  },
 };
 let CUR = 'compat';
 /* просмотр примера до покупки: тот же экран, но без скачивания и пересылки */
@@ -8809,7 +8836,7 @@ const TITLES = {
   welcome:'Приглашение',
   s1:'Лунора', s2:'Лунора', s3:'Лунора', s4:'Лунора', s5:'Лунора',
   obStart:'Лунора', obName:'Знакомство', obPlace:'Место рождения', obDate:'Дата рождения', obConsent:'Согласие', obCalc:'Проверьте данные', obRun:'Расчёт',
-  today:'Сегодня', personCalc:'Расчёт прогноза', profile:'Ваш профиль', shop:'Разборы', monthPick:'Выбрать месяц', shopTalk:'Разговор', shopMe:'Обо мне', shopPeople:'Про людей', shopChild:'Ребёнок', shopYear:'Прогноз на год', shopGift:'Подарить', giftCard:'Сертификат', giftUsed:'Сертификат', giftRefund:'Возврат', compat:'Совместимость', persData:'Личные данные', settings:'Настройки', delPerson:'Человек', slotPick:'Добавить в ленту', delPersonConfirm:'Удаление', delAll:'Удаление', tLove:'Отношения и любовь', tPeriod:'Периоды жизни', tCrisis:'Кризисы и переломы', peopleRel:'Отношения', payConfirm:'Подтверждение', payGate:'Оплата', payOk:'Оплата подтверждена', payWait:'Проверяем оплату', docBuild:'Сборка документа', payErr:'Оплата не прошла', pw0:'Планета', pw1:'Планета', pw2:'Планета', pw3:'Планета', pw4:'Планета', pw5:'Планета', pw6:'Планета', pw7:'Планета', pw8:'Планета', pw9:'Планета', calcWest:'Данные расчёта', calcVedic:'Данные расчёта', calcBazi:'Данные расчёта', calcNum:'Данные расчёта', docView:'Просмотр документа', 'sec-b-prac':'Раздел', 'sec-w-time':'Раздел', 'sec-v-dashas':'Раздел', 'sec-b-luck':'Раздел', 'help-calc':'Расчёты и разборы', 'help-pay':'Платежи', 'help-data':'Мои данные', 'help-chat':'Чат и лента', 'help-invite':'Приглашения и бонусы', idea:'У меня идея', docs:'Документы', myPeople:'Добавленные люди', 'doc-consent':'Согласие на ПД', 'doc-consentNew':'Согласие на ПД', 'doc-policy':'Политика ПД', 'doc-terms':'Соглашение', 'doc-offer':'Оферта', invite:'Реферальная программа', memory:'Память', answerTone:'Тон ответов', confirmRecalc:'Сохранить изменения', recalcRun:'Пересчёт', recalcDone:'Пересчитано', personRecalcDone:'Пересчитали', support:'Поддержка', tPurpose:'Путь и предназначение', tMoney:'Деньги и достаток', tEnergy:'Энергия и здоровье', tFamily:'Семья и род', tTalent:'Таланты и способности', addPerson:'Добавление человека', feedTime:'Ежедневный прогноз', pdfSell:'Разбор в одном файле', states:'Состояния экранов', stWebhook:'Платёж обрабатывается', stDouble:'Двойная оплата', stPartial:'Неполные данные', stTime:'Время неизвестно', stLat:'Высокие широты', numCycles:'Вершины и вызовы', numSynth:'Дата и имя вместе', prodPage:'Продукт', prodData:'Данные', prodDepth:'Расчёт', prodPay:'Оплата', prodBuild:'Сборка', prodResult:'Разбор', chatList:'Чаты', chat:'Диалог', chatNew:'Диалог', chatPaywall:'Диалог', tCharacter:'Характер', tMind:'Мышление и решения', tWork:'Работа и карьера',
+  today:'Сегодня', personCalc:'Расчёт прогноза', profile:'Ваш профиль', shop:'Разборы', monthPick:'Выбрать месяц', shopTalk:'Разговор', shopMe:'Обо мне', shopPeople:'Про людей', shopChild:'Ребёнок', shopYear:'Прогноз на год', shopDate:'Разбор даты', shopGift:'Подарить', giftCard:'Сертификат', giftUsed:'Сертификат', giftRefund:'Возврат', compat:'Совместимость', persData:'Личные данные', settings:'Настройки', delPerson:'Человек', slotPick:'Добавить в ленту', delPersonConfirm:'Удаление', delAll:'Удаление', tLove:'Отношения и любовь', tPeriod:'Периоды жизни', tCrisis:'Кризисы и переломы', peopleRel:'Отношения', payConfirm:'Подтверждение', payGate:'Оплата', payOk:'Оплата подтверждена', payWait:'Проверяем оплату', docBuild:'Сборка документа', payErr:'Оплата не прошла', pw0:'Планета', pw1:'Планета', pw2:'Планета', pw3:'Планета', pw4:'Планета', pw5:'Планета', pw6:'Планета', pw7:'Планета', pw8:'Планета', pw9:'Планета', calcWest:'Данные расчёта', calcVedic:'Данные расчёта', calcBazi:'Данные расчёта', calcNum:'Данные расчёта', docView:'Просмотр документа', 'sec-b-prac':'Раздел', 'sec-w-time':'Раздел', 'sec-v-dashas':'Раздел', 'sec-b-luck':'Раздел', 'help-calc':'Расчёты и разборы', 'help-pay':'Платежи', 'help-data':'Мои данные', 'help-chat':'Чат и лента', 'help-invite':'Приглашения и бонусы', idea:'У меня идея', docs:'Документы', myPeople:'Добавленные люди', 'doc-consent':'Согласие на ПД', 'doc-consentNew':'Согласие на ПД', 'doc-policy':'Политика ПД', 'doc-terms':'Соглашение', 'doc-offer':'Оферта', invite:'Реферальная программа', memory:'Память', answerTone:'Тон ответов', confirmRecalc:'Сохранить изменения', recalcRun:'Пересчёт', recalcDone:'Пересчитано', personRecalcDone:'Пересчитали', support:'Поддержка', tPurpose:'Путь и предназначение', tMoney:'Деньги и достаток', tEnergy:'Энергия и здоровье', tFamily:'Семья и род', tTalent:'Таланты и способности', addPerson:'Добавление человека', feedTime:'Ежедневный прогноз', pdfSell:'Разбор в одном файле', states:'Состояния экранов', stWebhook:'Платёж обрабатывается', stDouble:'Двойная оплата', stPartial:'Неполные данные', stTime:'Время неизвестно', stLat:'Высокие широты', numCycles:'Вершины и вызовы', numSynth:'Дата и имя вместе', prodPage:'Продукт', prodData:'Данные', prodDepth:'Расчёт', prodPay:'Оплата', prodBuild:'Сборка', prodResult:'Разбор', chatList:'Чаты', chat:'Диалог', chatNew:'Диалог', chatPaywall:'Диалог', tCharacter:'Характер', tMind:'Мышление и решения', tWork:'Работа и карьера',
   dWest:'Западная астрология', dVedic:'Ведическая астрология', dBazi:'Ба-Цзы', dNum:'Нумерология',
   schWest:'Западная астрология', schVedic:'Ведическая астрология', schBazi:'Ба-Цзы', schNum:'Нумерология',
   'vz-Водолей':'Луна в Водолее', 'vz-Козерог':'Солнце в Козероге', 'vz-Весы':'Марс и Сатурн в Весах', 'vz-Близнецы':'Восходящий знак', 'vz-Телец':'Раху в Тельце', 'vz-Скорпион':'Кету в Скорпионе', 'vz-Стрелец':'Меркурий, Юпитер и Венера'
@@ -10539,7 +10566,7 @@ view.addEventListener('click', e => {
        тот же контур оплаты, без подарочного сертификата */
     if (pr.dataset.prod === 'pdf') { PAYKIND = 'pdf'; render('payConfirm'); return; }
     if (pr.dataset.prod === 'slot') { PAYKIND = 'slot'; render('payConfirm'); return; }
-    CUR = pr.dataset.prod; SHOPTAB = 'docs'; render('prodPage'); return;
+    CUR = pr.dataset.prod; if (pr.dataset.ctype && PROD[CUR]) PROD[CUR].fields[0][1] = pr.dataset.ctype; SHOPTAB = 'docs'; render('prodPage'); return;
   }
   if (e.target.closest('[data-godocs]')) { SHOPTAB = 'docs'; render('shop'); return; }
   if (e.target.closest('.card-it[data-go="К-12"]')) { RECBACK = 'К-10'; RECKIND = 'pay'; }
@@ -10560,6 +10587,8 @@ view.addEventListener('click', e => {
   /* докупить слот: платёжный контур, после оплаты открывается новое место */
   const fbuy = e.target.closest('[data-feedbuy]');
   if (fbuy) { FEED_ADD = fbuy.dataset.feedbuy; PAYKIND = 'slot'; render('payConfirm'); return; }
+  const gf = e.target.closest('[data-gift]');
+  if (gf) { CUR = gf.dataset.gift; PAYKIND = 'prod'; render('prodPay'); return; }
   const rs = e.target.closest('[data-res]');
   if (rs) { RECALC_SEEN.add(rs.dataset.res); CUR = rs.dataset.res; SHOPTAB = 'docs'; render('prodResult'); return; }
   const ts = e.target.closest('[data-tset]');
