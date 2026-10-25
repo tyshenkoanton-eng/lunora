@@ -7041,7 +7041,7 @@ function buildShop() { return `<div class="pad">
       </div>
       <div class="shopcat" data-go="shopChild">
         <svg class="ci" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.35"><circle cx="10" cy="6.3" r="3"/><path d="M4.6 16.4c0-3 2.4-5.2 5.4-5.2s5.4 2.2 5.4 5.2"/></svg>
-        <div><h3>Ребёнок</h3><ul><li>Полный разбор личности</li><li>Подбор имени</li></ul></div>
+        <div><h3>Ребёнок</h3><ul><li>Полный разбор личности</li><li>Подбор имени</li><li>Проверка имён</li></ul></div>
         <div class="chev">›</div>
       </div>
       <div class="shopcat" data-go="shopDate">
@@ -7065,7 +7065,10 @@ function buildShop() { return `<div class="pad">
     ${HASDOCS ? `
     <div class="sec-label" style="margin-top:4px">Обо мне</div>
     <div class="cards">
-      <div class="doc" data-res="year"><b>Прогноз на год</b><span>Четыре школы</span></div>
+      <div class="doc" data-res="yearWest"><b>Прогноз на год</b><span>Западная школа</span></div>
+      <div class="doc" data-res="yearVedic"><b>Прогноз на год</b><span>Ведическая школа</span></div>
+      <div class="doc" data-res="yearBazi"><b>Прогноз на год</b><span>Ба-Цзы</span></div>
+      <div class="doc" data-res="yearNum"><b>Прогноз на год</b><span>Нумерология</span></div>
       <div class="doc" data-res="rename"><b>Смена фамилии</b><span>Тыщенко \u2192 Ковалёва</span></div>
       <div class="doc" data-res="pdf"><b>Полный разбор личности</b><span>PDF \u00b7 ${DOC_PAGES_TXT}</span></div>
     </div>
@@ -7079,6 +7082,7 @@ function buildShop() { return `<div class="pad">
     <div class="cards">
       <div class="doc" data-res="child"><b>Полный разбор личности</b><span>Софья Дмитриевна Тыщенко</span></div>
       <div class="doc" data-res="childName"><b>Подбор имени</b><span>Ева \u00b7 Мария \u00b7 Анна</span></div>
+      <div class="doc" data-res="childCheck"><b>Проверка имён</b><span>Ева \u00b7 Мария \u00b7 Анна</span></div>
     </div>
 
     <div class="sec-label">Разбор даты</div>
@@ -7160,7 +7164,8 @@ S.shopPeople = `<div class="pad">
   <div class="sec-label">Мой ребёнок</div>
   <div class="cards">
     <div class="card-it" data-prod="child"><div><div class="t">Полный разбор личности</div><span class="s">Его карта, что с этим делать вам и где вы не совпадаете</span></div><div class="price">1 490 ₽</div></div>
-    <div class="card-it" data-prod="childName"><div><div class="t">Подбор имени</div><span class="s">Проверим ваши варианты и предложим свои</span></div><div class="price">990 ₽</div></div>
+    <div class="card-it" data-prod="childName"><div><div class="t">Подбор имени</div><span class="s">Предложим лучшие варианты под отчество и фамилию</span></div><div class="price">990 ₽</div></div>
+    <div class="card-it" data-prod="childCheck"><div><div class="t">Проверка имён</div><span class="s">У вас уже есть варианты, проверим каждый по числам</span></div><div class="price">490 ₽</div></div>
   </div>
 
   <div class="nextsec" data-go="shopDate"><div><u>Дальше</u><b>Разбор даты</b></div><span>→</span></div>
@@ -7173,7 +7178,8 @@ S.shopChild = `<div class="pad">
   <p class="d-lede">Карта ребёнка по его дате рождения и помощь с выбором имени.</p>
   <div class="cards">
     <div class="card-it" data-prod="child"><div><div class="t">Полный разбор личности</div><span class="s">Его карта, что с этим делать вам и где вы не совпадаете</span></div><div class="price">1 490 ₽</div></div>
-    <div class="card-it" data-prod="childName"><div><div class="t">Подбор имени</div><span class="s">Проверим ваши варианты и предложим свои</span></div><div class="price">990 ₽</div></div>
+    <div class="card-it" data-prod="childName"><div><div class="t">Подбор имени</div><span class="s">Предложим лучшие варианты под отчество и фамилию</span></div><div class="price">990 ₽</div></div>
+    <div class="card-it" data-prod="childCheck"><div><div class="t">Проверка имён</div><span class="s">У вас уже есть варианты, проверим каждый по числам</span></div><div class="price">490 ₽</div></div>
   </div>
 </div>`;
 
@@ -7976,7 +7982,7 @@ const PROD = {
   },
   childName: {
     t:'Подбор имени', price:'990 ₽', crumb:'Разборы · ребёнок',
-    lead:'Проверим имена, которые вы рассматриваете, и предложим свои — в сочетании с отчеством и фамилией.',
+    lead:'Предложим лучшие имена под отчество и фамилию ребёнка. Проверим ваши варианты, если есть, и добавим свои.',
     sell:[
       ['Ваши варианты — по числам','Каждое имя вместе с отчеством и фамилией даёт своё число судьбы. Покажем, что получается у каждого.'],
       ['Наши варианты','Имена, которые дают лучшие сочетания именно с этим отчеством и этой фамилией. Не одно правильное, а список.'],
@@ -7989,6 +7995,21 @@ const PROD = {
     doc:`<div class="luna-block"><div class="lab">Коротко</div><p>Из трёх ваших вариантов сильнее всего с отчеством Дмитриевна и фамилией Тыщенко работает Ева: число судьбы 7 даёт глубину и самостоятельность, а число личности 1 уравновешивает это внешней решительностью. Мария и Анна тоже дают хорошие сочетания, но с другим характером.</p></div><div class="sec-label">Все варианты по числам</div><table class="ctable"><tr><th>Имя</th><th>Судьбы</th><th>Души</th><th>Личности</th></tr><tr><td>Ева Дмитриевна</td><td>7</td><td>6</td><td>1</td></tr><tr><td>Мария Дмитриевна</td><td>3</td><td>1</td><td>2</td></tr><tr><td>Анна Дмитриевна</td><td>5</td><td>6</td><td>8</td></tr><tr><td>София Дмитриевна</td><td>2</td><td>6</td><td>5</td></tr></table><div class="sec-label">Три сильных варианта</div><div class="cards"><div class="card-it"><div><div class="t">Ева Дмитриевна Тыщенко</div><span class="s">Число судьбы 7: склонность к глубине и исследованию. Число личности 1: воспринимается как человек с позицией. Сочетание даёт внутреннюю силу без необходимости доказывать</span></div><div class="chev">›</div></div><div class="card-it"><div><div class="t">Мария Дмитриевна Тыщенко</div><span class="s">Число судьбы 3: лёгкость в общении и самовыражении. Число души 1: внутренняя независимость. Имя для человека, который будет заметен</span></div><div class="chev">›</div></div><div class="card-it"><div><div class="t">Анна Дмитриевна Тыщенко</div><span class="s">Число судьбы 5: подвижность, интерес к новому. Число личности 8: воспринимается как надёжный человек. Энергичное сочетание</span></div><div class="chev">›</div></div></div><div class="sec-label">Что с четвёртым вариантом</div><div class="body-text"><p><b>София Дмитриевна Тыщенко.</b> Число судьбы 2: мягкость, потребность в паре и поддержке. Число личности 5: воспринимается как непостоянный человек. Сочетание рабочее, но менее определённое: ребёнку будет сложнее опереться на своё имя как на внутренний ориентир.</p></div><div class="sec-label">Чего этот разбор не делает</div><div class="body-text"><p>Об имени говорит <b>одна школа из четырёх</b>: нумерология. Ведическая могла бы через накшатру, но её метод требует, чтобы ребёнок уже родился, а имя обычно выбирают до. Звучание, сочетаемость и мода остаются вашим решением.</p></div><div class="calc-h">Как это посчитано</div>
 <div class="calc"><div class="pr"><u>Нумерология</u><span>Числа судьбы, души и личности для каждого сочетания имени, отчества и фамилии</span></div><div class="pr"><u>Остальные три школы</u><span>Не участвуют — им нечего сказать об имени до рождения</span></div></div>`,
     res:'Ева · Мария · Анна', resPhrase:'С этим отчеством и фамилией сильнее всего работает «Ева» — и вот почему.'
+  },
+  childCheck: {
+    t:'Проверка имён', price:'490 ₽', crumb:'Разборы · ребёнок',
+    lead:'У вас уже есть имена для ребёнка. Мы проверим каждое по числам в сочетании с отчеством и фамилией.',
+    sell:[
+      ['Каждое имя по числам','Число судьбы, души и личности для каждого сочетания. Увидите, чем варианты отличаются друг от друга.'],
+      ['Сравнительная таблица','Все ваши варианты рядом, чтобы сравнить было легко.'],
+      ['Честные ограничения','Об имени говорит только нумерология. Мы не делаем вид, что это полная картина.']
+    ],
+    need:'Имена, которые рассматриваете, отчество и фамилия.',
+    fields:[['Имена для проверки','Мария · Ева · Софья',1],['Отчество','Дмитриевна',1],['Фамилия','Тыщенко',1]],
+    depth:'—', depthNote:'Об имени говорит одна школа из четырёх — нумерология.',
+    build:['Посчитала каждое имя с отчеством и фамилией','Сравнила числа судьбы, души и личности','Пишу разбор'],
+    doc:`<div class="luna-block"><div class="lab">Результат</div><p>Из ваших трёх вариантов с отчеством Дмитриевна и фамилией Тыщенко лучше всего работает Ева: число судьбы 7, число личности 1. Мария и Анна тоже дают рабочие сочетания.</p></div><table class="ctable"><tr><th>Имя</th><th>Судьбы</th><th>Души</th><th>Личности</th></tr><tr><td>Ева Дмитриевна</td><td>7</td><td>6</td><td>1</td></tr><tr><td>Мария Дмитриевна</td><td>3</td><td>1</td><td>2</td></tr><tr><td>Анна Дмитриевна</td><td>5</td><td>6</td><td>8</td></tr></table><div class="calc-h">Как это посчитано</div><div class="calc"><div class="pr"><u>Нумерология</u><span>Числа судьбы, души и личности для каждого сочетания</span></div></div>`,
+    res:'Ева · Мария · Анна', resPhrase:'Сильнее всего с этим отчеством и фамилией работает «Ева».'
   },
   year: {
     t:'Прогноз на год', price:'1 990 ₽', crumb:'Разборы · обо мне',
