@@ -7116,14 +7116,14 @@ Object.defineProperty(S, "shop", { get: buildShop });
 Object.defineProperty(S, 'shopMe', { get() {
   const pdfCard = PDFST === 'bought'
     ? `<div class="card-it" data-godocs="1"><div><div class="t">PDF файл вашей карты</div><span class="s">Куплен · в разделе «Мои разборы»</span></div><div class="chev">›</div></div>`
-    : `<div class="card-it" data-prod="pdf"><div><div class="t">PDF файл вашей карты</div><span class="s">Свёрстанный файл со всеми четырьмя чертежами. Сам разбор остаётся бесплатным</span></div><div class="price">149 ₽</div></div>`;
+    : `<div class="card-it" data-prod="pdf"><div><div class="t">PDF файл вашей карты</div><span class="s">Полный разбор вашей личности в красивом PDF файле</span></div><div class="price">149 ₽</div></div>`;
   return `<div class="pad">
   <div class="dochead" data-go="shop"><span>&lsaquo;</span><div>Назад · Разборы</div></div>
   <h2 class="t-title" style="font-size:21px">Обо мне</h2>
   <p class="d-lede">Всё, что мы можем дополнительно рассчитать из ваших данных.</p>
   <div class="cards">
-    <div class="card-it" data-go="shopYear"><div><div class="t">Прогноз на год</div><span class="s">По одной из школ на выбор — единого прогноза на год не бывает</span></div><div class="price">от 990 ₽</div></div>
-    <div class="card-it" data-prod="rename"><div><div class="t">Смена имени или фамилии</div><span class="s">Что изменится в числах: было и стало. Псевдоним и творческое имя тоже</span></div><div class="price">490 ₽</div></div>
+    <div class="card-it" data-go="shopYear"><div><div class="t">Прогноз на год</div><span class="s">На выбор по одной из четырёх школ</span></div><div class="chev">›</div></div>
+    <div class="card-it" data-prod="rename"><div><div class="t">Смена имени или фамилии</div><span class="s">Что изменится: было и стало. Включая псевдоним и творческое имя</span></div><div class="price">490 ₽</div></div>
     ${pdfCard}
   </div>
 </div>`;
