@@ -7116,14 +7116,14 @@ Object.defineProperty(S, "shop", { get: buildShop });
 Object.defineProperty(S, 'shopMe', { get() {
   const pdfCard = PDFST === 'bought'
     ? `<div class="card-it" data-godocs="1"><div><div class="t">PDF файл вашей карты</div><span class="s">Куплен · в разделе «Мои разборы»</span></div><div class="chev">›</div></div>`
-    : `<div class="card-it" data-prod="pdf"><div><div class="t">PDF файл вашей карты</div><span class="s">Полный разбор вашей личности в красивом PDF файле</span></div><div class="price">149 ₽</div></div>`;
+    : `<div class="card-it" data-prod="pdf"><div><div class="t">PDF файл вашей карты</div><span class="s">Полный разбор вашей личности в красивом PDF файле</span></div><div class="chev">›</div></div>`;
   return `<div class="pad">
   <div class="dochead" data-go="shop"><span>&lsaquo;</span><div>Назад · Разборы</div></div>
   <h2 class="t-title" style="font-size:21px">Обо мне</h2>
   <p class="d-lede">Всё, что мы можем дополнительно рассчитать из ваших данных.</p>
   <div class="cards">
     <div class="card-it" data-go="shopYear"><div><div class="t">Прогноз на год</div><span class="s">На выбор по одной из четырёх школ</span></div><div class="chev">›</div></div>
-    <div class="card-it" data-prod="rename"><div><div class="t">Смена имени или фамилии</div><span class="s">Что изменится: было и стало. Включая псевдоним и творческое имя</span></div><div class="price">490 ₽</div></div>
+    <div class="card-it" data-prod="rename"><div><div class="t">Смена имени или фамилии</div><span class="s">Что изменится: было и стало. Включая псевдоним и творческое имя</span></div><div class="chev">›</div></div>
     ${pdfCard}
   </div>
 </div>`;
@@ -7156,15 +7156,15 @@ S.shopPeople = `<div class="pad">
   <p class="d-lede">По знаку мы скажем общее про любого человека бесплатно. По дате рождения — про него конкретно.</p>
 
   <div class="cards">
-    <div class="card-it" data-go="peopleRel"><div><div class="t">С кем вам легко, а с кем трудно</div><span class="s">По знакам — то, что видно без данных человека</span></div><div class="price">бесплатно</div></div>
-    <div class="card-it" data-go="compat"><div><div class="t">Совместимость</div><span class="s">Любовь · дружба · деловое партнёрство</span></div><div class="price">990 ₽</div></div>
+    <div class="card-it" data-go="peopleRel"><div><div class="t">С кем вам легко, а с кем трудно</div><span class="s">По знакам — то, что видно без данных человека</span></div><div class="chev">›</div></div>
+    <div class="card-it" data-go="compat"><div><div class="t">Совместимость</div><span class="s">Любовь · дружба · деловое партнёрство</span></div><div class="chev">›</div></div>
   </div>
 
   <div class="sec-label">Мой ребёнок</div>
   <div class="cards">
-    <div class="card-it" data-prod="child"><div><div class="t">Полный разбор личности</div><span class="s">Его карта, что с этим делать вам и где вы не совпадаете</span></div><div class="price">1 490 ₽</div></div>
-    <div class="card-it" data-prod="childName"><div><div class="t">Подбор имени</div><span class="s">Предложим лучшие варианты под отчество и фамилию</span></div><div class="price">990 ₽</div></div>
-    <div class="card-it" data-prod="childCheck"><div><div class="t">Проверка имён</div><span class="s">У вас уже есть варианты, проверим каждый по числам</span></div><div class="price">490 ₽</div></div>
+    <div class="card-it" data-prod="child"><div><div class="t">Полный разбор личности</div><span class="s">Его карта, что с этим делать вам и где вы не совпадаете</span></div><div class="chev">›</div></div>
+    <div class="card-it" data-prod="childName"><div><div class="t">Подбор имени</div><span class="s">Предложим лучшие варианты под отчество и фамилию</span></div><div class="chev">›</div></div>
+    <div class="card-it" data-prod="childCheck"><div><div class="t">Проверка имён</div><span class="s">У вас уже есть варианты, проверим каждый по числам</span></div><div class="chev">›</div></div>
   </div>
 
 </div>`;
@@ -7175,9 +7175,9 @@ S.shopChild = `<div class="pad">
   <h2 class="t-title" style="font-size:21px">Ребёнок</h2>
   <p class="d-lede">Узнайте больше о характере и способностях ребёнка. Подберите имя или проверьте уже выбранные.</p>
   <div class="cards">
-    <div class="card-it" data-prod="child"><div><div class="t">Полный разбор личности</div><span class="s">Его карта, что с этим делать вам и где вы не совпадаете</span></div><div class="price">1 490 ₽</div></div>
-    <div class="card-it" data-prod="childName"><div><div class="t">Подбор имени</div><span class="s">Предложим лучшие варианты под отчество и фамилию</span></div><div class="price">990 ₽</div></div>
-    <div class="card-it" data-prod="childCheck"><div><div class="t">Проверка имён</div><span class="s">У вас уже есть варианты, проверим каждый по числам</span></div><div class="price">490 ₽</div></div>
+    <div class="card-it" data-prod="child"><div><div class="t">Полный разбор личности</div><span class="s">Его карта, что с этим делать вам и где вы не совпадаете</span></div><div class="chev">›</div></div>
+    <div class="card-it" data-prod="childName"><div><div class="t">Подбор имени</div><span class="s">Предложим лучшие варианты под отчество и фамилию</span></div><div class="chev">›</div></div>
+    <div class="card-it" data-prod="childCheck"><div><div class="t">Проверка имён</div><span class="s">У вас уже есть варианты, проверим каждый по числам</span></div><div class="chev">›</div></div>
   </div>
 </div>`;
 
@@ -7189,10 +7189,10 @@ S.shopYear = `<div class="pad">
 
   <div class="sec-label">По какой школе построить</div>
   <div class="cards">
-    <div class="card-it" data-prod="yearWest"><div><div class="t">Западная астрология</div><span class="s">Соляр и ключевые транзиты года — самый подробный годовой срез</span><span class="perline">От дня рождения · 4 фев 2026 — 4 фев 2027</span></div><div class="price">1 990 ₽</div></div>
-    <div class="card-it" data-prod="yearVedic"><div><div class="t">Ведическая астрология</div><span class="s">Периоды даш и варшапхала — какой этап идёт и чем он окрашен</span><span class="perline">От дня рождения · 4 фев 2026 — 4 фев 2027 (даши идут непрерывно)</span></div><div class="price">1 990 ₽</div></div>
-    <div class="card-it" data-prod="yearBazi"><div><div class="t">Ба-Цзы</div><span class="s">Годовой столп: как год взаимодействует с вашей картой</span><span class="perline">От начала весны · 4 фев 2026 — 3 фев 2027</span></div><div class="price">1 490 ₽</div></div>
-    <div class="card-it" data-prod="yearNum"><div><div class="t">Нумерология</div><span class="s">Личный год — короткий контур темы и настроя года</span><span class="perline">Календарный год · 1 янв — 31 дек 2026</span></div><div class="price">990 ₽</div></div>
+    <div class="card-it" data-prod="yearWest"><div><div class="t">Западная астрология</div><span class="s">Соляр и ключевые транзиты года — самый подробный годовой срез</span><span class="perline">От дня рождения · 4 фев 2026 — 4 фев 2027</span></div><div class="chev">›</div></div>
+    <div class="card-it" data-prod="yearVedic"><div><div class="t">Ведическая астрология</div><span class="s">Периоды даш и варшапхала — какой этап идёт и чем он окрашен</span><span class="perline">От дня рождения · 4 фев 2026 — 4 фев 2027 (даши идут непрерывно)</span></div><div class="chev">›</div></div>
+    <div class="card-it" data-prod="yearBazi"><div><div class="t">Ба-Цзы</div><span class="s">Годовой столп: как год взаимодействует с вашей картой</span><span class="perline">От начала весны · 4 фев 2026 — 3 фев 2027</span></div><div class="chev">›</div></div>
+    <div class="card-it" data-prod="yearNum"><div><div class="t">Нумерология</div><span class="s">Личный год — короткий контур темы и настроя года</span><span class="perline">Календарный год · 1 янв — 31 дек 2026</span></div><div class="chev">›</div></div>
   </div>
 
   <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:14px">Школы честно расходятся в том, как видят год. Можно взять одну сейчас и добрать другую позже — они дополняют друг друга.</p>
@@ -7205,8 +7205,8 @@ S.shopDate = `<div class="pad">
 
   <div class="sec-label">Что вам нужно</div>
   <div class="cards">
-    <div class="card-it" data-prod="date"><div><div class="t">Выбрать лучший день</div><span class="s">Укажете промежуток и повод, мы найдём окна, когда вы будете в лучшей форме</span></div><div class="price">390 \u20bd</div></div>
-    <div class="card-it" data-prod="dateB"><div><div class="t">Проверить назначенную дату</div><span class="s">День уже выбран: разберём, каким вы в него войдёте и к чему подготовиться</span></div><div class="price">390 \u20bd</div></div>
+    <div class="card-it" data-prod="date"><div><div class="t">Выбрать лучший день</div><span class="s">Укажете промежуток и повод, мы найдём окна, когда вы будете в лучшей форме</span></div><div class="chev">\u203a</div></div>
+    <div class="card-it" data-prod="dateB"><div><div class="t">Проверить назначенную дату</div><span class="s">День уже выбран: разберём, каким вы в него войдёте и к чему подготовиться</span></div><div class="chev">\u203a</div></div>
   </div>
 
   <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:14px">Оба варианта считаются по четырём школам одновременно. Разница только в том, выбираете вы день или он уже назначен.</p>
@@ -7219,8 +7219,8 @@ S.shopGift = `<div class="pad">
 
   <div class="sec-label">Что можно подарить</div>
   <div class="cards">
-    <div class="card-it" data-gift="giftPerson"><div><div class="t">Полный разбор личности</div><span class="s">${scopeProse().charAt(0).toUpperCase() + scopeProse().slice(1)}</span></div><div class="price">990 ₽</div></div>
-    <div class="card-it" data-gift="giftYear"><div><div class="t">Прогноз на год</div><span class="s">От его дня рождения до следующего</span></div><div class="price">1 990 ₽</div></div>
+    <div class="card-it" data-gift="giftPerson"><div><div class="t">Полный разбор личности</div><span class="s">${scopeProse().charAt(0).toUpperCase() + scopeProse().slice(1)}</span></div><div class="chev">›</div></div>
+    <div class="card-it" data-gift="giftYear"><div><div class="t">Прогноз на год</div><span class="s">От его дня рождения до следующего</span></div><div class="chev">›</div></div>
   </div>
 
   <div class="orient" style="margin-top:18px">
@@ -7231,8 +7231,8 @@ S.shopGift = `<div class="pad">
 
   <div class="sec-label">Ваши подарки</div>
   <div class="cards">
-    <div class="card-it" data-go="giftCard"><div><div class="t">Прогноз на год</div><span class="s">Куплен 3 августа · <span style="color:var(--warn)">не активирован</span></span></div><div class="price">1 990 ₽</div></div>
-    <div class="card-it" data-go="giftUsed"><div><div class="t">Совместимость</div><span class="s">Куплен 12 августа · <span style="color:var(--good)">активирован</span></span></div><div class="price">990 ₽</div></div>
+    <div class="card-it" data-go="giftCard"><div><div class="t">Прогноз на год</div><span class="s">Куплен 3 августа · <span style="color:var(--warn)">не активирован</span></span></div><div class="chev">›</div></div>
+    <div class="card-it" data-go="giftUsed"><div><div class="t">Совместимость</div><span class="s">Куплен 12 августа · <span style="color:var(--good)">активирован</span></span></div><div class="chev">›</div></div>
   </div>
   <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:12px">Раздел появляется, только когда есть подарки. Использованные можно скрыть — тогда он исчезнет совсем.</p>
 
