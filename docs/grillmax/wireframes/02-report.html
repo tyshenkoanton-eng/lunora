@@ -7120,13 +7120,12 @@ Object.defineProperty(S, 'shopMe', { get() {
   return `<div class="pad">
   <div class="dochead" data-go="shop"><span>&lsaquo;</span><div>Назад · Разборы</div></div>
   <h2 class="t-title" style="font-size:21px">Обо мне</h2>
-  <p class="d-lede">Всё, что считается по вашей собственной карте и по вашему имени.</p>
+  <p class="d-lede">Ваша карта рождения, ваше имя и то, что они говорят о годе впереди.</p>
   <div class="cards">
     <div class="card-it" data-go="shopYear"><div><div class="t">Прогноз на год</div><span class="s">По одной из школ на выбор — единого прогноза на год не бывает</span></div><div class="price">от 990 ₽</div></div>
     <div class="card-it" data-prod="rename"><div><div class="t">Смена имени или фамилии</div><span class="s">Что изменится в числах: было и стало. Псевдоним и творческое имя тоже</span></div><div class="price">490 ₽</div></div>
     ${pdfCard}
   </div>
-  <div class="nextsec" data-go="compat"><div><u>Дальше</u><b>Совместимость</b></div><span>→</span></div>
 </div>`;
 }});
 
@@ -7168,7 +7167,6 @@ S.shopPeople = `<div class="pad">
     <div class="card-it" data-prod="childCheck"><div><div class="t">Проверка имён</div><span class="s">У вас уже есть варианты, проверим каждый по числам</span></div><div class="price">490 ₽</div></div>
   </div>
 
-  <div class="nextsec" data-go="shopDate"><div><u>Дальше</u><b>Разбор даты</b></div><span>→</span></div>
 </div>`;
 
 /* Ребёнок — отдельная категория витрины: карта ребёнка и выбор имени */
@@ -7238,7 +7236,6 @@ S.shopGift = `<div class="pad">
   </div>
   <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:12px">Раздел появляется, только когда есть подарки. Использованные можно скрыть — тогда он исчезнет совсем.</p>
 
-  <div class="nextsec" data-go="shop"><div><u>Дальше</u><b>Ко всем разборам</b></div><span>→</span></div>
 </div>`;
 
 S.giftCard = `<div class="pad">
@@ -7269,7 +7266,6 @@ S.giftCard = `<div class="pad">
     <div class="card-it" data-go="giftRefund" style="border-color:var(--warn-line)"><div><div class="t" style="color:var(--warn)">Вернуть деньги</div><span class="s">Пока сертификат не активирован — в любой момент</span></div><div class="chev">›</div></div>
   </div>
 
-  <div class="nextsec" data-go="shopGift"><div><u>Дальше</u><b>К вашим подаркам</b></div><span>→</span></div>
 </div>`;
 
 S.giftUsed = `<div class="pad">
@@ -7290,7 +7286,6 @@ S.giftUsed = `<div class="pad">
 
   <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:14px">Скрытие только визуальное. Запись о платеже остаётся у нас — этого требует налоговое законодательство.</p>
 
-  <div class="nextsec" data-go="shopGift"><div><u>Дальше</u><b>К вашим подаркам</b></div><span>→</span></div>
 </div>`;
 
 S.giftRefund = `<div class="pad">
