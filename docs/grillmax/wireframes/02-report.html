@@ -7076,6 +7076,8 @@ function buildShop() { return `<div class="pad">
     <div class="sec-label">Совместимость</div>
     <div class="cards">
       <div class="doc" data-res="compat"><b>Любовь</b><span>Дмитрий Сергеевич Ковалёв</span></div>
+      <div class="doc" data-res="compat"><b>Дружба</b><span>Ирина Владимировна Петрова</span></div>
+      <div class="doc" data-res="compat"><b>Деловое партнёрство</b><span>Алексей Николаевич Морозов</span></div>
     </div>
 
     <div class="sec-label">Ребёнок</div>
@@ -7093,11 +7095,9 @@ function buildShop() { return `<div class="pad">
 
     <div class="sec-label">Мои подарки</div>
     <div class="cards">
-      <div class="doc" data-res="giftPerson"><b>Полный разбор личности</b><span>Подарок для Анны</span></div>
-      <div class="doc" data-res="giftYear"><b>Прогноз на год</b><span>Подарок для Анны</span></div>
+      <div class="card-it" data-go="giftCard"><div><div class="t">Прогноз на год</div><span class="s">Куплен 3 августа \u00b7 <span style="color:var(--warn)">не активирован</span></span></div><div class="chev">\u203a</div></div>
+      <div class="card-it" data-go="giftUsed"><div><div class="t">Полный разбор личности</div><span class="s">Куплен 12 августа \u00b7 <span style="color:var(--good)">активирован</span></span></div><div class="chev">\u203a</div></div>
     </div>
-
-    <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:16px">Купленные разборы всегда доступны в этом разделе. PDF можно скачать в любой момент.</p>
     ` : `
     <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:260px;text-align:center;padding:40px 20px">
       <div style="font-size:36px;opacity:.18;margin-bottom:16px">\u2736</div>
