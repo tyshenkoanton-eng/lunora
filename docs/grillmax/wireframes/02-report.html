@@ -10502,10 +10502,11 @@ view.addEventListener('click', e => {
     tSync();
     return;
   }
-  const pl = e.target.closest('#plTabs i');
+  const pl = e.target.closest('#plTabs i') || e.target.closest('[data-ptab]');
   if (pl) {
-    document.querySelectorAll('#plTabs i').forEach(i => i.classList.toggle('on', i === pl));
-    SHOPTAB = pl.dataset.ptab;
+    const tab = pl.dataset.ptab;
+    document.querySelectorAll('#plTabs i').forEach(i => i.classList.toggle('on', i.dataset.ptab === tab));
+    SHOPTAB = tab;
     const isList = SHOPTAB === 'list';
     document.getElementById('plList').style.display = isList ? 'block' : 'none';
     document.getElementById('plDocs').style.display = isList ? 'none' : 'block';
