@@ -7051,6 +7051,7 @@ function buildShop() { return `<div class="pad">
       </div>
     </div>
 
+    <!-- HIDDEN: подарки отложены до продуктового решения
     <div class="giftsep">
       <p class="gift-lede">Подарите разбор близкому человеку</p>
       <div class="shopcat gift" data-go="shopGift">
@@ -7059,6 +7060,7 @@ function buildShop() { return `<div class="pad">
         <div class="chev">›</div>
       </div>
     </div>
+    -->
   </div>
 
   <div id="plDocs" style="display:${SHOPTAB==='docs'?'block':'none'}">
@@ -7092,12 +7094,7 @@ function buildShop() { return `<div class="pad">
       <div class="doc" data-res="date"><b>Переговоры по сделке</b><span>17 сентября 2026</span></div>
       <div class="doc" data-res="dateB"><b>Подписание договора</b><span>24 сентября 2026</span></div>
     </div>
-
-    <div class="sec-label">Мои подарки</div>
-    <div class="cards">
-      <div class="card-it" data-go="giftCard"><div><div class="t">Прогноз на год</div><span class="s">Куплен 3 августа \u00b7 <span style="color:var(--warn)">не активирован</span></span></div><div class="chev">\u203a</div></div>
-      <div class="card-it" data-go="giftUsed"><div><div class="t">Полный разбор личности</div><span class="s">Куплен 12 сентября 2025 \u00b7 <span style="color:var(--good)">активирован</span></span></div><div class="chev">\u203a</div></div>
-    </div>
+    <!-- HIDDEN: подарки отложены --></div>
     ` : `
     <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:260px;text-align:center;padding:40px 20px">
       <div style="font-size:36px;opacity:.18;margin-bottom:16px">\u2736</div>
