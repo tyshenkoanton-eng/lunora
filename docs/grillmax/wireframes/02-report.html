@@ -8695,7 +8695,7 @@ function prodPage() { const p = PROD[CUR]; return `<div class="pad">
     ? `<span class="pdflink" data-go="chat" style="margin-top:16px">Посмотреть, как она отвечает</span>`
     : `<span class="pdflink" data-res="${CUR}" style="margin-top:16px">Посмотреть пример разбора</span>`}
   <div class="docfoot boxed" style="margin-top:16px">
-    <p class="payterms">Оплата после того, как увидите глубину расчёта.<br>Оплачивая, вы принимаете <u data-go="doc-offer">оферту</u>.</p>
+    <p class="payterms">Оплачивая, вы принимаете <u data-go="doc-offer">оферту</u>.</p>
     <div class="w-btn" data-go="${p.fields.length ? 'prodData' : 'prodDepth'}">${p.cta || (p.access ? 'Купить' : 'Рассчитать')} · ${p.price}</div>
   </div>
 </div>`; }
