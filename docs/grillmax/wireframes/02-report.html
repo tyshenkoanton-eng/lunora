@@ -8104,7 +8104,7 @@ const PROD = {
     res:'Ваш год · 2026–2027', resPhrase:'Год завершения: апрель — главное окно, осень — второе дыхание. Четыре школы согласны.'
   },
   yearWest: {
-    t:'Прогноз на год · Западная астрология', price:'1 990 ₽', crumb:'Разборы · прогноз на год', cta:'Узнать свой год',
+    t:'Прогноз на год · Западная астрология', price:'1 990 ₽', crumb:'Разборы · прогноз на год', cta:'Узнать свой год', preview:'doc',
     lead:'<b>Ваш год: от одного дня рождения до другого.</b> Самый подробный взгляд на год из четырёх школ: с каким настроем он к вам приходит, когда лучше действовать, а когда подождать.', period:'с 4 февраля 2026 по 4 февраля 2027',
     sell:[
       ['Характер вашего года','Главные темы и общий настрой: чему этот год хочет вас научить и куда ведёт.'],
@@ -8683,7 +8683,15 @@ function prodPage() { const p = PROD[CUR]; return `<div class="pad">
   <div class="body-text">${p.sell.map(([h,t])=>`<p><b>${h}.</b> ${t}</p>`).join('')}</div>
   <div class="sec-label">Что нужно от вас</div>
   <div class="body-text"><p>${p.need}</p></div>
-  ${p.access
+  ${p.preview === 'doc'
+    ? `<div class="sec-label">Как выглядит документ</div>
+  <div class="pdfcar">
+    ${pdfPages('pdfStrip')}
+    <div class="pdots" id="pdfDots"><i class="on" data-pdot="0"></i><i data-pdot="1"></i><i data-pdot="2"></i><i data-pdot="3"></i><i data-pdot="4"></i></div>
+  </div>
+  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:12px">Разбор собирается по вашим данным в момент заказа.${DATAFULL ? '' : ' Если позже вы уточните данные о рождении, мы пересоберём его заново и бесплатно.'}</p>
+  <div style="text-align:center;margin-top:12px"><span class="pdflink" data-pdfdemo="${CUR}">Посмотреть пример документа</span></div>`
+    : p.access
     ? `<span class="pdflink" data-go="chat" style="margin-top:16px">Посмотреть, как она отвечает</span>`
     : `<span class="pdflink" data-res="${CUR}" style="margin-top:16px">Посмотреть пример разбора</span>`}
   <div class="docfoot boxed" style="margin-top:16px">
@@ -8775,7 +8783,7 @@ Object.defineProperty(S, 'docView', { get() {
   const p = PROD[CUR] || PROD.pdf;
   const pv = DOCPREVIEW;
   return `<div class="pad">
-  <div class="dochead" data-go="${pv ? 'pdfSell' : 'prodResult'}"><span>&lsaquo;</span><div>Назад · ${pv ? 'разбор в одном файле' : 'документ'}</div></div>
+  <div class="dochead" data-go="${pv ? (CUR === 'pdf' ? 'pdfSell' : 'prodPage') : 'prodResult'}"><span>&lsaquo;</span><div>Назад · ${pv ? (CUR === 'pdf' ? 'разбор в одном файле' : p.t) : 'документ'}</div></div>
   <h2 class="t-title" style="font-size:19px">${pv ? 'Пример документа' : (p.file ? p.file.name : 'Документ')}</h2>
   <p class="t-onephrase">${pv ? 'Так выглядит разбор внутри. Ваш соберётся по вашим данным' : (p.file ? p.file.size + ' · ' + p.file.pages : '')}</p>
 
@@ -10770,7 +10778,8 @@ view.addEventListener('click', e => {
     popShow('infoSheet');
     return;
   }
-  if (e.target.closest('[data-pdfdemo]')) { CUR = 'pdf'; DOCPREVIEW = true; render('docView'); return; }
+  const pd = e.target.closest('[data-pdfdemo]');
+  if (pd) { CUR = pd.dataset.pdfdemo === '1' ? 'pdf' : pd.dataset.pdfdemo; DOCPREVIEW = true; render('docView'); return; }
 });
 view.addEventListener('scroll', e => {
   const strip = e.target.closest('#pdfStrip, #docStrip');
