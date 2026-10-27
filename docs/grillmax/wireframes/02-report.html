@@ -8105,7 +8105,8 @@ const PROD = {
   },
   yearWest: {
     t:'Прогноз на год · Западная астрология', price:'1 990 ₽', crumb:'Разборы · прогноз на год', cta:'Рассчитать прогноз', preview:'doc',
-    lead:'<b>Ваш год: от одного дня рождения до другого.</b> Самый подробный взгляд на год из четырёх школ: с каким настроем он к вам приходит, когда лучше действовать, а когда подождать.', period:'с 4 февраля 2026 по 4 февраля 2027',
+    tag:'Ваш год: от одного дня рождения до другого.',
+    lead:'Самый подробный взгляд на год из четырёх школ: с каким настроем он к вам приходит, когда лучше действовать, а когда подождать.', period:'с 4 февраля 2026 по 4 февраля 2027',
     sell:[
       ['Характер вашего года','Главные темы и общий настрой: чему этот год хочет вас научить и куда ведёт.'],
       ['Календарь года по датам','Когда ждать подъёма, когда спада, а когда лучше не начинать важное. С конкретными периодами, а не «во второй половине года».'],
@@ -8676,13 +8677,16 @@ let HASDOCS = true;
 function prodPage() { const p = PROD[CUR]; return `<div class="pad">
   <div class="dochead" data-go="shop"><span>&lsaquo;</span><div>Назад · Разборы</div></div>
   <div class="d-crumb">${p.crumb}</div>
-  <h2 class="t-title" style="font-size:21px">${p.t}</h2>
-  <p class="d-lede">${p.lead}</p>
-  ${p.period ? `<p style="font-size:11.5px;color:var(--ink-faint);margin:7px 0 0;font-variant-numeric:tabular-nums"><b>Период:</b> ${p.period}</p>` : ''}
+  <h2 class="t-title" style="font-size:21px">${p.t.replace(' · ', '<br>')}</h2>
+  ${p.tag
+    ? `<p class="d-lede" style="border:none;padding-bottom:0;margin-bottom:12px">${p.tag}${p.period ? `<br>Период: ${p.period}` : ''}</p>
+  <p class="d-lede">${p.lead}</p>`
+    : `<p class="d-lede">${p.lead}</p>
+  ${p.period ? `<p style="font-size:11.5px;color:var(--ink-faint);margin:7px 0 0;font-variant-numeric:tabular-nums"><b>Период:</b> ${p.period}</p>` : ''}`}
   <div class="sec-label">Что вы узнаете</div>
-  <div class="body-text">${p.sell.map(([h,t])=>`<p><b>${h}.</b> ${t}</p>`).join('')}</div>
-  <div class="sec-label">Что нужно от вас</div>
-  <div class="body-text"><p>${p.need}</p></div>
+  <div class="body-text">${p.sell.map(([h,t])=>`<p><b>${h}.</b><br>${t}</p>`).join('')}</div>
+  ${p.fields.length ? `<div class="sec-label">Что нужно от вас</div>
+  <div class="body-text"><p>${p.need}</p></div>` : ''}
   ${p.preview === 'doc'
     ? `<div class="sec-label">Как выглядит документ</div>
   <div class="pdfcar">
