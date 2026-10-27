@@ -8104,14 +8104,14 @@ const PROD = {
     res:'Ваш год · 2026–2027', resPhrase:'Год завершения: апрель — главное окно, осень — второе дыхание. Четыре школы согласны.'
   },
   yearWest: {
-    t:'Прогноз на год · западная', price:'1 990 ₽', crumb:'Разборы · прогноз на год',
-    lead:'Соляр на 4 февраля 2026 и ключевые транзиты года. Самый подробный годовой срез из четырёх школ.', period:'от дня рождения, 4 фев 2026 — 4 фев 2027',
+    t:'Прогноз на год · Западная астрология', price:'1 990 ₽', crumb:'Разборы · прогноз на год', cta:'Узнать свой год',
+    lead:'<b>Ваш год: от одного дня рождения до другого.</b> Самый подробный взгляд на год из четырёх школ: с каким настроем он к вам приходит, когда лучше действовать, а когда подождать.', period:'с 4 февраля 2026 по 4 февраля 2027',
     sell:[
-      ['Соляр','Карта на момент возврата Солнца — с каким характером приходит год именно к вам.'],
-      ['Транзиты по датам','Где разгон, где спад, когда лучше не начинать — с периодами, а не «во второй половине».'],
-      ['По сферам','Работа, отношения, деньги, силы — по вашей карте, а не по знаку.']
+      ['Характер вашего года','Главные темы и общий настрой: чему этот год хочет вас научить и куда ведёт.'],
+      ['Календарь года по датам','Когда ждать подъёма, когда спада, а когда лучше не начинать важное. С конкретными периодами, а не «во второй половине года».'],
+      ['Работа, отношения, деньги, силы','Что происходит в каждой сфере именно у вас, а не у всех людей вашего знака.']
     ],
-    need:'Ничего вводить не нужно — всё уже есть в вашем профиле.',
+    need:'Ничего: все данные уже в вашем профиле.',
     fields:[], depth:'67%', depthNote:'Считаем по данным профиля. Если уточните время рождения, пересчитаем бесплатно.',
     build:['Взяла вашу карту','Посчитала соляр — возврат Солнца','Разложила транзиты по месяцам','Пишу разбор'],
     doc:`
@@ -8678,16 +8678,18 @@ function prodPage() { const p = PROD[CUR]; return `<div class="pad">
   <div class="d-crumb">${p.crumb}</div>
   <h2 class="t-title" style="font-size:21px">${p.t}</h2>
   <p class="d-lede">${p.lead}</p>
-  ${p.period ? `<p style="font-size:11.5px;color:var(--ink-faint);margin:7px 0 0;font-variant-numeric:tabular-nums"><b>Ваш период:</b> ${p.period}</p>` : ''}
-  <div class="sec-label">Что внутри</div>
+  ${p.period ? `<p style="font-size:11.5px;color:var(--ink-faint);margin:7px 0 0;font-variant-numeric:tabular-nums"><b>Период:</b> ${p.period}</p>` : ''}
+  <div class="sec-label">Что вы узнаете</div>
   <div class="body-text">${p.sell.map(([h,t])=>`<p><b>${h}.</b> ${t}</p>`).join('')}</div>
-  <div class="sec-label">Что понадобится</div>
+  <div class="sec-label">Что нужно от вас</div>
   <div class="body-text"><p>${p.need}</p></div>
   ${p.access
-    ? `<div class="w-btn ghost" data-go="chat" style="margin-top:16px">Посмотреть, как она отвечает</div>`
-    : `<div class="w-btn ghost" data-res="${CUR}" style="margin-top:16px">Открыть пример разбора</div>`}
-  <div class="w-btn" data-go="${p.fields.length ? 'prodData' : 'prodDepth'}" style="margin-top:18px">${p.access ? 'Купить' : 'Рассчитать'} · ${p.price}</div>
-  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:10px;text-align:center">Оплата после того, как увидите глубину расчёта.<br>Оплачивая, вы принимаете <span style="color:var(--note)">оферту</span>.</p>
+    ? `<span class="pdflink" data-go="chat" style="margin-top:16px">Посмотреть, как она отвечает</span>`
+    : `<span class="pdflink" data-res="${CUR}" style="margin-top:16px">Посмотреть пример разбора</span>`}
+  <div class="docfoot boxed" style="margin-top:16px">
+    <p class="payterms">Оплата после того, как увидите глубину расчёта.<br>Оплачивая, вы принимаете <u data-go="doc-offer">оферту</u>.</p>
+    <div class="w-btn" data-go="${p.fields.length ? 'prodData' : 'prodDepth'}">${p.cta || (p.access ? 'Купить' : 'Рассчитать')} · ${p.price}</div>
+  </div>
 </div>`; }
 
 function prodData() { const p = PROD[CUR]; const has = p.fields.length; return `<div class="pad">
