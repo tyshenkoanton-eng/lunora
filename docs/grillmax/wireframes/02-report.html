@@ -8784,13 +8784,43 @@ function prodPay() { PAYKIND = 'prod'; const p = PROD[CUR]; return `<div class="
 </div>`; }
 
 function prodBuild() { const p = PROD[CUR]; return `<div class="pad" style="min-height:500px;display:flex;flex-direction:column;justify-content:center">
-  <div class="kicker" style="margin-bottom:22px">Собираю ваш разбор</div>
-  <div style="display:flex;flex-direction:column;gap:13px;font-size:13px">
-    ${p.build.map((b,i)=>`<div style="display:flex;gap:10px;align-items:center;color:${i<p.build.length-2?'var(--good)':(i===p.build.length-2?'var(--ink)':'var(--ink-faint)')}"><span>${i<p.build.length-2?'✓':(i===p.build.length-2?'◷':'·')}</span> ${b}</div>`).join('')}
+  <div class="kicker" style="margin-bottom:10px">Собираю ваш разбор</div>
+  <div class="bar" style="margin:0 0 18px"><i id="prodBar" style="left:0;width:0%;transition:width 1.2s linear"></i></div>
+  <div id="prodSteps" style="display:flex;flex-direction:column;gap:11px;font-size:12.5px">
+    ${p.build.map((t,i)=>`<div class="cstep" data-ps="${i}" style="display:flex;gap:9px;align-items:flex-start;color:var(--ink-faint)"><span style="width:13px;flex:0 0 auto">·</span><div>${t}</div></div>`).join('')}
   </div>
-  <p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin-top:26px">Обычно занимает меньше минуты. Можно закрыть — пришлём, когда будет готово.</p>
-  <div class="w-btn" data-go="prodResult" style="margin-top:18px">Готово →</div>
+  <p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin-top:22px">Обычно занимает меньше минуты. Можно закрыть — пришлём, когда будет готово.</p>
+  <div class="w-btn off" id="prodGo" data-go="prodResult" style="margin-top:18px">Готово →</div>
 </div>`; }
+
+let PROD_T = null;
+function prodRun() {
+  clearInterval(PROD_T);
+  const bar = document.getElementById('prodBar');
+  if (!bar) return;
+  const total = view.querySelectorAll('.cstep').length;
+  let i = 0;
+  const paint = () => {
+    bar.style.width = Math.round((i + 1) / total * 100) + '%';
+    view.querySelectorAll('.cstep').forEach((s, n) => {
+      const done = n < i, now = n === i;
+      s.style.color = done ? 'var(--good)' : now ? 'var(--ink)' : 'var(--ink-faint)';
+      s.firstElementChild.textContent = done ? '✓' : now ? '◷' : '·';
+    });
+  };
+  paint();
+  PROD_T = setInterval(() => {
+    i++;
+    if (i >= total) {
+      view.querySelectorAll('.cstep').forEach(s => { s.style.color = 'var(--good)'; s.firstElementChild.textContent = '✓'; });
+      bar.style.width = '100%';
+      const go = document.getElementById('prodGo');
+      if (go) go.classList.remove('off');
+      clearInterval(PROD_T); return;
+    }
+    paint();
+  }, 1200);
+}
 
 /* иконка документа в системном виде: лист с загнутым углом и красной плашкой */
 function pdfIcon() {
@@ -10301,6 +10331,7 @@ function render(k, push = true, restore = 0) {
   if (k === 'recalcRun' && typeof recalcRunPlay === 'function') recalcRunPlay();
   if (k === 'personCalc' && typeof personCalcPlay === 'function') personCalcPlay();
   if (k === 'docBuild' && typeof docRun === 'function') docRun();
+  if (k === 'prodBuild' && typeof prodRun === 'function') prodRun();
   if (k === 'profile' && typeof pcRun === 'function') pcRun();
   if (k === 'invite' && typeof invMark === 'function') invMark();
   /* объяснение двух разрезов показывается один раз — при первом входе в профиль */
