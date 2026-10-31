@@ -8104,7 +8104,7 @@ const PROD = {
     res:'Ваш год · 2026–2027', resPhrase:'Год завершения: апрель — главное окно, осень — второе дыхание. Четыре школы согласны.'
   },
   yearWest: {
-    t:'Прогноз на год · Западная астрология', price:'1 990 ₽', crumb:'Разборы · прогноз на год', cta:'Рассчитать прогноз', preview:'doc', docPages:'Около 12 страниц',
+    t:'Прогноз на год · Западная астрология', price:'1 990 ₽', crumb:'Разборы · прогноз на год', cta:'Рассчитать прогноз', preview:'doc', docPages:'Около 12 страниц в PDF: общий портрет года, календарь по датам, разбор по четырём сферам и таблицы расчёта, если захотите проверить цифры.',
     tag:'От одного дня рождения до другого.',
     lead:'Самый подробный взгляд на год из четырёх школ: с каким настроем он к вам приходит, когда лучше действовать, а когда подождать.', period:'С 4 февраля 2026 по 4 февраля 2027',
     sell:[
@@ -8679,8 +8679,8 @@ function prodPage() { const p = PROD[CUR]; return `<div class="pad">
   <div class="d-crumb">${p.crumb}</div>
   <h2 class="t-title" style="font-size:21px">${p.t.replace(' · ', '<br>')}</h2>
   ${p.tag
-    ? `<p class="d-lede" style="border:none;padding-bottom:0;margin-bottom:12px"><b>Ваш год:</b><br>${p.tag}${p.period ? `<br><b>Период:</b><br>${p.period}` : ''}</p>
-  <p class="d-lede" style="border:none;padding-bottom:0">${p.lead}</p>`
+    ? `<p class="d-lede" style="border:none;padding-bottom:0;margin-bottom:12px">${p.lead}</p>
+  <p class="d-lede" style="border:none;padding-bottom:0"><b>Ваш год:</b><br>${p.tag}${p.period ? `<br><b>Период:</b><br>${p.period}` : ''}</p>`
     : `<p class="d-lede">${p.lead}</p>
   ${p.period ? `<p style="font-size:11.5px;color:var(--ink-faint);margin:7px 0 0;font-variant-numeric:tabular-nums"><b>Период:</b> ${p.period}</p>` : ''}`}
   <div class="sec-label">Что вы узнаете</div>
@@ -8693,7 +8693,7 @@ function prodPage() { const p = PROD[CUR]; return `<div class="pad">
     ${pdfPages('pdfStrip')}
     <div class="pdots" id="pdfDots"><i class="on" data-pdot="0"></i><i data-pdot="1"></i><i data-pdot="2"></i><i data-pdot="3"></i><i data-pdot="4"></i></div>
   </div>
-  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:12px">${p.docPages ? `${p.docPages} в PDF. ` : ''}Собирается по вашим данным в момент заказа.${DATAFULL ? '' : ' Если позже вы уточните данные о рождении, мы пересоберём его заново и бесплатно.'}</p>
+  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:12px">${p.docPages || `Собирается по вашим данным в момент заказа.${DATAFULL ? '' : ' Если позже вы уточните данные о рождении, мы пересоберём его заново и бесплатно.'}`}</p>
   <div style="text-align:center;margin-top:12px"><span class="pdflink" data-pdfdemo="${CUR}">Посмотреть пример документа</span></div>`
     : p.access
     ? `<span class="pdflink" data-go="chat" style="margin-top:16px">Посмотреть, как она отвечает</span>`
