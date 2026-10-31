@@ -8727,7 +8727,7 @@ function prodDepth() { const p = PROD[CUR]; const шагов = p.fields.length ?
                : OB.prec === 'n' ? 'время неизвестно' : '15:00 · ± 30 мин';
     const place = OB.addr || OB.city || 'Волгоград';
     return `<div class="pad">
-  <div class="dochead" data-go="prodPage"><span>&lsaquo;</span><div>Назад · ${p.t}</div></div>
+  <div class="dochead" data-go="prodPage"><span>&lsaquo;</span><div>Назад</div></div>
   <h2 class="t-title" style="font-size:21px">Проверьте данные</h2>
 
   <div class="sumcard" style="margin-top:14px">
@@ -8736,7 +8736,7 @@ function prodDepth() { const p = PROD[CUR]; const шагов = p.fields.length ?
   </div>
 
   <div class="body-text" style="margin-top:16px">
-    <p>Разбор начнёт собираться сразу после оплаты и появится в разделе «Мои разборы».${p.depthNote ? ' ' + p.depthNote : ''}</p>
+    <p>Разбор начнёт собираться сразу после оплаты и появится в разделе «Мои разборы».</p>
   </div>
 
   <div class="docfoot boxed" style="margin-top:18px">
