@@ -8726,6 +8726,7 @@ function prodDepth() { const p = PROD[CUR]; const шагов = p.fields.length ?
     const time = obTimeFull() && OB.prec !== 'n' ? `${OB.h}:${OB.i}${PREC_LABEL[OB.prec]}`
                : OB.prec === 'n' ? 'время неизвестно' : '15:00 · ± 30 мин';
     const place = OB.addr || OB.city || 'Волгоград';
+    PAYKIND = 'prod';
     return `<div class="pad">
   <div class="dochead" data-go="prodPage"><span>&lsaquo;</span><div>Назад</div></div>
   <h2 class="t-title" style="font-size:21px">Проверьте данные</h2>
@@ -8741,7 +8742,7 @@ function prodDepth() { const p = PROD[CUR]; const шагов = p.fields.length ?
 
   <div class="docfoot boxed" style="margin-top:18px">
     <p class="payterms">Оплачивая, вы принимаете <u data-go="doc-offer">оферту</u>.</p>
-    <div class="w-btn" data-go="prodPay">Оплатить · ${p.price}</div>
+    <div class="w-btn" data-go="payGate">Перейти к оплате · ${p.price}</div>
   </div>
 </div>`;
   }
