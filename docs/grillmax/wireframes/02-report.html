@@ -6006,7 +6006,7 @@ Object.defineProperty(S, 'pdfSell', { get: () => `<div class="pad">
     <div class="pdots" id="pdfDots"><i class="on" data-pdot="0"></i><i class="" data-pdot="1"></i><i class="" data-pdot="2"></i><i class="" data-pdot="3"></i><i class="" data-pdot="4"></i></div>
   </div>
 
-  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:12px">${DOC_PAGES_WORD} собираются по вашим данным в момент скачивания.${DATAFULL ? '' : ' Если позже вы уточните данные о рождении, мы пересоберём файл заново и бесплатно.'}</p>
+  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:12px">${DOC_PAGES_WORD} собираются по вашим данным в момент скачивания.</p>
 
   <div style="text-align:center;margin-top:12px"><span class="pdflink" data-pdfdemo="1">Посмотреть пример документа</span></div>
 
@@ -7965,7 +7965,7 @@ const PROD = {
       ['По сферам','Работа, отношения, деньги, силы — по вашей карте, а не по знаку.']
     ],
     need:'Ничего вводить не нужно — всё уже есть в вашем профиле.',
-    fields:[], depth:'67%', depthNote:'Считаем по данным профиля. Если уточните данные о рождении, пересчитаем бесплатно.',
+    fields:[], depth:'67%', depthNote:'Считаем по данным профиля.',
     build:['Взяла вашу карту','Посчитала соляр — возврат Солнца','Проверила ведический варшапхал','Наложила годовой столп Ба-Цзы','Свожу три школы','Пишу разбор'],
     doc:`
 
@@ -8113,7 +8113,7 @@ const PROD = {
       ['Работа, отношения, деньги, силы','Что происходит в каждой сфере именно у вас, а не у всех людей вашего знака.']
     ],
     need:'Ничего: все данные уже в вашем профиле.',
-    fields:[], depth:'67%', depthNote:'Считаем по данным профиля. Если уточните время рождения, пересчитаем бесплатно.',
+    fields:[], depth:'67%', depthNote:'Считаем по данным профиля.',
     build:['Взяла вашу карту','Посчитала соляр — возврат Солнца','Разложила транзиты по месяцам','Пишу разбор'],
     doc:`
   <div class="sec-label">Что это за год</div>
@@ -8412,7 +8412,7 @@ const PROD = {
       ['Что делать','Куда направить силы, а что в этот год лучше не форсировать.']
     ],
     need:'Ничего вводить не нужно — всё уже есть в вашем профиле.',
-    fields:[], depth:'67%', depthNote:'Считаем по данным профиля. Если уточните время рождения, пересчитаем бесплатно.',
+    fields:[], depth:'67%', depthNote:'Считаем по данным профиля.',
     build:['Взяла вашу карту','Наложила годовой столп','Проверила взаимодействия стихий','Пишу разбор'],
     doc:`
   <div class="sec-label">Стихия года и ваша карта</div>
@@ -8693,7 +8693,7 @@ function prodPage() { const p = PROD[CUR]; return `<div class="pad">
     ${pdfPages('pdfStrip')}
     <div class="pdots" id="pdfDots"><i class="on" data-pdot="0"></i><i data-pdot="1"></i><i data-pdot="2"></i><i data-pdot="3"></i><i data-pdot="4"></i></div>
   </div>
-  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:12px">${p.docPages || `Собирается по вашим данным в момент заказа.${DATAFULL ? '' : ' Если позже вы уточните данные о рождении, мы пересоберём его заново и бесплатно.'}`}</p>
+  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:12px">${p.docPages || `Собирается по вашим данным в момент заказа.`}</p>
   <div style="text-align:center;margin-top:12px"><span class="pdflink" data-pdfdemo="${CUR}">Посмотреть пример документа</span></div>`
     : p.access
     ? `<span class="pdflink" data-go="chat" style="margin-top:16px">Посмотреть, как она отвечает</span>`
