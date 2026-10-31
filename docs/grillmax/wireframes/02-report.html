@@ -8720,6 +8720,31 @@ function prodData() { const p = PROD[CUR]; const has = p.fields.length; return `
 </div>`; }
 
 function prodDepth() { const p = PROD[CUR]; const шагов = p.fields.length ? 3 : 2;
+  if (!p.fields.length) {
+    const fio = [OB.name, OB.pat, OB.fam].filter(Boolean).join(' ') || 'Антон Юрьевич Тыщенко';
+    const date = obDateFull() ? `${OB.d} ${OB.m} ${OB.y}` : '4 февраля 1984';
+    const time = obTimeFull() && OB.prec !== 'n' ? `${OB.h}:${OB.i}${PREC_LABEL[OB.prec]}`
+               : OB.prec === 'n' ? 'время неизвестно' : '15:00 · ± 30 мин';
+    const place = OB.addr || OB.city || 'Волгоград';
+    return `<div class="pad">
+  <div class="dochead" data-go="prodPage"><span>&lsaquo;</span><div>Назад · ${p.t}</div></div>
+  <h2 class="t-title" style="font-size:21px">Проверьте данные</h2>
+
+  <div class="sumcard" style="margin-top:14px">
+    <div><u>Разбор</u><b>${p.t}</b></div>
+    <div class="ml"><u>Данные для расчёта</u><b>${fio}<br>${date}, ${time}<br>${place}</b></div>
+  </div>
+
+  <div class="body-text" style="margin-top:16px">
+    <p>Разбор начнёт собираться сразу после оплаты и появится в разделе «Мои разборы».${p.depthNote ? ' ' + p.depthNote : ''}</p>
+  </div>
+
+  <div class="docfoot boxed" style="margin-top:18px">
+    <p class="payterms">Оплачивая, вы принимаете <u data-go="doc-offer">оферту</u>.</p>
+    <div class="w-btn" data-go="prodPay">Оплатить · ${p.price}</div>
+  </div>
+</div>`;
+  }
   return `<div class="pad">
   <div class="dochead" data-go="${p.fields.length ? 'prodData' : 'prodPage'}"><span>&lsaquo;</span><div>Назад</div></div>
   <div class="d-crumb">${p.t} · шаг ${шагов - 1} из ${шагов}</div>
