@@ -8790,7 +8790,7 @@ function prodBuild() { const p = PROD[CUR]; return `<div class="pad" style="min-
     ${p.build.map((t,i)=>`<div class="cstep" data-ps="${i}" style="display:flex;gap:9px;align-items:flex-start;color:var(--ink-faint)"><span style="width:13px;flex:0 0 auto">·</span><div>${t}</div></div>`).join('')}
   </div>
   <p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin-top:22px">Обычно занимает меньше минуты. Можно закрыть — пришлём, когда будет готово.</p>
-  <div class="w-btn off" id="prodGo" data-go="prodResult" style="margin-top:18px">Готово →</div>
+  <div class="w-btn off" id="prodGo" data-go="prodResult" style="margin-top:18px">Открыть разбор</div>
 </div>`; }
 
 let PROD_T = null;
