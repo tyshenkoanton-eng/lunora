@@ -8703,7 +8703,7 @@ function prodPage() { const p = PROD[CUR]; return `<div class="pad">
 
 function prodData() { const p = PROD[CUR]; const has = p.fields.length; return `<div class="pad">
   <div class="dochead" data-go="prodPage"><span>&lsaquo;</span><div>Назад · ${p.t}</div></div>
-  <div class="d-crumb">${p.t} · шаг 1 из 3</div>
+  <div class="d-crumb">${p.t} · шаг 1 из 2</div>
   <!-- экран показывается только когда есть что вводить: без полей конвейер идёт сразу на глубину -->
   <h2 class="t-title" style="font-size:20px">${has ? 'Что нужно для расчёта' : 'Всё уже есть'}</h2>
   ${has ? `<p class="d-lede">${p.need}</p>
@@ -8713,24 +8713,31 @@ function prodData() { const p = PROD[CUR]; const has = p.fields.length; return `
   ${CUR==='compat'||CUR==='child' ? '<div class="w-check" style="margin-top:16px"><div class="w-box"></div><div>Я имею право передать эти данные и понимаю, что они будут использованы только для расчёта</div></div>' : ''}`
   : `<p class="d-lede">Ничего вводить не нужно — всё берём из вашего профиля.</p>
   <div class="cards"><div class="card-it stub"><div><div class="t">Антон Юрьевич Тыщенко</div><span class="s">4 февраля 1984, 15:00 · Волгоград</span></div><div class="chev">·</div></div></div>`}
-  <div class="w-btn" data-go="prodDepth" style="margin-top:18px">${has?'Посчитать':'Продолжить'}</div>
+  <div class="w-btn" data-go="prodDepth" style="margin-top:18px">Продолжить</div>
 </div>`; }
 
-function prodDepth() { const p = PROD[CUR]; const шагов = p.fields.length ? 3 : 2;
-  if (!p.fields.length) {
-    const fio = [OB.name, OB.pat, OB.fam].filter(Boolean).join(' ') || 'Антон Юрьевич Тыщенко';
-    const date = obDateFull() ? `${OB.d} ${OB.m} ${OB.y}` : '4 февраля 1984';
-    const time = obTimeFull() && OB.prec !== 'n' ? `${OB.h}:${OB.i}${PREC_LABEL[OB.prec]}`
-               : OB.prec === 'n' ? 'время неизвестно' : '15:00 · ± 30 мин';
-    const place = OB.addr || OB.city || 'Волгоград';
+function prodDepth() { const p = PROD[CUR];
+  if (!p.access) {
+    const has = p.fields.length;
+    let rows;
+    if (has) {
+      rows = p.fields.map(([l, v]) => `${l}: ${v}`).join('<br>');
+    } else {
+      const fio = [OB.name, OB.pat, OB.fam].filter(Boolean).join(' ') || 'Антон Юрьевич Тыщенко';
+      const date = obDateFull() ? `${OB.d} ${OB.m} ${OB.y}` : '4 февраля 1984';
+      const time = obTimeFull() && OB.prec !== 'n' ? `${OB.h}:${OB.i}${PREC_LABEL[OB.prec]}`
+                 : OB.prec === 'n' ? 'время неизвестно' : '15:00 · ± 30 мин';
+      const place = OB.addr || OB.city || 'Волгоград';
+      rows = `${fio}<br>${date}, ${time}<br>${place}`;
+    }
     PAYKIND = 'prod';
     return `<div class="pad">
-  <div class="dochead" data-go="prodPage"><span>&lsaquo;</span><div>Назад</div></div>
+  <div class="dochead" data-go="${has ? 'prodData' : 'prodPage'}"><span>&lsaquo;</span><div>Назад</div></div>
   <h2 class="t-title" style="font-size:21px">Проверьте данные</h2>
 
   <div class="sumcard" style="margin-top:14px">
     <div><u>Разбор</u><b>${p.t}</b></div>
-    <div class="ml"><u>Данные для расчёта</u><b>${fio}<br>${date}, ${time}<br>${place}</b></div>
+    <div class="ml"><u>Данные для расчёта</u><b>${rows}</b></div>
   </div>
 
   <div class="body-text" style="margin-top:16px">
@@ -8743,6 +8750,7 @@ function prodDepth() { const p = PROD[CUR]; const шагов = p.fields.length ?
   </div>
 </div>`;
   }
+  const шагов = p.fields.length ? 3 : 2;
   return `<div class="pad">
   <div class="dochead" data-go="${p.fields.length ? 'prodData' : 'prodPage'}"><span>&lsaquo;</span><div>Назад</div></div>
   <div class="d-crumb">${p.t} · шаг ${шагов - 1} из ${шагов}</div>
