@@ -9865,7 +9865,6 @@ Object.defineProperty(S, 'payWait', { get() {
   const line = PAYKIND === 'slot' ? 'Дополнительный слот в ленте · 290 ₽'
              : pdf ? 'Индивидуальный разбор личности · 149 ₽' : (p ? `${p.t} · ${p.price}` : 'Разбор');
   return `<div class="pad" style="min-height:500px;display:flex;flex-direction:column;justify-content:center;text-align:center">
-  <div class="payic wait">◷</div>
   <b style="font-size:19px;font-weight:640;display:block;margin-bottom:10px">Проверяем оплату</b>
   <p style="font-size:13px;color:var(--ink-soft);line-height:1.6;margin:0 0 6px">${line}</p>
   <p style="font-size:12.5px;color:var(--ink-faint);line-height:1.6;margin:0 0 22px">Банк ещё не подтвердил платёж. Обычно это занимает от нескольких секунд до нескольких минут.<br><br>При необходимости приложение можно закрыть. Как только мы получим ответ от банка, пришлём вам оповещение в мессенджер.</p>
@@ -9885,7 +9884,6 @@ Object.defineProperty(S, 'payOk', { get() {
              : pdf ? 'Индивидуальный разбор личности · 149 ₽'
              : (p ? `${p.t} · ${p.price}` : 'Разбор');
   return `<div class="pad" style="min-height:500px;display:flex;flex-direction:column;justify-content:center;text-align:center">
-  <div class="payic ok">✓</div>
   <b style="font-size:19px;font-weight:640;display:block;margin-bottom:10px">Оплата подтверждена</b>
   <p style="font-size:13px;color:var(--ink-soft);line-height:1.6;margin:0 0 6px">${line}</p>
   <p style="font-size:12.5px;color:var(--ink-faint);line-height:1.6;margin:0 0 22px">${slot
@@ -9893,16 +9891,15 @@ Object.defineProperty(S, 'payOk', { get() {
     : 'Мы получили платёж. Готовы приступить к сборке, это займёт не более минуты.'}</p>
   <div class="docfoot boxed" style="margin-top:20px">
     ${slot
-      ? `<div class="w-btn ghost" data-go="personCalc">Рассчитать прогноз</div>`
-      : `<div class="w-btn ghost" data-go="${pdf ? 'docBuild' : 'prodBuild'}">${ICO.down}Собрать ${pdf ? 'документ' : 'разбор'}</div>`}
-    <div class="w-btn ghost" data-recopen="1">${ICO.mail}Открыть чек</div>
+      ? `<div class="w-btn" data-go="personCalc">Рассчитать прогноз</div>`
+      : `<div class="w-btn" data-go="${pdf ? 'docBuild' : 'prodBuild'}">Собрать ${pdf ? 'документ' : 'разбор'}</div>`}
+    <div class="w-btn ghost" data-recopen="1">Открыть чек</div>
   </div>
 </div>`;
 }});
 
 Object.defineProperty(S, 'payErr', { get() {
   return `<div class="pad" style="min-height:500px;display:flex;flex-direction:column;justify-content:center;text-align:center">
-  <div class="payic bad">✕</div>
   <b style="font-size:19px;font-weight:640;display:block;margin-bottom:10px">Оплата не прошла</b>
   <p style="font-size:13px;color:var(--ink-soft);line-height:1.6;margin:0 0 22px">Платёж не завершён, деньги не списаны. Попробуйте ещё раз или оплатите другой картой.</p>
   <div class="w-btn" data-go="payGate">Повторить оплату</div>
