@@ -8855,7 +8855,7 @@ Object.defineProperty(S, 'docView', { get() {
   const pv = DOCPREVIEW;
   const fc = pv && CUR !== 'pdf';
   return `<div class="pad">
-  <div class="dochead" data-go="${pv ? (CUR === 'pdf' ? 'pdfSell' : 'prodPage') : 'prodResult'}"><span>&lsaquo;</span><div>Назад · ${pv ? (CUR === 'pdf' ? 'разбор в одном файле' : p.t) : 'документ'}</div></div>
+  <div class="dochead" data-go="${pv ? (CUR === 'pdf' ? 'pdfSell' : 'prodPage') : 'prodResult'}"><span>&lsaquo;</span><div>Назад${pv ? (CUR === 'pdf' ? ' · разбор в одном файле' : '') : ' · документ'}</div></div>
   <h2 class="t-title" style="font-size:19px">${pv ? 'Пример документа' : (p.file ? p.file.name : 'Документ')}</h2>
   <p class="t-onephrase">${pv ? (fc ? 'Так выглядит годовой прогноз внутри. Ваш соберётся по вашей карте' : 'Так выглядит разбор внутри. Ваш соберётся по вашим данным') : (p.file ? p.file.size + ' · ' + p.file.pages : '')}</p>
 
