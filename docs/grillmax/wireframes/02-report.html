@@ -9023,6 +9023,8 @@ const regBy = n => REG.find(r => r.n === n);
 let cur = 's1';
 /* экран, на котором остановились в прошлый раз — читаем до первой отрисовки */
 const START_AT = (() => { try { return localStorage.getItem('lunora_screen'); } catch (e) { return null; } })();
+const START_REG = (() => { try { return localStorage.getItem('lunora_reg_cur'); } catch (e) { return null; } })();
+const START_CUR = (() => { try { return localStorage.getItem('lunora_cur'); } catch (e) { return null; } })();
 const hist = [];
 const view = document.getElementById('view');
 /* Закрытые экраны: согласованы и правкам не подлежат.
@@ -11841,11 +11843,9 @@ regGo(REG[0].n);
     const df = localStorage.getItem('lunora_datafull');
     if (df) DATAFULL = df === '1';
     if (f !== 'npd') FISC = f;
-    const savedCur = localStorage.getItem('lunora_cur');
-    if (savedCur && PROD[savedCur]) CUR = savedCur;
-    const regCur = localStorage.getItem('lunora_reg_cur');
-    const rr = regCur && regBy(regCur);
-    if (rr && rr.k === k) regGo(regCur);
+    if (START_CUR && PROD[START_CUR]) CUR = START_CUR;
+    const rr = START_REG && regBy(START_REG);
+    if (rr && rr.k === k) regGo(START_REG);
     else if (k && S[k] !== undefined) render(k, false);
   } catch (e) {}
 })();
