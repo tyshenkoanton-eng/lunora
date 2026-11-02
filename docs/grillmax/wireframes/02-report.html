@@ -10314,7 +10314,7 @@ function render(k, push = true, restore = 0) {
   document.getElementById('tabbar').style.display = (/^s\d$/.test(k) || k.startsWith('ob')) ? 'none' : 'flex';
   const tab = TAB_OF[k];
   document.querySelectorAll('#tabbar i').forEach(i => i.classList.toggle('on', i.dataset.tab === tab));
-  try { localStorage.setItem('lunora_screen', k); } catch (e) {}
+  try { localStorage.setItem('lunora_screen', k); if (typeof CUR !== 'undefined') localStorage.setItem('lunora_cur', CUR); } catch (e) {}
   if (typeof CALC_T !== 'undefined' && CALC_T) clearInterval(CALC_T);
   if (typeof RECALC_T !== 'undefined' && RECALC_T) clearInterval(RECALC_T);
   if (typeof DOC_T !== 'undefined' && DOC_T) clearInterval(DOC_T);
@@ -11745,6 +11745,7 @@ function regGo(n) {
   const r = regBy(n);
   if (!r) return;
   REG_CUR = n;
+  try { localStorage.setItem('lunora_reg_cur', n); } catch (e) {}
   const st = r.s || {};
   /* наложения-состояния (PDFST/PAYST) сбрасываем на каждом переходе в каталоге,
      иначе 'bought'/'stale'/'norec' от прошлой записи протекает в следующую */
@@ -11840,7 +11841,12 @@ regGo(REG[0].n);
     const df = localStorage.getItem('lunora_datafull');
     if (df) DATAFULL = df === '1';
     if (f !== 'npd') FISC = f;
-    if (k && S[k] !== undefined) render(k, false);
+    const savedCur = localStorage.getItem('lunora_cur');
+    if (savedCur && PROD[savedCur]) CUR = savedCur;
+    const regCur = localStorage.getItem('lunora_reg_cur');
+    const rr = regCur && regBy(regCur);
+    if (rr && rr.k === k) regGo(regCur);
+    else if (k && S[k] !== undefined) render(k, false);
   } catch (e) {}
 })();
 
