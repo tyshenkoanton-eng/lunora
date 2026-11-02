@@ -9084,6 +9084,8 @@ function regFor(k) {
   if (cands.length <= 1) return cands[0] || null;
   const score = r => {
     let s = 0;
+    /* продукт: у экранов флоу один ключ на все разборы, различает их только prod */
+    if (r.prod) s += (r.prod === CUR) ? 4 : -4;
     /* состояние экрана (норма/пусто/…): запись без r.st подразумевает норму */
     s += ((r.st || 'ok') === STATE) ? 2 : -2;
     if (r.tab) {
