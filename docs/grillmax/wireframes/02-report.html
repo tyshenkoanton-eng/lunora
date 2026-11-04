@@ -623,6 +623,8 @@
   /* ---------- тема ---------- */
   .t-title { font-size: 23px; font-weight: 650; letter-spacing: -.02em; line-height: 1.2; margin: 0 0 12px; }
   .t-onephrase { font-size: 16.5px; line-height: 1.45; font-weight: 500; color: var(--ink); margin: 0 0 20px; letter-spacing: -.01em; }
+  .res-school { font-size: 15px; font-weight: 600; color: var(--ink-soft); margin: 0 0 1px; letter-spacing: -.01em; }
+  .res-when { font-size: 12.5px; font-weight: 600; color: var(--ink-faint); letter-spacing: .06em; margin: 0 0 18px; }
 
   .luna-block { background: var(--luna-bg); border: 1px solid var(--luna-line); border-radius: 12px; padding: 15px 15px 16px; margin-bottom: 26px; }
   .luna-block .lab { font-size: 10px; letter-spacing: .14em; text-transform: uppercase; color: var(--luna); font-weight: 750; margin-bottom: 10px; }
@@ -2066,7 +2068,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v574</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v575</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9042,8 +9044,8 @@ Object.defineProperty(S, 'docView', { get() {
 
 function prodResult() { const p = PROD[CUR]; return `<div class="pad">
   <div class="dochead" data-go="shop"><span>‹</span><div>Мои разборы</div></div>
-  ${p.resEyebrow ? `<p class="eyebrow" style="margin:6px 0 7px">${p.resEyebrow}</p>` : ''}
-  <h2 class="t-title" style="font-size:21px;margin-top:${p.resEyebrow ? '0' : '4px'}">${p.res}</h2>
+  <h2 class="t-title" style="font-size:21px;margin:4px 0 ${p.resEyebrow ? '5px' : '12px'}">${p.res}</h2>
+  ${p.resEyebrow ? `<p class="res-school">${p.resEyebrow.split(' · ')[0]}</p><p class="res-when">${p.resEyebrow.split(' · ')[1] || ''}</p>` : ''}
   ${p.resPhrase ? `<p class="t-onephrase">${p.resPhrase}</p>` : ''}
 
   ${p.file ? `<div class="bigfile" data-save="doc">
