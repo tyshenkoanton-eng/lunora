@@ -2068,7 +2068,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v575</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v576</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -7117,7 +7117,7 @@ Object.defineProperty(S, "shop", { get: buildShop });
 Object.defineProperty(S, 'shopMe', { get() {
   const pdfCard = PDFST === 'bought'
     ? `<div class="card-it" data-godocs="1"><div><div class="t">PDF файл вашей карты</div><span class="s">Куплен · в разделе «Мои разборы»</span></div><div class="chev">›</div></div>`
-    : `<div class="card-it" data-prod="pdf"><div><div class="t">PDF файл вашей карты</div><span class="s">Полный разбор вашей личности в красивом PDF файле</span></div><div class="chev">›</div></div>`;
+    : `<div class="card-it" data-go="pdfSell"><div><div class="t">PDF файл вашей карты</div><span class="s">Полный разбор вашей личности в красивом PDF файле</span></div><div class="chev">›</div></div>`;
   return `<div class="pad">
   <div class="dochead" data-go="shop"><span>&lsaquo;</span><div>Назад · Разборы</div></div>
   <h2 class="t-title" style="font-size:21px">Обо мне</h2>
