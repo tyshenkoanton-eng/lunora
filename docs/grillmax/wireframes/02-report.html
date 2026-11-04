@@ -2066,7 +2066,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v573</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v574</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -7071,7 +7071,7 @@ function buildShop() { return `<div class="pad">
     <div class="cards">
       <div class="doc" data-res="yearWest"><b>Прогноз на год</b><span>Западная школа · 2026-2027</span></div>
       <div class="doc" data-res="yearVedic"><b>Прогноз на год</b><span>Ведическая школа · 2026-2027</span></div>
-      <div class="doc" data-res="yearBazi"><b>Прогноз на год</b><span>Ба-Цзы · 2026-2027</span></div>
+      <div class="doc" data-res="yearBazi"><b>Прогноз на год</b><span>Ба Цзы · 2026-2027</span></div>
       <div class="doc" data-res="yearNum"><b>Прогноз на год</b><span>Нумерология · 2026</span></div>
       <div class="doc" data-res="rename"><b>Смена фамилии</b><span>Тыщенко \u2192 Ковалёва</span></div>
       <div class="doc" data-res="pdf"><b>Полный разбор личности</b><span>PDF \u00b7 ${DOC_PAGES_TXT}</span></div>
@@ -8102,7 +8102,7 @@ const PROD = {
     <div class="pr"><u>Ба-Цзы</u><span>Годовой столп Бин-Инь (丙寅) поверх карты рождения. Взаимодействия стихий и столпов по сезонам.</span></div>
     <div class="pr"><u>Нумерология</u><span>Число личного года (9), положение в девятилетнем цикле. Считается по календарю, не от дня рождения.</span></div>
   </div>`,
-    res:'Ваш год · 2026–2027', resPhrase:'Год завершения: апрель — главное окно, осень — второе дыхание. Четыре школы согласны.'
+    res:'Прогноз на год', resEyebrow:'Четыре школы · 2026-2027', resPhrase:'Год завершения: апрель — главное окно, осень — второе дыхание. Четыре школы согласны.'
   },
   yearWest: { back:'shopYear',
     t:'Прогноз на год · Западная астрология', price:'1 990 ₽', crumb:'Разборы · прогноз на год', cta:'Рассчитать прогноз', preview:'doc', docPages:'Около 12 страниц в PDF: главные темы года, календарь по датам, разбор по трём сферам (работа и деньги, отношения, здоровье) и таблицы расчёта, если захотите проверить цифры.',
@@ -8256,7 +8256,7 @@ const PROD = {
     <p style="font-size:11.5px;color:var(--ink-faint)">Прогноз описывает тенденции, а не предопределённые события. Это опора для решений, а не замена им.</p>
   </div>
 `,
-    res:'Ваш год · западная · 2026–2027', resPhrase:'Год на доведение начатого: апрель — главное окно, осень — второе дыхание.'
+    res:'Прогноз на год', resEyebrow:'Западная школа · 2026-2027', resPhrase:'Год на доведение начатого: апрель — главное окно, осень — второе дыхание.'
   },
   yearVedic: { back:'shopYear',
     t:'Прогноз на год · Ведическая астрология', price:'1 990 ₽', crumb:'Разборы · прогноз на год', cta:'Рассчитать прогноз', preview:'doc', docPages:'Около 12 страниц в PDF: описание вашего периода, карта года, разбор по трём сферам (работа и деньги, отношения, здоровье) и таблицы расчёта, если захотите проверить цифры.',
@@ -8415,7 +8415,7 @@ const PROD = {
     <p style="font-size:11.5px;color:var(--ink-faint)">Прогноз описывает тенденции, а не предопределённые события. Это опора для решений, а не замена им.</p>
   </div>
 `,
-    res:'Ваш год · ведическая · 2026–2027', resPhrase:'Период ревизии внутри большого цикла Меркурия. Отпустите лишнее: Венера уже на подходе.'
+    res:'Прогноз на год', resEyebrow:'Ведическая школа · 2026-2027', resPhrase:'Период ревизии внутри большого цикла Меркурия. Отпустите лишнее: Венера уже на подходе.'
   },
   yearBazi: { back:'shopYear',
     t:'Прогноз на год · Ба Цзы', price:'1 490 ₽', crumb:'Разборы · прогноз на год', cta:'Рассчитать прогноз', preview:'doc', docPages:'Около 12 страниц в PDF: характер года, где легко и где трудно, разбор по трём сферам (работа и деньги, отношения, здоровье), советы и таблицы расчёта, если захотите проверить цифры.',
@@ -8577,7 +8577,7 @@ const PROD = {
     <p style="font-size:11.5px;color:var(--ink-faint)">Прогноз описывает тенденции, а не предопределённые события. Это опора для решений, а не замена им.</p>
   </div>
 `,
-    res:'Ваш год · Ба-Цзы · 2026–2027', resPhrase:'Огонь на дереве поверх вашей воды: год контроля и завершения. Весна — разгон, осень — закрытие.'
+    res:'Прогноз на год', resEyebrow:'Ба Цзы · 2026-2027', resPhrase:'Год Огненной Лошади давит на ваш Металл. Осень ваше окно, июнь беречь силы.'
   },
   yearNum: { back:'shopYear',
     t:'Прогноз на год · Нумерология', price:'990 ₽', crumb:'Разборы · прогноз на год', cta:'Рассчитать прогноз', preview:'doc', docPages:'Около 8 страниц в PDF: число и тема года, год по месяцам, разбор по трём сферам (работа и деньги, отношения, здоровье), следующий год и таблицы расчёта, если захотите проверить цифры.', periodLabel:'В этом году',
@@ -8755,7 +8755,7 @@ const PROD = {
     <p style="font-size:11.5px;color:var(--ink-faint)">Прогноз описывает тенденции, а не предопределённые события. Это опора для решений, а не замена им.</p>
   </div>
 `,
-    res:'Ваш личный год · нумерология', resPhrase:'Личный год 7 - год анализа и паузы. Сентябрь - главный месяц. В 2027 начнётся год результатов (8).'
+    res:'Прогноз на год', resEyebrow:'Нумерология · 2026', resPhrase:'Личный год 7 - год анализа и паузы. Сентябрь - главный месяц. В 2027 начнётся год результатов (8).'
   },
   rename: { back:'shopMe',
     t:'Смена имени или фамилии', price:'490 ₽', crumb:'Разборы · обо мне',
@@ -9042,7 +9042,8 @@ Object.defineProperty(S, 'docView', { get() {
 
 function prodResult() { const p = PROD[CUR]; return `<div class="pad">
   <div class="dochead" data-go="shop"><span>‹</span><div>Мои разборы</div></div>
-  <h2 class="t-title" style="font-size:21px;margin-top:4px">${p.res}</h2>
+  ${p.resEyebrow ? `<p class="eyebrow" style="margin:6px 0 7px">${p.resEyebrow}</p>` : ''}
+  <h2 class="t-title" style="font-size:21px;margin-top:${p.resEyebrow ? '0' : '4px'}">${p.res}</h2>
   ${p.resPhrase ? `<p class="t-onephrase">${p.resPhrase}</p>` : ''}
 
   ${p.file ? `<div class="bigfile" data-save="doc">
