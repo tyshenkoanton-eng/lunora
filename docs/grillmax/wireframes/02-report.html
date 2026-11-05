@@ -2068,7 +2068,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v579</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v580</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -8767,11 +8767,10 @@ const PROD = {
   },
   rename: { back:'shopMe',
     t:'Смена имени или фамилии', price:'490 ₽', crumb:'Разборы · обо мне',
-    lead:'Что изменится в числах, если сменить фамилию или взять псевдоним. Было и стало, рядом.',
+    lead:'Решили сменить имя или фамилию? Посчитаем, на что это повлияет: что изменится в вас, а что останется прежним. Покажем, что новое имя усиливает, а что ослабляет.',
     sell:[
-      ['Было и стало','Каждое число — текущее и новое, в одной таблице. Видно, что меняется, а что остаётся при вас.'],
-      ['Сравнение вариантов','Если рассматриваете несколько — покажем разницу между ними, а не только с текущим.'],
-      ['Что это значит','Не «лучше» и не «хуже» — что именно сдвигается и в какую сторону.']
+      ['Было и стало','Сравним в таблице, что вы умеете, чего хотите и каким вас видят другие. Слева как есть сейчас, справа как будет после смены. Например, одна фамилия может делать вас осторожным аналитиком, а другая лидером. Покажем, что именно меняется и насколько сильно.'],
+      ['Подходит ли новое имя вам','Сравним его с вашей датой рождения. Она не меняется, но по ней видно, поддерживает ли новое имя ваш характер или идёт против него. В конце будет понятный вывод и объяснение, почему он такой.']
     ],
     need:'Новая фамилия или имя. Текущее ФИО возьмём из профиля.',
     fields:[['Новое имя или фамилия','Ковалёва',1],['Ещё вариант','Тыщенко-Ковалёва',0]],
