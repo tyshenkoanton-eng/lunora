@@ -2068,7 +2068,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v583</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v584</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -8861,12 +8861,8 @@ function prodPage() { const p = PROD[CUR]; return `<div class="pad">
   <div class="body-text">${p.sell.map(([h,t])=>`<p><b>${h}.</b><br>${t}</p>`).join('')}</div>
   ${p.preview === 'doc'
     ? `<div class="sec-label">Как выглядит документ</div>
-  <div class="pdfcar">
-    ${pdfPages('pdfStrip')}
-    <div class="pdots" id="pdfDots"><i class="on" data-pdot="0"></i><i data-pdot="1"></i><i data-pdot="2"></i><i data-pdot="3"></i><i data-pdot="4"></i></div>
-  </div>
-  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:12px">${p.docPages || `Собирается по вашим данным в момент заказа.`}</p>
-  <div style="text-align:center;margin-top:12px"><span class="pdflink" data-pdfdemo="${CUR}">Посмотреть пример документа</span></div>`
+  <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.55">${p.docPages || `Собирается по вашим данным в момент заказа.`}</p>
+  <div style="text-align:center;margin-top:14px"><span class="pdflink" data-example="${CUR}">Посмотреть пример документа</span></div>`
     : p.access
     ? `<span class="pdflink" data-go="chat" style="margin-top:16px">Посмотреть, как она отвечает</span>`
     : `<span class="pdflink" data-example="${CUR}" style="margin-top:16px">Посмотреть пример разбора</span>`}
@@ -9050,7 +9046,7 @@ function prodResult() { const p = PROD[CUR]; const ex = EXPREVIEW; return `<div 
   <div class="dochead" data-go="${ex ? 'prodPage' : 'shop'}"><span>‹</span><div>${ex ? 'Назад' : 'Мои разборы'}</div></div>
   <h2 class="t-title" style="font-size:21px;margin:4px 0 ${p.resEyebrow ? '5px' : '12px'}">${p.res}</h2>
   ${p.resEyebrow ? `<p class="res-school">${p.resEyebrow.split(' · ')[0]}</p><p class="res-when">${p.resEyebrow.split(' · ')[1] || ''}</p>` : ''}
-  ${ex ? `<p class="t-onephrase">Пример разбора. Ваш соберётся по вашим данным.</p>`
+  ${ex ? `<p class="t-onephrase">Это пример документа. Ваш соберётся по вашим данным.</p>`
        : (p.resPhrase ? `<p class="t-onephrase">${p.resPhrase}</p>` : '')}
 
   ${p.file && !ex ? `<div class="bigfile" data-save="doc">
