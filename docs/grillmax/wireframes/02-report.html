@@ -2068,7 +2068,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v584</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v585</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -8844,7 +8844,6 @@ const PROD = {
 let CUR = 'compat';
 /* просмотр примера до покупки: тот же экран, но без скачивания и пересылки */
 let DOCPREVIEW = false;
-let EXPREVIEW = false;   /* результат открыт как пример (с витрины), а не как купленный документ */
 let SHOPTAB = 'list';
 let HASDOCS = true;
 
@@ -8861,11 +8860,15 @@ function prodPage() { const p = PROD[CUR]; return `<div class="pad">
   <div class="body-text">${p.sell.map(([h,t])=>`<p><b>${h}.</b><br>${t}</p>`).join('')}</div>
   ${p.preview === 'doc'
     ? `<div class="sec-label">Как выглядит документ</div>
-  <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.55">${p.docPages || `Собирается по вашим данным в момент заказа.`}</p>
-  <div style="text-align:center;margin-top:14px"><span class="pdflink" data-example="${CUR}">Посмотреть пример документа</span></div>`
+  <div class="pdfcar">
+    ${yearPages('pdfStrip')}
+    <div class="pdots" id="pdfDots"><i class="on" data-pdot="0"></i><i data-pdot="1"></i><i data-pdot="2"></i><i data-pdot="3"></i><i data-pdot="4"></i></div>
+  </div>
+  <p style="font-size:11px;color:var(--ink-faint);line-height:1.55;margin-top:12px">${p.docPages || `Собирается по вашим данным в момент заказа.`}</p>
+  <div style="text-align:center;margin-top:12px"><span class="pdflink" data-pdfdemo="${CUR}">Посмотреть пример документа</span></div>`
     : p.access
     ? `<span class="pdflink" data-go="chat" style="margin-top:16px">Посмотреть, как она отвечает</span>`
-    : `<span class="pdflink" data-example="${CUR}" style="margin-top:16px">Посмотреть пример разбора</span>`}
+    : `<span class="pdflink" data-pdfdemo="${CUR}" style="margin-top:16px">Посмотреть пример разбора</span>`}
   <div class="w-btn" data-go="${p.fields.length ? 'prodData' : 'prodDepth'}" style="margin-top:18px">${p.cta || (p.access ? 'Купить' : 'Рассчитать')} · ${p.price}</div>
 </div>`; }
 
@@ -9012,8 +9015,21 @@ function pdfPages(id) { return `<div class="strip" id="${id}">
     </div>`; }
 
 /* страницы годового прогноза — отдельный макет под западный прогноз */
-function yearPages(id) { return `<div class="strip" id="${id}">
-      <div class="pg"><svg viewBox="0 0 60 84" class="pgv"><circle cx="30" cy="28" r="16" fill="none" stroke="var(--wire-line)"/><circle cx="30" cy="28" r="9" fill="none" stroke="var(--wire-line)"/><line x1="30" y1="12" x2="30" y2="19" stroke="var(--wire-line)"/><line x1="30" y1="37" x2="30" y2="44" stroke="var(--wire-line)"/><line x1="14" y1="28" x2="21" y2="28" stroke="var(--wire-line)"/><line x1="39" y1="28" x2="46" y2="28" stroke="var(--wire-line)"/><line x1="10" y1="60" x2="50" y2="60" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="66" x2="40" y2="66" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="72" x2="46" y2="72" stroke="var(--wire-fill-2)" stroke-width="2"/></svg><b>Обложка</b></div><div class="pg"><svg viewBox="0 0 60 84" class="pgv"><line x1="10" y1="12" x2="34" y2="12" stroke="var(--wire-line)" stroke-width="2.5"/><line x1="10" y1="22" x2="50" y2="22" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="28" x2="50" y2="28" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="34" x2="44" y2="34" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="44" x2="50" y2="44" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="50" x2="50" y2="50" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="56" x2="38" y2="56" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="66" x2="50" y2="66" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="72" x2="46" y2="72" stroke="var(--wire-fill-2)" stroke-width="2"/></svg><b>Характер года</b></div><div class="pg"><svg viewBox="0 0 60 84" class="pgv"><line x1="10" y1="12" x2="30" y2="12" stroke="var(--wire-line)" stroke-width="2.5"/><rect x="10" y="24" width="16" height="5" fill="var(--wire-fill-2)"/><rect x="30" y="33" width="20" height="5" fill="var(--wire-line)"/><rect x="16" y="42" width="24" height="5" fill="var(--wire-fill-2)"/><rect x="34" y="51" width="12" height="5" fill="var(--wire-fill-2)"/><line x1="10" y1="66" x2="50" y2="66" stroke="var(--wire-line)"/><line x1="14" y1="64" x2="14" y2="68" stroke="var(--wire-fill-2)"/><line x1="22" y1="64" x2="22" y2="68" stroke="var(--wire-fill-2)"/><line x1="30" y1="64" x2="30" y2="68" stroke="var(--wire-fill-2)"/><line x1="38" y1="64" x2="38" y2="68" stroke="var(--wire-fill-2)"/><line x1="46" y1="64" x2="46" y2="68" stroke="var(--wire-fill-2)"/></svg><b>Календарь по месяцам</b></div><div class="pg"><svg viewBox="0 0 60 84" class="pgv"><line x1="10" y1="12" x2="30" y2="12" stroke="var(--wire-line)" stroke-width="2.5"/><circle cx="13" cy="26" r="2.2" fill="var(--wire-line)"/><line x1="19" y1="26" x2="50" y2="26" stroke="var(--wire-fill-2)" stroke-width="2"/><circle cx="13" cy="38" r="2.2" fill="var(--wire-line)"/><line x1="19" y1="38" x2="46" y2="38" stroke="var(--wire-fill-2)" stroke-width="2"/><circle cx="13" cy="50" r="2.2" fill="var(--wire-line)"/><line x1="19" y1="50" x2="50" y2="50" stroke="var(--wire-fill-2)" stroke-width="2"/><circle cx="13" cy="62" r="2.2" fill="var(--wire-line)"/><line x1="19" y1="62" x2="42" y2="62" stroke="var(--wire-fill-2)" stroke-width="2"/></svg><b>По сферам жизни</b></div><div class="pg"><svg viewBox="0 0 60 84" class="pgv"><line x1="10" y1="12" x2="30" y2="12" stroke="var(--wire-line)" stroke-width="2.5"/><line x1="10" y1="22" x2="50" y2="22" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="28" x2="44" y2="28" stroke="var(--wire-fill-2)" stroke-width="2"/><rect x="9" y="40" width="42" height="30" rx="3" fill="none" stroke="var(--wire-line)"/><line x1="14" y1="49" x2="46" y2="49" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="14" y1="56" x2="46" y2="56" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="14" y1="63" x2="38" y2="63" stroke="var(--wire-fill-2)" stroke-width="2"/></svg><b>Главные выводы</b></div>
+const PREVIEW_PAGES = {
+  yearWest:['Обложка','Главные темы года','Календарь по месяцам','Работа, отношения, здоровье','Что делать'],
+  yearVedic:['Обложка','Ваш период','Карта года','По сферам','Что делать'],
+  yearBazi:['Обложка','Карта и год','Год по месяцам','По сферам','Что делать'],
+  yearNum:['Обложка','Число года','Год по месяцам','По сферам','Что дальше'],
+  compat:['Обложка','Как вы вместе','Сильные стороны','Трудные места','Что делать'],
+  child:['Обложка','Характер','Способности','Для родителя','Что учесть'],
+  childName:['Обложка','Ваши варианты','Наши варианты','По числам','Итог'],
+  childCheck:['Обложка','Каждое имя','По числам','Сравнение','Итог'],
+  rename:['Обложка','Было и стало','Что меняется','Что остаётся','Как посчитано'],
+  date:['Обложка','Лучшие дни','Таблица дней','Почему так','Итог'],
+  dateB:['Обложка','Ваша дата','Оценка дня','Что учесть','Итог']
+};
+function yearPages(id) { const L = PREVIEW_PAGES[CUR] || ['Обложка','Главные темы','Календарь','По сферам','Итог']; return `<div class="strip" id="${id}">
+      <div class="pg"><svg viewBox="0 0 60 84" class="pgv"><circle cx="30" cy="28" r="16" fill="none" stroke="var(--wire-line)"/><circle cx="30" cy="28" r="9" fill="none" stroke="var(--wire-line)"/><line x1="30" y1="12" x2="30" y2="19" stroke="var(--wire-line)"/><line x1="30" y1="37" x2="30" y2="44" stroke="var(--wire-line)"/><line x1="14" y1="28" x2="21" y2="28" stroke="var(--wire-line)"/><line x1="39" y1="28" x2="46" y2="28" stroke="var(--wire-line)"/><line x1="10" y1="60" x2="50" y2="60" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="66" x2="40" y2="66" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="72" x2="46" y2="72" stroke="var(--wire-fill-2)" stroke-width="2"/></svg><b>${L[0]}</b></div><div class="pg"><svg viewBox="0 0 60 84" class="pgv"><line x1="10" y1="12" x2="34" y2="12" stroke="var(--wire-line)" stroke-width="2.5"/><line x1="10" y1="22" x2="50" y2="22" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="28" x2="50" y2="28" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="34" x2="44" y2="34" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="44" x2="50" y2="44" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="50" x2="50" y2="50" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="56" x2="38" y2="56" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="66" x2="50" y2="66" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="72" x2="46" y2="72" stroke="var(--wire-fill-2)" stroke-width="2"/></svg><b>${L[1]}</b></div><div class="pg"><svg viewBox="0 0 60 84" class="pgv"><line x1="10" y1="12" x2="30" y2="12" stroke="var(--wire-line)" stroke-width="2.5"/><rect x="10" y="24" width="16" height="5" fill="var(--wire-fill-2)"/><rect x="30" y="33" width="20" height="5" fill="var(--wire-line)"/><rect x="16" y="42" width="24" height="5" fill="var(--wire-fill-2)"/><rect x="34" y="51" width="12" height="5" fill="var(--wire-fill-2)"/><line x1="10" y1="66" x2="50" y2="66" stroke="var(--wire-line)"/><line x1="14" y1="64" x2="14" y2="68" stroke="var(--wire-fill-2)"/><line x1="22" y1="64" x2="22" y2="68" stroke="var(--wire-fill-2)"/><line x1="30" y1="64" x2="30" y2="68" stroke="var(--wire-fill-2)"/><line x1="38" y1="64" x2="38" y2="68" stroke="var(--wire-fill-2)"/><line x1="46" y1="64" x2="46" y2="68" stroke="var(--wire-fill-2)"/></svg><b>${L[2]}</b></div><div class="pg"><svg viewBox="0 0 60 84" class="pgv"><line x1="10" y1="12" x2="30" y2="12" stroke="var(--wire-line)" stroke-width="2.5"/><circle cx="13" cy="26" r="2.2" fill="var(--wire-line)"/><line x1="19" y1="26" x2="50" y2="26" stroke="var(--wire-fill-2)" stroke-width="2"/><circle cx="13" cy="38" r="2.2" fill="var(--wire-line)"/><line x1="19" y1="38" x2="46" y2="38" stroke="var(--wire-fill-2)" stroke-width="2"/><circle cx="13" cy="50" r="2.2" fill="var(--wire-line)"/><line x1="19" y1="50" x2="50" y2="50" stroke="var(--wire-fill-2)" stroke-width="2"/><circle cx="13" cy="62" r="2.2" fill="var(--wire-line)"/><line x1="19" y1="62" x2="42" y2="62" stroke="var(--wire-fill-2)" stroke-width="2"/></svg><b>${L[3]}</b></div><div class="pg"><svg viewBox="0 0 60 84" class="pgv"><line x1="10" y1="12" x2="30" y2="12" stroke="var(--wire-line)" stroke-width="2.5"/><line x1="10" y1="22" x2="50" y2="22" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="10" y1="28" x2="44" y2="28" stroke="var(--wire-fill-2)" stroke-width="2"/><rect x="9" y="40" width="42" height="30" rx="3" fill="none" stroke="var(--wire-line)"/><line x1="14" y1="49" x2="46" y2="49" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="14" y1="56" x2="46" y2="56" stroke="var(--wire-fill-2)" stroke-width="2"/><line x1="14" y1="63" x2="38" y2="63" stroke="var(--wire-fill-2)" stroke-width="2"/></svg><b>${L[4]}</b></div>
     </div>`; }
 
 /* просмотр документа: человек листает страницы до того, как скачает */
@@ -9024,7 +9040,7 @@ Object.defineProperty(S, 'docView', { get() {
   return `<div class="pad">
   <div class="dochead" data-go="${pv ? (CUR === 'pdf' ? 'pdfSell' : 'prodPage') : 'prodResult'}"><span>&lsaquo;</span><div>Назад${pv ? (CUR === 'pdf' ? ' · разбор в одном файле' : '') : ' · документ'}</div></div>
   <h2 class="t-title" style="font-size:19px">${pv ? 'Пример документа' : (p.file ? p.file.name : 'Документ')}</h2>
-  <p class="t-onephrase">${pv ? (fc ? 'Так выглядит годовой прогноз внутри. Ваш соберётся по вашей карте' : 'Так выглядит разбор внутри. Ваш соберётся по вашим данным') : (p.file ? p.file.size + ' · ' + p.file.pages : '')}</p>
+  <p class="t-onephrase">${pv ? 'Так выглядит разбор внутри. Ваш соберётся по вашим данным' : (p.file ? p.file.size + ' · ' + p.file.pages : '')}</p>
 
   <div class="pdfcar" style="margin-top:18px">
     ${fc ? yearPages('docStrip') : pdfPages('docStrip')}
@@ -9042,14 +9058,13 @@ Object.defineProperty(S, 'docView', { get() {
   </div>
 </div>`; }});
 
-function prodResult() { const p = PROD[CUR]; const ex = EXPREVIEW; return `<div class="pad">
-  <div class="dochead" data-go="${ex ? 'prodPage' : 'shop'}"><span>‹</span><div>${ex ? 'Назад' : 'Мои разборы'}</div></div>
+function prodResult() { const p = PROD[CUR]; return `<div class="pad">
+  <div class="dochead" data-go="shop"><span>‹</span><div>Мои разборы</div></div>
   <h2 class="t-title" style="font-size:21px;margin:4px 0 ${p.resEyebrow ? '5px' : '12px'}">${p.res}</h2>
   ${p.resEyebrow ? `<p class="res-school">${p.resEyebrow.split(' · ')[0]}</p><p class="res-when">${p.resEyebrow.split(' · ')[1] || ''}</p>` : ''}
-  ${ex ? `<p class="t-onephrase">Это пример документа. Ваш соберётся по вашим данным.</p>`
-       : (p.resPhrase ? `<p class="t-onephrase">${p.resPhrase}</p>` : '')}
+  ${p.resPhrase ? `<p class="t-onephrase">${p.resPhrase}</p>` : ''}
 
-  ${p.file && !ex ? `<div class="bigfile" data-save="doc">
+  ${p.file ? `<div class="bigfile" data-save="doc">
     ${pdfIcon()}
     <div><b>${p.file.name}</b><span>${p.file.size} · ${p.file.pages}</span></div>
   </div>` : ''}
@@ -9057,9 +9072,7 @@ function prodResult() { const p = PROD[CUR]; const ex = EXPREVIEW; return `<div 
   ${p.doc || ''}
 
   <div class="docfoot boxed">
-    ${ex
-      ? `<div class="w-btn" data-go="${p.fields.length ? 'prodData' : 'prodDepth'}">${p.cta || 'Рассчитать'} · ${p.price}</div>`
-      : p.access
+    ${p.access
       ? `<div class="w-btn" data-go="chatList">Спросить →</div>
          <div class="w-btn ghost" data-go="chatList">К разговору</div>`
       : `<div class="w-btn ghost" data-save="doc">${ICO.down}Скачать PDF</div>
@@ -10440,7 +10453,6 @@ function render(k, push = true, restore = 0) {
      не пускаем, сразу ведём в «Мои разборы», где документ можно открыть или пересобрать */
   if (k === 'pdfSell' && (PDFST === 'bought' || PDFST === 'stale')) { SHOPTAB = 'docs'; k = 'shop'; }
   if (k !== 'docView') DOCPREVIEW = false;
-  if (k !== 'prodResult') EXPREVIEW = false;
   /* листы не переживают смену экрана: иначе открытый шеринг висит поверх нового экрана */
   document.querySelectorAll('.sheet.show').forEach(s => s.classList.remove('show'));
   /* смена экрана отменяет «экран под шторкой»: иначе наблюдатель за закрытием шторки
@@ -10800,7 +10812,7 @@ view.addEventListener('click', e => {
   const ro = e.target.closest('[data-recopen]');
   if (ro) { RECBACK = 'payOk'; render('К-12'); return; }
   const gd = e.target.closest('[data-godoc]');
-  if (gd) { CUR = gd.dataset.godoc; EXPREVIEW = false; SHOPTAB = 'docs'; render('prodResult'); return; }
+  if (gd) { CUR = gd.dataset.godoc; SHOPTAB = 'docs'; render('prodResult'); return; }
   const pr = e.target.closest('[data-prod]');
   if (pr) {
     /* PDF и слот не требуют страницы продукта — короткий путь через подтверждение,
@@ -10830,10 +10842,8 @@ view.addEventListener('click', e => {
   if (fbuy) { FEED_ADD = fbuy.dataset.feedbuy; PAYKIND = 'slot'; render('payConfirm'); return; }
   const gf = e.target.closest('[data-gift]');
   if (gf) { CUR = gf.dataset.gift; PAYKIND = 'prod'; render('prodPay'); return; }
-  const exl = e.target.closest('[data-example]');
-  if (exl) { CUR = exl.dataset.example; EXPREVIEW = true; render('prodResult'); return; }
   const rs = e.target.closest('[data-res]');
-  if (rs) { RECALC_SEEN.add(rs.dataset.res); CUR = rs.dataset.res; EXPREVIEW = false; SHOPTAB = 'docs'; render('prodResult'); return; }
+  if (rs) { RECALC_SEEN.add(rs.dataset.res); CUR = rs.dataset.res; SHOPTAB = 'docs'; render('prodResult'); return; }
   const ts = e.target.closest('[data-tset]');
   if (ts) TCUR = ts.dataset.tset;
   /* «Рассчитать» на пустом контуре имени: короткая анимация, потом раскрываем числа */
