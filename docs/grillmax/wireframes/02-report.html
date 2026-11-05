@@ -2068,7 +2068,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v581</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v582</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -8858,8 +8858,6 @@ function prodPage() { const p = PROD[CUR]; return `<div class="pad">
   ${p.period ? `<p style="font-size:11.5px;color:var(--ink-faint);margin:7px 0 0;font-variant-numeric:tabular-nums"><b>Период:</b> ${p.period}</p>` : ''}`}
   <div class="sec-label">Что вы узнаете</div>
   <div class="body-text">${p.sell.map(([h,t])=>`<p><b>${h}.</b><br>${t}</p>`).join('')}</div>
-  ${p.fields.length ? `<div class="sec-label">Что нужно от вас</div>
-  <div class="body-text"><p>${p.need}</p></div>` : ''}
   ${p.preview === 'doc'
     ? `<div class="sec-label">Как выглядит документ</div>
   <div class="pdfcar">
