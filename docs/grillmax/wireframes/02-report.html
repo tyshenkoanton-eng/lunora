@@ -2068,7 +2068,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v587</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v588</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -8773,7 +8773,7 @@ const PROD = {
       ['Подходит ли новое имя вам','Сравним его с вашей датой рождения. Она не меняется, но по ней видно, поддерживает ли новое имя ваш характер или идёт против него. В конце будет понятный вывод и объяснение, почему он такой.']
     ],
     need:'Новая фамилия или имя. Текущее ФИО возьмём из профиля.',
-    fields:[['Имя','',0],['Фамилия','Ковалёва',0]],
+    fields:[['Имя','',0],['Фамилия','',0]],
     depth:'—', depthNote:'Считает нумерология — единственная школа, которая работает с именами.',
     build:['Посчитала текущее ФИО','Посчитала новый вариант','Сравнила числа','Пишу разбор'],
     doc:`<div class="luna-block"><div class="lab">Что сдвигается</div><p>Два-три абзаца. Не «лучше» и не «хуже» — что именно меняется и в какую сторону.</p></div><div class="sec-label">Было и стало</div><table class="ctable"><tr><th>Число</th><th>Тыщенко</th><th>Ковалёва</th><th></th></tr><tr><td>Судьбы</td><td>3</td><td>7</td><td>меняется</td></tr><tr><td>Души</td><td>4</td><td>4</td><td>остаётся</td></tr><tr><td>Личности</td><td>8</td><td>3</td><td>меняется</td></tr></table><div class="sec-label">Что меняется</div><div class="body-text"><p><b>Число судьбы: 3 → 7.</b> Тройка — это выражение, общение, лёгкость подачи. Семёрка — глубина, исследование, уход внутрь. Сдвиг значительный: от человека, которого замечают в комнате, к человеку, к которому приходят за ответом. Если вы устали от роли «своего в доску», семёрка даст передышку.</p><p><b>Число личности: 8 → 3.</b> Восьмёрка воспринимается окружающими как сила и авторитет. Тройка — как лёгкость и открытость. Вас будут воспринимать иначе: меньше дистанции, больше тепла. Для одних задач это плюс, для других — потеря позиции.</p></div><div class="sec-label">Что остаётся при вас</div><div class="body-text"><p><b>Число души: 4.</b> Считается по дате рождения, а не по имени. Остаётся при вас при любой смене. Четвёрка — это потребность в структуре и порядке. Она никуда не денется, и это хорошо: какую бы фамилию вы ни носили, внутренний стержень остаётся тем же.</p><p>Смена имени меняет то, как вас воспринимают и как складывается ваш путь, но не меняет того, кто вы внутри. Это важно понимать до решения.</p></div><div class="calc-h">Как это посчитано</div>
@@ -8877,17 +8877,23 @@ function prodData() { const p = PROD[CUR]; const has = p.fields.length;
     const nm = p.fields[0] ? p.fields[0][1] : '';
     const fm = p.fields[1] ? p.fields[1][1] : '';
     return `<div class="pad">
-  <div class="dochead" data-go="prodPage"><span>&lsaquo;</span><div>Назад · ${p.t}</div></div>
-  <div class="d-crumb">${p.t} · шаг 1 из 2</div>
-  <h2 class="t-title" style="font-size:20px">Новое имя или фамилия</h2>
+  <div class="stepper">
+    <div class="now"><u>1</u><span>Данные</span></div>
+    <div><i class="lin"></i><u>2</u><span>Проверка</span></div>
+    <div><i class="lin"></i><u>3</u><span>Оплата</span></div>
+    <div><i class="lin"></i><u>4</u><span>Готово</span></div>
+  </div>
+  <h2 class="t-title" style="font-size:20px;margin-top:16px">Смена имени или фамилии</h2>
   <p class="obhint" style="margin:6px 0 16px">Заполните имя, фамилию или оба поля — смотря что меняете.</p>
   <div class="fields" style="display:flex;flex-direction:column;gap:14px">
     <div><div class="w-label">Имя</div>
-      <div class="w-field${nm ? ' filled' : ''}" contenteditable="true" data-rn="name" data-ph="Новое имя, если меняете">${nm}</div></div>
+      <div class="w-field${nm ? ' filled' : ''}" contenteditable="true" data-rn="name" data-rnsample="Лев" data-ph="Новое имя, если меняете">${nm}</div></div>
     <div><div class="w-label">Фамилия</div>
-      <div class="w-field${fm ? ' filled' : ''}" contenteditable="true" data-rn="fam" data-ph="Новая фамилия, если меняете">${fm}</div></div>
+      <div class="w-field${fm ? ' filled' : ''}" contenteditable="true" data-rn="fam" data-rnsample="Ковалёва" data-ph="Новая фамилия, если меняете">${fm}</div></div>
   </div>
-  <div class="w-btn${(!nm && !fm) ? ' off' : ''}" id="rnGo" data-go="prodDepth" style="margin-top:18px">Продолжить</div>
+  <p style="font-size:11px;color:var(--ink-faint);margin:10px 0 0">Прототип: правый клик по полю подставит пример.</p>
+  <div class="w-btn${(!nm && !fm) ? ' off' : ''}" id="rnGo" data-go="prodDepth" style="margin-top:16px">Продолжить</div>
+  <div style="text-align:center;margin-top:12px"><span class="w-link" data-go="prodPage" style="cursor:pointer">‹ Назад</span></div>
 </div>`;
   }
   return `<div class="pad">
@@ -11793,14 +11799,7 @@ view.addEventListener('input', e => {
   }
   const f = e.target.closest('.w-field[contenteditable]');
   if (!f) return;
-  if (f.dataset.rn) {
-    const pad = f.closest('.pad');
-    const nmEl = pad.querySelector('[data-rn="name"]'), fmEl = pad.querySelector('[data-rn="fam"]');
-    const nm = (nmEl ? nmEl.textContent : '').trim(), fm = (fmEl ? fmEl.textContent : '').trim();
-    const go = document.getElementById('rnGo');
-    if (go) go.classList.toggle('off', !nm && !fm);
-    return;
-  }
+  if (f.dataset.rn) { rnSync(f.closest('.pad')); return; }
   const ib = document.querySelector('#ideaForm [data-ideasend]');
   if (ib && f.closest('#ideaForm')) { ib.classList.toggle('off', f.textContent.trim() === ''); return; }
   if (f.dataset.sug === 'addr') {
@@ -11824,6 +11823,26 @@ view.addEventListener('input', e => {
     }
   }
   if (f.dataset.sug === 'street') renderStreetSug(f);
+});
+
+/* смена имени: синхронизируем два поля с конфигом и активируем кнопку по вводу */
+function rnSync(pad) {
+  if (!pad) return;
+  const nmEl = pad.querySelector('[data-rn="name"]'), fmEl = pad.querySelector('[data-rn="fam"]');
+  const nm = (nmEl ? nmEl.textContent : '').trim(), fm = (fmEl ? fmEl.textContent : '').trim();
+  if (PROD.rename.fields[0]) PROD.rename.fields[0][1] = nm;
+  if (PROD.rename.fields[1]) PROD.rename.fields[1][1] = fm;
+  const go = document.getElementById('rnGo');
+  if (go) go.classList.toggle('off', !nm && !fm);
+}
+/* демо: правый клик по полю подставляет пример (в прототипе клавиатуры нет) */
+view.addEventListener('contextmenu', e => {
+  const f = e.target.closest('.w-field[data-rn][data-rnsample]');
+  if (!f) return;
+  e.preventDefault();
+  f.textContent = f.dataset.rnsample;
+  f.classList.add('filled');
+  rnSync(f.closest('.pad'));
 });
 
 view.addEventListener('click', e => {
