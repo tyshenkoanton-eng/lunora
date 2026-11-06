@@ -2068,7 +2068,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v591</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v592</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -8778,7 +8778,7 @@ const PROD = {
     build:['Посчитала текущее ФИО','Посчитала новый вариант','Сравнила числа','Пишу разбор'],
     doc:`<div class="luna-block"><div class="lab">Что сдвигается</div><p>Два-три абзаца. Не «лучше» и не «хуже» — что именно меняется и в какую сторону.</p></div><div class="sec-label">Было и стало</div><table class="ctable"><tr><th>Число</th><th>Тыщенко</th><th>Ковалёва</th><th></th></tr><tr><td>Судьбы</td><td>3</td><td>7</td><td>меняется</td></tr><tr><td>Души</td><td>4</td><td>4</td><td>остаётся</td></tr><tr><td>Личности</td><td>8</td><td>3</td><td>меняется</td></tr></table><div class="sec-label">Что меняется</div><div class="body-text"><p><b>Число судьбы: 3 → 7.</b> Тройка — это выражение, общение, лёгкость подачи. Семёрка — глубина, исследование, уход внутрь. Сдвиг значительный: от человека, которого замечают в комнате, к человеку, к которому приходят за ответом. Если вы устали от роли «своего в доску», семёрка даст передышку.</p><p><b>Число личности: 8 → 3.</b> Восьмёрка воспринимается окружающими как сила и авторитет. Тройка — как лёгкость и открытость. Вас будут воспринимать иначе: меньше дистанции, больше тепла. Для одних задач это плюс, для других — потеря позиции.</p></div><div class="sec-label">Что остаётся при вас</div><div class="body-text"><p><b>Число души: 4.</b> Считается по дате рождения, а не по имени. Остаётся при вас при любой смене. Четвёрка — это потребность в структуре и порядке. Она никуда не денется, и это хорошо: какую бы фамилию вы ни носили, внутренний стержень остаётся тем же.</p><p>Смена имени меняет то, как вас воспринимают и как складывается ваш путь, но не меняет того, кто вы внутри. Это важно понимать до решения.</p></div><div class="calc-h">Как это посчитано</div>
 <div class="calc"><div class="pr"><u>Нумерология</u><span>Числа судьбы, души и личности по текущему и новому написанию</span></div><div class="pr"><u>Остальные три школы</u><span>Не участвуют — с именами работает только нумерология</span></div></div>`,
-    res:'Тыщенко → Ковалёва', resPhrase:'Число судьбы уходит с 3 на 7 — с выражения на углубление.'
+    res:'Смена имени или фамилии', resEyebrow:'Тыщенко → Ковалёва', resPhrase:'Число судьбы меняется с 3 на 7, с выражения на углубление.'
   },
   pdf: {
     t:'PDF вашей карты', price:'149 ₽', crumb:'Разборы · обо мне',
@@ -9082,7 +9082,7 @@ Object.defineProperty(S, 'docView', { get() {
 function prodResult() { const p = PROD[CUR]; return `<div class="pad">
   <div class="dochead" data-go="shop"><span>‹</span><div>Мои разборы</div></div>
   <h2 class="t-title" style="font-size:21px;margin:4px 0 ${p.resEyebrow ? '5px' : '12px'}">${p.res}</h2>
-  ${p.resEyebrow ? `<p class="res-school">${p.resEyebrow.split(' · ')[0]}</p><p class="res-when">${p.resEyebrow.split(' · ')[1] || ''}</p>` : ''}
+  ${p.resEyebrow ? `<p class="res-school">${p.resEyebrow.split(' · ')[0]}</p>${p.resEyebrow.split(' · ')[1] ? `<p class="res-when">${p.resEyebrow.split(' · ')[1]}</p>` : ''}` : ''}
   ${p.resPhrase ? `<p class="t-onephrase">${p.resPhrase}</p>` : ''}
 
   ${p.file ? `<div class="bigfile" data-save="doc">
