@@ -2068,7 +2068,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v594</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v595</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -8778,7 +8778,7 @@ const PROD = {
     build:['Посчитала текущее ФИО','Посчитала новый вариант','Сравнила числа','Пишу разбор'],
     doc:`<div class="luna-block"><div class="lab">Что сдвигается</div><p>Два-три абзаца. Не «лучше» и не «хуже» — что именно меняется и в какую сторону.</p></div><div class="sec-label">Было и стало</div><table class="ctable"><tr><th>Число</th><th>Тыщенко</th><th>Ковалёва</th><th></th></tr><tr><td>Судьбы</td><td>3</td><td>7</td><td>меняется</td></tr><tr><td>Души</td><td>4</td><td>4</td><td>остаётся</td></tr><tr><td>Личности</td><td>8</td><td>3</td><td>меняется</td></tr></table><div class="sec-label">Что меняется</div><div class="body-text"><p><b>Число судьбы: 3 → 7.</b> Тройка — это выражение, общение, лёгкость подачи. Семёрка — глубина, исследование, уход внутрь. Сдвиг значительный: от человека, которого замечают в комнате, к человеку, к которому приходят за ответом. Если вы устали от роли «своего в доску», семёрка даст передышку.</p><p><b>Число личности: 8 → 3.</b> Восьмёрка воспринимается окружающими как сила и авторитет. Тройка — как лёгкость и открытость. Вас будут воспринимать иначе: меньше дистанции, больше тепла. Для одних задач это плюс, для других — потеря позиции.</p></div><div class="sec-label">Что остаётся при вас</div><div class="body-text"><p><b>Число души: 4.</b> Считается по дате рождения, а не по имени. Остаётся при вас при любой смене. Четвёрка — это потребность в структуре и порядке. Она никуда не денется, и это хорошо: какую бы фамилию вы ни носили, внутренний стержень остаётся тем же.</p><p>Смена имени меняет то, как вас воспринимают и как складывается ваш путь, но не меняет того, кто вы внутри. Это важно понимать до решения.</p></div><div class="calc-h">Как это посчитано</div>
 <div class="calc"><div class="pr"><u>Нумерология</u><span>Числа судьбы, души и личности по текущему и новому написанию</span></div><div class="pr"><u>Остальные три школы</u><span>Не участвуют — с именами работает только нумерология</span></div></div>`,
-    res:'Смена имени или фамилии', resPhrase:'Новое написание сдвигает часть чисел. Что именно меняется, видно в таблице ниже.'
+    res:'Смена имени или фамилии', resPhrase:''
   },
   pdf: {
     t:'PDF вашей карты', price:'149 ₽', crumb:'Разборы · обо мне',
@@ -9079,48 +9079,93 @@ Object.defineProperty(S, 'docView', { get() {
   </div>
 </div>`; }});
 
-/* пример документа смены имени считается из введённых полей (кириллическая
-   пифагорейская таблица). Числа демонстрационные: финальные даёт движок. */
-const CYR_NUM = {а:1,б:2,в:3,г:4,д:5,е:6,ё:7,ж:8,з:9,и:1,й:2,к:3,л:4,м:5,н:6,о:7,п:8,р:9,с:1,т:2,у:3,ф:4,х:5,ц:6,ч:7,ш:8,щ:9,ъ:1,ы:2,ь:3,э:4,ю:5,я:6};
+/* Пример документа смены имени. Структура согласована; числа считаются из
+   введённого: кириллическая таблица (А=1..З=9, затем снова с 1), мягкий и
+   твёрдый знаки не считаются, 11 и 22 не сокращаются. Значения
+   демонстрационные — финальные даёт движок нумерологии. */
+const RN_OLD = { name:'Антон', pat:'Юрьевич', fam:'Тыщенко' };
+const RN_DEF_FAM = 'Стальмахов';
+const RN_DATE = '04.02.1984', RN_DATENUM = 1;
+const CYR_NUM = {а:1,б:2,в:3,г:4,д:5,е:6,ё:7,ж:8,з:9,и:1,й:2,к:3,л:4,м:5,н:6,о:7,п:8,р:9,с:1,т:2,у:3,ф:4,х:5,ц:6,ч:7,ш:8,щ:9,ы:2,э:4,ю:5,я:6};
 const VOWELS_RU = 'аеёиоуыэюя';
-const NUM_MEAN = {1:'самостоятельность и инициатива',2:'чуткость и партнёрство',3:'самовыражение и лёгкость',4:'порядок и опора',5:'свобода и перемены',6:'забота и ответственность',7:'глубина и анализ',8:'сила и результат',9:'широта и завершение'};
-function numReduce(n){ while(n>9){ n = String(n).split('').reduce((s,d)=>s + (+d),0); } return n; }
-function numStr(str, consOnly){ let sum=0; for(const ch of str.toLowerCase()){ const v=CYR_NUM[ch]; if(v==null) continue; if(consOnly && VOWELS_RU.indexOf(ch)>=0) continue; sum+=v; } return numReduce(sum); }
+const NUM_DESC = {1:'инициатива, умение начинать и вести за собой',2:'чуткость, сотрудничество, внимание к людям',3:'самовыражение, общение, лёгкость',4:'порядок, система, опора на правила',5:'свобода, перемены, движение',6:'забота, ответственность, дом и близкие',7:'наблюдение, анализ, работа в одиночку',8:'результат, устойчивость, деньги и положение',9:'широта, завершение, служение большому',11:'смысл, интуиция и чуткость к людям (усиленная двойка)',22:'большое дело и крупная структура (усиленная четвёрка)'};
+function numReduce(n){ while(n>9 && n!==11 && n!==22){ n=String(n).split('').reduce((s,d)=>s+ +d,0); } return n; }
+function rnRaw(str, kind){ let s=0; for(const ch of str.toLowerCase()){ const v=CYR_NUM[ch]; if(v==null) continue; const vow=VOWELS_RU.indexOf(ch)>=0; if(kind==='vow'&&!vow) continue; if(kind==='con'&&vow) continue; s+=v; } return s; }
 function renameDoc(){
   const p = PROD.rename;
-  const oldN='Антон', oldF='Тыщенко';
   const nm=(p.fields[0]&&p.fields[0][1])||'', fm=(p.fields[1]&&p.fields[1][1])||'';
-  const any = nm||fm;
-  const newN = nm || oldN, newF = fm || (any ? oldF : 'Ковалёва');
-  const oldFull = oldN+' '+oldF, newFull = newN+' '+newF;
-  const dOld=numStr(oldFull,false), dNew=numStr(newFull,false);
-  const pOld=numStr(oldFull,true), pNew=numStr(newFull,true);
-  const soul=4;
-  const row=(nmL,o,n)=>`<tr><td>${nmL}</td><td>${o}</td><td>${n}</td><td>${o===n?'остаётся':'меняется'}</td></tr>`;
-  const ch=[];
-  if(dOld!==dNew) ch.push(`<p><b>Число судьбы: ${dOld} → ${dNew}.</b> Было: ${NUM_MEAN[dOld]}. Стало: ${NUM_MEAN[dNew]}. Это число о том, как складывается ваш путь и каким вас встречает мир.</p>`);
-  if(pOld!==pNew) ch.push(`<p><b>Число личности: ${pOld} → ${pNew}.</b> Как вас считывают при встрече. Было: ${NUM_MEAN[pOld]}. Стало: ${NUM_MEAN[pNew]}.</p>`);
-  const chHtml = ch.length ? ch.join('') : '<p>Ключевые числа по новому написанию не изменились: смена затрагивает форму, а не расчётную основу.</p>';
-  return `<div class="luna-block"><div class="lab">Что сдвигается</div><p>Имя и фамилия задают часть чисел. Ниже видно, что меняется при переходе на новое написание, а что остаётся при вас.</p></div>
+  const any=nm||fm;
+  const newName = nm || RN_OLD.name;
+  const newFam = fm || (any ? RN_OLD.fam : RN_DEF_FAM);
+  const oldToks=[RN_OLD.name, RN_OLD.pat, RN_OLD.fam], newToks=[newName, RN_OLD.pat, newFam];
+  const sum=(toks,k)=>toks.reduce((s,t)=>s+rnRaw(t,k),0);
+  const uOld=numReduce(sum(oldToks,'all')), uNew=numReduce(sum(newToks,'all'));
+  const hOld=numReduce(sum(oldToks,'vow')), hNew=numReduce(sum(newToks,'vow'));
+  const vOld=numReduce(sum(oldToks,'con')), vNew=numReduce(sum(newToks,'con'));
+  const date=RN_DATENUM;
+  const chg=(a,b)=>a===b?'не меняется':'меняется';
+  const supports = uNew===date;
+  let glav = supports
+    ? `Новая фамилия поддерживает вашу дату рождения. То, что вы умеете, теперь совпадает с вашим характером по дате${uOld!==uNew?', а прежнее написание тянуло немного в сторону':''}.`
+    : `Новая фамилия заметно меняет картину, но с вашей датой рождения совпадает не так точно, как прежняя. Часть сил будет уходить на совмещение.`;
+  if (hNew===11||hNew===22) glav += ' В желаниях появляется новая линия: она не мешает, но о ней стоит знать.';
+  const moved=[];
+  if (uOld!==uNew) moved.push(`<p><b>Что вы умеете: ${uOld} → ${uNew}.</b> Было: ${NUM_DESC[uOld]}. Стало: ${NUM_DESC[uNew]}. Это про то, как складывается ваш путь и каким вас встречает мир.</p>`);
+  if (hOld!==hNew) moved.push(`<p><b>Чего вы хотите: ${hOld} → ${hNew}.</b> Было: ${NUM_DESC[hOld]}. Стало: ${NUM_DESC[hNew]}. Это внутренние мотивы, то, что тянет вас на самом деле.</p>`);
+  if (vOld!==vNew) moved.push(`<p><b>Как вас видят: ${vOld} → ${vNew}.</b> Было: ${NUM_DESC[vOld]}. Стало: ${NUM_DESC[vNew]}. Это первое впечатление у окружающих.</p>`);
+  const movedHtml = moved.length?moved.join(''):'<p>Ключевые числа по новому написанию не изменились: смена затрагивает форму, а не расчётную основу.</p>';
+  const stays=[];
+  if (uOld===uNew) stays.push(`<p><b>Что вы умеете: ${uNew}.</b> ${NUM_DESC[uNew]}. Не меняется.</p>`);
+  if (hOld===hNew) stays.push(`<p><b>Чего вы хотите: ${hNew}.</b> ${NUM_DESC[hNew]}. Не меняется.</p>`);
+  if (vOld===vNew) stays.push(`<p><b>Как вас видят: ${vNew}.</b> ${NUM_DESC[vNew]}. Первое впечатление прежнее.</p>`);
+  stays.push(`<p><b>Ваша дата рождения: ${date}.</b> Это ваша основа: ${NUM_DESC[date]}. Смена имени её не затрагивает.</p>`);
+  let fit = `Дата рождения даёт ${date}: ${NUM_DESC[date]}. ` + (supports
+    ? `Новое написание даёт то же число в том, что вы умеете, значит имя работает заодно с вашей природой, а не против неё. Это главный плюс смены.`
+    : `Новое написание даёт в этом другое число (${uNew}), поэтому имя и характер по дате будут тянуть в разные стороны. Это не опасно, но стоит замечать.`);
+  if (hNew===11||hNew===22) fit += ` В желаниях появляется мастер-число ${hNew}: добавляется чувствительность и тяга к смыслу, а с ними напряжение между «делать» и «чувствовать».`;
+  const cols=[]; [RN_OLD.name,newName].forEach(t=>{if(!cols.includes(t))cols.push(t);}); if(!cols.includes(RN_OLD.pat))cols.push(RN_OLD.pat); [RN_OLD.fam,newFam].forEach(t=>{if(!cols.includes(t))cols.push(t);});
+  const calcRow=(label,k)=>`<tr><td>${label}</td>${cols.map(t=>`<td>${rnRaw(t,k)}</td>`).join('')}</tr>`;
+  const ario=(toks,k)=>{ const parts=toks.map(t=>rnRaw(t,k)); const tot=parts.reduce((a,b)=>a+b,0); return `${parts.join(' + ')} = ${tot} → ${numReduce(tot)}`; };
+  return `<p class="d-lede" style="border:none;padding-bottom:0;color:var(--ink-faint);font-size:12.5px">${RN_OLD.name} ${RN_OLD.pat} · дата рождения ${RN_DATE}</p>
+  <div class="luna-block"><div class="lab">Главное</div><p>${glav}</p></div>
   <div class="sec-label">Было и стало</div>
-  <table class="ctable"><tr><th>Число</th><th>Сейчас</th><th>После</th><th></th></tr>
-    ${row('Судьбы',dOld,dNew)}
-    ${row('Души',soul,soul)}
-    ${row('Личности',pOld,pNew)}
+  <table class="ctable"><tr><th></th><th>Сейчас</th><th>После</th><th>Меняется?</th></tr>
+    <tr><td>Что вы умеете</td><td>${uOld}</td><td>${uNew}</td><td>${chg(uOld,uNew)}</td></tr>
+    <tr><td>Чего вы хотите</td><td>${hOld}</td><td>${hNew}</td><td>${chg(hOld,hNew)}</td></tr>
+    <tr><td>Как вас видят</td><td>${vOld}</td><td>${vNew}</td><td>${chg(vOld,vNew)}</td></tr>
   </table>
+  <p style="font-size:12px;color:var(--ink-faint);margin-top:8px">Число вашей даты рождения: ${date}. Оно не зависит от фамилии.</p>
   <div class="sec-label">Что меняется</div>
-  <div class="body-text">${chHtml}</div>
-  <div class="sec-label">Что остаётся при вас</div>
-  <div class="body-text"><p><b>Число души: ${soul}.</b> Считается по дате рождения, а не по имени, поэтому при любой смене остаётся прежним. Внутренний стержень никуда не девается.</p>
-  <p>Смена имени меняет то, как вас воспринимают и как складывается путь, но не то, кто вы внутри.</p></div>
-  <div class="calc-h">Как это посчитано</div>
-  <div class="calc"><div class="pr"><u>Нумерология</u><span>Числа судьбы, души и личности по текущему и новому написанию</span></div><div class="pr"><u>Остальные три школы</u><span>Не участвуют: с именами работает только нумерология</span></div></div>`;
+  <div class="body-text">${movedHtml}</div>
+  <div class="sec-label">Что остаётся</div>
+  <div class="body-text">${stays.join('')}</div>
+  <div class="sec-label">Подходит ли новое имя вам</div>
+  <div class="body-text"><p>${fit}</p><p><b>Вывод:</b> ${supports?'новая фамилия поддерживает вашу дату.':'новая фамилия не усиливает вашу дату, решать стоит по другим причинам.'}</p></div>
+  <div class="sec-label">На что обратить внимание</div>
+  <div class="body-text">
+    <p>Опирайтесь на то, что усиливает новое имя, и не ждите быстрых перемен: имя действует постепенно, обычно проходит несколько месяцев, прежде чем это заметно.</p>
+    ${(hNew===11||hNew===22)?'<p>Следите, чтобы тяга к смыслу не отодвигала дела, а дела не заглушали чуткость к людям. Баланс между этими линиями — задача на первое время.</p>':''}
+  </div>
+  <p style="font-size:11.5px;color:var(--ink-faint);margin-top:12px">Расчёт описывает склонности, а не предсказывает события. Он не заменяет решение о смене фамилии.</p>
+  <div class="calc-h">Как посчитано</div>
+  <div class="body-text"><p style="font-size:12px;color:var(--ink-soft)">Каждой букве соответствует число от 1 до 9 (А=1, Б=2, … З=9, затем снова с 1). Мягкий и твёрдый знаки не считаются. Числа 11 и 22 не сокращаются.</p></div>
+  <table class="ctable"><tr><th></th>${cols.map(t=>`<th>${t}</th>`).join('')}</tr>
+    ${calcRow('Сумма всех букв','all')}
+    ${calcRow('Сумма гласных','vow')}
+    ${calcRow('Сумма согласных','con')}
+  </table>
+  <div class="body-text" style="margin-top:10px">
+    <p style="font-size:12px"><b>Сейчас:</b> все буквы ${ario(oldToks,'all')}. Гласные ${ario(oldToks,'vow')}. Согласные ${ario(oldToks,'con')}.</p>
+    <p style="font-size:12px"><b>После:</b> все буквы ${ario(newToks,'all')}. Гласные ${ario(newToks,'vow')}. Согласные ${ario(newToks,'con')}.</p>
+    <p style="font-size:12px"><b>Дата:</b> день 4, месяц 2, год 1 + 9 + 8 + 4 = 22. Всего 4 + 2 + 22 = 28 → 1.</p>
+  </div>
+  <div class="calc"><div class="pr"><u>Нумерология</u><span>Имена считает только нумерология, остальные три школы в этом разборе не участвуют</span></div></div>`;
 }
 function prodResult() { const p = PROD[CUR];
   let eyebrow = p.resEyebrow;
   if (CUR === 'rename') {
     const nm = (p.fields[0] && p.fields[0][1]) || '', fm = (p.fields[1] && p.fields[1][1]) || '';
-    eyebrow = (nm && fm) ? `Антон Тыщенко → ${nm} ${fm}` : fm ? `Тыщенко → ${fm}` : nm ? `Антон → ${nm}` : 'Тыщенко → Ковалёва';
+    eyebrow = (nm && fm) ? `Антон Тыщенко → ${nm} ${fm}` : fm ? `Тыщенко → ${fm}` : nm ? `Антон → ${nm}` : 'Тыщенко → Стальмахов';
   }
   return `<div class="pad">
   <div class="dochead" data-go="shop"><span>‹</span><div>Мои разборы</div></div>
