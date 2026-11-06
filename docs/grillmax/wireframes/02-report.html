@@ -2068,7 +2068,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v593</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v594</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -8778,7 +8778,7 @@ const PROD = {
     build:['Посчитала текущее ФИО','Посчитала новый вариант','Сравнила числа','Пишу разбор'],
     doc:`<div class="luna-block"><div class="lab">Что сдвигается</div><p>Два-три абзаца. Не «лучше» и не «хуже» — что именно меняется и в какую сторону.</p></div><div class="sec-label">Было и стало</div><table class="ctable"><tr><th>Число</th><th>Тыщенко</th><th>Ковалёва</th><th></th></tr><tr><td>Судьбы</td><td>3</td><td>7</td><td>меняется</td></tr><tr><td>Души</td><td>4</td><td>4</td><td>остаётся</td></tr><tr><td>Личности</td><td>8</td><td>3</td><td>меняется</td></tr></table><div class="sec-label">Что меняется</div><div class="body-text"><p><b>Число судьбы: 3 → 7.</b> Тройка — это выражение, общение, лёгкость подачи. Семёрка — глубина, исследование, уход внутрь. Сдвиг значительный: от человека, которого замечают в комнате, к человеку, к которому приходят за ответом. Если вы устали от роли «своего в доску», семёрка даст передышку.</p><p><b>Число личности: 8 → 3.</b> Восьмёрка воспринимается окружающими как сила и авторитет. Тройка — как лёгкость и открытость. Вас будут воспринимать иначе: меньше дистанции, больше тепла. Для одних задач это плюс, для других — потеря позиции.</p></div><div class="sec-label">Что остаётся при вас</div><div class="body-text"><p><b>Число души: 4.</b> Считается по дате рождения, а не по имени. Остаётся при вас при любой смене. Четвёрка — это потребность в структуре и порядке. Она никуда не денется, и это хорошо: какую бы фамилию вы ни носили, внутренний стержень остаётся тем же.</p><p>Смена имени меняет то, как вас воспринимают и как складывается ваш путь, но не меняет того, кто вы внутри. Это важно понимать до решения.</p></div><div class="calc-h">Как это посчитано</div>
 <div class="calc"><div class="pr"><u>Нумерология</u><span>Числа судьбы, души и личности по текущему и новому написанию</span></div><div class="pr"><u>Остальные три школы</u><span>Не участвуют — с именами работает только нумерология</span></div></div>`,
-    res:'Смена имени или фамилии', resPhrase:'Число судьбы меняется с 3 на 7, с выражения на углубление.'
+    res:'Смена имени или фамилии', resPhrase:'Новое написание сдвигает часть чисел. Что именно меняется, видно в таблице ниже.'
   },
   pdf: {
     t:'PDF вашей карты', price:'149 ₽', crumb:'Разборы · обо мне',
@@ -9079,6 +9079,43 @@ Object.defineProperty(S, 'docView', { get() {
   </div>
 </div>`; }});
 
+/* пример документа смены имени считается из введённых полей (кириллическая
+   пифагорейская таблица). Числа демонстрационные: финальные даёт движок. */
+const CYR_NUM = {а:1,б:2,в:3,г:4,д:5,е:6,ё:7,ж:8,з:9,и:1,й:2,к:3,л:4,м:5,н:6,о:7,п:8,р:9,с:1,т:2,у:3,ф:4,х:5,ц:6,ч:7,ш:8,щ:9,ъ:1,ы:2,ь:3,э:4,ю:5,я:6};
+const VOWELS_RU = 'аеёиоуыэюя';
+const NUM_MEAN = {1:'самостоятельность и инициатива',2:'чуткость и партнёрство',3:'самовыражение и лёгкость',4:'порядок и опора',5:'свобода и перемены',6:'забота и ответственность',7:'глубина и анализ',8:'сила и результат',9:'широта и завершение'};
+function numReduce(n){ while(n>9){ n = String(n).split('').reduce((s,d)=>s + (+d),0); } return n; }
+function numStr(str, consOnly){ let sum=0; for(const ch of str.toLowerCase()){ const v=CYR_NUM[ch]; if(v==null) continue; if(consOnly && VOWELS_RU.indexOf(ch)>=0) continue; sum+=v; } return numReduce(sum); }
+function renameDoc(){
+  const p = PROD.rename;
+  const oldN='Антон', oldF='Тыщенко';
+  const nm=(p.fields[0]&&p.fields[0][1])||'', fm=(p.fields[1]&&p.fields[1][1])||'';
+  const any = nm||fm;
+  const newN = nm || oldN, newF = fm || (any ? oldF : 'Ковалёва');
+  const oldFull = oldN+' '+oldF, newFull = newN+' '+newF;
+  const dOld=numStr(oldFull,false), dNew=numStr(newFull,false);
+  const pOld=numStr(oldFull,true), pNew=numStr(newFull,true);
+  const soul=4;
+  const row=(nmL,o,n)=>`<tr><td>${nmL}</td><td>${o}</td><td>${n}</td><td>${o===n?'остаётся':'меняется'}</td></tr>`;
+  const ch=[];
+  if(dOld!==dNew) ch.push(`<p><b>Число судьбы: ${dOld} → ${dNew}.</b> Было: ${NUM_MEAN[dOld]}. Стало: ${NUM_MEAN[dNew]}. Это число о том, как складывается ваш путь и каким вас встречает мир.</p>`);
+  if(pOld!==pNew) ch.push(`<p><b>Число личности: ${pOld} → ${pNew}.</b> Как вас считывают при встрече. Было: ${NUM_MEAN[pOld]}. Стало: ${NUM_MEAN[pNew]}.</p>`);
+  const chHtml = ch.length ? ch.join('') : '<p>Ключевые числа по новому написанию не изменились: смена затрагивает форму, а не расчётную основу.</p>';
+  return `<div class="luna-block"><div class="lab">Что сдвигается</div><p>Имя и фамилия задают часть чисел. Ниже видно, что меняется при переходе на новое написание, а что остаётся при вас.</p></div>
+  <div class="sec-label">Было и стало</div>
+  <table class="ctable"><tr><th>Число</th><th>Сейчас</th><th>После</th><th></th></tr>
+    ${row('Судьбы',dOld,dNew)}
+    ${row('Души',soul,soul)}
+    ${row('Личности',pOld,pNew)}
+  </table>
+  <div class="sec-label">Что меняется</div>
+  <div class="body-text">${chHtml}</div>
+  <div class="sec-label">Что остаётся при вас</div>
+  <div class="body-text"><p><b>Число души: ${soul}.</b> Считается по дате рождения, а не по имени, поэтому при любой смене остаётся прежним. Внутренний стержень никуда не девается.</p>
+  <p>Смена имени меняет то, как вас воспринимают и как складывается путь, но не то, кто вы внутри.</p></div>
+  <div class="calc-h">Как это посчитано</div>
+  <div class="calc"><div class="pr"><u>Нумерология</u><span>Числа судьбы, души и личности по текущему и новому написанию</span></div><div class="pr"><u>Остальные три школы</u><span>Не участвуют: с именами работает только нумерология</span></div></div>`;
+}
 function prodResult() { const p = PROD[CUR];
   let eyebrow = p.resEyebrow;
   if (CUR === 'rename') {
@@ -9096,7 +9133,7 @@ function prodResult() { const p = PROD[CUR];
     <div><b>${p.file.name}</b><span>${p.file.size} · ${p.file.pages}</span></div>
   </div>` : ''}
 
-  ${p.doc || ''}
+  ${CUR === 'rename' ? renameDoc() : (p.doc || '')}
 
   <div class="docfoot boxed">
     ${p.access
