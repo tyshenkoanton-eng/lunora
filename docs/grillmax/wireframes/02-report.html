@@ -1093,6 +1093,7 @@
   .ck-opt .w-box { margin-top: 0; }
   .ck-opt.on .w-box { background: var(--note); border-color: var(--note); }
   .ck-opt.on .w-box::after { content: '✓'; color: #fff; font-size: 12px; line-height: 1; }
+  .cmplink { color: var(--note); cursor: pointer; }
   .ck-opt b { display: block; font-size: 14px; font-weight: 620; color: var(--ink); }
   .ck-opt span { font-size: 12px; color: var(--ink-soft); line-height: 1.45; }
   input.w-field { width: 100%; font: inherit; font-size: 15px; -moz-appearance: textfield; }
@@ -2077,7 +2078,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v616</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v617</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9029,6 +9030,15 @@ function cmpGate() {
   const go = document.getElementById('cmpGo');
   if (go) go.classList.toggle('off', !(CMP_DATA.name && CMP_DATA.d && CMP_DATA.m && CMP_DATA.y));
 }
+/* как только вводят час или минуты, точность по умолчанию становится «± 30 мин» */
+function cmpTimeTouched() {
+  if (CMP_DATA.prec && CMP_DATA.prec !== 'n') return;
+  CMP_DATA.prec = 'p';
+  const seg = document.getElementById('cmpPrec');
+  if (seg) seg.querySelectorAll('i').forEach(i => i.classList.toggle('on', i.dataset.cmpprec === 'p'));
+  const row = document.getElementById('cmpTimeRow');
+  if (row) row.style.display = 'flex';
+}
 function prodData() { const p = PROD[CUR]; const has = p.fields.length;
   if (CUR.startsWith('compat')) return compatData(p);
   if (CUR === 'rename') {
@@ -9088,10 +9098,11 @@ function compatDepth(p) {
   const miss = [];
   if (!D.place) miss.push('место рождения');
   if (!hasTime) miss.push('время рождения');
+  const missLinks = miss.map(m => `<u class="cmplink" data-cstep="2">${m}</u>`);
   const dataLines = [`${nameLine}`, `${dateLine}, ${timeLine}`, D.place ? D.place : ''].filter(Boolean).join('<br>');
   const infoHtml = miss.length
-    ? `<div class="orient" style="margin-top:14px"><p>Разбор составим и по этим данным. Если добавить ${miss.join(' и ')}, он станет точнее и подробнее.</p></div>`
-    : `<div class="orient" style="margin-top:14px"><p>Данных достаточно для подробного разбора.</p></div>`;
+    ? `<div class="orient" style="margin-top:14px"><p>Разбор составим и по этим данным. Если добавить ${missLinks.join(' и ')}, он станет точнее и подробнее.</p></div>`
+    : '';
   return `<div class="pad" style="padding-bottom:16px">
   <div class="dochead" ${back}><span>&lsaquo;</span><div>Назад</div></div>
   ${compatStepper(hasType, hasType ? 2 : 1)}
@@ -12174,6 +12185,7 @@ view.addEventListener('contextmenu', e => {
     cell.textContent = cell.dataset.val;
     cell.classList.add('filled');
     if (cell.dataset.cmpkey) CMP_DATA[cell.dataset.cmpkey] = cell.dataset.val;
+    if (cell.dataset.cmpkey === 'h' || cell.dataset.cmpkey === 'i') cmpTimeTouched();
     cmpGate();
     return;
   }
@@ -12182,7 +12194,11 @@ view.addEventListener('contextmenu', e => {
 /* ручной ввод в поля совместимости (место, час, минуты) сохраняется в CMP_DATA */
 view.addEventListener('input', e => {
   const c = e.target.closest('#cmpData [data-cmpkey]');
-  if (c && c.isContentEditable) { CMP_DATA[c.dataset.cmpkey] = c.textContent.trim(); cmpGate(); }
+  if (c && c.isContentEditable) {
+    CMP_DATA[c.dataset.cmpkey] = c.textContent.trim();
+    if ((c.dataset.cmpkey === 'h' || c.dataset.cmpkey === 'i') && c.textContent.trim()) cmpTimeTouched();
+    cmpGate();
+  }
 });
 
 view.addEventListener('click', e => {
