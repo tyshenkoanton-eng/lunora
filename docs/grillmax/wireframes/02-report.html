@@ -2077,7 +2077,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v612</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v613</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9006,7 +9006,7 @@ function compatData(p) {
   <div style="margin-top:22px">
     <div class="w-label">Время рождения</div>
     <p class="obhint" style="margin:0 0 8px">Насколько точно вы его знаете?</p>
-    <div class="segtabs seg4"><i>Точно</i><i>± 30 мин</i><i>± 3 часа</i><i data-cmpon>Не знаю</i></div>
+    <div class="segtabs seg4" data-cmpseg><i>Точно</i><i>± 30 мин</i><i>± 3 часа</i><i data-cmpon>Не знаю</i></div>
     <div class="hmrow"><div><div class="w-field">—</div><span class="flab">час</span></div><div><div class="w-field">—</div><span class="flab">минуты</span></div></div>
   </div>
 
@@ -12132,12 +12132,20 @@ view.addEventListener('contextmenu', e => {
     rnSync(f.closest('.pad'));
     return;
   }
-  /* правый клик по экрану данных совместимости подставляет пример целиком */
-  const box = e.target.closest('#cmpData');
-  if (box) {
+  /* совместимость: правый клик по полю подставляет пример только в это поле */
+  const cell = e.target.closest('#cmpData [data-cmpfill]');
+  if (cell) {
     e.preventDefault();
-    box.querySelectorAll('[data-cmpfill]').forEach(el => { el.textContent = el.dataset.val; el.classList.add('filled'); });
-    box.querySelectorAll('[data-cmpon]').forEach(el => el.classList.add('on'));
+    cell.textContent = cell.dataset.val;
+    cell.classList.add('filled');
+    return;
+  }
+  /* правый клик по блоку времени (или другого выбора) отмечает нужный вариант */
+  const seg = e.target.closest('#cmpData [data-cmpseg]');
+  if (seg) {
+    e.preventDefault();
+    seg.querySelectorAll('i').forEach(i => i.classList.toggle('on', i.hasAttribute('data-cmpon')));
+    return;
   }
 });
 
