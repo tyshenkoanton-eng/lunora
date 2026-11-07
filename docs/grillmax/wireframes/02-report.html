@@ -2077,7 +2077,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v610</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v611</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -8980,41 +8980,41 @@ function compatData(p) {
 </div>`;
   }
   const back = hasType ? 'data-cstep="1"' : 'data-go="prodPage"';
-  return `<div class="pad" style="padding-bottom:16px">
+  return `<div class="pad" id="cmpData" style="padding-bottom:16px">
   <div class="dochead" ${back}><span>&lsaquo;</span><div>Назад</div></div>
   ${compatStepper(hasType, hasType ? 1 : 0)}
   <h2 class="t-title" style="font-size:20px;margin-top:16px">Данные другого человека</h2>
   <p class="obhint" style="margin:6px 0 16px">Имя и дата рождения обязательны. Время и место можно не указывать, но с ними разбор точнее.</p>
 
   <div class="fields" style="margin-top:4px">
-    <div><div class="w-label">Полное имя</div><div class="w-field filled">Дмитрий</div></div>
-    <div><div class="w-label">Отчество</div><div class="w-field filled">Сергеевич</div></div>
-    <div><div class="w-label">Фамилия</div><div class="w-field filled">Ковалёв</div>
+    <div><div class="w-label">Полное имя</div><div class="w-field" data-cmpfill data-val="Дмитрий">Введите имя</div></div>
+    <div><div class="w-label">Отчество</div><div class="w-field" data-cmpfill data-val="Сергеевич">Введите отчество</div></div>
+    <div><div class="w-label">Фамилия</div><div class="w-field" data-cmpfill data-val="Ковалёв">Введите фамилию</div>
       <p class="obhint">Фамилию и отчество можно не заполнять. Но с ними нумерология расскажет о нём подробнее.</p></div>
   </div>
 
   <div style="margin-top:22px">
     <div class="w-label">Пол</div>
-    <div class="segtabs" style="margin-bottom:0"><i class="on">Мужской</i><i>Женский</i></div>
+    <div class="segtabs" style="margin-bottom:0"><i data-cmpon>Мужской</i><i>Женский</i></div>
   </div>
 
   <div style="margin-top:22px">
     <div class="w-label">Место рождения</div>
-    <div class="w-field filled" contenteditable="true" data-ph="Укажите город рождения" data-sug="city">Ростов-на-Дону</div>
+    <div class="w-field" contenteditable="true" data-cmpfill data-val="Ростов-на-Дону" data-ph="Укажите город рождения" data-sug="city"></div>
     <div class="sug"></div>
     <p class="obhint" style="margin:5px 0 0">Город можно не указывать, но с ним разбор точнее.</p>
   </div>
 
   <div style="margin-top:22px">
     <div class="w-label">Дата рождения</div>
-    <div class="hm3"><div class="w-field filled">17</div><div class="w-field filled">августа</div><div class="w-field filled">1981</div></div>
+    <div class="hm3"><div class="w-field" data-cmpfill data-val="17">—</div><div class="w-field" data-cmpfill data-val="августа">—</div><div class="w-field" data-cmpfill data-val="1981">—</div></div>
     <div class="dlab"><span>день</span><span>месяц</span><span>год</span></div>
   </div>
 
   <div style="margin-top:22px">
     <div class="w-label">Время рождения</div>
     <p class="obhint" style="margin:0 0 8px">Насколько точно вы его знаете?</p>
-    <div class="segtabs seg4"><i>Точно</i><i>± 30 мин</i><i>± 3 часа</i><i class="on">Не знаю</i></div>
+    <div class="segtabs seg4"><i>Точно</i><i>± 30 мин</i><i>± 3 часа</i><i data-cmpon>Не знаю</i></div>
     <div class="hmrow"><div><div class="w-field">—</div><span class="flab">час</span></div><div><div class="w-field">—</div><span class="flab">минуты</span></div></div>
   </div>
 
@@ -12133,11 +12133,20 @@ function rnSync(pad) {
 /* демо: правый клик по полю подставляет пример (в прототипе клавиатуры нет) */
 view.addEventListener('contextmenu', e => {
   const f = e.target.closest('.w-field[data-rn][data-rnsample]');
-  if (!f) return;
-  e.preventDefault();
-  f.textContent = f.dataset.rnsample;
-  f.classList.add('filled');
-  rnSync(f.closest('.pad'));
+  if (f) {
+    e.preventDefault();
+    f.textContent = f.dataset.rnsample;
+    f.classList.add('filled');
+    rnSync(f.closest('.pad'));
+    return;
+  }
+  /* правый клик по экрану данных совместимости подставляет пример целиком */
+  const box = e.target.closest('#cmpData');
+  if (box) {
+    e.preventDefault();
+    box.querySelectorAll('[data-cmpfill]').forEach(el => { el.textContent = el.dataset.val; el.classList.add('filled'); });
+    box.querySelectorAll('[data-cmpon]').forEach(el => el.classList.add('on'));
+  }
 });
 
 view.addEventListener('click', e => {
