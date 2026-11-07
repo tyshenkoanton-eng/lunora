@@ -2068,7 +2068,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v595</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v596</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -7622,13 +7622,9 @@ S.compat = `<div class="pad">
   <div class="dochead" data-go="shop"><span>&lsaquo;</span><div>Назад · Разборы</div></div>
   <div class="d-crumb">Разборы</div>
   <h2 class="t-title" style="font-size:21px">Совместимость</h2>
-  <p class="d-lede">Рассчитайте совместимость с любым человеком: для любви, дружбы или деловых отношений.</p>
-  <div class="sec-label">Выберите тип отношений</div>
-  <div class="cards">
-    <div class="card-it" data-prod="compat" data-ctype="Любовь"><div><div class="t">Любовь</div><span class="s">Эмоциональная близость, общие ценности и вероятные сценарии конфликтов</span></div><div class="chev">›</div></div>
-    <div class="card-it" data-prod="compat" data-ctype="Дружба"><div><div class="t">Дружба</div><span class="s">Насколько совпадаете по ритму, интересам и ценностям</span></div><div class="chev">›</div></div>
-    <div class="card-it" data-prod="compat" data-ctype="Деловое партнёрство"><div><div class="t">Деловое партнёрство</div><span class="s">Сильные и слабые стороны партнёрства: где усиливаете друг друга, а где ослабляете</span></div><div class="chev">›</div></div>
-  </div>
+  <p class="d-lede">Разбор на двух настоящих картах, по датам рождения обоих. Подходит для пары, друга или коллеги: покажем, где вам легко вместе, из-за чего повторяются ссоры и что с этим делать.</p>
+  <div class="luna-block" style="margin-top:14px"><div class="lab">Тип отношений выберете при вводе данных</div><p>Любовь, дружба или деловые отношения. От выбора зависит, что войдёт в разбор: в любви это про притяжение и близость, в дружбе про общий ритм и интересы, в деловых про договорённости и ответственность.</p></div>
+  <div class="w-btn" data-prod="compat" style="margin-top:18px">Продолжить</div>
 </div>`;
 
 /* ============ ЛИЧНЫЕ ДАННЫЕ ============ */
@@ -8900,7 +8896,12 @@ function prodData() { const p = PROD[CUR]; const has = p.fields.length;
   <h2 class="t-title" style="font-size:20px">${has ? 'Что нужно для расчёта' : 'Всё уже есть'}</h2>
   ${has ? `<p class="d-lede">${p.need}</p>
   <div style="display:flex;flex-direction:column;gap:11px">
-    ${p.fields.map(([l,v,req,hint])=>`<div><div class="w-label">${l}${req?'':' <span style="color:var(--ink-faint);font-weight:400">— если знаете</span>'}</div><div class="w-field ${v.startsWith('не ')||v.startsWith('ещё')?'':'filled'}"${/[Гг]ород/.test(l)?' contenteditable="true" data-ph="Укажите город рождения" data-sug="city"':''}>${v}</div>${/[Гг]ород/.test(l)?'<div class="sug"></div>':''}${hint?`<p style="font-size:11px;color:var(--ink-faint);margin:5px 0 0">${hint}</p>`:''}</div>`).join('')}
+    ${p.fields.map(([l,v,req,hint])=>{
+      if (CUR==='compat' && l==='Тип связи') {
+        return `<div><div class="w-label">Тип отношений</div><div class="segtabs" id="ctSeg">${['Любовь','Дружба','Деловые'].map(o=>`<i class="${v===o?'on':''}" data-ct="${o}">${o}</i>`).join('')}</div><p style="font-size:11px;color:var(--ink-faint);margin:0 0 4px">От выбора зависит, какие блоки войдут в разбор.</p></div>`;
+      }
+      return `<div><div class="w-label">${l}${req?'':' <span style="color:var(--ink-faint);font-weight:400">— если знаете</span>'}</div><div class="w-field ${v.startsWith('не ')||v.startsWith('ещё')?'':'filled'}"${/[Гг]ород/.test(l)?' contenteditable="true" data-ph="Укажите город рождения" data-sug="city"':''}>${v}</div>${/[Гг]ород/.test(l)?'<div class="sug"></div>':''}${hint?`<p style="font-size:11px;color:var(--ink-faint);margin:5px 0 0">${hint}</p>`:''}</div>`;
+    }).join('')}
   </div>
   ${CUR==='compat'||CUR==='child' ? '<div class="w-check" style="margin-top:16px"><div class="w-box"></div><div>Я имею право передать эти данные и понимаю, что они будут использованы только для расчёта</div></div>' : ''}`
   : `<p class="d-lede">Ничего вводить не нужно — всё берём из вашего профиля.</p>
@@ -10922,6 +10923,8 @@ view.addEventListener('click', e => {
   if (ro) { RECBACK = 'payOk'; render('К-12'); return; }
   const gd = e.target.closest('[data-godoc]');
   if (gd) { CUR = gd.dataset.godoc; SHOPTAB = 'docs'; render('prodResult'); return; }
+  const ct = e.target.closest('[data-ct]');
+  if (ct) { if (PROD.compat.fields[0]) PROD.compat.fields[0][1] = ct.dataset.ct; ct.parentElement.querySelectorAll('i').forEach(i => i.classList.toggle('on', i === ct)); return; }
   const pr = e.target.closest('[data-prod]');
   if (pr) {
     /* PDF и слот не требуют страницы продукта — короткий путь через подтверждение,
