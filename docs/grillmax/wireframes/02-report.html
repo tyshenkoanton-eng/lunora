@@ -2077,7 +2077,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v615</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v616</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -8917,12 +8917,14 @@ const PROD = {
 let CUR = 'compatWest';
 /* шаг мастера совместимости: 1 — тип, 2 — данные. Проверка живёт в prodDepth */
 let CMP_STEP = 1;
+/* введённые данные другого человека: наследуются между шагами и в проверку */
+let CMP_DATA = {};
 /* просмотр примера до покупки: тот же экран, но без скачивания и пересылки */
 let DOCPREVIEW = false;
 let SHOPTAB = 'list';
 let HASDOCS = true;
 
-function prodPage() { const p = PROD[CUR]; CMP_STEP = 1; return `<div class="pad">
+function prodPage() { const p = PROD[CUR]; CMP_STEP = 1; CMP_DATA = {}; return `<div class="pad">
   <div class="dochead" data-go="${p.back || 'shop'}"><span>&lsaquo;</span><div>Назад · ${TITLES[p.back] || 'Разборы'}</div></div>
   <div class="d-crumb">${p.crumb}</div>
   <h2 class="t-title" style="font-size:21px">${p.t.replace(' · ', '<br>')}</h2>
@@ -8980,6 +8982,14 @@ function compatData(p) {
 </div>`;
   }
   const back = hasType ? 'data-cstep="1"' : 'data-go="prodPage"';
+  const D = CMP_DATA;
+  /* поле только для демо-подстановки (правый клик) */
+  const fcell = (key, val, ph, req) => `<div class="w-field${D[key] ? ' filled' : ''}" data-cmpfill${req ? ' data-cmpreq' : ''} data-cmpkey="${key}" data-val="${val}">${D[key] || ph}</div>`;
+  /* поле, которое можно вписать вручную */
+  const ecell = (key, val, ph, sug) => `<div class="w-field${D[key] ? ' filled' : ''}" contenteditable="true" data-cmpfill data-cmpkey="${key}" data-val="${val}" data-ph="${ph}"${sug ? ' data-sug="city"' : ''}>${D[key] || ''}</div>`;
+  const reqOk = D.name && D.d && D.m && D.y;
+  const prec = D.prec || '';
+  const ptab = (c, l) => `<i class="${prec === c ? 'on' : ''}" data-cmpprec="${c}">${l}</i>`;
   return `<div class="pad" id="cmpData" style="padding-bottom:16px">
   <div class="dochead" ${back}><span>&lsaquo;</span><div>Назад</div></div>
   ${compatStepper(hasType, hasType ? 1 : 0)}
@@ -8987,40 +8997,37 @@ function compatData(p) {
   <p class="obhint" style="margin:6px 0 16px">Имя и дата рождения обязательны. Время и место можно не указывать, но с ними разбор точнее.</p>
 
   <div class="fields" style="margin-top:4px">
-    <div><div class="w-label">Полное имя</div><div class="w-field" data-cmpfill data-cmpreq data-val="Дмитрий Ковалёв">Введите имя</div></div>
+    <div><div class="w-label">Полное имя</div>${fcell('name', 'Дмитрий Ковалёв', 'Введите имя', true)}</div>
   </div>
 
   <div style="margin-top:22px">
     <div class="w-label">Место рождения</div>
-    <div class="w-field" contenteditable="true" data-cmpfill data-val="Ростов-на-Дону" data-ph="Укажите город рождения" data-sug="city"></div>
+    ${ecell('place', 'Ростов-на-Дону', 'Укажите город рождения', true)}
     <div class="sug"></div>
     <p class="obhint" style="margin:5px 0 0">Город можно не указывать, но с ним разбор точнее.</p>
   </div>
 
   <div style="margin-top:22px">
     <div class="w-label">Дата рождения</div>
-    <div class="hm3"><div class="w-field" data-cmpfill data-cmpreq data-val="17">—</div><div class="w-field" data-cmpfill data-cmpreq data-val="августа">—</div><div class="w-field" data-cmpfill data-cmpreq data-val="1981">—</div></div>
+    <div class="hm3">${fcell('d', '17', '—', true)}${fcell('m', 'августа', '—', true)}${fcell('y', '1981', '—', true)}</div>
     <div class="dlab"><span>день</span><span>месяц</span><span>год</span></div>
   </div>
 
   <div style="margin-top:22px">
     <div class="w-label">Время рождения</div>
     <p class="obhint" style="margin:0 0 8px">Насколько точно вы его знаете?</p>
-    <div class="segtabs seg4" id="cmpPrec"><i data-cmpprec="t">Точно</i><i data-cmpprec="p">± 30 мин</i><i data-cmpprec="r">± 3 часа</i><i data-cmpprec="n">Не знаю</i></div>
-    <div class="hmrow" id="cmpTimeRow"><div><div class="w-field" contenteditable="true" data-cmpfill data-val="14" data-ph="чч"></div><span class="flab">час</span></div><div><div class="w-field" contenteditable="true" data-cmpfill data-val="30" data-ph="мм"></div><span class="flab">минуты</span></div></div>
+    <div class="segtabs seg4" id="cmpPrec">${ptab('t', 'Точно')}${ptab('p', '± 30 мин')}${ptab('r', '± 3 часа')}${ptab('n', 'Не знаю')}</div>
+    <div class="hmrow" id="cmpTimeRow"${prec === 'n' ? ' style="display:none"' : ''}><div>${ecell('h', '14', 'чч')}<span class="flab">час</span></div><div>${ecell('i', '30', 'мм')}<span class="flab">минуты</span></div></div>
   </div>
 
-  <div class="w-btn off" id="cmpGo" data-go="prodDepth" style="margin-top:20px">Продолжить</div>
+  <div class="w-btn${reqOk ? '' : ' off'}" id="cmpGo" data-go="prodDepth" style="margin-top:20px">Продолжить</div>
 </div>`;
 }
 /* шаг данных: кнопка «Продолжить» активна, когда заполнены обязательные
    поля — имя и дата рождения (место и время не обязательны) */
 function cmpGate() {
-  const box = document.getElementById('cmpData');
-  if (!box) return;
-  const ok = [...box.querySelectorAll('[data-cmpreq]')].every(el => el.classList.contains('filled'));
   const go = document.getElementById('cmpGo');
-  if (go) go.classList.toggle('off', !ok);
+  if (go) go.classList.toggle('off', !(CMP_DATA.name && CMP_DATA.d && CMP_DATA.m && CMP_DATA.y));
 }
 function prodData() { const p = PROD[CUR]; const has = p.fields.length;
   if (CUR.startsWith('compat')) return compatData(p);
@@ -9072,6 +9079,19 @@ function compatDepth(p) {
   const typeVal = typeField && typeField[1] ? typeField[1] : '';
   PAYKIND = 'prod';
   const back = hasType ? 'data-cstep="2"' : 'data-go="prodData"';
+  const D = CMP_DATA;
+  const nameLine = D.name || 'Имя не указано';
+  const dateLine = (D.d && D.m && D.y) ? `${D.d} ${D.m} ${D.y}` : 'дата не указана';
+  const hasTime = D.prec && D.prec !== 'n' && D.h && D.i;
+  const precLbl = { t: 'точно', p: '± 30 мин', r: '± 3 часа' }[D.prec] || '';
+  const timeLine = hasTime ? `${D.h}:${D.i}${precLbl ? ' ' + precLbl : ''}` : 'время не указано';
+  const miss = [];
+  if (!D.place) miss.push('место рождения');
+  if (!hasTime) miss.push('время рождения');
+  const dataLines = [`${nameLine}`, `${dateLine}, ${timeLine}`, D.place ? D.place : ''].filter(Boolean).join('<br>');
+  const infoHtml = miss.length
+    ? `<div class="orient" style="margin-top:14px"><p>Разбор составим и по этим данным. Если добавить ${miss.join(' и ')}, он станет точнее и подробнее.</p></div>`
+    : `<div class="orient" style="margin-top:14px"><p>Данных достаточно для подробного разбора.</p></div>`;
   return `<div class="pad" style="padding-bottom:16px">
   <div class="dochead" ${back}><span>&lsaquo;</span><div>Назад</div></div>
   ${compatStepper(hasType, hasType ? 2 : 1)}
@@ -9080,12 +9100,10 @@ function compatDepth(p) {
   <div class="sumcard" style="margin-top:14px">
     <div><u>Разбор</u><b>${p.t}</b></div>
     ${typeVal ? `<div><u>Тип совместимости</u><b>${typeVal}</b></div>` : ''}
-    <div class="ml"><u>Другой человек</u><b>Дмитрий Ковалёв<br>17 августа 1981, время неизвестно<br>Ростов-на-Дону</b></div>
+    <div class="ml"><u>Другой человек</u><b>${dataLines}</b></div>
   </div>
 
-  ${p.depth !== '—' ? `<div class="depth" style="cursor:default;margin-top:14px"><span>Глубина расчёта</span><div class="bar"><i style="left:0;width:${p.depth}"></i></div><b>${p.depth}</b></div>` : ''}
-  <div class="note-l" style="display:grid;grid-template-columns:16px 1fr;gap:9px;align-items:start;font-size:11.5px;color:var(--warn);line-height:1.55;background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:9px;padding:11px 12px;margin-top:12px">
-    <i style="font-style:normal">⚠</i><div>${p.depthNote}</div></div>
+  ${infoHtml}
 
   <div class="docfoot boxed" style="margin-top:18px">
     <div class="w-check" data-consent="compat"><div class="w-box"></div>
@@ -11118,6 +11136,7 @@ view.addEventListener('click', e => {
   const pc = e.target.closest('#cmpData [data-cmpprec]');
   if (pc) {
     pc.parentElement.querySelectorAll('i').forEach(i => i.classList.toggle('on', i === pc));
+    CMP_DATA.prec = pc.dataset.cmpprec;
     const row = document.getElementById('cmpTimeRow');
     if (row) row.style.display = pc.dataset.cmpprec === 'n' ? 'none' : 'flex';
     return;
@@ -12154,9 +12173,16 @@ view.addEventListener('contextmenu', e => {
     e.preventDefault();
     cell.textContent = cell.dataset.val;
     cell.classList.add('filled');
+    if (cell.dataset.cmpkey) CMP_DATA[cell.dataset.cmpkey] = cell.dataset.val;
     cmpGate();
     return;
   }
+});
+
+/* ручной ввод в поля совместимости (место, час, минуты) сохраняется в CMP_DATA */
+view.addEventListener('input', e => {
+  const c = e.target.closest('#cmpData [data-cmpkey]');
+  if (c && c.isContentEditable) { CMP_DATA[c.dataset.cmpkey] = c.textContent.trim(); cmpGate(); }
 });
 
 view.addEventListener('click', e => {
