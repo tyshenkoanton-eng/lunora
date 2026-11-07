@@ -2068,7 +2068,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v603</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v604</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -7909,17 +7909,23 @@ const PROD = {
   compatWest: { back:'compat',
     t:'Совместимость · Западная астрология', price:'990 ₽', crumb:'Разборы · совместимость', cta:'Рассчитать совместимость', preview:'doc',
     docPages:'От 6 до 9 страниц в PDF: главное, что между вами, что вы даёте друг другу, где будут споры, что делать. В конце таблица расчёта, если захотите проверить. Чем больше вариантов отношений выберете, тем документ длиннее.',
-    lead:'Западная астрология сравнивает положение Солнца, Луны и планет в день рождения каждого из вас. Разбор идёт по темам, и по каждой видно, где вам легко, а где придётся договариваться.',
+    lead:'Западная астрология сравнивает положение Солнца, Луны и планет в день рождения каждого из вас. Разбор идёт по нескольким темам, и по каждой видно, где вам легко, а где придётся договариваться.',
+    sellBul:1,
     sell:[
-      ['Что вас притягивает','Что сближает вас с первых встреч и что держит рядом сейчас.'],
-      ['Как вы общаетесь','Где вы понимаете друг друга с полуслова, а где разговор не идёт.'],
-      ['Есть ли опора','Можете ли вы положиться друг на друга, когда трудно.'],
-      ['Надолго ли это','Что поможет сохранить связь, а что со временем начнёт мешать.'],
-      ['Где будут споры','Из-за чего они начинаются и как их проходить.'],
-      ['Что с этим делать','Советы под вас двоих.']
+      ['Что вас притягивает','что сближает вас с первых встреч и что держит рядом сейчас.'],
+      ['Как вы общаетесь','где вы понимаете друг друга с полуслова, а где разговор не идёт.'],
+      ['Есть ли опора','можете ли вы положиться друг на друга, когда трудно.'],
+      ['Надолго ли это','что поможет сохранить связь, а что со временем начнёт мешать.'],
+      ['Где будут споры','из-за чего они начинаются и как их проходить.'],
+      ['Персонализированные советы для вас двоих','']
     ],
-    relChoice:'Любовь, дружба или деловые отношения. Можно выбрать один вариант или несколько: от этого зависит, что войдёт в разбор.',
-    needPage:1, need:'Дата рождения другого человека. Время и город можно не указывать, но с ними разбор точнее. Без времени часть выводов будет приблизительной, и мы отметим это в документе. Ваши данные уже есть в профиле.',
+    relTitle:'Какую совместимость можно проверить',
+    relItems:['Любовь','Дружба','Деловые отношения'],
+    relNote:'Можно выбрать один или несколько вариантов, от этого зависит, что войдёт в разбор.',
+    needTitle:'Что понадобится', needLead:'Понадобятся данные другого человека:',
+    needItems:['Имя','Дата рождения','Место рождения','Время рождения'],
+    needNote:'Время и место рождения можно не указывать, но с ними разбор будет точнее.',
+    need:'Укажите данные другого человека. Имя и дата рождения обязательны, место и время если знаете.',
     fields:[['Тип связи','Любовь',1],['Как его зовут','Дмитрий',1],['Дата рождения','17 августа 1981',1],['Время рождения','не знаю',0],['Город рождения','Ростов-на-Дону',0]],
     depth:'50%', depthNote:'Времени рождения Дмитрия нет, поэтому не считаются дома и восходящий. Это заметная часть западного разбора.',
     build:['Посчитала обе карты','Сравнила положения планет','Нашла сильные аспекты и напряжения','Пишу разбор'],
@@ -8915,11 +8921,16 @@ function prodPage() { const p = PROD[CUR]; return `<div class="pad">
     : `<p class="d-lede">${p.lead}</p>
   ${p.period ? `<p style="font-size:11.5px;color:var(--ink-faint);margin:7px 0 0;font-variant-numeric:tabular-nums"><b>Период:</b> ${p.period}</p>` : ''}`}
   <div class="sec-label">Что вы узнаете</div>
-  <div class="body-text">${p.sell.map(([h,t])=>`<p><b>${h}.</b><br>${t}</p>`).join('')}</div>
-  ${p.relChoice ? `<div class="sec-label">Какие отношения смотрим</div>
-  <div class="body-text"><p>${p.relChoice}</p></div>` : ''}
-  ${p.needPage ? `<div class="sec-label">Что понадобится</div>
-  <div class="body-text"><p>${p.need}</p></div>` : ''}
+  ${p.sellBul
+    ? `<ul class="bc-list" style="margin-top:4px">${p.sell.map(([h,t])=>`<li><b>${h}</b>${t||''}</li>`).join('')}</ul>`
+    : `<div class="body-text">${p.sell.map(([h,t])=>`<p><b>${h}.</b><br>${t}</p>`).join('')}</div>`}
+  ${p.relItems ? `<div class="sec-label">${p.relTitle || 'Какую совместимость можно проверить'}</div>
+  <ul class="bc-list" style="margin-top:4px">${p.relItems.map(x=>`<li>${x}</li>`).join('')}</ul>
+  ${p.relNote ? `<p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin:2px 0 0">${p.relNote}</p>` : ''}` : ''}
+  ${p.needItems ? `<div class="sec-label">${p.needTitle || 'Что понадобится'}</div>
+  ${p.needLead ? `<p style="font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin:0 0 7px">${p.needLead}</p>` : ''}
+  <ul class="bc-list" style="margin-top:0">${p.needItems.map(x=>`<li>${x}</li>`).join('')}</ul>
+  ${p.needNote ? `<p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin:2px 0 0">${p.needNote}</p>` : ''}` : ''}
   ${p.preview === 'doc'
     ? `<div class="sec-label">Как выглядит документ</div>
   <div class="pdfcar">
