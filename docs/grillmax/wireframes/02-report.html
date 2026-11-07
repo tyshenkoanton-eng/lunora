@@ -2077,7 +2077,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v611</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v612</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -8987,15 +8987,7 @@ function compatData(p) {
   <p class="obhint" style="margin:6px 0 16px">Имя и дата рождения обязательны. Время и место можно не указывать, но с ними разбор точнее.</p>
 
   <div class="fields" style="margin-top:4px">
-    <div><div class="w-label">Полное имя</div><div class="w-field" data-cmpfill data-val="Дмитрий">Введите имя</div></div>
-    <div><div class="w-label">Отчество</div><div class="w-field" data-cmpfill data-val="Сергеевич">Введите отчество</div></div>
-    <div><div class="w-label">Фамилия</div><div class="w-field" data-cmpfill data-val="Ковалёв">Введите фамилию</div>
-      <p class="obhint">Фамилию и отчество можно не заполнять. Но с ними нумерология расскажет о нём подробнее.</p></div>
-  </div>
-
-  <div style="margin-top:22px">
-    <div class="w-label">Пол</div>
-    <div class="segtabs" style="margin-bottom:0"><i data-cmpon>Мужской</i><i>Женский</i></div>
+    <div><div class="w-label">Полное имя</div><div class="w-field" data-cmpfill data-val="Дмитрий Ковалёв">Введите имя</div></div>
   </div>
 
   <div style="margin-top:22px">
@@ -9079,7 +9071,7 @@ function compatDepth(p) {
   <div class="sumcard" style="margin-top:14px">
     <div><u>Разбор</u><b>${p.t}</b></div>
     ${typeVal ? `<div><u>Тип совместимости</u><b>${typeVal}</b></div>` : ''}
-    <div class="ml"><u>Другой человек</u><b>Дмитрий Сергеевич Ковалёв<br>17 августа 1981, время неизвестно<br>Ростов-на-Дону</b></div>
+    <div class="ml"><u>Другой человек</u><b>Дмитрий Ковалёв<br>17 августа 1981, время неизвестно<br>Ростов-на-Дону</b></div>
   </div>
 
   ${p.depth !== '—' ? `<div class="depth" style="cursor:default;margin-top:14px"><span>Глубина расчёта</span><div class="bar"><i style="left:0;width:${p.depth}"></i></div><b>${p.depth}</b></div>` : ''}
