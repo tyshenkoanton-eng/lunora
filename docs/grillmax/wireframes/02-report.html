@@ -1086,6 +1086,15 @@
            background: var(--card); display: grid; place-items: center; margin-top: 1px; }
   .w-check.on .w-box { background: var(--note); border-color: var(--note); }
   .w-check.on .w-box::after { content: '✓'; color: #fff; font-size: 12px; line-height: 1; }
+  .ck-opt { display: grid; grid-template-columns: 20px 1fr; gap: 11px; align-items: center;
+            border: 1px solid var(--wire-line); border-radius: 10px; padding: 13px 14px; cursor: pointer; }
+  .ck-opt + .ck-opt { margin-top: 10px; }
+  .ck-opt.on { border-color: var(--note); background: var(--wire-fill-2); }
+  .ck-opt .w-box { margin-top: 0; }
+  .ck-opt.on .w-box { background: var(--note); border-color: var(--note); }
+  .ck-opt.on .w-box::after { content: '✓'; color: #fff; font-size: 12px; line-height: 1; }
+  .ck-opt b { display: block; font-size: 14px; font-weight: 620; color: var(--ink); }
+  .ck-opt span { font-size: 12px; color: var(--ink-soft); line-height: 1.45; }
   input.w-field { width: 100%; font: inherit; font-size: 15px; -moz-appearance: textfield; }
   input.w-field::-webkit-outer-spin-button, input.w-field::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
   input.w-field:focus { outline: none; border-color: var(--ink-faint); }
@@ -2068,7 +2077,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v608</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v609</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -8906,12 +8915,14 @@ const PROD = {
   },
 };
 let CUR = 'compatWest';
+/* шаг мастера совместимости: 1 — тип, 2 — данные. Проверка живёт в prodDepth */
+let CMP_STEP = 1;
 /* просмотр примера до покупки: тот же экран, но без скачивания и пересылки */
 let DOCPREVIEW = false;
 let SHOPTAB = 'list';
 let HASDOCS = true;
 
-function prodPage() { const p = PROD[CUR]; return `<div class="pad">
+function prodPage() { const p = PROD[CUR]; CMP_STEP = 1; return `<div class="pad">
   <div class="dochead" data-go="${p.back || 'shop'}"><span>&lsaquo;</span><div>Назад · ${TITLES[p.back] || 'Разборы'}</div></div>
   <div class="d-crumb">${p.crumb}</div>
   <h2 class="t-title" style="font-size:21px">${p.t.replace(' · ', '<br>')}</h2>
@@ -8943,7 +8954,75 @@ function prodPage() { const p = PROD[CUR]; return `<div class="pad">
   <div class="w-btn" data-go="${p.fields.length ? 'prodData' : 'prodDepth'}" style="margin-top:18px">${p.cta || (p.access ? 'Купить' : 'Рассчитать')} · ${p.price}</div>
 </div>`; }
 
+/* мастер совместимости: шаг 1 тип, шаг 2 данные, шаг 3 (prodDepth) проверка.
+   У ведической типа нет, поэтому шага два: данные и проверка. */
+function compatStepper(hasType, cur) {
+  const labels = hasType ? ['Тип', 'Данные', 'Проверка'] : ['Данные', 'Проверка'];
+  return `<div class="stepper" style="grid-template-columns:repeat(${labels.length},1fr)">${labels.map((l, i) =>
+    `<div class="${i < cur ? 'done' : i === cur ? 'now' : ''}">${i === 0 ? '' : `<i class="lin ${i <= cur ? 'passed' : ''}"></i>`}<u>${i < cur ? '✓' : i + 1}</u><span>${l}</span></div>`).join('')}</div>`;
+}
+function compatData(p) {
+  const f = p.fields;
+  const typeField = (f[0] && f[0][0] === 'Тип связи') ? f[0] : null;
+  const hasType = !!typeField;
+  if (hasType && CMP_STEP === 1) {
+    const sel = typeField[1] ? typeField[1].split(', ') : [];
+    const opts = [['Любовь', 'романтические отношения или брак'], ['Дружба', 'близкий человек, друг, не романтика'], ['Деловые отношения', 'партнёр, коллега, общее дело']];
+    return `<div class="pad">
+  <div class="dochead" data-go="prodPage"><span>&lsaquo;</span><div>Назад</div></div>
+  ${compatStepper(true, 0)}
+  <h2 class="t-title" style="font-size:20px;margin-top:16px">Тип совместимости</h2>
+  <p class="obhint" style="margin:6px 0 16px">Можно выбрать один или несколько вариантов. От этого зависит, что войдёт в разбор.</p>
+  <div id="ctList">
+    ${opts.map(([o, d]) => `<div class="ck-opt${sel.includes(o) ? ' on' : ''}" data-ct="${o}"><div class="w-box"></div><div><b>${o}</b><span>${d}</span></div></div>`).join('')}
+  </div>
+  <div class="w-btn${sel.length ? '' : ' off'}" id="ctGo" data-cstep="2" style="margin-top:18px">Продолжить</div>
+</div>`;
+  }
+  const back = hasType ? 'data-cstep="1"' : 'data-go="prodPage"';
+  return `<div class="pad" style="padding-bottom:16px">
+  <div class="dochead" ${back}><span>&lsaquo;</span><div>Назад</div></div>
+  ${compatStepper(hasType, hasType ? 1 : 0)}
+  <h2 class="t-title" style="font-size:20px;margin-top:16px">Данные другого человека</h2>
+  <p class="obhint" style="margin:6px 0 16px">Имя и дата рождения обязательны. Время и место можно не указывать, но с ними разбор точнее.</p>
+
+  <div class="fields" style="margin-top:4px">
+    <div><div class="w-label">Полное имя</div><div class="w-field filled">Дмитрий</div></div>
+    <div><div class="w-label">Отчество</div><div class="w-field filled">Сергеевич</div></div>
+    <div><div class="w-label">Фамилия</div><div class="w-field filled">Ковалёв</div>
+      <p class="obhint">Фамилию и отчество можно не заполнять. Но с ними нумерология расскажет о нём подробнее.</p></div>
+  </div>
+
+  <div style="margin-top:22px">
+    <div class="w-label">Пол</div>
+    <div class="segtabs" style="margin-bottom:0"><i class="on">Мужской</i><i>Женский</i></div>
+  </div>
+
+  <div style="margin-top:22px">
+    <div class="w-label">Место рождения</div>
+    <div class="w-field filled" contenteditable="true" data-ph="Укажите город рождения" data-sug="city">Ростов-на-Дону</div>
+    <div class="sug"></div>
+    <p class="obhint" style="margin:5px 0 0">Город можно не указывать, но с ним разбор точнее.</p>
+  </div>
+
+  <div style="margin-top:22px">
+    <div class="w-label">Дата рождения</div>
+    <div class="hm3"><div class="w-field filled">17</div><div class="w-field filled">августа</div><div class="w-field filled">1981</div></div>
+    <div class="dlab"><span>день</span><span>месяц</span><span>год</span></div>
+  </div>
+
+  <div style="margin-top:22px">
+    <div class="w-label">Время рождения</div>
+    <p class="obhint" style="margin:0 0 8px">Насколько точно вы его знаете?</p>
+    <div class="segtabs seg4"><i>Точно</i><i>± 30 мин</i><i>± 3 часа</i><i class="on">Не знаю</i></div>
+    <div class="hmrow"><div><div class="w-field">—</div><span class="flab">час</span></div><div><div class="w-field">—</div><span class="flab">минуты</span></div></div>
+  </div>
+
+  <div class="w-btn" data-go="prodDepth" style="margin-top:20px">Продолжить</div>
+</div>`;
+}
 function prodData() { const p = PROD[CUR]; const has = p.fields.length;
+  if (CUR.startsWith('compat')) return compatData(p);
   if (CUR === 'rename') {
     const nm = p.fields[0] ? p.fields[0][1] : '';
     const fm = p.fields[1] ? p.fields[1][1] : '';
@@ -8985,7 +9064,38 @@ function prodData() { const p = PROD[CUR]; const has = p.fields.length;
   <div class="w-btn" data-go="prodDepth" style="margin-top:18px">Продолжить</div>
 </div>`; }
 
+function compatDepth(p) {
+  const f = p.fields;
+  const typeField = (f[0] && f[0][0] === 'Тип связи') ? f[0] : null;
+  const hasType = !!typeField;
+  const typeVal = typeField && typeField[1] ? typeField[1] : '';
+  PAYKIND = 'prod';
+  const back = hasType ? 'data-cstep="2"' : 'data-go="prodData"';
+  return `<div class="pad" style="padding-bottom:16px">
+  <div class="dochead" ${back}><span>&lsaquo;</span><div>Назад</div></div>
+  ${compatStepper(hasType, hasType ? 2 : 1)}
+  <h2 class="t-title" style="font-size:20px;margin-top:16px">Проверьте данные</h2>
+
+  <div class="sumcard" style="margin-top:14px">
+    <div><u>Разбор</u><b>${p.t}</b></div>
+    ${typeVal ? `<div><u>Тип совместимости</u><b>${typeVal}</b></div>` : ''}
+    <div class="ml"><u>Другой человек</u><b>Дмитрий Сергеевич Ковалёв<br>17 августа 1981, время неизвестно<br>Ростов-на-Дону</b></div>
+  </div>
+
+  ${p.depth !== '—' ? `<div class="depth" style="cursor:default;margin-top:14px"><span>Глубина расчёта</span><div class="bar"><i style="left:0;width:${p.depth}"></i></div><b>${p.depth}</b></div>` : ''}
+  <div class="note-l" style="display:grid;grid-template-columns:16px 1fr;gap:9px;align-items:start;font-size:11.5px;color:var(--warn);line-height:1.55;background:var(--warn-bg);border:1px solid var(--warn-line);border-radius:9px;padding:11px 12px;margin-top:12px">
+    <i style="font-style:normal">⚠</i><div>${p.depthNote}</div></div>
+
+  <div class="docfoot boxed" style="margin-top:18px">
+    <div class="w-check" data-consent="compat"><div class="w-box"></div>
+      <div style="font-size:11.5px;color:var(--ink-soft);line-height:1.5">Подтверждаю, что имею право передать данные этого человека, и понимаю, что они будут использованы только для расчёта. <u class="ihint" data-info="consent">i</u></div></div>
+    <p class="payterms" style="margin:12px 0 0">Оплачивая, вы принимаете <u data-go="doc-offer">оферту</u>.</p>
+    <div class="w-btn off" id="cmpPay" data-go="payGate" style="margin-top:10px">Перейти к оплате · ${p.price}</div>
+  </div>
+</div>`;
+}
 function prodDepth() { const p = PROD[CUR];
+  if (CUR.startsWith('compat')) return compatDepth(p);
   if (!p.access) {
     const has = p.fields.length;
     let rows;
@@ -11002,16 +11112,20 @@ view.addEventListener('click', e => {
   if (ro) { RECBACK = 'payOk'; render('К-12'); return; }
   const gd = e.target.closest('[data-godoc]');
   if (gd) { CUR = gd.dataset.godoc; SHOPTAB = 'docs'; render('prodResult'); return; }
+  const cs = e.target.closest('[data-cstep]');
+  if (cs) { if (cs.classList.contains('off')) return; CMP_STEP = +cs.dataset.cstep; render('prodData'); return; }
   const ct = e.target.closest('[data-ct]');
   if (ct) {
     const f = PROD[CUR] && PROD[CUR].fields[0];
     if (f) {
       let sel = f[1] ? f[1].split(', ') : [];
       const o = ct.dataset.ct;
-      if (sel.includes(o)) { if (sel.length > 1) sel = sel.filter(x => x !== o); }
+      if (sel.includes(o)) sel = sel.filter(x => x !== o);
       else sel.push(o);
       f[1] = sel.join(', ');
-      ct.parentElement.querySelectorAll('i').forEach(i => i.classList.toggle('on', sel.includes(i.dataset.ct)));
+      ct.parentElement.querySelectorAll('[data-ct]').forEach(el => el.classList.toggle('on', sel.includes(el.dataset.ct)));
+      const go = document.getElementById('ctGo');
+      if (go) go.classList.toggle('off', sel.length === 0);
     }
     return;
   }
@@ -11667,6 +11781,9 @@ view.addEventListener('click', e => {
   if (ch.dataset.consent === 'add') {
     /* согласие — одно из условий; кнопку включает общая проверка формы */
     addGate();
+  } else if (ch.dataset.consent === 'compat') {
+    const btn = document.getElementById('cmpPay');
+    if (btn) btn.classList.toggle('off', !on);
   } else if (ch.dataset.consent) {
     OB.consent = on;
     const btn = document.getElementById('obConsentGo');
