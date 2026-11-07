@@ -2077,7 +2077,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v613</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v614</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9006,8 +9006,8 @@ function compatData(p) {
   <div style="margin-top:22px">
     <div class="w-label">Время рождения</div>
     <p class="obhint" style="margin:0 0 8px">Насколько точно вы его знаете?</p>
-    <div class="segtabs seg4" data-cmpseg><i>Точно</i><i>± 30 мин</i><i>± 3 часа</i><i data-cmpon>Не знаю</i></div>
-    <div class="hmrow"><div><div class="w-field">—</div><span class="flab">час</span></div><div><div class="w-field">—</div><span class="flab">минуты</span></div></div>
+    <div class="segtabs seg4" id="cmpPrec"><i data-cmpprec="t">Точно</i><i data-cmpprec="p">± 30 мин</i><i data-cmpprec="r">± 3 часа</i><i data-cmpprec="n">Не знаю</i></div>
+    <div class="hmrow" id="cmpTimeRow"><div><div class="w-field" contenteditable="true" data-cmpfill data-val="14" data-ph="чч"></div><span class="flab">час</span></div><div><div class="w-field" contenteditable="true" data-cmpfill data-val="30" data-ph="мм"></div><span class="flab">минуты</span></div></div>
   </div>
 
   <div class="w-btn" data-go="prodDepth" style="margin-top:20px">Продолжить</div>
@@ -11106,6 +11106,13 @@ view.addEventListener('click', e => {
   if (gd) { CUR = gd.dataset.godoc; SHOPTAB = 'docs'; render('prodResult'); return; }
   const cs = e.target.closest('[data-cstep]');
   if (cs) { if (cs.classList.contains('off')) return; CMP_STEP = +cs.dataset.cstep; render('prodData'); return; }
+  const pc = e.target.closest('#cmpData [data-cmpprec]');
+  if (pc) {
+    pc.parentElement.querySelectorAll('i').forEach(i => i.classList.toggle('on', i === pc));
+    const row = document.getElementById('cmpTimeRow');
+    if (row) row.style.display = pc.dataset.cmpprec === 'n' ? 'none' : 'flex';
+    return;
+  }
   const ct = e.target.closest('[data-ct]');
   if (ct) {
     const f = PROD[CUR] && PROD[CUR].fields[0];
@@ -12138,13 +12145,6 @@ view.addEventListener('contextmenu', e => {
     e.preventDefault();
     cell.textContent = cell.dataset.val;
     cell.classList.add('filled');
-    return;
-  }
-  /* правый клик по блоку времени (или другого выбора) отмечает нужный вариант */
-  const seg = e.target.closest('#cmpData [data-cmpseg]');
-  if (seg) {
-    e.preventDefault();
-    seg.querySelectorAll('i').forEach(i => i.classList.toggle('on', i.hasAttribute('data-cmpon')));
     return;
   }
 });
