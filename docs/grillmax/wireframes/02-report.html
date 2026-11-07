@@ -2078,7 +2078,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v622</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v623</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -7966,13 +7966,18 @@ const PROD = {
     docPages:'Около 6 страниц в PDF: обложка, баллы, восемь сторон, сильное и слабое, что делать.',
     lead:'Совместимость пары по Луне: общий балл из 36 и разбор по восьми сторонам отношений. Считается для любви и семьи.',
     sell:[
-      ['Общий балл из 36','что он значит и из чего сложился.'],
-      ['Восемь сторон отношений','взгляды на жизнь, притяжение, характеры, чувства и быт, здоровье и семья и другие; по каждой видно, сколько баллов набрано.'],
+      ['Общий балл из 36','как его читать: что значит ваш результат и какие стороны его дали.'],
+      ['Восемь сторон отношений','по каждой видно, сколько баллов набрано из возможных и что это значит в жизни.'],
       ['Что с этим делать','где у вас всё сходится само, а где стоит договариваться.']
     ],
+    midBlock:`<div class="sec-label">Откуда берутся 36 баллов</div>
+  <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin:0 0 8px">Пара проверяется по восьми сторонам. У каждой свой максимум: чем он больше, тем сильнее сторона влияет на итог.</p>
+  <table class="ctable"><tr><th>Сторона</th><th>Баллов</th></tr><tr><td>Взгляды на жизнь</td><td>до 1</td></tr><tr><td>Кто кого ведёт</td><td>до 2</td></tr><tr><td>Общая удача</td><td>до 3</td></tr><tr><td>Притяжение</td><td>до 4</td></tr><tr><td>Понимание</td><td>до 5</td></tr><tr><td>Характеры</td><td>до 6</td></tr><tr><td>Чувства и быт</td><td>до 7</td></tr><tr><td>Здоровье и семья</td><td>до 8</td></tr><tr><td><b>Всего</b></td><td><b>до 36</b></td></tr></table>
+  <div class="sec-label">Как читать результат</div>
+  <table class="ctable"><tr><th>Балл</th><th>Что значит</th></tr><tr><td>до 18</td><td>сходится немного, нужна работа</td></tr><tr><td>18-23</td><td>рабочая основа</td></tr><tr><td>24-31</td><td>хорошее совпадение</td></tr><tr><td>32-36</td><td>очень высокое</td></tr></table>
+  <p style="font-size:12px;color:var(--ink-soft);line-height:1.55;margin:8px 0 0">Общий балл показывает общую картину. Отдельные стороны важнее для конкретной пары, поэтому в документе разобрана каждая.</p>`,
     needTitle:'Что понадобится', needLead:'Дата, время и город рождения: ваши и второго человека.',
-    needItems:['Имя','Дата рождения','Время рождения','Город рождения'],
-    needNote:'Время обязательно, но достаточно приблизительного: всё считается по Луне, а за сутки она заметно смещается. Хватает точности до двух-трёх часов, до минуты важно, только если вы родились близко к смене лунного созвездия.',
+    needNote:'Время обязательно, но достаточно приблизительного: всё считается по Луне, а за сутки она заметно смещается. Хватает точности до двух-трёх часов. До минуты важно, только если вы родились близко к смене лунного созвездия.',
     pairNote:'Только для пары. Для дружбы и дела выберите другую школу.',
     need:'Укажите данные второго человека. Для ведического разбора нужны имя, дата, время и город рождения.',
     fields:[['Как его зовут','Дмитрий',1],['Дата рождения','17 августа 1981',1],['Время рождения','09:20',1],['Город рождения','Ростов-на-Дону',1]],
@@ -8981,12 +8986,13 @@ function prodPage() { const p = PROD[CUR]; CMP_STEP = 1; CMP_DATA = {}; return `
   ${p.period ? `<p style="font-size:11.5px;color:var(--ink-faint);margin:7px 0 0;font-variant-numeric:tabular-nums"><b>Период:</b> ${p.period}</p>` : ''}`}
   <div class="sec-label">Что вы узнаете</div>
   <ul class="bc-list" style="margin-top:4px">${p.sell.map(([h,t])=>`<li><b>${h}</b>${t||''}</li>`).join('')}</ul>
+  ${p.midBlock || ''}
   ${p.relItems ? `<div class="sec-label">${p.relTitle || 'Какую совместимость можно проверить'}</div>
   <ul class="bc-list" style="margin-top:4px">${p.relItems.map(x=>`<li>${x}</li>`).join('')}</ul>
   ${p.relNote ? `<p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin:2px 0 0">${p.relNote}</p>` : ''}` : ''}
-  ${p.needItems ? `<div class="sec-label">${p.needTitle || 'Что понадобится'}</div>
+  ${(p.needItems || p.needLead) ? `<div class="sec-label">${p.needTitle || 'Что понадобится'}</div>
   ${p.needLead ? `<p style="font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin:0 0 7px">${p.needLead}</p>` : ''}
-  <ul class="bc-list" style="margin-top:0">${p.needItems.map(x=>`<li>${x}</li>`).join('')}</ul>
+  ${p.needItems ? `<ul class="bc-list" style="margin-top:0">${p.needItems.map(x=>`<li>${x}</li>`).join('')}</ul>` : ''}
   ${p.needNote ? `<p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin:2px 0 0">${p.needNote}</p>` : ''}` : ''}
   ${p.pairNote ? `<p style="font-size:12px;color:var(--ink-soft);line-height:1.55;margin:14px 0 0"><b>${p.pairNote}</b></p>` : ''}
   ${p.preview === 'doc'
