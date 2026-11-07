@@ -2077,7 +2077,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v614</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v615</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -8987,7 +8987,7 @@ function compatData(p) {
   <p class="obhint" style="margin:6px 0 16px">Имя и дата рождения обязательны. Время и место можно не указывать, но с ними разбор точнее.</p>
 
   <div class="fields" style="margin-top:4px">
-    <div><div class="w-label">Полное имя</div><div class="w-field" data-cmpfill data-val="Дмитрий Ковалёв">Введите имя</div></div>
+    <div><div class="w-label">Полное имя</div><div class="w-field" data-cmpfill data-cmpreq data-val="Дмитрий Ковалёв">Введите имя</div></div>
   </div>
 
   <div style="margin-top:22px">
@@ -8999,7 +8999,7 @@ function compatData(p) {
 
   <div style="margin-top:22px">
     <div class="w-label">Дата рождения</div>
-    <div class="hm3"><div class="w-field" data-cmpfill data-val="17">—</div><div class="w-field" data-cmpfill data-val="августа">—</div><div class="w-field" data-cmpfill data-val="1981">—</div></div>
+    <div class="hm3"><div class="w-field" data-cmpfill data-cmpreq data-val="17">—</div><div class="w-field" data-cmpfill data-cmpreq data-val="августа">—</div><div class="w-field" data-cmpfill data-cmpreq data-val="1981">—</div></div>
     <div class="dlab"><span>день</span><span>месяц</span><span>год</span></div>
   </div>
 
@@ -9010,8 +9010,17 @@ function compatData(p) {
     <div class="hmrow" id="cmpTimeRow"><div><div class="w-field" contenteditable="true" data-cmpfill data-val="14" data-ph="чч"></div><span class="flab">час</span></div><div><div class="w-field" contenteditable="true" data-cmpfill data-val="30" data-ph="мм"></div><span class="flab">минуты</span></div></div>
   </div>
 
-  <div class="w-btn" data-go="prodDepth" style="margin-top:20px">Продолжить</div>
+  <div class="w-btn off" id="cmpGo" data-go="prodDepth" style="margin-top:20px">Продолжить</div>
 </div>`;
+}
+/* шаг данных: кнопка «Продолжить» активна, когда заполнены обязательные
+   поля — имя и дата рождения (место и время не обязательны) */
+function cmpGate() {
+  const box = document.getElementById('cmpData');
+  if (!box) return;
+  const ok = [...box.querySelectorAll('[data-cmpreq]')].every(el => el.classList.contains('filled'));
+  const go = document.getElementById('cmpGo');
+  if (go) go.classList.toggle('off', !ok);
 }
 function prodData() { const p = PROD[CUR]; const has = p.fields.length;
   if (CUR.startsWith('compat')) return compatData(p);
@@ -12145,6 +12154,7 @@ view.addEventListener('contextmenu', e => {
     e.preventDefault();
     cell.textContent = cell.dataset.val;
     cell.classList.add('filled');
+    cmpGate();
     return;
   }
 });
