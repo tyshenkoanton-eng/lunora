@@ -2079,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v638</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v639</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -8023,9 +8023,10 @@ const PROD = {
       ['Что делать','как добавить то, чего не хватает, не меняя себя.']
     ],
     needTitle:'Что понадобится',
-    needHtml:`<p style="font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin:0 0 8px">Дата, время и город рождения: ваши и второго человека. Время нужно, чтобы определить час рождения, это одна из четырёх частей карты. Город нужен, чтобы этот час посчитать точно.</p>
-  <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin:0 0 8px">Если времени нет, разбор возможен по дате, но без часа. В документе мы отметим, что из-за этого не посчитано.</p>
-  <p style="font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin:0">Что смотрим, выбираете при вводе данных: любовь, дружбу или дело.</p>`,
+    needHtml(){ return `${DATAFULL ? '' : `<p style="font-size:12.5px;color:var(--ink);font-weight:620;margin:0 0 4px">От вас</p>
+  <ul class="bc-list" style="margin:0 0 12px"><li>Время рождения</li><li>Место рождения</li></ul>`}<p style="font-size:12.5px;color:var(--ink);font-weight:620;margin:0 0 4px">Данные другого человека</p>
+  <ul class="bc-list" style="margin:0"><li>Имя</li><li>Дата рождения</li><li>Время рождения</li><li>Место рождения</li></ul>
+  <p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin:10px 0 0">Время нужно, чтобы определить час рождения, это одна из четырёх частей карты, а город нужен, чтобы посчитать его точно. Если времени нет, разбор возможен по дате, без часа, и мы отметим это в документе. Что смотрим, выбираете при вводе данных: любовь, дружбу или дело.</p>`; },
     need:'Укажите данные другого человека. Имя и дата рождения обязательны, место и время если знаете.',
     fields:[['Тип связи','',1],['Как его зовут','Дмитрий',1],['Дата рождения','17 августа 1981',1],['Время рождения','не знаю',0],['Город рождения','Ростов-на-Дону',0]],
     depth:'75%', depthNote:'Без времени рождения не считается столп часа. Основной расчёт это не ломает, но часть деталей уходит.',
