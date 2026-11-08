@@ -2079,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v630</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v631</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9177,19 +9177,30 @@ function compatDepth(p) {
   const typeField = (f[0] && f[0][0] === 'Тип связи') ? f[0] : null;
   const hasType = !!typeField;
   const typeVal = typeField && typeField[1] ? typeField[1] : '';
+  const reqAll = !!p.reqAll;
+  const showYou = reqAll;
   PAYKIND = 'prod';
   const back = hasType ? 'data-cstep="2"' : 'data-go="prodData"';
+  /* на экран можно прийти напрямую из реестра — тогда данных нет, показываем пример */
+  if (!CMP_DATA.name) {
+    CMP_DATA = { name: 'Дмитрий Ковалёв', place: 'Ростов-на-Дону', d: '17', m: 'августа', y: '1981', prec: 'p', h: '09', i: '20',
+                 uplace: 'Волгоград', uprec: 'p', uh: '15', ui: '00' };
+  }
   const D = CMP_DATA;
+  const fmtTime = (pk, hk, ik) => { const ok = D[pk] && D[pk] !== 'n' && D[hk] && D[ik]; const lbl = { t: 'точно', p: '± 30 мин', r: '± 3 часа' }[D[pk]] || ''; return ok ? `${D[hk]}:${D[ik]}${lbl ? ' ' + lbl : ''}` : 'время не указано'; };
   const nameLine = D.name || 'Имя не указано';
   const dateLine = (D.d && D.m && D.y) ? `${D.d} ${D.m} ${D.y}` : 'дата не указана';
   const hasTime = D.prec && D.prec !== 'n' && D.h && D.i;
-  const precLbl = { t: 'точно', p: '± 30 мин', r: '± 3 часа' }[D.prec] || '';
-  const timeLine = hasTime ? `${D.h}:${D.i}${precLbl ? ' ' + precLbl : ''}` : 'время не указано';
+  const timeLine = fmtTime('prec', 'h', 'i');
   const miss = [];
-  if (!D.place) miss.push('место рождения');
-  if (!hasTime) miss.push('время рождения');
+  if (!reqAll) {
+    if (!D.place) miss.push('место рождения');
+    if (!hasTime) miss.push('время рождения');
+  }
   const missLinks = miss.map(m => `<u class="cmplink" data-cstep="2">${m}</u>`);
   const dataLines = [`${nameLine}`, `${dateLine}, ${timeLine}`, D.place ? D.place : ''].filter(Boolean).join('<br>');
+  const youTime = (D.uprec && D.uprec !== 'n' && D.uh && D.ui) ? fmtTime('uprec', 'uh', 'ui') : '15:00 ± 30 мин';
+  const youLines = `Антон Тыщенко<br>4 февраля 1984, ${youTime}<br>${D.uplace || 'Волгоград'}`;
   const infoHtml = miss.length
     ? `<div class="orient" style="margin-top:14px"><p>Разбор составим и по этим данным. Если добавить ${missLinks.join(' и ')}, он станет точнее и подробнее.</p></div>`
     : '';
@@ -9201,6 +9212,7 @@ function compatDepth(p) {
   <div class="sumcard" style="margin-top:14px">
     <div><u>Разбор</u><b>${p.t}</b></div>
     ${typeVal ? `<div><u>Тип совместимости</u><b>${typeVal}</b></div>` : ''}
+    ${showYou ? `<div class="ml"><u>Вы</u><b>${youLines}</b></div>` : ''}
     <div class="ml"><u>Другой человек</u><b>${dataLines}</b></div>
   </div>
 
