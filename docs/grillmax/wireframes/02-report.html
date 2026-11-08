@@ -2079,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v626</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v627</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -7967,18 +7967,17 @@ const PROD = {
     docPages:'Около 6 страниц в PDF: обложка, баллы, восемь сторон, сильное и слабое, что делать.',
     lead:'Покажем, насколько вы подходите друг другу как пара. Эта школа считает только для любви и семьи.', leadNoBorder:1,
     afterLead:`<p class="d-lede" style="border:none;padding-bottom:0;margin-top:10px">Расчёт идёт по Луне каждого из вас. Пара проверяется по восьми сторонам отношений, за каждую даются баллы (максимум 36 баллов). Чем больше баллов у стороны отношений, тем важнее она для итогового результата.</p>
-  <table class="ctable lnum" style="margin-top:14px"><tr><th>Сторона отношений</th><th>Баллов</th></tr><tr><td>Взгляды на жизнь</td><td>до 1</td></tr><tr><td>Кто кого ведёт</td><td>до 2</td></tr><tr><td>Общая удача</td><td>до 3</td></tr><tr><td>Притяжение</td><td>до 4</td></tr><tr><td>Понимание</td><td>до 5</td></tr><tr><td>Характеры</td><td>до 6</td></tr><tr><td>Чувства и быт</td><td>до 7</td></tr><tr><td>Здоровье и семья</td><td>до 8</td></tr><tr><td><b>Всего</b></td><td><b>до 36</b></td></tr></table>`,
+  <table class="ctable lnum" style="margin-top:14px"><tr><th>Сторона отношений</th><th>Баллов</th></tr><tr><td>Взгляды на жизнь</td><td>0-1</td></tr><tr><td>Кто кого ведёт</td><td>0-2</td></tr><tr><td>Общая удача</td><td>0-3</td></tr><tr><td>Притяжение</td><td>0-4</td></tr><tr><td>Понимание</td><td>0-5</td></tr><tr><td>Характеры</td><td>0-6</td></tr><tr><td>Чувства и быт</td><td>0-7</td></tr><tr><td>Здоровье и семья</td><td>0-8</td></tr><tr><td><b>Всего</b></td><td><b>0-36</b></td></tr></table>`,
     sell:[
-      ['Общий балл из 36','что значит ваш результат и какие стороны его дали.'],
-      ['Восемь сторон отношений','по каждой видно, сколько баллов набрано из возможных и что это значит в жизни.'],
-      ['Что с этим делать','где у вас всё сходится само, а где стоит договариваться.']
+      ['Ваш балл','сколько вы набрали из 36 и что это значит для пары.'],
+      ['Восемь сторон','по каждой: сколько баллов из возможных и как это выглядит в жизни.'],
+      ['Что с этим делать','что у вас и так работает, а о чём стоит договориться.']
     ],
     needTitle:'Что понадобится',
-    needHtml:`<p style="font-size:12.5px;color:var(--ink);font-weight:620;margin:0 0 4px">От вас</p>
-  <ul class="bc-list" style="margin:0 0 12px"><li>Время рождения</li><li>Место рождения</li></ul>
-  <p style="font-size:12.5px;color:var(--ink);font-weight:620;margin:0 0 4px">Данные другого человека</p>
+    needHtml(){ return `${DATAFULL ? '' : `<p style="font-size:12.5px;color:var(--ink);font-weight:620;margin:0 0 4px">От вас</p>
+  <ul class="bc-list" style="margin:0 0 12px"><li>Время рождения</li><li>Место рождения</li></ul>`}<p style="font-size:12.5px;color:var(--ink);font-weight:620;margin:0 0 4px">Данные другого человека</p>
   <ul class="bc-list" style="margin:0"><li>Имя</li><li>Дата рождения</li><li>Время рождения</li><li>Место рождения</li></ul>
-  <p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin:10px 0 0">Время обязательно, но достаточно приблизительного: всё считается по Луне, а за сутки она заметно смещается. Хватает точности до двух-трёх часов.</p>`,
+  <p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin:10px 0 0">Время обязательно, но достаточно приблизительного: всё считается по Луне, а за сутки она заметно смещается. Хватает точности до двух-трёх часов.</p>`; },
     need:'Укажите данные второго человека. Для ведического разбора нужны имя, дата, время и город рождения.',
     fields:[['Как его зовут','Дмитрий',1],['Дата рождения','17 августа 1981',1],['Время рождения','09:20',1],['Город рождения','Ростов-на-Дону',1]],
     depth:'\u2014', depthNote:'',
@@ -8992,7 +8991,7 @@ function prodPage() { const p = PROD[CUR]; CMP_STEP = 1; CMP_DATA = {}; return `
   <ul class="bc-list" style="margin-top:4px">${p.relItems.map(x=>`<li>${x}</li>`).join('')}</ul>
   ${p.relNote ? `<p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin:2px 0 0">${p.relNote}</p>` : ''}` : ''}
   ${(p.needHtml || p.needItems || p.needLead) ? `<div class="sec-label">${p.needTitle || 'Что понадобится'}</div>
-  ${p.needHtml ? p.needHtml : `${p.needLead ? `<p style="font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin:0 0 7px">${p.needLead}</p>` : ''}
+  ${p.needHtml ? (typeof p.needHtml === 'function' ? p.needHtml() : p.needHtml) : `${p.needLead ? `<p style="font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin:0 0 7px">${p.needLead}</p>` : ''}
   ${p.needItems ? `<ul class="bc-list" style="margin-top:0">${p.needItems.map(x=>`<li>${x}</li>`).join('')}</ul>` : ''}
   ${p.needNote ? `<p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin:2px 0 0">${p.needNote}</p>` : ''}`}` : ''}
   ${p.pairNote ? `<p style="font-size:12px;color:var(--ink-soft);line-height:1.55;margin:14px 0 0"><b>${p.pairNote}</b></p>` : ''}
