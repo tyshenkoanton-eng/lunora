@@ -2079,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v627</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v628</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -7933,9 +7933,10 @@ const PROD = {
     relTitle:'Тип совместимости',
     relItems:['Любовь','Дружба','Деловые отношения'],
     relNote:'Можно выбрать один или несколько вариантов, от этого зависит, что войдёт в разбор.',
-    needTitle:'Что понадобится', needLead:'Данные другого человека',
-    needItems:['Имя','Дата рождения','Место рождения','Время рождения'],
-    needNote:'Время и место можно не указывать, но с ними разбор точнее. Если знаете время и город, добавятся два раздела: какие стороны жизни вы затрагиваете друг у друга и какие вы вдвоём.',
+    needTitle:'Что понадобится',
+    needHtml:`<p style="font-size:12.5px;color:var(--ink);font-weight:620;margin:0 0 4px">Данные другого человека</p>
+  <ul class="bc-list" style="margin:0"><li>Имя</li><li>Дата рождения</li><li>Место рождения</li><li>Время рождения</li></ul>
+  <p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin:10px 0 0">Время и место можно не указывать, но с ними разбор точнее. Если знаете время и город, добавятся два раздела: какие стороны жизни вы затрагиваете друг у друга и какие вы вдвоём.</p>`,
     need:'Укажите данные другого человека. Имя и дата рождения обязательны, место и время если знаете.',
     fields:[['Тип связи','',1],['Как его зовут','Дмитрий',1],['Дата рождения','17 августа 1981',1],['Время рождения','не знаю',0],['Город рождения','Ростов-на-Дону',0]],
     depth:'50%', depthNote:'Времени рождения Дмитрия нет, поэтому не считаются дома и восходящий. Это заметная часть западного разбора.',
