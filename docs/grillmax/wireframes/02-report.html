@@ -2079,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v628</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v629</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -8970,6 +8970,8 @@ let CMP_STEP = 1;
 let CMP_DATA = {};
 /* продукт требует все данные (ведическая: время и место обязательны) */
 let CMP_REQALL = false;
+/* показываем ли блок «Ваши данные» (ведическая и свои данные неполные) */
+let CMP_SHOWMINE = false;
 /* просмотр примера до покупки: тот же экран, но без скачивания и пересылки */
 let DOCPREVIEW = false;
 let SHOPTAB = 'list';
@@ -9037,46 +9039,67 @@ function compatData(p) {
   }
   const back = hasType ? 'data-cstep="1"' : 'data-go="prodPage"';
   const D = CMP_DATA;
+  const reqAll = !!p.reqAll;
+  CMP_REQALL = reqAll;
+  const showMine = reqAll && !DATAFULL;
+  CMP_SHOWMINE = showMine;
   /* поле только для демо-подстановки (правый клик) */
   const fcell = (key, val, ph, req) => `<div class="w-field${D[key] ? ' filled' : ''}" data-cmpfill${req ? ' data-cmpreq' : ''} data-cmpkey="${key}" data-val="${val}">${D[key] || ph}</div>`;
   /* поле, которое можно вписать вручную */
   const ecell = (key, val, ph, sug) => `<div class="w-field${D[key] ? ' filled' : ''}" contenteditable="true" data-cmpfill data-cmpkey="${key}" data-val="${val}" data-ph="${ph}"${sug ? ' data-sug="city"' : ''}>${D[key] || ''}</div>`;
-  const reqAll = !!p.reqAll;
-  CMP_REQALL = reqAll;
-  const timeOk = D.prec && D.prec !== 'n' && D.h && D.i;
-  const reqOk = reqAll ? (D.name && D.d && D.m && D.y && D.place && timeOk) : (D.name && D.d && D.m && D.y);
-  const prec = D.prec || '';
-  const ptab = (c, l) => `<i class="${prec === c ? 'on' : ''}" data-cmpprec="${c}">${l}</i>`;
-  return `<div class="pad" id="cmpData" style="padding-bottom:16px">
-  <div class="dochead" ${back}><span>&lsaquo;</span><div>Назад</div></div>
-  ${compatStepper(hasType, hasType ? 1 : 0)}
-  <h2 class="t-title" style="font-size:20px;margin-top:16px">Данные другого человека</h2>
-  <p class="obhint" style="margin:6px 0 16px">${reqAll ? 'Для ведического разбора нужны дата, время и город рождения второго человека. Время обязательно, но достаточно приблизительного: всё считается по Луне.' : 'Имя и дата рождения обязательны. Время и место можно не указывать, но с ними разбор точнее.'}</p>
+  /* блок выбора времени: свой preckey, чтобы работали два блока на экране */
+  const timeBlock = (pk, hk, ik) => `<div style="margin-top:22px" data-timewrap data-preckey="${pk}">
+    <div class="w-label">Время рождения</div>
+    <p class="obhint" style="margin:0 0 8px">Насколько точно вы его знаете?</p>
+    <div class="segtabs seg4">${['t','p','r','n'].map((c, idx) => `<i class="${D[pk] === c ? 'on' : ''}" data-cmpprec="${c}">${['Точно', '± 30 мин', '± 3 часа', 'Не знаю'][idx]}</i>`).join('')}</div>
+    <div class="hmrow"${D[pk] === 'n' ? ' style="display:none"' : ''}><div><div class="w-field${D[hk] ? ' filled' : ''}" contenteditable="true" data-cmpfill data-cmpkey="${hk}" data-preckey="${pk}" data-val="14" data-ph="чч">${D[hk] || ''}</div><span class="flab">час</span></div><div><div class="w-field${D[ik] ? ' filled' : ''}" contenteditable="true" data-cmpfill data-cmpkey="${ik}" data-preckey="${pk}" data-val="30" data-ph="мм">${D[ik] || ''}</div><span class="flab">минуты</span></div></div>
+  </div>`;
+  const subhead = t => `<div style="font-size:14px;font-weight:620;color:var(--ink);margin:0 0 10px">${t}</div>`;
+  const tOk = (pk, hk, ik) => D[pk] && D[pk] !== 'n' && D[hk] && D[ik];
+  const reqOk = reqAll
+    ? (D.name && D.d && D.m && D.y && D.place && tOk('prec', 'h', 'i') && (showMine ? (D.uplace && tOk('uprec', 'uh', 'ui')) : true))
+    : (D.name && D.d && D.m && D.y);
 
+  const mineSection = showMine ? `
+  ${subhead('Ваши данные')}
+  <div style="margin-top:4px">
+    <div class="w-label">Место рождения</div>
+    ${ecell('uplace', 'Волгоград', 'Укажите город рождения', true)}
+    <div class="sug"></div>
+  </div>
+  ${timeBlock('uprec', 'uh', 'ui')}
+  <div style="border-top:1px solid var(--rule);margin:24px 0 0"></div>` : '';
+
+  const otherSection = `
+  ${reqAll ? subhead('Данные другого человека') : ''}
   <div class="fields" style="margin-top:4px">
     <div><div class="w-label">Полное имя</div>${fcell('name', 'Дмитрий Ковалёв', 'Введите имя', true)}</div>
   </div>
-
   <div style="margin-top:22px">
     <div class="w-label">Место рождения</div>
     ${ecell('place', 'Ростов-на-Дону', 'Укажите город рождения', true)}
     <div class="sug"></div>
     <p class="obhint" style="margin:5px 0 0">${reqAll ? 'Город обязателен: без него положение по времени не посчитать.' : 'Город можно не указывать, но с ним разбор точнее.'}</p>
   </div>
-
   <div style="margin-top:22px">
     <div class="w-label">Дата рождения</div>
     <div class="hm3">${fcell('d', '17', '—', true)}${fcell('m', 'августа', '—', true)}${fcell('y', '1981', '—', true)}</div>
     <div class="dlab"><span>день</span><span>месяц</span><span>год</span></div>
   </div>
+  ${timeBlock('prec', 'h', 'i')}`;
 
-  <div style="margin-top:22px">
-    <div class="w-label">Время рождения</div>
-    <p class="obhint" style="margin:0 0 8px">Насколько точно вы его знаете?</p>
-    <div class="segtabs seg4" id="cmpPrec">${ptab('t', 'Точно')}${ptab('p', '± 30 мин')}${ptab('r', '± 3 часа')}${ptab('n', 'Не знаю')}</div>
-    <div class="hmrow" id="cmpTimeRow"${prec === 'n' ? ' style="display:none"' : ''}><div>${ecell('h', '14', 'чч')}<span class="flab">час</span></div><div>${ecell('i', '30', 'мм')}<span class="flab">минуты</span></div></div>
-  </div>
+  const title = reqAll ? 'Данные для расчёта' : 'Данные другого человека';
+  const hint = reqAll
+    ? 'Для ведического разбора нужны дата, время и город рождения обоих. Время обязательно, но достаточно приблизительного: всё считается по Луне.'
+    : 'Имя и дата рождения обязательны. Время и место можно не указывать, но с ними разбор точнее.';
 
+  return `<div class="pad" id="cmpData" style="padding-bottom:16px">
+  <div class="dochead" ${back}><span>&lsaquo;</span><div>Назад</div></div>
+  ${compatStepper(hasType, hasType ? 1 : 0)}
+  <h2 class="t-title" style="font-size:20px;margin-top:16px">${title}</h2>
+  <p class="obhint" style="margin:6px 0 16px">${hint}</p>
+  ${mineSection}
+  ${otherSection}
   <div class="w-btn${reqOk ? '' : ' off'}" id="cmpGo" data-go="prodDepth" style="margin-top:20px">Продолжить</div>
 </div>`;
 }
@@ -9085,19 +9108,25 @@ function compatData(p) {
 function cmpGate() {
   const D = CMP_DATA;
   const base = D.name && D.d && D.m && D.y;
-  const timeOk = D.prec && D.prec !== 'n' && D.h && D.i;
-  const ok = CMP_REQALL ? (base && D.place && timeOk) : base;
+  const tOk = (pk, hk, ik) => D[pk] && D[pk] !== 'n' && D[hk] && D[ik];
+  let ok = base;
+  if (CMP_REQALL) ok = base && D.place && tOk('prec', 'h', 'i') && (CMP_SHOWMINE ? (D.uplace && tOk('uprec', 'uh', 'ui')) : true);
   const go = document.getElementById('cmpGo');
   if (go) go.classList.toggle('off', !ok);
 }
-/* как только вводят час или минуты, точность по умолчанию становится «± 30 мин» */
-function cmpTimeTouched() {
-  if (CMP_DATA.prec && CMP_DATA.prec !== 'n') return;
-  CMP_DATA.prec = 'p';
-  const seg = document.getElementById('cmpPrec');
-  if (seg) seg.querySelectorAll('i').forEach(i => i.classList.toggle('on', i.dataset.cmpprec === 'p'));
-  const row = document.getElementById('cmpTimeRow');
-  if (row) row.style.display = 'flex';
+/* как только вводят час или минуты, точность в этом блоке по умолчанию «± 30 мин» */
+function cmpTimeTouched(cell) {
+  const pk = cell.dataset.preckey;
+  if (!pk) return;
+  if (CMP_DATA[pk] && CMP_DATA[pk] !== 'n') return;
+  CMP_DATA[pk] = 'p';
+  const wrap = cell.closest('[data-timewrap]');
+  if (wrap) {
+    const seg = wrap.querySelector('.segtabs');
+    if (seg) seg.querySelectorAll('i').forEach(i => i.classList.toggle('on', i.dataset.cmpprec === 'p'));
+    const row = wrap.querySelector('.hmrow');
+    if (row) row.style.display = 'flex';
+  }
 }
 function prodData() { const p = PROD[CUR]; const has = p.fields.length;
   if (CUR.startsWith('compat')) return compatData(p);
@@ -11207,9 +11236,13 @@ view.addEventListener('click', e => {
   const pc = e.target.closest('#cmpData [data-cmpprec]');
   if (pc) {
     pc.parentElement.querySelectorAll('i').forEach(i => i.classList.toggle('on', i === pc));
-    CMP_DATA.prec = pc.dataset.cmpprec;
-    const row = document.getElementById('cmpTimeRow');
-    if (row) row.style.display = pc.dataset.cmpprec === 'n' ? 'none' : 'flex';
+    const wrap = pc.closest('[data-timewrap]');
+    if (wrap) {
+      CMP_DATA[wrap.dataset.preckey || 'prec'] = pc.dataset.cmpprec;
+      const row = wrap.querySelector('.hmrow');
+      if (row) row.style.display = pc.dataset.cmpprec === 'n' ? 'none' : 'flex';
+    }
+    cmpGate();
     return;
   }
   const ct = e.target.closest('[data-ct]');
@@ -12245,7 +12278,7 @@ view.addEventListener('contextmenu', e => {
     cell.textContent = cell.dataset.val;
     cell.classList.add('filled');
     if (cell.dataset.cmpkey) CMP_DATA[cell.dataset.cmpkey] = cell.dataset.val;
-    if (cell.dataset.cmpkey === 'h' || cell.dataset.cmpkey === 'i') cmpTimeTouched();
+    if (cell.dataset.preckey) cmpTimeTouched(cell);
     cmpGate();
     return;
   }
@@ -12256,7 +12289,7 @@ view.addEventListener('input', e => {
   const c = e.target.closest('#cmpData [data-cmpkey]');
   if (c && c.isContentEditable) {
     CMP_DATA[c.dataset.cmpkey] = c.textContent.trim();
-    if ((c.dataset.cmpkey === 'h' || c.dataset.cmpkey === 'i') && c.textContent.trim()) cmpTimeTouched();
+    if (c.dataset.preckey && c.textContent.trim()) cmpTimeTouched(c);
     cmpGate();
   }
 });
