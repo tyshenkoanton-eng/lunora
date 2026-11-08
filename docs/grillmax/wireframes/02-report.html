@@ -2078,7 +2078,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v624</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v625</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -7964,10 +7964,13 @@ const PROD = {
   compatVedic: { back:'compat', reqAll:1,
     t:'Совместимость · Ведическая астрология', price:'990 ₽', crumb:'Разборы · совместимость', cta:'Рассчитать совместимость', preview:'doc',
     docPages:'Около 6 страниц в PDF: обложка, баллы, восемь сторон, сильное и слабое, что делать.',
-    lead:'Ведическая астрология считает только любовную совместимость. Пара проверяется по Луне в восьми сферах. У каждой сферы свой максимальный балл: чем он выше, тем сильнее сфера влияет на общий итог. Максимум 36 баллов.',
-    afterLead:`<table class="ctable" style="margin-top:14px"><tr><th>Сторона</th><th>Баллов</th></tr><tr><td>Взгляды на жизнь</td><td>до 1</td></tr><tr><td>Кто кого ведёт</td><td>до 2</td></tr><tr><td>Общая удача</td><td>до 3</td></tr><tr><td>Притяжение</td><td>до 4</td></tr><tr><td>Понимание</td><td>до 5</td></tr><tr><td>Характеры</td><td>до 6</td></tr><tr><td>Чувства и быт</td><td>до 7</td></tr><tr><td>Здоровье и семья</td><td>до 8</td></tr><tr><td><b>Всего</b></td><td><b>до 36</b></td></tr></table>`,
+    lead:'Покажем, насколько вы подходите друг другу как пара. Эта школа считает только для любви и семьи, для дружбы и дела выберите другую.',
+    afterLead:`<p class="d-lede" style="border:none;padding-bottom:0;margin-top:10px">Расчёт идёт по Луне каждого из вас. Пара проверяется по восьми сторонам отношений, за каждую даются баллы, всего до 36. У сторон разный максимум: чем он больше, тем важнее сторона для итога.</p>
+  <table class="ctable" style="margin-top:14px"><tr><th>Сторона</th><th>Баллов</th></tr><tr><td>Взгляды на жизнь</td><td>до 1</td></tr><tr><td>Кто кого ведёт</td><td>до 2</td></tr><tr><td>Общая удача</td><td>до 3</td></tr><tr><td>Притяжение</td><td>до 4</td></tr><tr><td>Понимание</td><td>до 5</td></tr><tr><td>Характеры</td><td>до 6</td></tr><tr><td>Чувства и быт</td><td>до 7</td></tr><tr><td>Здоровье и семья</td><td>до 8</td></tr><tr><td><b>Всего</b></td><td><b>до 36</b></td></tr></table>
+  <div class="sec-label">Как читать итог</div>
+  <table class="ctable"><tr><th>Балл</th><th>Что значит</th></tr><tr><td>до 18</td><td>сходится немного, нужна работа</td></tr><tr><td>18-23</td><td>рабочая основа</td></tr><tr><td>24-31</td><td>хорошее совпадение</td></tr><tr><td>32-36</td><td>очень высокое</td></tr></table>`,
     sell:[
-      ['Общий балл из 36','как его читать: что значит ваш результат и какие стороны его дали.'],
+      ['Общий балл из 36','что значит ваш результат и какие стороны его дали.'],
       ['Восемь сторон отношений','по каждой видно, сколько баллов набрано из возможных и что это значит в жизни.'],
       ['Что с этим делать','где у вас всё сходится само, а где стоит договариваться.']
     ],
