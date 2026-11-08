@@ -733,6 +733,7 @@
   .ctable td { padding: 7px 0; border-bottom: 1px solid var(--rule-soft); font-variant-numeric: tabular-nums; }
   .ctable td:first-child { font-weight: 600; }
   .ctable td:last-child { text-align: right; color: var(--ink-faint); }
+  .ctable.lnum th:last-child, .ctable.lnum td:last-child { text-align: left; }
   .ctable.diff3 { table-layout: fixed; }
   .ctable.diff3 th, .ctable.diff3 td { text-align: left; padding: 7px 8px; overflow-wrap: break-word; word-break: normal; hyphens: none; vertical-align: top; border-right: 1px solid var(--rule); }
   .ctable.diff3 th { padding-top: 0; }
@@ -2078,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v625</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v626</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -7964,18 +7965,20 @@ const PROD = {
   compatVedic: { back:'compat', reqAll:1,
     t:'Совместимость · Ведическая астрология', price:'990 ₽', crumb:'Разборы · совместимость', cta:'Рассчитать совместимость', preview:'doc',
     docPages:'Около 6 страниц в PDF: обложка, баллы, восемь сторон, сильное и слабое, что делать.',
-    lead:'Покажем, насколько вы подходите друг другу как пара. Эта школа считает только для любви и семьи, для дружбы и дела выберите другую.',
-    afterLead:`<p class="d-lede" style="border:none;padding-bottom:0;margin-top:10px">Расчёт идёт по Луне каждого из вас. Пара проверяется по восьми сторонам отношений, за каждую даются баллы, всего до 36. У сторон разный максимум: чем он больше, тем важнее сторона для итога.</p>
-  <table class="ctable" style="margin-top:14px"><tr><th>Сторона</th><th>Баллов</th></tr><tr><td>Взгляды на жизнь</td><td>до 1</td></tr><tr><td>Кто кого ведёт</td><td>до 2</td></tr><tr><td>Общая удача</td><td>до 3</td></tr><tr><td>Притяжение</td><td>до 4</td></tr><tr><td>Понимание</td><td>до 5</td></tr><tr><td>Характеры</td><td>до 6</td></tr><tr><td>Чувства и быт</td><td>до 7</td></tr><tr><td>Здоровье и семья</td><td>до 8</td></tr><tr><td><b>Всего</b></td><td><b>до 36</b></td></tr></table>
-  <div class="sec-label">Как читать итог</div>
-  <table class="ctable"><tr><th>Балл</th><th>Что значит</th></tr><tr><td>до 18</td><td>сходится немного, нужна работа</td></tr><tr><td>18-23</td><td>рабочая основа</td></tr><tr><td>24-31</td><td>хорошее совпадение</td></tr><tr><td>32-36</td><td>очень высокое</td></tr></table>`,
+    lead:'Покажем, насколько вы подходите друг другу как пара. Эта школа считает только для любви и семьи.', leadNoBorder:1,
+    afterLead:`<p class="d-lede" style="border:none;padding-bottom:0;margin-top:10px">Расчёт идёт по Луне каждого из вас. Пара проверяется по восьми сторонам отношений, за каждую даются баллы (максимум 36 баллов). Чем больше баллов у стороны отношений, тем важнее она для итогового результата.</p>
+  <table class="ctable lnum" style="margin-top:14px"><tr><th>Сторона отношений</th><th>Баллов</th></tr><tr><td>Взгляды на жизнь</td><td>до 1</td></tr><tr><td>Кто кого ведёт</td><td>до 2</td></tr><tr><td>Общая удача</td><td>до 3</td></tr><tr><td>Притяжение</td><td>до 4</td></tr><tr><td>Понимание</td><td>до 5</td></tr><tr><td>Характеры</td><td>до 6</td></tr><tr><td>Чувства и быт</td><td>до 7</td></tr><tr><td>Здоровье и семья</td><td>до 8</td></tr><tr><td><b>Всего</b></td><td><b>до 36</b></td></tr></table>`,
     sell:[
       ['Общий балл из 36','что значит ваш результат и какие стороны его дали.'],
       ['Восемь сторон отношений','по каждой видно, сколько баллов набрано из возможных и что это значит в жизни.'],
       ['Что с этим делать','где у вас всё сходится само, а где стоит договариваться.']
     ],
-    needTitle:'Что понадобится', needLead:'Дата, время и город рождения: ваши и второго человека.',
-    needNote:'Время обязательно, но достаточно приблизительного: всё считается по Луне, а за сутки она заметно смещается. Хватает точности до двух-трёх часов. До минуты важно, только если вы родились близко к смене лунного созвездия.',
+    needTitle:'Что понадобится',
+    needHtml:`<p style="font-size:12.5px;color:var(--ink);font-weight:620;margin:0 0 4px">От вас</p>
+  <ul class="bc-list" style="margin:0 0 12px"><li>Время рождения</li><li>Место рождения</li></ul>
+  <p style="font-size:12.5px;color:var(--ink);font-weight:620;margin:0 0 4px">Данные другого человека</p>
+  <ul class="bc-list" style="margin:0"><li>Имя</li><li>Дата рождения</li><li>Время рождения</li><li>Место рождения</li></ul>
+  <p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin:10px 0 0">Время обязательно, но достаточно приблизительного: всё считается по Луне, а за сутки она заметно смещается. Хватает точности до двух-трёх часов.</p>`,
     need:'Укажите данные второго человека. Для ведического разбора нужны имя, дата, время и город рождения.',
     fields:[['Как его зовут','Дмитрий',1],['Дата рождения','17 августа 1981',1],['Время рождения','09:20',1],['Город рождения','Ростов-на-Дону',1]],
     depth:'\u2014', depthNote:'',
@@ -8979,7 +8982,7 @@ function prodPage() { const p = PROD[CUR]; CMP_STEP = 1; CMP_DATA = {}; return `
   ${p.tag
     ? `<p class="d-lede" style="border:none;padding-bottom:0;margin-bottom:12px">${p.lead}</p>
   <p class="d-lede" style="border:none;padding-bottom:0"><b>Как считаем год:</b><br>${p.tag}${p.period ? `<br><b>${p.periodLabel || 'Ваш период'}:</b><br>${p.period}` : ''}</p>`
-    : `<p class="d-lede">${p.lead}</p>
+    : `<p class="d-lede"${p.leadNoBorder ? ' style="border:none;padding-bottom:0;margin-bottom:0"' : ''}>${p.lead}</p>
   ${p.period ? `<p style="font-size:11.5px;color:var(--ink-faint);margin:7px 0 0;font-variant-numeric:tabular-nums"><b>Период:</b> ${p.period}</p>` : ''}`}
   ${p.afterLead || ''}
   <div class="sec-label">Что вы узнаете</div>
@@ -8988,10 +8991,10 @@ function prodPage() { const p = PROD[CUR]; CMP_STEP = 1; CMP_DATA = {}; return `
   ${p.relItems ? `<div class="sec-label">${p.relTitle || 'Какую совместимость можно проверить'}</div>
   <ul class="bc-list" style="margin-top:4px">${p.relItems.map(x=>`<li>${x}</li>`).join('')}</ul>
   ${p.relNote ? `<p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin:2px 0 0">${p.relNote}</p>` : ''}` : ''}
-  ${(p.needItems || p.needLead) ? `<div class="sec-label">${p.needTitle || 'Что понадобится'}</div>
-  ${p.needLead ? `<p style="font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin:0 0 7px">${p.needLead}</p>` : ''}
+  ${(p.needHtml || p.needItems || p.needLead) ? `<div class="sec-label">${p.needTitle || 'Что понадобится'}</div>
+  ${p.needHtml ? p.needHtml : `${p.needLead ? `<p style="font-size:12.5px;color:var(--ink-soft);line-height:1.55;margin:0 0 7px">${p.needLead}</p>` : ''}
   ${p.needItems ? `<ul class="bc-list" style="margin-top:0">${p.needItems.map(x=>`<li>${x}</li>`).join('')}</ul>` : ''}
-  ${p.needNote ? `<p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin:2px 0 0">${p.needNote}</p>` : ''}` : ''}
+  ${p.needNote ? `<p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin:2px 0 0">${p.needNote}</p>` : ''}`}` : ''}
   ${p.pairNote ? `<p style="font-size:12px;color:var(--ink-soft);line-height:1.55;margin:14px 0 0"><b>${p.pairNote}</b></p>` : ''}
   ${p.preview === 'doc'
     ? `<div class="sec-label">Как выглядит документ</div>
