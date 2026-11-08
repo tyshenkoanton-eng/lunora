@@ -2079,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v629</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v630</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9054,25 +9054,13 @@ function compatData(p) {
     <div class="segtabs seg4">${['t','p','r','n'].map((c, idx) => `<i class="${D[pk] === c ? 'on' : ''}" data-cmpprec="${c}">${['Точно', '± 30 мин', '± 3 часа', 'Не знаю'][idx]}</i>`).join('')}</div>
     <div class="hmrow"${D[pk] === 'n' ? ' style="display:none"' : ''}><div><div class="w-field${D[hk] ? ' filled' : ''}" contenteditable="true" data-cmpfill data-cmpkey="${hk}" data-preckey="${pk}" data-val="14" data-ph="чч">${D[hk] || ''}</div><span class="flab">час</span></div><div><div class="w-field${D[ik] ? ' filled' : ''}" contenteditable="true" data-cmpfill data-cmpkey="${ik}" data-preckey="${pk}" data-val="30" data-ph="мм">${D[ik] || ''}</div><span class="flab">минуты</span></div></div>
   </div>`;
-  const subhead = t => `<div style="font-size:14px;font-weight:620;color:var(--ink);margin:0 0 10px">${t}</div>`;
   const tOk = (pk, hk, ik) => D[pk] && D[pk] !== 'n' && D[hk] && D[ik];
   const reqOk = reqAll
     ? (D.name && D.d && D.m && D.y && D.place && tOk('prec', 'h', 'i') && (showMine ? (D.uplace && tOk('uprec', 'uh', 'ui')) : true))
     : (D.name && D.d && D.m && D.y);
-
-  const mineSection = showMine ? `
-  ${subhead('Ваши данные')}
-  <div style="margin-top:4px">
-    <div class="w-label">Место рождения</div>
-    ${ecell('uplace', 'Волгоград', 'Укажите город рождения', true)}
-    <div class="sug"></div>
-  </div>
-  ${timeBlock('uprec', 'uh', 'ui')}
-  <div style="border-top:1px solid var(--rule);margin:24px 0 0"></div>` : '';
-
-  const otherSection = `
-  ${reqAll ? subhead('Данные другого человека') : ''}
-  <div class="fields" style="margin-top:4px">
+  const h2 = (t, mt) => `<h2 class="t-title" style="font-size:20px;margin-top:${mt}px">${t}</h2>`;
+  const vedHint = 'Для ведического разбора нужны дата, время и город рождения обоих. Время обязательно, но достаточно приблизительного: всё считается по Луне.';
+  const otherFields = `<div class="fields" style="margin-top:4px">
     <div><div class="w-label">Полное имя</div>${fcell('name', 'Дмитрий Ковалёв', 'Введите имя', true)}</div>
   </div>
   <div style="margin-top:22px">
@@ -9087,19 +9075,32 @@ function compatData(p) {
     <div class="dlab"><span>день</span><span>месяц</span><span>год</span></div>
   </div>
   ${timeBlock('prec', 'h', 'i')}`;
-
-  const title = reqAll ? 'Данные для расчёта' : 'Данные другого человека';
-  const hint = reqAll
-    ? 'Для ведического разбора нужны дата, время и город рождения обоих. Время обязательно, но достаточно приблизительного: всё считается по Луне.'
-    : 'Имя и дата рождения обязательны. Время и место можно не указывать, но с ними разбор точнее.';
-
+  const mineFields = `<div style="margin-top:4px">
+    <div class="w-label">Место рождения</div>
+    ${ecell('uplace', 'Волгоград', 'Укажите город рождения', true)}
+    <div class="sug"></div>
+  </div>
+  ${timeBlock('uprec', 'uh', 'ui')}`;
+  let body;
+  if (!reqAll) {
+    body = `${h2('Данные другого человека', 16)}
+  <p class="obhint" style="margin:6px 0 16px">Имя и дата рождения обязательны. Время и место можно не указывать, но с ними разбор точнее.</p>
+  ${otherFields}`;
+  } else if (showMine) {
+    body = `${h2('Ваши данные', 16)}
+  <p class="obhint" style="margin:6px 0 16px">${vedHint}</p>
+  ${mineFields}
+  ${h2('Данные другого человека', 30)}
+  ${otherFields}`;
+  } else {
+    body = `${h2('Данные другого человека', 16)}
+  <p class="obhint" style="margin:6px 0 16px">${vedHint}</p>
+  ${otherFields}`;
+  }
   return `<div class="pad" id="cmpData" style="padding-bottom:16px">
   <div class="dochead" ${back}><span>&lsaquo;</span><div>Назад</div></div>
   ${compatStepper(hasType, hasType ? 1 : 0)}
-  <h2 class="t-title" style="font-size:20px;margin-top:16px">${title}</h2>
-  <p class="obhint" style="margin:6px 0 16px">${hint}</p>
-  ${mineSection}
-  ${otherSection}
+  ${body}
   <div class="w-btn${reqOk ? '' : ' off'}" id="cmpGo" data-go="prodDepth" style="margin-top:20px">Продолжить</div>
 </div>`;
 }
