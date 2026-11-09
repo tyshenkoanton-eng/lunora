@@ -2079,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v663</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v664</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9345,12 +9345,18 @@ function childData(p) {
     btn = `<div class="w-btn${CH.name ? '' : ' off'}" id="chNext" data-chstep="1" style="margin-top:18px">Дальше</div>`;
   } else if (n === 1) {
     body = `<h2 class="t-title" style="font-size:20px;margin-top:16px">Где родился ребёнок?</h2>
-  <div class="fields" style="margin-top:16px;display:flex;flex-direction:column;gap:14px">
-    <div><div class="w-label">Город</div>${cell('city', 'Укажите город рождения')}</div>
-    <div><div class="w-label">Точный адрес</div>${cell('addr', 'Улица и дом')}
-      <p class="obhint">Можно добавить точный адрес, чтобы увеличить глубину разбора.</p></div>
+  <div class="fields" style="margin-top:16px">
+    <div><div class="w-label">Город</div>
+      <div class="w-field${CH.city ? ' filled' : ''}" contenteditable="true" data-ph="Укажите город рождения" data-sug="city">${CH.city || ''}</div>
+      <div class="sug" id="sugCity"></div></div>
+    <div><span class="w-link" data-obaddr="1"${CH.addr ? ' style="display:none"' : ''}>Знаю точный адрес рождения</span>
+      <p class="ferr" id="obAddrErr">Сначала укажите город рождения</p></div>
+    <div id="obAddrBox"${CH.addr ? '' : ' style="display:none"'}><div class="w-label">Адрес</div>
+      <div class="w-field${CH.addr ? ' filled' : ''}" contenteditable="true" data-ph="Введите адрес рождения" data-sug="street">${CH.addr || ''}</div>
+      <div class="sug"></div></div>
+    <p class="obhint" style="margin:0">Добавьте точный адрес, чтобы увеличить глубину разбора</p>
   </div>`;
-    btn = `<div class="w-btn" id="chNext" data-chstep="2" style="margin-top:18px">Дальше</div>
+    btn = `<div class="w-btn${CH.city ? '' : ' off'}" id="chNext" data-chstep="2" style="margin-top:18px">Дальше</div>
   <div class="w-btn ghost" data-chstep="0" style="margin-top:8px">Назад</div>`;
   } else if (n === 2) {
     body = `<h2 class="t-title" style="font-size:20px;margin-top:16px">Когда родился ребёнок?</h2>
@@ -11994,6 +12000,13 @@ function obPaint() {
 }
 
 /* живой бар глубины на форме ребёнка: двигаем полосу и переключаем «Продолжить» */
+/* контекст поля «Место рождения»: онбординг пишет в OB, форма ребёнка в CH.
+   Один и тот же механизм города/адреса обслуживает оба экрана. */
+function placeCtx() {
+  if (cur === 'obPlace') return { d: OB, paint: obPaint };
+  if (cur === 'prodData' && CUR === 'child' && CH_STEP === 1) return { d: CH, paint: chPaint };
+  return null;
+}
 function chPaint() {
   const pct = depthPct(CH);
   view.querySelectorAll('.depth[data-chbar]').forEach(box => {
@@ -12002,7 +12015,7 @@ function chPaint() {
   });
   const go = document.getElementById('chNext');
   if (go) {
-    const ok = CH_STEP === 0 ? !!CH.name : CH_STEP === 2 ? !!(CH.d && CH.m && CH.y) : true;
+    const ok = CH_STEP === 0 ? !!CH.name : CH_STEP === 1 ? !!CH.city : CH_STEP === 2 ? !!(CH.d && CH.m && CH.y) : true;
     go.classList.toggle('off', !ok);
   }
 }
@@ -12483,15 +12496,16 @@ view.addEventListener('input', e => {
     renderCitySug(f);
     /* город правят руками: пока он не выбран из списка, адреса для него нет —
        адресная база подгружается только под выбранный город */
-    if (cur === 'obPlace' && f.textContent.trim() !== OB.city) {
-      OB.city = ''; OB.addr = '';
+    const pc = placeCtx();
+    if (pc && f.textContent.trim() !== pc.d.city) {
+      pc.d.city = ''; pc.d.addr = '';
       f.classList.remove('filled');
       const box = document.getElementById('obAddrBox');
       const link = view.querySelector('[data-obaddr]');
       if (box) { box.style.display = 'none'; const s = box.querySelector('[data-sug="street"]'); if (s) { s.textContent = ''; s.classList.remove('filled'); } }
       if (link) link.style.display = '';
       const err = document.getElementById('obAddrErr'); if (err) err.classList.remove('show');
-      obPaint();
+      pc.paint();
     }
   }
   if (f.dataset.sug === 'street') renderStreetSug(f);
@@ -12547,7 +12561,8 @@ view.addEventListener('click', e => {
     const f = box.parentElement.querySelector('[data-sug="city"]');
     if (f) { f.textContent = sc.dataset.city; f.classList.add('filled'); }
     box.classList.remove('show');
-    if (cur === 'obPlace') { OB.city = sc.dataset.city; obPaint(); }
+    const pc = placeCtx();
+    if (pc) { pc.d.city = sc.dataset.city; pc.paint(); }
     const er = document.getElementById('obAddrErr'); if (er) er.classList.remove('show');
     return;
   }
@@ -12558,14 +12573,17 @@ view.addEventListener('click', e => {
     const f = document.querySelector('#obAddrBox [data-sug="street"]');
     if (f) { f.textContent = ss.dataset.addr; f.classList.add('filled'); }
     box.classList.remove('show');
-    if (cur === 'obPlace') { OB.addr = ss.dataset.addr; obPaint(); }
+    const pc = placeCtx();
+    if (pc) { pc.d.addr = ss.dataset.addr; pc.paint(); }
     return;
   }
   /* «знаю точный адрес»: без города открывать нечего */
   const oa = e.target.closest('[data-obaddr]');
   if (oa) {
     const err = document.getElementById('obAddrErr');
-    if (!OB.city) { err.classList.add('show'); return; }
+    const pc = placeCtx();
+    const city = pc ? pc.d.city : OB.city;
+    if (!city) { err.classList.add('show'); return; }
     err.classList.remove('show');
     document.getElementById('obAddrBox').style.display = '';
     oa.style.display = 'none';
