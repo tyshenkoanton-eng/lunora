@@ -2079,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v658</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v659</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9216,6 +9216,7 @@ function cmpTimeTouched(cell) {
 }
 function prodData() { const p = PROD[CUR]; const has = p.fields.length;
   if (CUR.startsWith('compat')) return compatData(p);
+  if (CUR === 'child') return childData(p);
   if (CUR === 'rename') {
     const nm = p.fields[0] ? p.fields[0][1] : '';
     const fm = p.fields[1] ? p.fields[1][1] : '';
@@ -9316,12 +9317,56 @@ function compatDepth(p) {
   </div>
 </div>`;
 }
+/* форма разбора личности ребёнка: те же девять полей, что в онбординге, с живым
+   баром глубины. Поля заполняются тапом (демо-значение) и так же снимаются. */
+function childData(p) {
+  const cell = (key, ph) => `<div class="w-field${CH[key] ? ' filled' : ''}" data-chfill data-chkey="${key}" data-ph="${ph}">${CH[key] || ph}</div>`;
+  const pct = depthPct(CH);
+  const ok = CH.name && CH.d && CH.m && CH.y;
+  return `<div class="pad">
+  <div class="dochead" data-go="prodPage"><span>&lsaquo;</span><div>Назад · ${p.t}</div></div>
+  <div class="d-crumb">${p.t} · шаг 1 из 2</div>
+  <h2 class="t-title" style="font-size:20px">Данные ребёнка</h2>
+  <p class="d-lede">Заполните, что знаете. Чем точнее данные, тем глубже разбор.</p>
+  <div class="depth" data-chbar style="cursor:default;margin-top:4px"><span>Глубина расчёта</span><div class="bar"><i style="left:0;width:${pct}%"></i></div><b>${pct}%</b></div>
+  <p class="obhint" style="margin:7px 0 0">Время лучше взять из свидетельства о рождении: с ним разбор выходит на полной глубине.</p>
+  <div class="fields" style="margin-top:18px;display:flex;flex-direction:column;gap:14px">
+    <div><div class="w-label">Имя</div>${cell('name', 'Имя ребёнка')}</div>
+    <div><div class="w-label">Отчество</div>${cell('pat', 'Отчество')}</div>
+    <div><div class="w-label">Фамилия</div>${cell('fam', 'Фамилия')}</div>
+  </div>
+  <div style="margin-top:14px"><div class="w-label">Пол</div><div class="segtabs" id="chSex">${['ж', 'м'].map(s => `<i class="${CH.sex === s ? 'on' : ''}" data-chsex="${s}">${s === 'ж' ? 'Девочка' : 'Мальчик'}</i>`).join('')}</div></div>
+  <div style="margin-top:14px"><div class="w-label">Место рождения</div>${cell('city', 'Город рождения')}
+    <p class="obhint" style="margin:5px 0 0">Можно добавить точный адрес — так глубже.</p></div>
+  <div style="margin-top:8px"><div class="w-label">Точный адрес</div>${cell('addr', 'Улица и дом')}</div>
+  <div style="margin-top:14px">
+    <div class="w-label">Дата рождения</div>
+    <div class="hm3">${cell('d', '—')}${cell('m', '—')}${cell('y', '—')}</div>
+    <div class="dlab"><span>день</span><span>месяц</span><span>год</span></div>
+  </div>
+  <div style="margin-top:18px" data-chtime>
+    <div class="w-label">Время рождения</div>
+    <p class="obhint" style="margin:0 0 8px">Насколько точно оно известно?</p>
+    <div class="segtabs seg4">${['t', 'p', 'r', 'n'].map((c, idx) => `<i class="${CH.prec === c ? 'on' : ''}" data-chprec="${c}">${['Точно', '± 30 мин', '± 3 часа', 'Не знаю'][idx]}</i>`).join('')}</div>
+    <div class="hmrow"${CH.prec === 'n' ? ' style="display:none"' : ''}><div>${cell('h', 'чч')}<span class="flab">час</span></div><div>${cell('i', 'мм')}<span class="flab">минуты</span></div></div>
+  </div>
+  <div class="w-check" data-chconsent style="margin-top:16px"><div class="w-box"></div><div>Это данные моего ребёнка, я согласна на их обработку для расчёта</div></div>
+  <div class="w-btn${ok ? '' : ' off'}" id="chGo" data-go="prodDepth" style="margin-top:18px">Продолжить</div>
+</div>`;
+}
 function prodDepth() { const p = PROD[CUR];
   if (CUR.startsWith('compat')) return compatDepth(p);
   if (!p.access) {
     const has = p.fields.length;
+    const isChild = CUR === 'child';
     let rows;
-    if (has) {
+    if (isChild) {
+      const fio = [CH.fam, CH.name, CH.pat].filter(Boolean).join(' ') || 'Имя не указано';
+      const date = (CH.d && CH.m && CH.y) ? `${CH.d} ${CH.m} ${CH.y}` : 'дата не указана';
+      const time = (CH.h && CH.i && CH.prec !== 'n') ? `${CH.h}:${CH.i}${PREC_LABEL[CH.prec] || ''}` : CH.prec === 'n' ? 'время неизвестно' : 'время не указано';
+      const place = CH.addr ? `${CH.city ? CH.city + ', ' : ''}${CH.addr}` : (CH.city || 'место не указано');
+      rows = `${fio}<br>${date}, ${time}<br>${place}`;
+    } else if (has) {
       rows = p.fields.filter(([l, v]) => v).map(([l, v]) => `${l}: ${v}`).join('<br>');
     } else {
       const fio = [OB.name, OB.pat, OB.fam].filter(Boolean).join(' ') || 'Антон Юрьевич Тыщенко';
@@ -9340,6 +9385,8 @@ function prodDepth() { const p = PROD[CUR];
     <div><u>Разбор</u><b>${p.t}</b></div>
     <div class="ml"><u>Данные для расчёта</u><b>${rows}</b></div>
   </div>
+
+  ${isChild ? (() => { const cp = depthPct(CH); return `<div class="depth" style="cursor:default;margin-top:14px"><span>Глубина расчёта</span><div class="bar"><i style="left:0;width:${cp}%"></i></div><b>${cp}%</b></div>${cp < 100 ? `<div class="orient" style="margin-top:12px"><p>Разбор составим и по этим данным. Если добавить недостающее, он станет глубже и подробнее. <u data-go="prodData">Дополнить данные</u></p></div>` : ''}`; })() : ''}
 
   <div class="body-text" style="margin-top:16px">
     <p>Разбор начнёт собираться сразу после оплаты и появится в разделе «Мои разборы».</p>
@@ -11850,22 +11897,34 @@ const OB = { name: 'Антон', fam: 'Тыщенко', pat: '', sex: 'ж',
 const OB_PH = { name: 'Введите ваше имя', pat: 'Введите ваше отчество', fam: 'Введите вашу фамилию' };
 const OB_DEF = { name: 'Антон', pat: 'Юрьевич', fam: 'Тыщенко' };
 
+/* данные ребёнка для разбора личности: та же форма, что и профиль пользователя.
+   Старт как в онбординге — имя, фамилия и пол заполнены (17%), остальное добавляют. */
+const CH = { name: 'Софья', fam: 'Тыщенко', pat: '', sex: 'ж',
+             city: '', addr: '', d: '', m: '', y: '', h: '', i: '', prec: 'p' };
+const CH_DEF = { name: 'Софья', pat: 'Дмитриевна', fam: 'Тыщенко', sex: 'ж',
+                 city: 'Волгоград', addr: 'ул. Мира, 12', d: '9', m: 'мая', y: '2019', h: '06', i: '40' };
+
 const obDateFull = () => !!(OB.d && OB.m && OB.y);
 const obTimeFull = () => OB.h !== '' && OB.i !== '';
 
-function obPct() {
+/* глубина расчёта от любого объекта данных (онбординг, разбор ребёнка и т.д.).
+   Веса DW — единственный источник, чтобы глубина нигде не разъехалась. */
+function depthPct(d) {
+  const dateFull = !!(d.d && d.m && d.y);
+  const timeFull = d.h !== '' && d.i !== '';
   let p = 0;
-  if (OB.name) p += DW.name;
-  if (OB.fam) p += DW.fam;
-  if (OB.pat) p += DW.pat;
-  if (OB.sex) p += DW.sex;
-  if (OB.city) p += DW.city;
-  if (OB.city && OB.addr) p += DW.addr;
-  if (obDateFull()) p += DW.date;
-  if (obDateFull() && obTimeFull() && OB.prec !== 'n') p += (OB.prec === 'r' ? 14 : DW.time);
-  if (obDateFull() && obTimeFull() && OB.prec === 't') p += DW.prec;
+  if (d.name) p += DW.name;
+  if (d.fam) p += DW.fam;
+  if (d.pat) p += DW.pat;
+  if (d.sex) p += DW.sex;
+  if (d.city) p += DW.city;
+  if (d.city && d.addr) p += DW.addr;
+  if (dateFull) p += DW.date;
+  if (dateFull && timeFull && d.prec !== 'n') p += (d.prec === 'r' ? 14 : DW.time);
+  if (dateFull && timeFull && d.prec === 't') p += DW.prec;
   return p;
 }
+function obPct() { return depthPct(OB); }
 
 function obPaint() {
   const pct = obPct();
@@ -11896,6 +11955,47 @@ function obPaint() {
     if (cbtn) cbtn.classList.toggle('off', !OB.consent);
   }
 }
+
+/* живой бар глубины на форме ребёнка: двигаем полосу и переключаем «Продолжить» */
+function chPaint() {
+  const pct = depthPct(CH);
+  view.querySelectorAll('.depth[data-chbar]').forEach(box => {
+    box.querySelector('.bar i').style.width = pct + '%';
+    box.querySelector('b').textContent = pct + '%';
+  });
+  const go = document.getElementById('chGo');
+  if (go) go.classList.toggle('off', !(CH.name && CH.d && CH.m && CH.y));
+}
+view.addEventListener('click', e => {
+  if (cur !== 'prodData' || CUR !== 'child') return;
+  const fl = e.target.closest('[data-chfill]');
+  if (fl) {
+    const key = fl.dataset.chkey;
+    CH[key] = CH[key] ? '' : (CH_DEF[key] || '');
+    fl.classList.toggle('filled', !!CH[key]);
+    fl.textContent = CH[key] || fl.dataset.ph || '';
+    chPaint(); return;
+  }
+  const sx = e.target.closest('[data-chsex]');
+  if (sx) {
+    CH.sex = sx.dataset.chsex;
+    view.querySelectorAll('#chSex i').forEach(i => i.classList.toggle('on', i === sx));
+    chPaint(); return;
+  }
+  const pc = e.target.closest('[data-chprec]');
+  if (pc) {
+    CH.prec = pc.dataset.chprec;
+    const wrap = pc.closest('[data-chtime]');
+    if (wrap) {
+      wrap.querySelectorAll('.segtabs i').forEach(i => i.classList.toggle('on', i === pc));
+      const row = wrap.querySelector('.hmrow');
+      if (row) row.style.display = CH.prec === 'n' ? 'none' : 'flex';
+    }
+    chPaint(); return;
+  }
+  const chk = e.target.closest('.w-check[data-chconsent]');
+  if (chk) { chk.classList.toggle('on'); return; }
+});
 
 /* после каждой отрисовки экрана онбординга поля заполняются из состояния */
 function obRestore(k) {
