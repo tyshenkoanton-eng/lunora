@@ -2079,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v653</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v654</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9120,9 +9120,9 @@ function compatData(p) {
   const vedHint = 'Для ведического разбора нужны дата, время и город рождения обоих. Время обязательно, но достаточно приблизительного: всё считается по Луне.';
   const splitHint = reqAll ? vedHint : 'Считаем по вашим данным и данным другого человека. Время и место можно не указывать, но с ними разбор точнее.';
   const otherFields = numData ? `<div class="fields" style="margin-top:4px;display:flex;flex-direction:column;gap:14px">
-    <div><div class="w-label">Фамилия</div>${fcell('fam', 'Ковалёв', 'Введите фамилию', true)}</div>
-    <div><div class="w-label">Имя</div>${fcell('name', 'Дмитрий', 'Введите имя', true)}</div>
+    <div><div class="w-label">Полное имя</div>${fcell('name', 'Дмитрий', 'Введите имя', true)}</div>
     <div><div class="w-label">Отчество</div>${fcell('pat', 'Сергеевич', 'Введите отчество', false)}</div>
+    <div><div class="w-label">Фамилия</div>${fcell('fam', 'Ковалёв', 'Введите фамилию', true)}</div>
   </div>
   <div style="margin-top:22px">
     <div class="w-label">Дата рождения</div>
