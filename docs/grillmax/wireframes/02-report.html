@@ -2079,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v661</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v662</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -11050,8 +11050,11 @@ function render(k, push = true, restore = 0) {
      не пускаем, сразу ведём в «Мои разборы», где документ можно открыть или пересобрать */
   if (k === 'pdfSell' && (PDFST === 'bought' || PDFST === 'stale')) { SHOPTAB = 'docs'; k = 'shop'; }
   if (k !== 'docView') DOCPREVIEW = false;
-  /* форма ребёнка идёт по этапам: уход с неё сбрасывает на первый шаг */
-  if (k !== 'prodData') CH_STEP = 0;
+  /* форма ребёнка по этапам: свежий вход (с витрины или из каталога) начинает с
+     первого шага и с чистых данных; переходы шаг↔шаг и форма↔проверка сохраняют */
+  if (k === 'prodData' && CUR === 'child' && cur !== 'prodData' && cur !== 'prodDepth') {
+    Object.assign(CH, CH_INIT); CH_STEP = 0;
+  } else if (k !== 'prodData') { CH_STEP = 0; }
   /* листы не переживают смену экрана: иначе открытый шеринг висит поверх нового экрана */
   document.querySelectorAll('.sheet.show').forEach(s => s.classList.remove('show'));
   /* смена экрана отменяет «экран под шторкой»: иначе наблюдатель за закрытием шторки
@@ -11933,6 +11936,9 @@ const OB_DEF = { name: 'Антон', pat: 'Юрьевич', fam: 'Тыщенко
    Старт как в онбординге — имя, фамилия и пол заполнены (17%), остальное добавляют. */
 const CH = { name: 'Софья', fam: 'Тыщенко', pat: '', sex: 'ж',
              city: '', addr: '', d: '', m: '', y: '', h: '', i: '', prec: 'p' };
+/* исходное состояние формы: свежий вход начинает с него, чтобы раньше введённые
+   данные (напр. город) не оставались «уже заполненными» при повторном открытии */
+const CH_INIT = { ...CH };
 const CH_DEF = { name: 'Софья', pat: 'Дмитриевна', fam: 'Тыщенко', sex: 'ж',
                  city: 'Волгоград', addr: 'ул. Мира, 12', d: '9', m: 'мая', y: '2019', h: '06', i: '40' };
 /* форма ребёнка идёт по этапам, как онбординг (О-02…О-05) */
