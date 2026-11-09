@@ -2079,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v646</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v647</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -8012,7 +8012,7 @@ const PROD = {
 <div class="body-text" style="margin-top:12px"><p style="font-size:11.5px;color:var(--ink-faint)">Полный разбор по каждой куте с категориями у каждого человека даёт движок. Баллы и выводы в примере показаны для образца, в вашем разборе они считаются по вашим данным. Названия сторон упрощены, соответствие традиционным кутам проверяет астролог.</p></div>`,
     res:'Совместимость', resEyebrow:'Ведическая астрология', resPhrase:''
   },
-  compatBazi: { back:'compat',
+  compatBazi: { back:'compat', splitData:1,
     t:'Совместимость · Ба Цзы', price:'790 ₽', crumb:'Разборы · совместимость', cta:'Рассчитать совместимость', preview:'doc',
     docPages:'Около 5 страниц в PDF.',
     lead:'Ба Цзы по дате и времени рождения считает баланс пяти стихий: дерево, огонь, земля, металл, вода. У каждого он свой: одной стихии больше, другой не хватает. Мы сложим стихии пары и покажем, что вас поддерживает, а что мешает.', leadNoBorder:1,
@@ -9057,7 +9057,9 @@ function compatData(p) {
   const D = CMP_DATA;
   const reqAll = !!p.reqAll;
   CMP_REQALL = reqAll;
-  const showMine = reqAll && !DATAFULL;
+  /* splitData: разделять «Ваши данные» и «Данные другого человека» (ведическая, Ба Цзы) */
+  const splitData = reqAll || !!p.splitData;
+  const showMine = splitData && !DATAFULL;
   CMP_SHOWMINE = showMine;
   /* поле только для демо-подстановки (правый клик) */
   const fcell = (key, val, ph, req) => `<div class="w-field${D[key] ? ' filled' : ''}" data-cmpfill${req ? ' data-cmpreq' : ''} data-cmpkey="${key}" data-val="${val}">${D[key] || ph}</div>`;
@@ -9076,6 +9078,7 @@ function compatData(p) {
     : (D.name && D.d && D.m && D.y);
   const h2 = (t, mt) => `<h2 class="t-title" style="font-size:20px;margin-top:${mt}px">${t}</h2>`;
   const vedHint = 'Для ведического разбора нужны дата, время и город рождения обоих. Время обязательно, но достаточно приблизительного: всё считается по Луне.';
+  const splitHint = reqAll ? vedHint : 'Считаем по вашим данным и данным другого человека. Время и место можно не указывать, но с ними разбор точнее.';
   const otherFields = `<div class="fields" style="margin-top:4px">
     <div><div class="w-label">Полное имя</div>${fcell('name', 'Дмитрий Ковалёв', 'Введите имя', true)}</div>
   </div>
@@ -9098,19 +9101,19 @@ function compatData(p) {
   </div>
   ${timeBlock('uprec', 'uh', 'ui')}`;
   let body;
-  if (!reqAll) {
+  if (!splitData) {
     body = `${h2('Данные другого человека', 16)}
   <p class="obhint" style="margin:6px 0 16px">Имя и дата рождения обязательны. Время и место можно не указывать, но с ними разбор точнее.</p>
   ${otherFields}`;
   } else if (showMine) {
     body = `${h2('Ваши данные', 16)}
-  <p class="obhint" style="margin:6px 0 16px">${vedHint}</p>
+  <p class="obhint" style="margin:6px 0 16px">${splitHint}</p>
   ${mineFields}
   ${h2('Данные другого человека', 30)}
   ${otherFields}`;
   } else {
     body = `${h2('Данные другого человека', 16)}
-  <p class="obhint" style="margin:6px 0 16px">${vedHint}</p>
+  <p class="obhint" style="margin:6px 0 16px">${splitHint}</p>
   ${otherFields}`;
   }
   return `<div class="pad" id="cmpData" style="padding-bottom:16px">
@@ -9194,7 +9197,7 @@ function compatDepth(p) {
   const hasType = !!typeField;
   const typeVal = typeField && typeField[1] ? typeField[1] : '';
   const reqAll = !!p.reqAll;
-  const showYou = reqAll;
+  const showYou = reqAll || !!p.splitData;
   PAYKIND = 'prod';
   const back = hasType ? 'data-cstep="2"' : 'data-go="prodData"';
   /* на экран можно прийти напрямую из реестра — тогда данных нет, показываем пример */
