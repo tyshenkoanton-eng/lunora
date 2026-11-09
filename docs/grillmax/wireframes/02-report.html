@@ -2079,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v659</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v660</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -2727,8 +2727,8 @@ function obDepthHTML() {
     ${block('Можно добавить', add, true)}`;
 }
 
-function stepper(n) {
-  return `<div class="stepper">${OB_STEPS.map(([a, b], i) => {
+function stepper(n, steps) {
+  return `<div class="stepper">${(steps || OB_STEPS).map(([a, b], i) => {
     const st = i < n ? 'done' : i === n ? 'now' : '';
     /* линия слева от кружка: сплошная там, где путь пройден, пунктир — впереди */
     const line = i === 0 ? '' : `<i class="lin ${i <= n ? 'passed' : ''}"></i>`;
@@ -9317,41 +9317,65 @@ function compatDepth(p) {
   </div>
 </div>`;
 }
-/* форма разбора личности ребёнка: те же девять полей, что в онбординге, с живым
-   баром глубины. Поля заполняются тапом (демо-значение) и так же снимаются. */
+/* бар глубины формы ребёнка — внизу, над кнопкой, как в онбординге */
+function chBar(mt) {
+  const pct = depthPct(CH);
+  return `<div class="depth" data-chbar style="cursor:default;margin-top:${mt}px"><span>Глубина расчёта</span><div class="bar"><i style="left:0;width:${pct}%"></i></div><b>${pct}%</b></div>`;
+}
+/* форма разбора личности ребёнка: те же девять полей, что в онбординге, и те же
+   этапы (ребёнок → место → дата → согласие) с живым баром глубины. Поля
+   заполняются тапом (демо-значение) и так же снимаются. */
 function childData(p) {
   const cell = (key, ph) => `<div class="w-field${CH[key] ? ' filled' : ''}" data-chfill data-chkey="${key}" data-ph="${ph}">${CH[key] || ph}</div>`;
-  const pct = depthPct(CH);
-  const ok = CH.name && CH.d && CH.m && CH.y;
-  return `<div class="pad">
-  <div class="dochead" data-go="prodPage"><span>&lsaquo;</span><div>Назад · ${p.t}</div></div>
-  <div class="d-crumb">${p.t} · шаг 1 из 2</div>
-  <h2 class="t-title" style="font-size:20px">Данные ребёнка</h2>
-  <p class="d-lede">Заполните, что знаете. Чем точнее данные, тем глубже разбор.</p>
-  <div class="depth" data-chbar style="cursor:default;margin-top:4px"><span>Глубина расчёта</span><div class="bar"><i style="left:0;width:${pct}%"></i></div><b>${pct}%</b></div>
-  <p class="obhint" style="margin:7px 0 0">Время лучше взять из свидетельства о рождении: с ним разбор выходит на полной глубине.</p>
-  <div class="fields" style="margin-top:18px;display:flex;flex-direction:column;gap:14px">
+  const n = CH_STEP;
+  let body, btn;
+  if (n === 0) {
+    body = `<h2 class="t-title" style="font-size:20px;margin-top:16px">Данные ребёнка</h2>
+  <div class="fields" style="margin-top:16px;display:flex;flex-direction:column;gap:14px">
     <div><div class="w-label">Имя</div>${cell('name', 'Имя ребёнка')}</div>
     <div><div class="w-label">Отчество</div>${cell('pat', 'Отчество')}</div>
-    <div><div class="w-label">Фамилия</div>${cell('fam', 'Фамилия')}</div>
-  </div>
-  <div style="margin-top:14px"><div class="w-label">Пол</div><div class="segtabs" id="chSex">${['ж', 'м'].map(s => `<i class="${CH.sex === s ? 'on' : ''}" data-chsex="${s}">${s === 'ж' ? 'Девочка' : 'Мальчик'}</i>`).join('')}</div></div>
-  <div style="margin-top:14px"><div class="w-label">Место рождения</div>${cell('city', 'Город рождения')}
-    <p class="obhint" style="margin:5px 0 0">Можно добавить точный адрес — так глубже.</p></div>
-  <div style="margin-top:8px"><div class="w-label">Точный адрес</div>${cell('addr', 'Улица и дом')}</div>
-  <div style="margin-top:14px">
-    <div class="w-label">Дата рождения</div>
-    <div class="hm3">${cell('d', '—')}${cell('m', '—')}${cell('y', '—')}</div>
-    <div class="dlab"><span>день</span><span>месяц</span><span>год</span></div>
-  </div>
-  <div style="margin-top:18px" data-chtime>
-    <div class="w-label">Время рождения</div>
+    <div><div class="w-label">Фамилия</div>${cell('fam', 'Фамилия')}
+      <p class="obhint">Фамилию и отчество можно не заполнять. Но с ними нумерология расскажет о ребёнке подробнее.</p></div>
+    <div><div class="w-label">Пол</div><div class="segtabs" id="chSex"><i class="${CH.sex === 'ж' ? 'on' : ''}" data-chsex="ж">Девочка</i><i class="${CH.sex === 'м' ? 'on' : ''}" data-chsex="м">Мальчик</i></div></div>
+  </div>`;
+    btn = `<div class="w-btn${CH.name ? '' : ' off'}" id="chNext" data-chstep="1" style="margin-top:18px">Дальше</div>`;
+  } else if (n === 1) {
+    body = `<h2 class="t-title" style="font-size:20px;margin-top:16px">Где родился ребёнок?</h2>
+  <div class="fields" style="margin-top:16px;display:flex;flex-direction:column;gap:14px">
+    <div><div class="w-label">Город</div>${cell('city', 'Укажите город рождения')}</div>
+    <div><div class="w-label">Точный адрес</div>${cell('addr', 'Улица и дом')}
+      <p class="obhint">Можно добавить точный адрес, чтобы увеличить глубину разбора.</p></div>
+  </div>`;
+    btn = `<div class="w-btn" id="chNext" data-chstep="2" style="margin-top:18px">Дальше</div>
+  <div class="w-btn ghost" data-chstep="0" style="margin-top:8px">Назад</div>`;
+  } else if (n === 2) {
+    body = `<h2 class="t-title" style="font-size:20px;margin-top:16px">Когда родился ребёнок?</h2>
+  <div class="w-label" style="margin-top:16px">Дата рождения</div>
+  <div class="hm3">${cell('d', '—')}${cell('m', '—')}${cell('y', '—')}</div>
+  <div class="dlab"><span>день</span><span>месяц</span><span>год</span></div>
+  <div data-chtime>
+    <div class="w-label" style="margin-top:18px">Время рождения</div>
     <p class="obhint" style="margin:0 0 8px">Насколько точно оно известно?</p>
-    <div class="segtabs seg4">${['t', 'p', 'r', 'n'].map((c, idx) => `<i class="${CH.prec === c ? 'on' : ''}" data-chprec="${c}">${['Точно', '± 30 мин', '± 3 часа', 'Не знаю'][idx]}</i>`).join('')}</div>
+    <div class="segtabs seg4"><i class="${CH.prec === 't' ? 'on' : ''}" data-chprec="t">Точно</i><i class="${CH.prec === 'p' ? 'on' : ''}" data-chprec="p">± 30 мин</i><i class="${CH.prec === 'r' ? 'on' : ''}" data-chprec="r">± 3 часа</i><i class="${CH.prec === 'n' ? 'on' : ''}" data-chprec="n">Не знаю</i></div>
     <div class="hmrow"${CH.prec === 'n' ? ' style="display:none"' : ''}><div>${cell('h', 'чч')}<span class="flab">час</span></div><div>${cell('i', 'мм')}<span class="flab">минуты</span></div></div>
   </div>
-  <div class="w-check" data-chconsent style="margin-top:16px"><div class="w-box"></div><div>Это данные моего ребёнка, я согласна на их обработку для расчёта</div></div>
-  <div class="w-btn${ok ? '' : ' off'}" id="chGo" data-go="prodDepth" style="margin-top:18px">Продолжить</div>
+  <p class="obhint" style="margin:8px 0 0">Время лучше взять из свидетельства о рождении: с ним разбор выходит на полной глубине.</p>`;
+    btn = `<div class="w-btn${(CH.d && CH.m && CH.y) ? '' : ' off'}" id="chNext" data-chstep="3" style="margin-top:18px">Дальше</div>
+  <div class="w-btn ghost" data-chstep="1" style="margin-top:8px">Назад</div>`;
+  } else {
+    body = `<h2 class="t-title" style="font-size:20px;margin-top:16px">Согласие</h2>
+  <div class="body-text" style="margin-top:14px"><p>Это данные вашего ребёнка. Нам нужно ваше согласие на их обработку — это требование закона.</p></div>
+  <div class="w-check" data-chconsent style="margin-top:16px"><div class="w-box"></div><div>Даю согласие на обработку данных ребёнка для расчёта</div></div>`;
+    btn = `<div class="w-btn" data-go="prodDepth" style="margin-top:18px">Продолжить</div>
+  <div class="w-btn ghost" data-chstep="2" style="margin-top:8px">Назад</div>`;
+  }
+  const back = n === 0 ? `<div class="dochead" data-go="prodPage"><span>&lsaquo;</span><div>Назад · ${p.t}</div></div>` : '';
+  return `<div class="pad">
+  ${back}
+  ${stepper(n, CH_STEPS)}
+  ${body}
+  ${chBar(18)}
+  ${btn}
 </div>`;
 }
 function prodDepth() { const p = PROD[CUR];
@@ -11022,6 +11046,8 @@ function render(k, push = true, restore = 0) {
      не пускаем, сразу ведём в «Мои разборы», где документ можно открыть или пересобрать */
   if (k === 'pdfSell' && (PDFST === 'bought' || PDFST === 'stale')) { SHOPTAB = 'docs'; k = 'shop'; }
   if (k !== 'docView') DOCPREVIEW = false;
+  /* форма ребёнка идёт по этапам: уход с неё сбрасывает на первый шаг */
+  if (k !== 'prodData') CH_STEP = 0;
   /* листы не переживают смену экрана: иначе открытый шеринг висит поверх нового экрана */
   document.querySelectorAll('.sheet.show').forEach(s => s.classList.remove('show'));
   /* смена экрана отменяет «экран под шторкой»: иначе наблюдатель за закрытием шторки
@@ -11903,6 +11929,9 @@ const CH = { name: 'Софья', fam: 'Тыщенко', pat: '', sex: 'ж',
              city: '', addr: '', d: '', m: '', y: '', h: '', i: '', prec: 'p' };
 const CH_DEF = { name: 'Софья', pat: 'Дмитриевна', fam: 'Тыщенко', sex: 'ж',
                  city: 'Волгоград', addr: 'ул. Мира, 12', d: '9', m: 'мая', y: '2019', h: '06', i: '40' };
+/* форма ребёнка идёт по этапам, как онбординг (О-02…О-05) */
+const CH_STEPS = [['Ребёнок', ''], ['Место', 'рождения'], ['Дата', 'рождения'], ['Согласие', '']];
+let CH_STEP = 0;
 
 const obDateFull = () => !!(OB.d && OB.m && OB.y);
 const obTimeFull = () => OB.h !== '' && OB.i !== '';
@@ -11963,11 +11992,16 @@ function chPaint() {
     box.querySelector('.bar i').style.width = pct + '%';
     box.querySelector('b').textContent = pct + '%';
   });
-  const go = document.getElementById('chGo');
-  if (go) go.classList.toggle('off', !(CH.name && CH.d && CH.m && CH.y));
+  const go = document.getElementById('chNext');
+  if (go) {
+    const ok = CH_STEP === 0 ? !!CH.name : CH_STEP === 2 ? !!(CH.d && CH.m && CH.y) : true;
+    go.classList.toggle('off', !ok);
+  }
 }
 view.addEventListener('click', e => {
   if (cur !== 'prodData' || CUR !== 'child') return;
+  const st = e.target.closest('[data-chstep]');
+  if (st) { if (st.classList.contains('off')) return; CH_STEP = +st.dataset.chstep; render('prodData', false); return; }
   const fl = e.target.closest('[data-chfill]');
   if (fl) {
     const key = fl.dataset.chkey;
