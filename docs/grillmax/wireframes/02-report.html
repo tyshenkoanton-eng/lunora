@@ -2079,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v660</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v661</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -2709,11 +2709,13 @@ function obBar(mt) {
 }
 /* Что учитывается в глубине — шторка, как и остальные подсказки онбординга.
    Собирается при открытии: состояние девяти пунктов меняется на каждом шаге. */
-function obDepthHTML() {
-  const got = { name: !!OB.name, fam: !!OB.fam, sex: !!OB.sex, pat: !!OB.pat,
-                city: !!OB.city, addr: !!(OB.city && OB.addr), date: obDateFull(),
-                time: obDateFull() && obTimeFull() && OB.prec !== 'n',
-                prec: obDateFull() && obTimeFull() && OB.prec === 't' };
+function depthSheet(d) {
+  const dateFull = !!(d.d && d.m && d.y);
+  const timeFull = d.h !== '' && d.i !== '';
+  const got = { name: !!d.name, fam: !!d.fam, sex: !!d.sex, pat: !!d.pat,
+                city: !!d.city, addr: !!(d.city && d.addr), date: dateFull,
+                time: dateFull && timeFull && d.prec !== 'n',
+                prec: dateFull && timeFull && d.prec === 't' };
   const has = OB_ROWS.filter(([k]) => got[k]);
   /* недостающее идёт по весу: сверху то, что добавит больше всего */
   const add = OB_ROWS.filter(([k]) => !got[k]).sort((a, b) => DW[b[0]] - DW[a[0]]);
@@ -2721,11 +2723,13 @@ function obDepthHTML() {
     `<div class="r ${plus ? 'add' : 'has'}"><div>${t}</div><b>${plus ? '+\u00a0' : ''}${DW[k]}%</b></div>`).join('');
   const block = (title, list, plus) => list.length
     ? `<div class="dd obdd insheet"><div class="sheet-h">${title}</div><div class="dgroup">${rows(list, plus)}</div></div>` : '';
-  return `<p class="ddlead">Чем больше вы рассказываете о себе, тем выше процент и подробнее расчёт.</p>
-    <div class="ddbar"><div class="bar"><i style="left:0;width:${obPct()}%"></i></div><b>${obPct()}%</b></div>
+  const pct = depthPct(d);
+  return `<p class="ddlead">Чем больше данных, тем выше процент и подробнее расчёт.</p>
+    <div class="ddbar"><div class="bar"><i style="left:0;width:${pct}%"></i></div><b>${pct}%</b></div>
     ${block('Уже знаю', has, false)}
     ${block('Можно добавить', add, true)}`;
 }
+function obDepthHTML() { return depthSheet(OB); }
 
 function stepper(n, steps) {
   return `<div class="stepper">${(steps || OB_STEPS).map(([a, b], i) => {
@@ -9320,7 +9324,7 @@ function compatDepth(p) {
 /* бар глубины формы ребёнка — внизу, над кнопкой, как в онбординге */
 function chBar(mt) {
   const pct = depthPct(CH);
-  return `<div class="depth" data-chbar style="cursor:default;margin-top:${mt}px"><span>Глубина расчёта</span><div class="bar"><i style="left:0;width:${pct}%"></i></div><b>${pct}%</b></div>`;
+  return `<div class="depth" data-chbar style="cursor:default;margin-top:${mt}px"><span>Глубина расчёта</span><div class="bar"><i style="left:0;width:${pct}%"></i></div><b>${pct}%</b><i class="dinfo" data-info="depth">i</i></div>`;
 }
 /* форма разбора личности ребёнка: те же девять полей, что в онбординге, и те же
    этапы (ребёнок → место → дата → согласие) с живым баром глубины. Поля
@@ -9332,7 +9336,7 @@ function childData(p) {
   if (n === 0) {
     body = `<h2 class="t-title" style="font-size:20px;margin-top:16px">Данные ребёнка</h2>
   <div class="fields" style="margin-top:16px;display:flex;flex-direction:column;gap:14px">
-    <div><div class="w-label">Имя</div>${cell('name', 'Имя ребёнка')}</div>
+    <div><div class="w-label">Полное имя <u class="ihint" data-info="name">i</u></div>${cell('name', 'Имя ребёнка')}</div>
     <div><div class="w-label">Отчество</div>${cell('pat', 'Отчество')}</div>
     <div><div class="w-label">Фамилия</div>${cell('fam', 'Фамилия')}
       <p class="obhint">Фамилию и отчество можно не заполнять. Но с ними нумерология расскажет о ребёнке подробнее.</p></div>
@@ -11651,7 +11655,9 @@ view.addEventListener('click', e => {
     if (!d) return;
     INFO_LVL = 1;
     document.getElementById('infoH').textContent = d[0];
-    document.getElementById('infoB').innerHTML = ih.dataset.info === 'depth' ? obDepthHTML() : d[1];
+    document.getElementById('infoB').innerHTML = ih.dataset.info === 'depth'
+      ? depthSheet((CUR === 'child' && (cur === 'prodData' || cur === 'prodDepth')) ? CH : OB)
+      : d[1];
     const lv = document.getElementById('infoLvl');
     lv.style.display = d[2] ? '' : 'none';
     lv.textContent = 'Показать в терминах';
