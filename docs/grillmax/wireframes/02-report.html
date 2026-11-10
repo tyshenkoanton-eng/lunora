@@ -2079,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v668</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v669</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9318,6 +9318,8 @@ function compatDepth(p) {
   </div>
 </div>`;
 }
+/* данные для глубины на экране проверки: ввод формы, иначе полный пример */
+function childDepthData() { return (CH.d && CH.m && CH.y) ? CH : CH_DEF; }
 /* бар глубины формы ребёнка — внизу, над кнопкой, как в онбординге */
 function chBar(mt) {
   const pct = depthPct(CH);
@@ -9391,7 +9393,7 @@ function prodDepth() { const p = PROD[CUR];
     const isChild = CUR === 'child';
     let rows;
     /* наследуем ввод формы; при прямом входе из каталога (данных нет) — пример */
-    const src = isChild ? ((CH.d && CH.m && CH.y) ? CH : CH_DEF) : null;
+    const src = isChild ? childDepthData() : null;
     if (isChild) {
       const fio = [src.fam, src.name, src.pat].filter(Boolean).join(' ') || 'Имя не указано';
       const date = (src.d && src.m && src.y) ? `${src.d} ${src.m} ${src.y}` : 'дата не указана';
@@ -9418,7 +9420,7 @@ function prodDepth() { const p = PROD[CUR];
     <div class="ml"><u>Данные для расчёта</u><b>${rows}</b></div>
   </div>
 
-  ${isChild ? (() => { const cp = depthPct(src); return `<div class="depth" style="cursor:default;margin-top:14px"><span>Глубина расчёта</span><div class="bar"><i style="left:0;width:${cp}%"></i></div><b>${cp}%</b></div>${cp < 100 ? `<p class="obhint" style="margin:12px 0 0">Данные всегда можно дополнить, карту пересчитаем бесплатно.</p>` : ''}`; })() : ''}
+  ${isChild ? (() => { const cp = depthPct(src); return `<div class="depth" style="cursor:default;margin-top:14px"><span>Глубина расчёта</span><div class="bar"><i style="left:0;width:${cp}%"></i></div><b>${cp}%</b><i class="dinfo" data-info="depth">i</i></div>${cp < 100 ? `<p class="obhint" style="margin:12px 0 0">Данные всегда можно дополнить, карту пересчитаем бесплатно.</p>` : ''}`; })() : ''}
 
   <div class="body-text" style="margin-top:16px">
     <p>Разбор начнёт собираться сразу после оплаты и появится в разделе «Мои разборы».</p>
@@ -11659,7 +11661,9 @@ view.addEventListener('click', e => {
     INFO_LVL = 1;
     document.getElementById('infoH').textContent = d[0];
     document.getElementById('infoB').innerHTML = ih.dataset.info === 'depth'
-      ? depthSheet((CUR === 'child' && (cur === 'prodData' || cur === 'prodDepth')) ? CH : OB)
+      ? depthSheet((CUR === 'child' && cur === 'prodData') ? CH
+                 : (CUR === 'child' && cur === 'prodDepth') ? childDepthData()
+                 : OB)
       : d[1];
     const lv = document.getElementById('infoLvl');
     lv.style.display = d[2] ? '' : 'none';
