@@ -2079,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v665</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v666</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9372,9 +9372,9 @@ function childData(p) {
   <div class="w-btn ghost" data-chstep="1" style="margin-top:8px">Назад</div>`;
   } else {
     body = `<h2 class="t-title" style="font-size:20px;margin-top:16px">Согласие</h2>
-  <div class="body-text" style="margin-top:14px"><p>Это данные вашего ребёнка. Нам нужно ваше согласие на их обработку — это требование закона.</p></div>
-  <div class="w-check" data-chconsent style="margin-top:16px"><div class="w-box"></div><div>Даю согласие на обработку данных ребёнка для расчёта</div></div>`;
-    btn = `<div class="w-btn" data-go="prodDepth" style="margin-top:18px">Продолжить</div>
+  <div class="body-text" style="margin-top:14px"><p>Это данные вашего ребёнка. Нам нужно ваше согласие на их обработку, этого требует закон.</p></div>
+  <div class="w-check${CH.consent ? ' on' : ''}" data-chconsent style="margin-top:16px"><div class="w-box"></div><div>Даю согласие на обработку данных ребёнка для расчёта</div></div>`;
+    btn = `<div class="w-btn${CH.consent ? '' : ' off'}" id="chConsentGo" data-chgo="prodDepth" style="margin-top:18px">Продолжить</div>
   <div class="w-btn ghost" data-chstep="2" style="margin-top:8px">Назад</div>`;
   }
   const back = n === 0 ? `<div class="dochead" data-go="prodPage"><span>&lsaquo;</span><div>Назад · ${p.t}</div></div>` : '';
@@ -11935,7 +11935,7 @@ const OB_DEF = { name: 'Антон', pat: 'Юрьевич', fam: 'Тыщенко
 /* данные ребёнка для разбора личности: та же форма, что и профиль пользователя.
    Старт как в онбординге — имя, фамилия и пол заполнены (17%), остальное добавляют. */
 const CH = { name: 'Софья', fam: 'Тыщенко', pat: '', sex: 'ж',
-             city: '', addr: '', d: '', m: '', y: '', h: '', i: '', prec: 'p' };
+             city: '', addr: '', d: '', m: '', y: '', h: '', i: '', prec: 'p', consent: false };
 /* исходное состояние формы: свежий вход начинает с него, чтобы раньше введённые
    данные (напр. город) не оставались «уже заполненными» при повторном открытии */
 const CH_INIT = { ...CH };
@@ -12047,7 +12047,17 @@ view.addEventListener('click', e => {
     chPaint(); return;
   }
   const chk = e.target.closest('.w-check[data-chconsent]');
-  if (chk) { chk.classList.toggle('on'); return; }
+  if (chk) {
+    CH.consent = !CH.consent;
+    chk.classList.toggle('on', CH.consent);
+    const g = document.getElementById('chConsentGo');
+    if (g) g.classList.toggle('off', !CH.consent);
+    return;
+  }
+  /* «Продолжить» на шаге согласия: переход только при проставленной галочке.
+     Через свой атрибут, а не data-go, чтобы общий обработчик не увёл раньше времени. */
+  const cg = e.target.closest('[data-chgo]');
+  if (cg) { if (!CH.consent) return; render(cg.dataset.chgo); return; }
 });
 
 /* после каждой отрисовки экрана онбординга поля заполняются из состояния */
