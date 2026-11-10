@@ -2079,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v679</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v680</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -8284,7 +8284,7 @@ const PROD = {
 <div class="body-text" style="margin-top:12px"><p style="font-size:11.5px;color:var(--ink-faint)">Числа посчитаны по реальным ФИО и датам. Формулировки сверены с нумерологом. В вашем разборе всё считается по вашим данным.</p></div>`,
     res:'Совместимость', resEyebrow:'Нумерология', resPhrase:''
   },
-  child: { back:'shopChild',
+  child: { back:'shopChild', preview:'doc',
     t:'Полный разбор личности ребёнка', price:'1 490 ₽', crumb:'Разборы · ребёнок',
     lead:'Разбор по четырём школам: западной и ведической астрологии, Ба Цзы и нумерологии. Вы узнаете, какой у ребёнка характер, в чём он силён, что даётся ему трудно и как с ним лучше договариваться.<br><br>Дополнительно мы сопоставим его разбор с вашим собственным и покажем, в чём вы похожи, где устроены по-разному и из-за чего чаще всего возникают конфликты.',
     sell:[
@@ -8297,6 +8297,9 @@ const PROD = {
       ['Как он будет меняться','Какие возрасты даются легче, а какие труднее, что и когда в нём проявится и где поддержать заранее.']
     ],
     need:'Для ребёнка: полное имя, дата, время и место рождения. Время лучше взять из свидетельства о рождении. Ваши данные возьмём из профиля.',
+    needHtml:`<p style="font-size:12.5px;color:var(--ink);font-weight:620;margin:0 0 4px">Данные ребёнка</p>
+  <ul class="bc-list" style="margin:0"><li>Имя</li><li>Отчество</li><li>Фамилия</li><li>Дата рождения</li><li>Время рождения</li><li>Место рождения</li></ul>
+  <p style="font-size:11.5px;color:var(--ink-faint);line-height:1.55;margin:10px 0 0">Время рождения можно не указывать, но с ним разбор точнее. Ваши данные возьмём из профиля.</p>`,
     fields:[['Имя ребёнка','Софья',1],['Дата рождения','9 мая 2019',1],['Время рождения','06:40',1],['Город рождения','Волгоград',1]],
     depth:'100%', depthNote:'Все данные есть, разбор пойдёт на полной глубине.',
     docPages:'Около 8 страниц в PDF: характер, сильные и слабые стороны, способности, учёба и занятия, как с ней общаться, вы и она, как будет меняться, и таблица расчёта, если захотите проверить.',
