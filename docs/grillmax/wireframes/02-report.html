@@ -2079,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v667</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v668</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -2876,11 +2876,9 @@ S.obConsent = `<div class="pad">
 
   <div class="body-text" style="margin-top:20px"><p>После получения вашего согласия мы сразу начнём расчёты</p></div>
 
-  ${obBar(16)}
+  <p style="font-size:11.5px;line-height:1.55;color:var(--ink-soft);text-align:center;margin:16px 0 0">Нажимая «Продолжить», вы принимаете <u data-go="doc-terms" style="color:var(--note);cursor:pointer;text-underline-offset:2px;white-space:nowrap">условия использования</u>.</p>
 
-  <p style="font-size:11.5px;line-height:1.55;color:var(--ink-soft);text-align:center;margin:16px 0 0">Нажимая «Перейти к расчёту», вы принимаете <u data-go="doc-terms" style="color:var(--note);cursor:pointer;text-underline-offset:2px;white-space:nowrap">условия использования</u>.</p>
-
-  <div class="w-btn off" id="obConsentGo" data-go="obCalc" style="margin-top:14px">Перейти к расчёту</div>
+  <div class="w-btn off" id="obConsentGo" data-go="obCalc" style="margin-top:14px">Продолжить</div>
   <div class="w-btn ghost" data-go="obDate" style="margin-top:8px">Назад</div>
 </div>`;
 
@@ -8110,7 +8108,7 @@ const PROD = {
     res:'Совместимость', resEyebrow:'Нумерология', resPhrase:''
   },
   child: { back:'shopChild',
-    t:'Полный разбор личности', price:'1 490 ₽', crumb:'Разборы · ребёнок',
+    t:'Полный разбор личности ребёнка', price:'1 490 ₽', crumb:'Разборы · ребёнок',
     lead:'Его карта целиком плюс то, что с этим делать вам. И где вы с ним не совпадаете — этого нельзя получить, заведя ему отдельный аккаунт.',
     sell:[
       ['Какой он на самом деле','Не «спокойный» или «трудный», а как устроен: что его успокаивает, от чего он закрывается, чего от него бесполезно требовать.'],
@@ -9382,7 +9380,7 @@ function childData(p) {
   ${back}
   ${stepper(n, CH_STEPS)}
   ${body}
-  ${chBar(18)}
+  ${n < 3 ? chBar(18) : ''}
   ${btn}
 </div>`;
 }
@@ -9392,11 +9390,13 @@ function prodDepth() { const p = PROD[CUR];
     const has = p.fields.length;
     const isChild = CUR === 'child';
     let rows;
+    /* наследуем ввод формы; при прямом входе из каталога (данных нет) — пример */
+    const src = isChild ? ((CH.d && CH.m && CH.y) ? CH : CH_DEF) : null;
     if (isChild) {
-      const fio = [CH.fam, CH.name, CH.pat].filter(Boolean).join(' ') || 'Имя не указано';
-      const date = (CH.d && CH.m && CH.y) ? `${CH.d} ${CH.m} ${CH.y}` : 'дата не указана';
-      const time = (CH.h && CH.i && CH.prec !== 'n') ? `${CH.h}:${CH.i}${PREC_LABEL[CH.prec] || ''}` : CH.prec === 'n' ? 'время неизвестно' : 'время не указано';
-      const place = CH.addr ? `${CH.city ? CH.city + ', ' : ''}${CH.addr}` : (CH.city || 'место не указано');
+      const fio = [src.fam, src.name, src.pat].filter(Boolean).join(' ') || 'Имя не указано';
+      const date = (src.d && src.m && src.y) ? `${src.d} ${src.m} ${src.y}` : 'дата не указана';
+      const time = (src.h && src.i && src.prec !== 'n') ? `${src.h}:${src.i}${PREC_LABEL[src.prec] || ''}` : src.prec === 'n' ? 'время неизвестно' : 'время не указано';
+      const place = src.addr ? `${src.city ? src.city + ', ' : ''}${src.addr}` : (src.city || 'место не указано');
       rows = `${fio}<br>${date}, ${time}<br>${place}`;
     } else if (has) {
       rows = p.fields.filter(([l, v]) => v).map(([l, v]) => `${l}: ${v}`).join('<br>');
@@ -9418,7 +9418,7 @@ function prodDepth() { const p = PROD[CUR];
     <div class="ml"><u>Данные для расчёта</u><b>${rows}</b></div>
   </div>
 
-  ${isChild ? (() => { const cp = depthPct(CH); return `<div class="depth" style="cursor:default;margin-top:14px"><span>Глубина расчёта</span><div class="bar"><i style="left:0;width:${cp}%"></i></div><b>${cp}%</b></div>${cp < 100 ? `<div class="orient" style="margin-top:12px"><p>Разбор составим и по этим данным. Если добавить недостающее, он станет глубже и подробнее. <u data-go="prodData">Дополнить данные</u></p></div>` : ''}`; })() : ''}
+  ${isChild ? (() => { const cp = depthPct(src); return `<div class="depth" style="cursor:default;margin-top:14px"><span>Глубина расчёта</span><div class="bar"><i style="left:0;width:${cp}%"></i></div><b>${cp}%</b></div>${cp < 100 ? `<p class="obhint" style="margin:12px 0 0">Данные всегда можно дополнить, карту пересчитаем бесплатно.</p>` : ''}`; })() : ''}
 
   <div class="body-text" style="margin-top:16px">
     <p>Разбор начнёт собираться сразу после оплаты и появится в разделе «Мои разборы».</p>
