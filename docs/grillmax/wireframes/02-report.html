@@ -2079,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v674</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v675</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -3707,14 +3707,13 @@ function childThemeScreen(k) {
 CHILD_THEMES.forEach(([,,k]) => Object.defineProperty(S, k, { get() { return childThemeScreen(k); } }));
 /* лендинг результата ребёнка: шапка, короткий вывод, карточки тем, как посчитано */
 function childResultCards() {
-  return `<div class="sumcard" style="margin:4px 0 18px"><div class="ml"><u>Данные ребёнка</u><b>Софья Дмитриевна Тыщенко<br>9 мая 2019, 06:40<br>Волгоград · 7 лет</b></div><div><u>Тип разбора</u><b>Личность ребёнка</b></div></div>
+  return `<div class="sumcard" style="margin:4px 0 18px"><div><u>Имя ребёнка</u><b>Софья Дмитриевна Тыщенко</b></div><div><u>Дата рождения</u><b>9 мая 2019, 06:40</b></div><div><u>Место рождения</u><b>Волгоград</b></div></div>
   <div class="luna-block"><div class="lab">Коротко</div><p>Софье нужна опора, чтобы открыться. Когда она открылась, она тёплая, заметная и ответственная. Западная астрология и нумерология видят в ней больше спокойствия и серьёзности, Ба-Цзы и ведическая добавляют живости и быстрые перепады настроения. Подробности по темам ниже.</p></div>
   <div class="sec-label">Разбор по темам</div>
   <div class="cards">
     ${CHILD_THEMES.map(([t,sub,go,icon]) => `<div class="card-it ic" data-go="${go}">${ticon(icon)}<div><div class="t">${t}</div><span class="s">${sub}</span></div><div class="chev">›</div></div>`).join('')}
-  </div>
-  <div class="sec-label" style="margin-top:22px">Данные расчёта</div>
-  <div class="cards"><div class="card-it" data-go="childCalc"><div><div class="t">Данные расчёта</div><span class="s">Положения планет, столпы, числа, часовой пояс</span></div><div class="chev">›</div></div></div>`;
+    <div class="card-it ic" data-go="childCalc"><svg class="ticon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h7M14 6h3M3 10h3M10 10h7M3 14h9M16 14h1"/><circle cx="12" cy="6" r="1.7"/><circle cx="8" cy="10" r="1.7"/><circle cx="14" cy="14" r="1.7"/></svg><div><div class="t">Данные расчёта</div><span class="s">Положения планет, столпы, числа, часовой пояс</span></div><div class="chev">›</div></div>
+  </div>`;
 }
 /* отдельный экран с положениями и настройками расчёта, как «Данные расчёта» в профиле */
 function childCalc() {
@@ -3723,7 +3722,7 @@ function childCalc() {
   <div class="dochead" data-go="prodResult"><span>&lsaquo;</span><div>Назад · разбор Софьи</div></div>
   <h2 class="t-title">Данные расчёта</h2>
   <p class="d-lede">Положения и настройки, по которым собран разбор Софьи. Это арифметика карты, тексты по темам опираются на неё.</p>
-  <div class="sumcard" style="margin:4px 0 16px"><div class="ml"><u>Данные ребёнка</u><b>Софья Дмитриевна Тыщенко<br>9 мая 2019, 06:40<br>Волгоград · 7 лет</b></div><div><u>Время рождения</u><b>06:40, UTC+4 · историческая зона Волгограда в 2019</b></div></div>
+  <div class="sumcard" style="margin:4px 0 16px"><div><u>Имя ребёнка</u><b>Софья Дмитриевна Тыщенко</b></div><div><u>Дата рождения</u><b>9 мая 2019, 06:40</b></div><div><u>Место рождения</u><b>Волгоград</b></div><div><u>Время рождения</u><b>06:40, UTC+4 · историческая зона Волгограда в 2019</b></div></div>
   <div class="calc"><div class="pr"><u>Западная</u><span>Натальная карта: Солнце в Тельце 18°, Луна в Раке 10°, асцендент в Близнецах 10°, планеты, возрастные ритмы</span></div><div class="pr"><u>Ведическая</u><span>Раши-чарта: лагна Телец 16°, Луна в Близнецах 16°, накшатра Ардра (пада 3), текущий период Юпитера</span></div><div class="pr"><u>Ба-Цзы</u><span>Четыре столпа 己亥 己巳 丙午 辛卯, господин дня Бин (Ян-Огонь), огонь 3 знака из 8</span></div><div class="pr"><u>Нумерология</u><span>Квадрат Пифагора по дате рождения: 8 три раза, 9 дважды, нет 3, 4, 7</span></div><div class="pr"><u>Точность</u><span>Полная: дата, время и место рождения известны</span></div></div>
 </div>`;
 }
