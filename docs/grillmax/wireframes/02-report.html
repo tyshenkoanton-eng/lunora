@@ -2079,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v664</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v665</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -2860,7 +2860,6 @@ S.obDate = `<div class="pad">
   ${obBar(18)}
 
   <div class="w-btn off" id="obDateGo" data-go="obConsent" style="margin-top:18px">Дальше</div>
-  <p class="obhint" id="obDateWhy" style="margin:8px 0 0;text-align:center">Заполните дату — без неё карту не построить</p>
   <div class="w-btn ghost" data-go="obPlace" style="margin-top:8px">Назад</div>
 </div>`;
 
@@ -9368,8 +9367,7 @@ function childData(p) {
     <p class="obhint" style="margin:0 0 8px">Насколько точно оно известно?</p>
     <div class="segtabs seg4"><i class="${CH.prec === 't' ? 'on' : ''}" data-chprec="t">Точно</i><i class="${CH.prec === 'p' ? 'on' : ''}" data-chprec="p">± 30 мин</i><i class="${CH.prec === 'r' ? 'on' : ''}" data-chprec="r">± 3 часа</i><i class="${CH.prec === 'n' ? 'on' : ''}" data-chprec="n">Не знаю</i></div>
     <div class="hmrow"${CH.prec === 'n' ? ' style="display:none"' : ''}><div>${cell('h', 'чч')}<span class="flab">час</span></div><div>${cell('i', 'мм')}<span class="flab">минуты</span></div></div>
-  </div>
-  <p class="obhint" style="margin:8px 0 0">Время лучше взять из свидетельства о рождении: с ним разбор выходит на полной глубине.</p>`;
+  </div>`;
     btn = `<div class="w-btn${(CH.d && CH.m && CH.y) ? '' : ' off'}" id="chNext" data-chstep="3" style="margin-top:18px">Дальше</div>
   <div class="w-btn ghost" data-chstep="1" style="margin-top:8px">Назад</div>`;
   } else {
