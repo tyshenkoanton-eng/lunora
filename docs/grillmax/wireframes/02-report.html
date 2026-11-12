@@ -2079,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v682</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v683</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9194,7 +9194,7 @@ const PROD = {
     res:'Разбор личности', resPhrase:'Ваша карта по четырём школам — сорок страниц.',
     file:{ name:'Разбор личности.pdf', size:'6,4 МБ', pages: DOC_PAGES_TXT }
   },
-  date: { back:'shopDate',
+  date: { back:'shopDate', chatCheck:1,
     t:'Разбор даты', price:'390 ₽', crumb:'Разборы',
     lead:'Каким вы будете в этот день: где легче настоять, где склонны уступить, на что не хватит терпения.',
     sell:[
@@ -9289,6 +9289,11 @@ function prodPage() { const p = PROD[CUR]; CMP_STEP = 1; CMP_DATA = {}; Object.a
     ? `<span class="pdflink" data-go="chat" style="margin-top:16px">Посмотреть, как она отвечает</span>`
     : `<span class="pdflink" data-pdfdemo="${CUR}" style="margin-top:16px">Посмотреть пример разбора</span>`}
   <div class="w-btn" data-go="${p.fields.length ? 'prodData' : 'prodDepth'}" style="margin-top:18px">${p.cta || (p.access ? 'Купить' : 'Рассчитать')} · ${p.price}</div>
+  ${p.chatCheck ? `<div class="askchat" style="margin-top:20px">
+    <b>Уже есть дата?</b>
+    <p>Если хотите проверить конкретный день, спросите в чате. Лунора ответит по вашей карте.</p>
+    <div class="w-btn" data-go="chatList">Спросить в чате</div>
+  </div>` : ''}
 </div>`; }
 
 /* мастер совместимости: шаг 1 тип, шаг 2 данные, шаг 3 (prodDepth) проверка.
