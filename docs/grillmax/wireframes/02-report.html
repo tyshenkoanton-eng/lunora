@@ -2086,7 +2086,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v702</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v703</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9590,12 +9590,13 @@ function childCheckData(p) {
       return `<div class="w-row"><div class="w-field${v ? ' filled' : ''}" data-ccfill data-ccidx="${i}" data-ph="${ph}">${v || ph}</div>${del}</div>`;
     }).join('');
     const add = CC.names.length < 5 ? `<div class="w-add" data-ccadd>+ добавить имя</div>` : '';
-    const ready = CC.names.some(x => x.trim());
+    const ready = CC.names.some(x => x.trim()) && CC.fam;
     body = `<h2 class="t-title" style="font-size:20px;margin-top:16px">Имена для проверки</h2>
   <p class="obhint" style="margin:8px 0 0">До 5 имён, которые вы рассматриваете для ребёнка.</p>
   <div class="fields" style="margin-top:16px;display:flex;flex-direction:column;gap:14px">
     <div style="display:flex;flex-direction:column;gap:10px">${rows}${add}</div>
-    <div><div class="w-label">Отчество</div>${cell('pat', 'Отчество')}</div>
+    <div><div class="w-label">Отчество</div>${cell('pat', 'Отчество')}
+      <p class="obhint" style="margin:5px 0 0">Можно не заполнять.</p></div>
     <div><div class="w-label">Фамилия</div>${cell('fam', 'Фамилия')}</div>
   </div>`;
     btn = `<div class="w-btn${ready ? '' : ' off'}" id="ccNext" data-ccstep="1" style="margin-top:18px">Дальше</div>`;
@@ -12444,6 +12445,7 @@ view.addEventListener('click', e => {
     }
     const key = fl.dataset.cckey;
     CC[key] = CC[key] ? '' : (CC_DEF[key] || '');
+    if (key === 'fam' && CC_STEP === 0) { render('prodData', false); return; }
     fl.classList.toggle('filled', !!CC[key]);
     fl.textContent = CC[key] || fl.dataset.ph || '';
     return;
