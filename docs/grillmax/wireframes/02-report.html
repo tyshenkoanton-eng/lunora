@@ -1291,6 +1291,13 @@
              padding: 11px 12px; background: var(--card); cursor: text; }
   .w-field.filled { color: var(--ink); }
   .w-field.bad { color: var(--ink); border-color: var(--bad); }
+  .w-row { display: flex; gap: 8px; align-items: center; }
+  .w-row .w-field { flex: 1; }
+  .w-del { flex: 0 0 auto; width: 32px; height: 32px; display: grid; place-items: center;
+           color: var(--ink-faint); font-size: 13px; cursor: pointer; border-radius: 8px; }
+  .w-del:active { background: var(--wire-fill-2); }
+  .w-add { display: inline-flex; align-items: center; font-size: 13px; color: var(--note);
+           cursor: pointer; margin-top: 2px; }
   .savebar { position: sticky; bottom: 0; display: none; align-items: center; justify-content: flex-start;
              gap: 12px; margin: 0 -16px; padding: 11px 16px; background: var(--card);
              border-top: 1px solid var(--rule); z-index: 6; }
@@ -2079,7 +2086,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v700</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v701</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9282,7 +9289,7 @@ let DOCPREVIEW = false;
 let SHOPTAB = 'list';
 let HASDOCS = true;
 
-function prodPage() { const p = PROD[CUR]; CMP_STEP = 1; CMP_DATA = {}; Object.assign(CH, CH_INIT); CH_STEP = 0; Object.assign(CN, CN_INIT); CN_STEP = 0; Object.assign(CC, CC_INIT); CC_STEP = 0; return `<div class="pad">
+function prodPage() { const p = PROD[CUR]; CMP_STEP = 1; CMP_DATA = {}; Object.assign(CH, CH_INIT); CH_STEP = 0; Object.assign(CN, CN_INIT); CN_STEP = 0; ccReset(); CC_STEP = 0; return `<div class="pad">
   <div class="dochead" data-go="${p.back || 'shop'}"><span>&lsaquo;</span><div>Назад · ${TITLES[p.back] || 'Разборы'}</div></div>
   <div class="d-crumb">${p.crumb}</div>
   <h2 class="t-title" style="font-size:21px">${p.t.replace(' · ', '<br>')}</h2>
@@ -9576,14 +9583,20 @@ function childCheckData(p) {
   const n = CC_STEP;
   let body, btn;
   if (n === 0) {
+    const rows = CC.names.map((v, i) => {
+      const del = CC.names.length > 1 ? `<span class="w-del" data-ccdel="${i}">✕</span>` : '';
+      return `<div class="w-row"><div class="w-field${v ? ' filled' : ''}" data-ccfill data-ccidx="${i}" data-ph="Имя ${i + 1}">${v || 'Имя ' + (i + 1)}</div>${del}</div>`;
+    }).join('');
+    const add = CC.names.length < 5 ? `<div class="w-add" data-ccadd>+ добавить имя</div>` : '';
+    const ready = CC.names.some(x => x.trim());
     body = `<h2 class="t-title" style="font-size:20px;margin-top:16px">Имена для проверки</h2>
+  <p class="obhint" style="margin:8px 0 0">До 5 имён, которые вы рассматриваете для ребёнка.</p>
   <div class="fields" style="margin-top:16px;display:flex;flex-direction:column;gap:14px">
-    <div><div class="w-label">До 5 имён</div>${cell('names', 'Например: Мария · Ева · Анна')}
-      <p class="obhint" style="margin:5px 0 0">Через пробел или запятую.</p></div>
+    <div style="display:flex;flex-direction:column;gap:10px">${rows}${add}</div>
     <div><div class="w-label">Отчество</div>${cell('pat', 'Отчество')}</div>
     <div><div class="w-label">Фамилия</div>${cell('fam', 'Фамилия')}</div>
   </div>`;
-    btn = `<div class="w-btn${CC.names ? '' : ' off'}" id="ccNext" data-ccstep="1" style="margin-top:18px">Дальше</div>`;
+    btn = `<div class="w-btn${ready ? '' : ' off'}" id="ccNext" data-ccstep="1" style="margin-top:18px">Дальше</div>`;
   } else {
     body = `<h2 class="t-title" style="font-size:20px;margin-top:16px">Дата рождения</h2>
   <div class="hm3" style="margin-top:16px">${cell('d', '—')}${cell('m', '—')}${cell('y', '—')}</div>
@@ -12266,11 +12279,12 @@ const CN_STEPS = [['Данные', ''], ['Дата', 'рождения']];
 let CN_STEP = 0;
 
 /* форма проверки имён: те же два этапа, но имена приносит пользователь */
-const CC = { names: '', pat: '', fam: '', d: '', m: '', y: '' };
-const CC_INIT = { ...CC };
-const CC_DEF = { names: 'Мария · Ева · Анна', pat: 'Дмитриевна', fam: 'Тыщенко', d: '9', m: 'мая', y: '2019' };
-const CC_STEPS = [['Данные', ''], ['Дата', 'рождения']];
+const CC = { names: [''], pat: '', fam: '', d: '', m: '', y: '' };
+const CC_REST = { pat: '', fam: '', d: '', m: '', y: '' };
+const CC_DEF = { names: ['Мария', 'Ева', 'Анна', 'София', 'Дарья'], pat: 'Дмитриевна', fam: 'Тыщенко', d: '9', m: 'мая', y: '2019' };
+const CC_STEPS = [['Имена', ''], ['Дата', 'рождения']];
 let CC_STEP = 0;
+function ccReset() { Object.assign(CC, CC_REST); CC.names = ['']; }
 
 const obDateFull = () => !!(OB.d && OB.m && OB.y);
 const obTimeFull = () => OB.h !== '' && OB.i !== '';
@@ -12414,14 +12428,22 @@ view.addEventListener('click', e => {
   if (cur !== 'prodData' || CUR !== 'childCheck') return;
   const st = e.target.closest('[data-ccstep]');
   if (st) { if (st.classList.contains('off')) return; CC_STEP = +st.dataset.ccstep; render('prodData', false); return; }
+  const del = e.target.closest('[data-ccdel]');
+  if (del) { CC.names.splice(+del.dataset.ccdel, 1); if (!CC.names.length) CC.names = ['']; render('prodData', false); return; }
+  const add = e.target.closest('[data-ccadd]');
+  if (add) { if (CC.names.length < 5) CC.names.push(''); render('prodData', false); return; }
   const fl = e.target.closest('[data-ccfill]');
   if (fl) {
+    if ('ccidx' in fl.dataset) {
+      const i = +fl.dataset.ccidx;
+      CC.names[i] = CC.names[i] ? '' : (CC_DEF.names[i] || CC_DEF.names[i % CC_DEF.names.length]);
+      render('prodData', false);
+      return;
+    }
     const key = fl.dataset.cckey;
     CC[key] = CC[key] ? '' : (CC_DEF[key] || '');
     fl.classList.toggle('filled', !!CC[key]);
     fl.textContent = CC[key] || fl.dataset.ph || '';
-    const go = document.getElementById('ccNext');
-    if (go && CC_STEP === 0) go.classList.toggle('off', !CC.names);
     return;
   }
 });
@@ -13082,7 +13104,7 @@ function regGo(n) {
      Данные приводим в исходное, чтобы экран каталога был предсказуемым. */
   if ('chstep' in st) { Object.assign(CH, CH_INIT); CH_STEP = st.chstep; }
   if ('cnstep' in st) { Object.assign(CN, CN_INIT); CN_STEP = st.cnstep; }
-  if ('ccstep' in st) { Object.assign(CC, CC_INIT); CC_STEP = st.ccstep; }
+  if ('ccstep' in st) { ccReset(); CC_STEP = st.ccstep; }
   NAME_FULL = !('nofio' in st);
   /* контур имени открывается в заданной фазе: с данными (ready) или пустым (empty) */
   if ('nofio' in st) NAME_PHASE = st.nameready ? 'ready' : 'empty';
