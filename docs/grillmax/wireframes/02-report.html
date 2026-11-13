@@ -2079,7 +2079,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v695</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v696</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9655,7 +9655,7 @@ function prodDepth() { const p = PROD[CUR];
       const place = src.addr ? `${src.city ? src.city + ', ' : ''}${src.addr}` : (src.city || 'место не указано');
       rows = `<div><u>Полное имя</u><b>${fio}</b></div><div><u>Дата рождения</u><b>${date}, ${time}</b></div><div><u>Место рождения</u><b>${place}</b></div>`;
     } else if (has) {
-      rows = `<div class="ml"><u>Данные для расчёта</u><b>${p.fields.filter(([l, v]) => v).map(([l, v]) => `${l}: ${v}`).join('<br>')}</b></div>`;
+      rows = p.fields.filter(([l, v]) => v).map(([l, v]) => `<div><u>${l}</u><b>${v}</b></div>`).join('');
     } else {
       const fio = [OB.name, OB.pat, OB.fam].filter(Boolean).join(' ') || 'Антон Юрьевич Тыщенко';
       const date = obDateFull() ? `${OB.d} ${OB.m} ${OB.y}` : '4 февраля 1984';
@@ -9671,6 +9671,7 @@ function prodDepth() { const p = PROD[CUR];
 
   <div class="sumcard" style="margin-top:14px">
     <div><u>Разбор</u><b>${p.t}</b></div>
+    <div style="border-top:1px solid var(--rule)"></div>
     ${rows}
   </div>
 
