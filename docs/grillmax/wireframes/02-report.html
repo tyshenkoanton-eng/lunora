@@ -2086,7 +2086,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v707</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v708</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -7239,9 +7239,9 @@ function buildShop() { return `<div class="pad">
         <div><h3>Ребёнок</h3><ul><li>Полный разбор личности</li><li>Подбор имени</li><li>Проверка имён</li></ul></div>
         <div class="chev">›</div>
       </div>
-      <div class="shopcat" data-go="shopDate">
+      <div class="shopcat" data-prod="date">
         <svg class="ci" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.35"><rect x="3.3" y="4.5" width="13.4" height="12.2" rx="2"/><path d="M3.3 8h13.4M7 4.5V2.7M13 4.5V2.7"/></svg>
-        <div><h3>Разбор даты</h3><ul><li>Выбрать день для события</li><li>Проверить назначенную дату</li></ul></div>
+        <div><h3>Выбор лучшего дня</h3><ul><li>Лучший день периода для события</li><li>Назначенную дату проверим в чате</li></ul></div>
         <div class="chev">›</div>
       </div>
     </div>
@@ -7371,18 +7371,6 @@ S.shopYear = `<div class="pad">
   </div>
 
   
-</div>`;
-
-S.shopDate = `<div class="pad">
-  <div class="dochead" data-go="shop"><span>&lsaquo;</span><div>Назад \u00b7 Разборы</div></div>
-  <h2 class="t-title" style="font-size:21px">Разбор даты</h2>
-  <p class="d-lede">Не все дни одинаково подходят для важных дел. По вашей натальной карте мы найдём подходящий период или проверим дату, которая уже назначена.</p>
-
-  <div class="sec-label">С чего начнём?</div>
-  <div class="cards">
-    <div class="card-it" data-prod="date"><div><div class="t">Выбрать лучший день</div><span class="s">Укажите повод и период, в который планируете событие, а мы подскажем самые благоприятные дни</span></div><div class="chev">\u203a</div></div>
-    <div class="card-it" data-go="chatList"><div><div class="t">Проверить назначенную дату</div><span class="s">Если день уже назначен, спросите в чате: Лунора разберёт его по вашей карте и подскажет, что учесть заранее</span></div><div class="chev">\u203a</div></div>
-  </div>
 </div>`;
 
 S.shopGift = `<div class="pad">
@@ -9225,7 +9213,7 @@ const PROD = {
     res:'Разбор личности', resPhrase:'Ваша карта по четырём школам — сорок страниц.',
     file:{ name:'Разбор личности.pdf', size:'6,4 МБ', pages: DOC_PAGES_TXT }
   },
-  date: { back:'shopDate', chatCheck:1,
+  date: { back:'shop', chatCheck:1,
     t:'Выбор лучшего дня', price:'390 ₽', crumb:'Разборы',
     lead:'Выберите лучший день для важного события. Укажите повод и период, а мы сравним дни по вашей карте и назовём те, что подходят вам больше всего.',
     sell:[
@@ -9990,7 +9978,7 @@ const TITLES = {
   welcome:'Приглашение',
   s1:'Лунора', s2:'Лунора', s3:'Лунора', s4:'Лунора', s5:'Лунора',
   obStart:'Лунора', obName:'Знакомство', obPlace:'Место рождения', obDate:'Дата рождения', obConsent:'Согласие', obCalc:'Проверьте данные', obRun:'Расчёт',
-  today:'Сегодня', personCalc:'Расчёт прогноза', profile:'Ваш профиль', shop:'Разборы', monthPick:'Выбрать месяц', shopTalk:'Разговор', shopMe:'Обо мне', shopChild:'Ребёнок', shopYear:'Прогноз на год', shopDate:'Разбор даты', shopGift:'Подарить', giftCard:'Сертификат', giftUsed:'Сертификат', giftRefund:'Возврат', compat:'Совместимость', persData:'Личные данные', settings:'Настройки', delPerson:'Человек', slotPick:'Добавить в ленту', delPersonConfirm:'Удаление', delAll:'Удаление', tLove:'Отношения и любовь', tPeriod:'Периоды жизни', tCrisis:'Кризисы и переломы', payConfirm:'Подтверждение', payGate:'Оплата', payOk:'Оплата подтверждена', payWait:'Проверяем оплату', docBuild:'Сборка документа', payErr:'Оплата не прошла', pw0:'Планета', pw1:'Планета', pw2:'Планета', pw3:'Планета', pw4:'Планета', pw5:'Планета', pw6:'Планета', pw7:'Планета', pw8:'Планета', pw9:'Планета', calcWest:'Данные расчёта', calcVedic:'Данные расчёта', calcBazi:'Данные расчёта', calcNum:'Данные расчёта', docView:'Просмотр документа', 'sec-b-prac':'Раздел', 'sec-w-time':'Раздел', 'sec-v-dashas':'Раздел', 'sec-b-luck':'Раздел', 'help-calc':'Расчёты и разборы', 'help-pay':'Платежи', 'help-data':'Мои данные', 'help-chat':'Чат и лента', 'help-invite':'Приглашения и бонусы', idea:'У меня идея', docs:'Документы', myPeople:'Добавленные люди', 'doc-consent':'Согласие на ПД', 'doc-consentNew':'Согласие на ПД', 'doc-policy':'Политика ПД', 'doc-terms':'Соглашение', 'doc-offer':'Оферта', invite:'Реферальная программа', memory:'Память', answerTone:'Тон ответов', confirmRecalc:'Сохранить изменения', recalcRun:'Пересчёт', recalcDone:'Пересчитано', personRecalcDone:'Пересчитали', support:'Поддержка', tPurpose:'Путь и предназначение', tMoney:'Деньги и достаток', tEnergy:'Энергия и здоровье', tFamily:'Семья и род', tTalent:'Таланты и способности', addPerson:'Добавление человека', feedTime:'Ежедневный прогноз', pdfSell:'Разбор в одном файле', states:'Состояния экранов', stWebhook:'Платёж обрабатывается', stDouble:'Двойная оплата', stPartial:'Неполные данные', stTime:'Время неизвестно', stLat:'Высокие широты', numCycles:'Вершины и вызовы', numSynth:'Дата и имя вместе', prodPage:'Продукт', prodData:'Данные', prodDepth:'Расчёт', prodPay:'Оплата', prodBuild:'Сборка', prodResult:'Разбор', chatList:'Чаты', chat:'Диалог', chatNew:'Диалог', chatPaywall:'Диалог', tCharacter:'Характер', tMind:'Мышление и решения', tWork:'Работа и карьера',
+  today:'Сегодня', personCalc:'Расчёт прогноза', profile:'Ваш профиль', shop:'Разборы', monthPick:'Выбрать месяц', shopTalk:'Разговор', shopMe:'Обо мне', shopChild:'Ребёнок', shopYear:'Прогноз на год', shopGift:'Подарить', giftCard:'Сертификат', giftUsed:'Сертификат', giftRefund:'Возврат', compat:'Совместимость', persData:'Личные данные', settings:'Настройки', delPerson:'Человек', slotPick:'Добавить в ленту', delPersonConfirm:'Удаление', delAll:'Удаление', tLove:'Отношения и любовь', tPeriod:'Периоды жизни', tCrisis:'Кризисы и переломы', payConfirm:'Подтверждение', payGate:'Оплата', payOk:'Оплата подтверждена', payWait:'Проверяем оплату', docBuild:'Сборка документа', payErr:'Оплата не прошла', pw0:'Планета', pw1:'Планета', pw2:'Планета', pw3:'Планета', pw4:'Планета', pw5:'Планета', pw6:'Планета', pw7:'Планета', pw8:'Планета', pw9:'Планета', calcWest:'Данные расчёта', calcVedic:'Данные расчёта', calcBazi:'Данные расчёта', calcNum:'Данные расчёта', docView:'Просмотр документа', 'sec-b-prac':'Раздел', 'sec-w-time':'Раздел', 'sec-v-dashas':'Раздел', 'sec-b-luck':'Раздел', 'help-calc':'Расчёты и разборы', 'help-pay':'Платежи', 'help-data':'Мои данные', 'help-chat':'Чат и лента', 'help-invite':'Приглашения и бонусы', idea:'У меня идея', docs:'Документы', myPeople:'Добавленные люди', 'doc-consent':'Согласие на ПД', 'doc-consentNew':'Согласие на ПД', 'doc-policy':'Политика ПД', 'doc-terms':'Соглашение', 'doc-offer':'Оферта', invite:'Реферальная программа', memory:'Память', answerTone:'Тон ответов', confirmRecalc:'Сохранить изменения', recalcRun:'Пересчёт', recalcDone:'Пересчитано', personRecalcDone:'Пересчитали', support:'Поддержка', tPurpose:'Путь и предназначение', tMoney:'Деньги и достаток', tEnergy:'Энергия и здоровье', tFamily:'Семья и род', tTalent:'Таланты и способности', addPerson:'Добавление человека', feedTime:'Ежедневный прогноз', pdfSell:'Разбор в одном файле', states:'Состояния экранов', stWebhook:'Платёж обрабатывается', stDouble:'Двойная оплата', stPartial:'Неполные данные', stTime:'Время неизвестно', stLat:'Высокие широты', numCycles:'Вершины и вызовы', numSynth:'Дата и имя вместе', prodPage:'Продукт', prodData:'Данные', prodDepth:'Расчёт', prodPay:'Оплата', prodBuild:'Сборка', prodResult:'Разбор', chatList:'Чаты', chat:'Диалог', chatNew:'Диалог', chatPaywall:'Диалог', tCharacter:'Характер', tMind:'Мышление и решения', tWork:'Работа и карьера',
   dWest:'Западная астрология', dVedic:'Ведическая астрология', dBazi:'Ба-Цзы', dNum:'Нумерология',
   schWest:'Западная астрология', schVedic:'Ведическая астрология', schBazi:'Ба-Цзы', schNum:'Нумерология',
   'vz-Водолей':'Луна в Водолее', 'vz-Козерог':'Солнце в Козероге', 'vz-Весы':'Марс и Сатурн в Весах', 'vz-Близнецы':'Восходящий знак', 'vz-Телец':'Раху в Тельце', 'vz-Скорпион':'Кету в Скорпионе', 'vz-Стрелец':'Меркурий, Юпитер и Венера'
