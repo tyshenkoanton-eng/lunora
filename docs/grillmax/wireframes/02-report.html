@@ -2086,7 +2086,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v701</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v702</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9583,9 +9583,11 @@ function childCheckData(p) {
   const n = CC_STEP;
   let body, btn;
   if (n === 0) {
+    const ord = ['первое', 'второе', 'третье', 'четвёртое', 'пятое'];
     const rows = CC.names.map((v, i) => {
+      const ph = `Введите ${ord[i] || (i + 1) + '-е'} имя`;
       const del = CC.names.length > 1 ? `<span class="w-del" data-ccdel="${i}">✕</span>` : '';
-      return `<div class="w-row"><div class="w-field${v ? ' filled' : ''}" data-ccfill data-ccidx="${i}" data-ph="Имя ${i + 1}">${v || 'Имя ' + (i + 1)}</div>${del}</div>`;
+      return `<div class="w-row"><div class="w-field${v ? ' filled' : ''}" data-ccfill data-ccidx="${i}" data-ph="${ph}">${v || ph}</div>${del}</div>`;
     }).join('');
     const add = CC.names.length < 5 ? `<div class="w-add" data-ccadd>+ добавить имя</div>` : '';
     const ready = CC.names.some(x => x.trim());
