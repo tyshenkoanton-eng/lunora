@@ -2104,7 +2104,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v731</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v732</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -7306,7 +7306,7 @@ function buildShop() { return `<div class="pad">
 
     <div class="sec-label">Разбор даты</div>
     <div class="cards">
-      <div class="doc" data-res="date"><b>Переговоры по сделке${docDot('date')}</b><span>Лучший день · 10 декабря 2026</span></div>
+      <div class="doc" data-res="date"><b>Выбор лучшего дня${docDot('date')}</b><span>Переговоры по сделке · 10 декабря 2026</span></div>
     </div>
     <!-- HIDDEN: подарки отложены --></div>
     ` : `
@@ -9246,7 +9246,7 @@ const PROD = {
     fields:[['Событие','',1],['Временной период','',1]],
     depth:'67%', depthNote:'Считаем по данным профиля.',
     build:['Взяла вашу карту','Посчитала транзиты на каждый день','Проверила дневные столпы Ба-Цзы','Посчитала личные дни','Сравниваю дни между собой','Пишу разбор'],
-    doc:`<div class="sumcard" style="margin:4px 0 18px"><div><u>Период</u><b>1–31 декабря 2026</b></div><div><u>Город</u><b>Москва</b></div></div>
+    doc:`<div class="sumcard" style="margin:4px 0 18px"><div><u>Название</u><b>Переговоры по сделке</b></div><div><u>Описание</u><b style="font-weight:500">Важно отстоять цену, не поссориться со второй стороной.</b></div><div><u>Город</u><b>Москва</b></div><div><u>Период</u><b>1–31 декабря 2026</b></div></div>
 <div class="luna-block"><div class="lab">Коротко</div><p>Из 31 дня подходят четыре. Лучший день четверг, 10 декабря, окно 10:30–13:00.</p><p>Три дня из четырёх лежат в первой половине месяца. После 20 декабря хорошего дня для переговоров нет. Если встречу нельзя назначить раньше, смотрите 10 и 17 декабря: у них общий фон лучше остальных.</p></div>
 <div class="sec-label">Лучшие дни</div>
 <div class="luna-block"><div class="lab">10 декабря, четверг · окно 10:30–13:00</div><p><b>Общий фон:</b> Луна в знаке Весов и в хорошем аспекте к Меркурию. День хорош для разговоров и договорённостей. Это одинаково для всех.</p><p><b>Ведическая:</b> накшатра дня считается удачной для договоров, тити благоприятная.</p><p><b>Ба-Цзы:</b> ветвь дня не конфликтует с вашими четырьмя столпами.</p><p><b>Нумерология:</b> личный день 2. В русских источниках двойка связана с договорённостями и партнёрством.</p><p><b>Лично по карте:</b> Луна в доме партнёров в вашей карте. Это единственный личный довод, но он совпадает с остальными.</p><p><b>Обратите внимание:</b> после 14:00 Луна входит в напряжённый аспект с Марсом, вторую половину дня лучше не брать.</p></div>
@@ -9264,7 +9264,7 @@ const PROD = {
 <div class="body-text"><p>Не обещает успех сделки. Условия дня зависят от общих и личных факторов, а результат зависит ещё от вас и от второй стороны. Время рождения нужно точное: без него часть личных доводов считается приблизительно.</p></div>
 <div class="calc-h">Как это посчитано</div>
 <div class="calc"><div class="pr"><u>Западная</u><span>Транзиты к натальной карте на каждый день. Отдельные дни различают Луна и быстрые планеты, медленные дают фон на недели.</span></div><div class="pr"><u>Ведическая</u><span>Панчанга (тити, накшатра, йога) на каждый день, плюс личные Тара-бала и Чандра-бала.</span></div><div class="pr"><u>Ба-Цзы</u><span>Столп дня и его отношение к вашим четырём столпам.</span></div><div class="pr"><u>Нумерология</u><span>Личный день по вашей дате. Для переговоров ближе всего числа 2 и 6.</span></div><div class="pr"><u>Событие</u><span>Переговоры по сделке. От него зависит, какие показатели считаются главными.</span></div></div>`,
-    res:'Переговоры по сделке', resPhrase:''
+    res:'Выбор лучшего дня', resPhrase:''
   },
 
   giftPerson: {
