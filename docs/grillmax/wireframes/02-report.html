@@ -2104,7 +2104,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v721</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v722</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9509,20 +9509,21 @@ function prodData() { const p = PROD[CUR]; const has = p.fields.length;
 const _dtNow = new Date();
 const DATE_TODAY = { d: _dtNow.getDate(), m: _dtNow.getMonth() + 1, y: _dtNow.getFullYear() };  /* реальное сегодня */
 function addDays(o, n) { const dt = new Date(o.y, o.m - 1, o.d + n); return { d: dt.getDate(), m: dt.getMonth() + 1, y: dt.getFullYear() }; }
-const DATE_EVT = { text: '' };
+const DATE_NAME = { text: '' };                  /* название события (вводит пользователь) */
+const DATE_EVT = { text: '' };                   /* описание события */
 let DATE_FROM = null, DATE_TO = null;            /* {d,m,y} */
-const DATE_UND = { title: '', matter: '' };
 const DATE_LIMIT = 300;
+const DATE_NAME_LIMIT = 80;
 const DATE_SPAN = 30;            /* макс. окно: конец не дальше начала + 30 дней (до 31 дня) */
 const DATE_DEFAULT_SPAN = 14;    /* конец подставляется на +2 недели от начала */
 const RU_MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
 const RU_MON_GEN = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 let DP_TARGET = 'from', DP_Y = DATE_TODAY.y, DP_M = DATE_TODAY.m, DP_SEL = null;
-function dateReset() { DATE_EVT.text = ''; DATE_FROM = null; DATE_TO = null; DATE_UND.title = ''; DATE_UND.matter = ''; }
+function dateReset() { DATE_NAME.text = ''; DATE_EVT.text = ''; DATE_FROM = null; DATE_TO = null; }
 function daysInMonth(y, m) { return new Date(y, m, 0).getDate(); }
 function fmtDate(o) { return o ? String(o.d).padStart(2, '0') + '.' + String(o.m).padStart(2, '0') + '.' + o.y : ''; }
 function dateNum(o) { return o.y * 10000 + o.m * 100 + o.d; }
-function dateReady() { return !!DATE_EVT.text.trim() && DATE_FROM && DATE_TO; }
+function dateReady() { return !!DATE_NAME.text.trim() && !!DATE_EVT.text.trim() && DATE_FROM && DATE_TO; }
 
 function dateData(p) {
   const n = DATE_EVT.text.length;
@@ -9535,9 +9536,13 @@ function dateData(p) {
   <h2 class="t-title" style="font-size:20px;margin-top:16px">${p.dataTitle}</h2>
   <div class="fields" style="display:flex;flex-direction:column;gap:16px;margin-top:14px">
     <div>
-      <div class="w-label">Расскажите о событии</div>
+      <div class="w-label">Название события</div>
+      <div class="w-field" contenteditable="true" data-datename data-ph="Например: переговоры по сделке" style="text-align:left;color:var(--ink)">${DATE_NAME.text}</div>
+    </div>
+    <div>
+      <div class="w-label">Описание</div>
       <p class="obhint" style="margin:5px 0 8px">Кратко опишите, в чём состоит ваше событие и что важно учесть.</p>
-      <div class="w-field" contenteditable="true" data-dateevt data-ph="Например: переговоры по сделке, важно отстоять цену" style="min-height:92px;text-align:left;color:var(--ink)">${DATE_EVT.text}</div>
+      <div class="w-field" contenteditable="true" data-dateevt data-ph="Например: встреча с инвестором, важно отстоять условия" style="min-height:92px;text-align:left;color:var(--ink)">${DATE_EVT.text}</div>
       <div style="text-align:right;margin-top:5px"><span class="obhint" id="dateCount" style="margin:0;white-space:nowrap">${n}/${DATE_LIMIT}</span></div>
     </div>
     <div>
@@ -9558,24 +9563,20 @@ function dateDepth(p) {
   PAYKIND = 'prod';
   const from = DATE_FROM || { ...DATE_TODAY };
   const to = DATE_TO || addDays(from, DATE_DEFAULT_SPAN);
-  const txt = DATE_EVT.text.trim() || 'Переговоры по сделке, важно отстоять цену';
-  if (!DATE_UND.title) {
-    const parts = txt.split(',');
-    DATE_UND.title = parts[0].trim();
-    DATE_UND.matter = parts.slice(1).join(',').trim();
-  }
+  const title = DATE_NAME.text.trim() || 'Переговоры по сделке';
+  const descr = DATE_EVT.text.trim() || 'Важно отстоять цену, не поссориться со второй стороной.';
   const period = `${from.d} ${RU_MON_GEN[from.m - 1]} ${from.y} — ${to.d} ${RU_MON_GEN[to.m - 1]} ${to.y}`;
   return `<div class="pad">
   <div class="dochead" data-go="prodData"><span>&lsaquo;</span><div>Назад</div></div>
   <h2 class="t-title" style="font-size:21px">Проверьте данные</h2>
-  <p class="d-lede" style="border:none;padding-bottom:0;margin-bottom:10px">Вот как мы поняли ваше событие. Поправьте, если не так.</p>
+  <p class="d-lede" style="border:none;padding-bottom:0;margin-bottom:10px">Проверьте, всё ли верно. Если нет — поправьте.</p>
   <div class="sumcard" style="margin-top:4px">
-    <div><u>Событие <span style="color:var(--ink-faint);font-weight:400;text-transform:none;letter-spacing:0">· можно поправить</span></u><b contenteditable="true" data-dundtitle style="border-bottom:1px dashed var(--rule)">${DATE_UND.title}</b></div>
-    ${DATE_UND.matter ? `<div><u>Что важно</u><b>${DATE_UND.matter}</b></div>` : ''}
+    <div><u>Название <span style="color:var(--ink-faint);font-weight:400;text-transform:none;letter-spacing:0">· можно поправить</span></u><b contenteditable="true" data-dundtitle style="border-bottom:1px dashed var(--rule)">${title}</b></div>
+    <div><u>Описание</u><b style="font-weight:500">${descr}</b></div>
     <div style="border-top:1px solid var(--rule)"></div>
     <div><u>Период</u><b>${period}</b></div>
   </div>
-  <p class="obhint" style="margin:10px 0 0">Суть события вытащила Лунора из вашего описания. Название правится прямо здесь. Описание и период меняются на шаге ввода.</p>
+  <p class="obhint" style="margin:10px 0 0">Название правится прямо здесь. Описание и период меняются на шаге ввода — по описанию Лунора подберёт самые подходящие дни.</p>
   <div class="w-btn ghost" data-go="prodData" style="margin-top:12px">Изменить описание или период</div>
   <div class="body-text" style="margin-top:16px"><p>Разбор начнёт собираться сразу после оплаты и появится в разделе «Мои разборы».</p></div>
   <div class="docfoot boxed" style="margin-top:18px">
@@ -11680,6 +11681,17 @@ document.getElementById('balsw').addEventListener('click', e => {
 view.addEventListener('input', e => {
   const ta = e.target.closest('.cfield');
   if (ta && ta.tagName === 'TEXTAREA') chatComposerUpdate(ta);
+  /* название события: лимит, пересчёт кнопки «Далее» */
+  const nm = e.target.closest('[data-datename]');
+  if (nm) {
+    let t = nm.textContent;
+    if (t.length > DATE_NAME_LIMIT) { t = t.slice(0, DATE_NAME_LIMIT); nm.textContent = t;
+      const r = document.createRange(); r.selectNodeContents(nm); r.collapse(false);
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+    DATE_NAME.text = t;
+    const go = document.getElementById('dateGo'); if (go) go.classList.toggle('off', !dateReady());
+    return;
+  }
   /* описание события: лимит, счётчик, пересчёт кнопки «Далее» */
   const ev = e.target.closest('[data-dateevt]');
   if (ev) {
@@ -11692,9 +11704,9 @@ view.addEventListener('input', e => {
     const go = document.getElementById('dateGo'); if (go) go.classList.toggle('off', !dateReady());
     return;
   }
-  /* правка названия события на подтверждении */
+  /* правка названия на подтверждении */
   const un = e.target.closest('[data-dundtitle]');
-  if (un) { DATE_UND.title = un.textContent.trim(); return; }
+  if (un) { DATE_NAME.text = un.textContent.trim(); return; }
 });
 
 view.addEventListener('click', e => {
@@ -11706,9 +11718,15 @@ view.addEventListener('click', e => {
 /* тестовый шорткат: правый клик по полям формы даты подставляет демо-значения */
 view.addEventListener('contextmenu', e => {
   if (cur !== 'prodData' || CUR !== 'date') return;
+  if (e.target.closest('[data-datename]')) {
+    e.preventDefault();
+    DATE_NAME.text = 'Переговоры по сделке';
+    render('prodData', false); return;
+  }
   if (e.target.closest('[data-dateevt]')) {
     e.preventDefault();
-    DATE_EVT.text = 'Переговоры по сделке, важно отстоять цену';
+    DATE_NAME.text = DATE_NAME.text || 'Переговоры по сделке';
+    DATE_EVT.text = 'Важно отстоять цену, не поссориться со второй стороной.';
     render('prodData', false); return;
   }
   const dp = e.target.closest('[data-dp]');
