@@ -2103,7 +2103,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v715</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v716</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -11676,6 +11676,23 @@ view.addEventListener('click', e => {
   /* поля периода открывают шторку выбора даты */
   const dp = e.target.closest('[data-dp]');
   if (dp && cur === 'prodData' && CUR === 'date') { openDatePicker(dp.dataset.dp); return; }
+});
+
+/* тестовый шорткат: правый клик по полям формы даты подставляет демо-значения */
+view.addEventListener('contextmenu', e => {
+  if (cur !== 'prodData' || CUR !== 'date') return;
+  if (e.target.closest('[data-dateevt]')) {
+    e.preventDefault();
+    DATE_EVT.text = 'Переговоры по сделке, важно отстоять цену';
+    render('prodData', false); return;
+  }
+  const dp = e.target.closest('[data-dp]');
+  if (dp) {
+    e.preventDefault();
+    if (dp.dataset.dp === 'from') { DATE_FROM = { d: 1, m: 9, y: 2026 }; if (DATE_TO && dateNum(DATE_TO) < dateNum(DATE_FROM)) DATE_TO = null; }
+    else { if (!DATE_FROM) DATE_FROM = { d: 1, m: 9, y: 2026 }; DATE_TO = { d: 30, m: 9, y: 2026 }; }
+    render('prodData', false); return;
+  }
 });
 
 /* шторка выбора даты: год и месяц шевронами, выбор числа, «Готово» фиксирует */
