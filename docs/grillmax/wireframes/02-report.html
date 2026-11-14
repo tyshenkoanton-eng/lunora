@@ -2104,7 +2104,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v722</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v723</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9571,13 +9571,12 @@ function dateDepth(p) {
   <h2 class="t-title" style="font-size:21px">Проверьте данные</h2>
   <p class="d-lede" style="border:none;padding-bottom:0;margin-bottom:10px">Проверьте, всё ли верно. Если нет — поправьте.</p>
   <div class="sumcard" style="margin-top:4px">
-    <div><u>Название <span style="color:var(--ink-faint);font-weight:400;text-transform:none;letter-spacing:0">· можно поправить</span></u><b contenteditable="true" data-dundtitle style="border-bottom:1px dashed var(--rule)">${title}</b></div>
+    <div><u>Название</u><b>${title}</b></div>
     <div><u>Описание</u><b style="font-weight:500">${descr}</b></div>
     <div style="border-top:1px solid var(--rule)"></div>
     <div><u>Период</u><b>${period}</b></div>
   </div>
-  <p class="obhint" style="margin:10px 0 0">Название правится прямо здесь. Описание и период меняются на шаге ввода — по описанию Лунора подберёт самые подходящие дни.</p>
-  <div class="w-btn ghost" data-go="prodData" style="margin-top:12px">Изменить описание или период</div>
+  <div class="w-btn ghost" data-go="prodData" style="margin-top:14px">Изменить данные</div>
   <div class="body-text" style="margin-top:16px"><p>Разбор начнёт собираться сразу после оплаты и появится в разделе «Мои разборы».</p></div>
   <div class="docfoot boxed" style="margin-top:18px">
     <p class="payterms">Оплачивая, вы принимаете <u data-go="doc-offer">оферту</u>.</p>
@@ -11704,9 +11703,6 @@ view.addEventListener('input', e => {
     const go = document.getElementById('dateGo'); if (go) go.classList.toggle('off', !dateReady());
     return;
   }
-  /* правка названия на подтверждении */
-  const un = e.target.closest('[data-dundtitle]');
-  if (un) { DATE_NAME.text = un.textContent.trim(); return; }
 });
 
 view.addEventListener('click', e => {
