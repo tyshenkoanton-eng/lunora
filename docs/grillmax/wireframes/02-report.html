@@ -2086,7 +2086,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v711</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v712</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -3734,6 +3734,7 @@ function childCalc() {
   <p class="d-lede">Положения и настройки, по которым собран разбор вашего ребёнка. Это арифметика карты, тексты по темам опираются на неё.</p>
   <div class="sumcard" style="margin:4px 0 16px"><div><u>Имя ребёнка</u><b>Софья Дмитриевна Тыщенко</b></div><div><u>Дата рождения</u><b>9 мая 2019, 06:40</b></div><div><u>Место рождения</u><b>Волгоград</b></div><div><u>Время рождения</u><b>06:40, UTC+4 · историческая зона Волгограда в 2019</b></div></div>
   <div class="calc"><div class="pr"><u>Западная</u><span>Натальная карта: Солнце в Тельце 18°, Луна в Раке 10°, асцендент в Близнецах 10°, планеты, возрастные ритмы</span></div><div class="pr"><u>Ведическая</u><span>Раши-чарта: лагна Телец 16°, Луна в Близнецах 16°, накшатра Ардра (пада 3), текущий период Юпитера</span></div><div class="pr"><u>Ба-Цзы</u><span>Четыре столпа 己亥 己巳 丙午 辛卯, господин дня Бин (Ян-Огонь), огонь 3 знака из 8</span></div><div class="pr"><u>Нумерология</u><span>Квадрат Пифагора по дате рождения: 8 три раза, 9 дважды, нет 3, 4, 7</span></div><div class="pr"><u>Точность</u><span>Полная: дата, время и место рождения известны</span></div></div>
+  <div class="docfoot boxed"><div class="w-btn ghost" data-share="prodResult">${ICO.share}Поделиться разбором</div></div>
 </div>`;
 }
 Object.defineProperty(S, 'childCalc', { get: childCalc });
@@ -9223,6 +9224,7 @@ const PROD = {
       ['Что пропустить','Дни, на которые лучше не ставить событие, и почему.']
     ],
     needItems:['Описание события','Период, в который планируете событие'],
+    dataTitle:'Подбор лучшего дня',
     fields:[['Что за событие','Переговоры по сделке',1,'Коротко — это станет заголовком разбора'],['Промежуток','1 — 30 сентября',1]],
     depth:'67%', depthNote:'Считаем по данным профиля.',
     build:['Взяла вашу карту','Посчитала транзиты на каждый день','Проверила дневные столпы Ба-Цзы','Посчитала личные дни','Сравниваю дни между собой','Пишу разбор'],
@@ -9459,10 +9461,13 @@ function prodData() { const p = PROD[CUR]; const has = p.fields.length;
   }
   return `<div class="pad">
   <div class="dochead" data-go="prodPage"><span>&lsaquo;</span><div>Назад · ${p.t}</div></div>
-  <div class="d-crumb">${p.t} · шаг 1 из 2</div>
   <!-- экран показывается только когда есть что вводить: без полей конвейер идёт сразу на глубину -->
-  <h2 class="t-title" style="font-size:20px">${has ? 'Что нужно для расчёта' : 'Всё уже есть'}</h2>
-  ${has ? `<p class="d-lede">${p.need}</p>
+  ${has ? `<div class="stepper" style="grid-template-columns:repeat(2,1fr)">
+    <div class="now"><u>1</u><span>Ввод данных</span></div>
+    <div><i class="lin"></i><u>2</u><span>Проверка</span></div>
+  </div>` : ''}
+  <h2 class="t-title" style="font-size:20px${has ? ';margin-top:16px' : ''}">${has ? (p.dataTitle || 'Что нужно для расчёта') : 'Всё уже есть'}</h2>
+  ${has ? `${p.need ? `<p class="d-lede">${p.need}</p>` : ''}
   <div style="display:flex;flex-direction:column;gap:11px">
     ${p.fields.map(([l,v,req,hint])=>{
       if (CUR.startsWith('compat') && l==='Тип связи') {
