@@ -2086,7 +2086,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v709</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v710</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9218,12 +9218,11 @@ const PROD = {
     docPages:'Около 3 страниц в PDF: лучшие дни периода с окнами времени, таблица всех дней и как это посчитано.',
     lead:'Выберите лучший день для важного события. Укажите повод и период, а мы сравним дни по вашей карте и назовём те, что подходят вам больше всего.',
     sell:[
-      ['Лучшие дни периода','Сравним каждый день промежутка по вашей карте и назовём несколько самых подходящих, с окнами времени.'],
+      ['Лучшие дни периода','Сравним каждый день указанного периода по вашей карте и назовём несколько самых подходящих, с окнами времени.'],
       ['Почему именно они','По каждому дню коротко: что складывается в вашу пользу и для чего он годится.'],
       ['Что пропустить','Дни, на которые лучше не ставить событие, и почему.']
     ],
-    needItems:['Повод события','Период, в который планируете событие'],
-    needNote:'Данные вашей карты уже есть в профиле, вводить их заново не нужно. Повод важен: для переговоров смотрим одно, для разговора с родителями другое.',
+    needItems:['Описание события','Период, в который планируете событие'],
     fields:[['Что за событие','Переговоры по сделке',1,'Коротко — это станет заголовком разбора'],['Промежуток','1 — 30 сентября',1]],
     depth:'67%', depthNote:'Считаем по данным профиля.',
     build:['Взяла вашу карту','Посчитала транзиты на каждый день','Проверила дневные столпы Ба-Цзы','Посчитала личные дни','Сравниваю дни между собой','Пишу разбор'],
@@ -9295,7 +9294,7 @@ function prodPage() { const p = PROD[CUR]; CMP_STEP = 1; CMP_DATA = {}; Object.a
     : `<span class="pdflink" data-pdfdemo="${CUR}" style="margin-top:16px">Посмотреть пример разбора</span>`}
   <div class="w-btn" data-go="${p.fields.length ? 'prodData' : 'prodDepth'}" style="margin-top:18px">${p.cta || (p.access ? 'Купить' : 'Рассчитать')} · ${p.price}</div>
   ${p.chatCheck ? `<div class="askchat" style="margin-top:20px">
-    <b>Уже есть дата?</b>
+    <b>Уже выбрали дату?</b>
     <p>Если хотите проверить конкретный день, спросите в чате. Лунора ответит по вашей карте.</p>
     <div class="w-btn" data-go="chatList">Спросить в чате</div>
   </div>` : ''}
