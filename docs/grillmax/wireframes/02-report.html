@@ -2104,7 +2104,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v729</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v730</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9524,7 +9524,7 @@ function dateReset() { DATE_NAME.text = ''; DATE_EVT.text = ''; DATE_CITY.text =
 function daysInMonth(y, m) { return new Date(y, m, 0).getDate(); }
 function fmtDate(o) { return o ? String(o.d).padStart(2, '0') + '.' + String(o.m).padStart(2, '0') + '.' + o.y : ''; }
 function dateNum(o) { return o.y * 10000 + o.m * 100 + o.d; }
-function dateReady() { return !!DATE_NAME.text.trim() && !!DATE_EVT.text.trim() && DATE_FROM && DATE_TO; }
+function dateReady() { return !!DATE_NAME.text.trim() && !!DATE_EVT.text.trim() && !!DATE_CITY.text.trim() && DATE_FROM && DATE_TO; }
 
 function dateData(p) {
   const n = DATE_EVT.text.length;
@@ -13119,6 +13119,7 @@ view.addEventListener('input', e => {
   if (f.hasAttribute('data-datecity')) {
     DATE_CITY.text = f.textContent.trim();
     renderCitySug(f);
+    const go = document.getElementById('dateGo'); if (go) go.classList.toggle('off', !dateReady());
     return;
   }
   if (f.dataset.sug === 'addr') {
@@ -13196,7 +13197,7 @@ view.addEventListener('click', e => {
     if (f) { f.textContent = sc.dataset.city; f.classList.add('filled'); }
     box.classList.remove('show');
     /* город события на форме даты: пишем в своё состояние, без адресной связки */
-    if (f && f.hasAttribute('data-datecity')) { DATE_CITY.text = sc.dataset.city; return; }
+    if (f && f.hasAttribute('data-datecity')) { DATE_CITY.text = sc.dataset.city; const go = document.getElementById('dateGo'); if (go) go.classList.toggle('off', !dateReady()); return; }
     const pc = placeCtx();
     if (pc) { pc.d.city = sc.dataset.city; pc.paint(); }
     const er = document.getElementById('obAddrErr'); if (er) er.classList.remove('show');
