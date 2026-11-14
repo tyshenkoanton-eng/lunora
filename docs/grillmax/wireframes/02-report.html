@@ -2103,7 +2103,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v716</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v717</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9505,7 +9505,9 @@ function prodData() { const p = PROD[CUR]; const has = p.fields.length;
    Прототип не гоняет языковую модель: на подтверждении «суть» разбирается
    простым делением описания по первой запятой (название / что важно) —
    в проде это делает Лунора. */
-const DATE_TODAY = { d: 12, m: 8, y: 2026 };     /* «сегодня» прототипа (как на «Сегодня») */
+const _dtNow = new Date();
+const DATE_TODAY = { d: _dtNow.getDate(), m: _dtNow.getMonth() + 1, y: _dtNow.getFullYear() };  /* реальное сегодня */
+function addDays(o, n) { const dt = new Date(o.y, o.m - 1, o.d + n); return { d: dt.getDate(), m: dt.getMonth() + 1, y: dt.getFullYear() }; }
 const DATE_EVT = { text: '' };
 let DATE_FROM = null, DATE_TO = null;            /* {d,m,y} */
 const DATE_UND = { title: '', matter: '' };
@@ -9551,8 +9553,8 @@ function dateData(p) {
 
 function dateDepth(p) {
   PAYKIND = 'prod';
-  const from = DATE_FROM || { d: 1, m: 9, y: 2026 };
-  const to = DATE_TO || { d: 30, m: 9, y: 2026 };
+  const from = DATE_FROM || { ...DATE_TODAY };
+  const to = DATE_TO || addDays(from, 21);
   const txt = DATE_EVT.text.trim() || 'Переговоры по сделке, важно отстоять цену';
   if (!DATE_UND.title) {
     const parts = txt.split(',');
@@ -11689,8 +11691,8 @@ view.addEventListener('contextmenu', e => {
   const dp = e.target.closest('[data-dp]');
   if (dp) {
     e.preventDefault();
-    if (dp.dataset.dp === 'from') { DATE_FROM = { d: 1, m: 9, y: 2026 }; if (DATE_TO && dateNum(DATE_TO) < dateNum(DATE_FROM)) DATE_TO = null; }
-    else { if (!DATE_FROM) DATE_FROM = { d: 1, m: 9, y: 2026 }; DATE_TO = { d: 30, m: 9, y: 2026 }; }
+    if (dp.dataset.dp === 'from') { DATE_FROM = { ...DATE_TODAY }; if (DATE_TO && dateNum(DATE_TO) < dateNum(DATE_FROM)) DATE_TO = null; }
+    else { if (!DATE_FROM) DATE_FROM = { ...DATE_TODAY }; DATE_TO = addDays(DATE_FROM, 21); }
     render('prodData', false); return;
   }
 });
