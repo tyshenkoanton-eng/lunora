@@ -2104,7 +2104,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v724</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v725</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9570,9 +9570,10 @@ function dateDepth(p) {
   <div class="dochead" data-go="prodData"><span>&lsaquo;</span><div>Назад</div></div>
   <h2 class="t-title" style="font-size:21px">Проверьте данные</h2>
   <div class="sumcard" style="margin-top:14px">
+    <div><u>Разбор</u><b>${p.t}</b></div>
+    <div style="border-top:1px solid var(--rule)"></div>
     <div><u>Название</u><b>${title}</b></div>
     <div><u>Описание</u><b style="font-weight:500">${descr}</b></div>
-    <div style="border-top:1px solid var(--rule)"></div>
     <div><u>Период</u><b>${period}</b></div>
   </div>
   <div class="w-btn ghost" data-go="prodData" style="margin-top:14px">Изменить данные</div>
@@ -9848,7 +9849,10 @@ function prodDepth() { const p = PROD[CUR];
       const place = src.addr ? `${src.city ? src.city + ', ' : ''}${src.addr}` : (src.city || 'место не указано');
       rows = `<div><u>Полное имя</u><b>${fio}</b></div><div><u>Дата рождения</u><b>${date}, ${time}</b></div><div><u>Место рождения</u><b>${place}</b></div>`;
     } else if (has) {
-      rows = p.fields.filter(([l, v]) => v).map(([l, v]) => `<div><u>${l}</u><b>${v}</b></div>`).join('');
+      /* при прямом входе из каталога значений нет — показываем пример (как в совместимости) */
+      let flds = p.fields;
+      if (CUR === 'rename' && !flds.some(([l, v]) => v)) flds = [['Имя', 'Лев', 0], ['Фамилия', 'Ковалёва', 0]];
+      rows = flds.filter(([l, v]) => v).map(([l, v]) => `<div><u>${l}</u><b>${v}</b></div>`).join('');
     } else {
       const fio = [OB.name, OB.pat, OB.fam].filter(Boolean).join(' ') || 'Антон Юрьевич Тыщенко';
       const date = obDateFull() ? `${OB.d} ${OB.m} ${OB.y}` : '4 февраля 1984';
@@ -9869,6 +9873,8 @@ function prodDepth() { const p = PROD[CUR];
   </div>
 
   ${isChild ? (() => { const cp = depthPct(src); return `<div class="depth" style="cursor:default;margin-top:14px"><span>Глубина расчёта</span><div class="bar"><i style="left:0;width:${cp}%"></i></div><b>${cp}%</b><i class="dinfo" data-info="depth">i</i></div>${cp < 100 ? `<p class="obhint" style="margin:12px 0 0">Данные всегда можно дополнить, карту пересчитаем бесплатно.</p>` : ''}`; })() : ''}
+
+  ${(isChild || has) ? `<div class="w-btn ghost" data-go="prodData" style="margin-top:14px">Изменить данные</div>` : ''}
 
   <div class="body-text" style="margin-top:16px">
     <p>Разбор начнёт собираться сразу после оплаты и появится в разделе «Мои разборы».</p>
