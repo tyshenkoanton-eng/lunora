@@ -1826,6 +1826,15 @@
   .mcell.now { border-color: var(--wire-line); font-weight: 640; }
   .mcell.off { color: var(--ink-faint); opacity: .4; cursor: default; background: none; }
   .mnote { font-size: 11px; color: var(--ink-faint); line-height: 1.55; margin-top: 14px; }
+  .daygrid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-top: 2px; }
+  .dgcell { border: 1px solid transparent; border-radius: 8px; padding: 9px 0; text-align: center;
+            font-size: 13px; cursor: pointer; background: var(--card); font-variant-numeric: tabular-nums; }
+  .dgcell.now { border-color: var(--wire-line); }
+  .dgcell.sel { background: var(--note); border-color: var(--note); color: #fff; font-weight: 640; }
+  .dgcell.off { color: var(--ink-faint); opacity: .3; cursor: default; }
+  .daterange { display: flex; align-items: center; gap: 10px; }
+  .daterange .w-field { flex: 1; text-align: center; }
+  .daterange .drdash { color: var(--ink-faint); font-size: 15px; }
 
   .daystrip { display: flex; gap: 5px; overflow-x: auto; padding: 12px 16px 10px; margin: 0 -16px; border-bottom: 1px solid var(--rule-soft); }
   .daystrip::-webkit-scrollbar { display: none; }
@@ -2033,6 +2042,14 @@
           <div class="mgrid" id="mpGrid"></div>
           <div class="w-btn ghost" data-sheet="close" style="margin-top:14px">Отмена</div>
         </div></div>
+        <div class="sheet" id="datePick"><div class="sheet-in">
+          <div class="sheet-h" id="dpHead">Начало периода</div>
+          <div class="yearrow" id="dpYear"></div>
+          <div class="yearrow" id="dpMonth" style="margin-top:0"></div>
+          <div class="daygrid" id="dpDays"></div>
+          <div class="w-btn" id="dpDone" style="margin-top:16px">Готово</div>
+          <div class="w-btn ghost" data-sheet="close" style="margin-top:8px">Отмена</div>
+        </div></div>
         <div class="sheet" id="osShare"><div class="sheet-in">
           <div class="osfile" id="osFile"><div class="fi">PDF</div><div><b id="osName">Чек LN-8412-DK.pdf</b><span>84 КБ</span></div></div>
           <div class="osfile" id="osLink" style="display:none"><div class="fi" style="font-size:15px">↗</div><div><b id="osLinkT">Разбор</b><span id="osLinkU">lunora.ru/s/a7f3k2</span></div></div>
@@ -2086,7 +2103,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v713</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v714</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9225,7 +9242,7 @@ const PROD = {
     ],
     needItems:['Описание события','Период, в который планируете событие'],
     dataTitle:'Подбор лучшего дня',
-    fields:[['Событие','Переговоры по сделке, важно отстоять цену',1,'Одной строкой: что за событие и что в нём важно. По этому настроим разбор.'],['Промежуток','1 — 30 сентября',1]],
+    fields:[['Событие','',1],['Временной период','',1]],
     depth:'67%', depthNote:'Считаем по данным профиля.',
     build:['Взяла вашу карту','Посчитала транзиты на каждый день','Проверила дневные столпы Ба-Цзы','Посчитала личные дни','Сравниваю дни между собой','Пишу разбор'],
     doc:`<div class="luna-block"><div class="lab">Коротко</div><p>Из тридцати дней вам подходят четыре. Один-два абзаца о том, почему именно они, — и дальше разбор каждого.</p></div><div class="sec-label">Лучший день</div><div class="card-it"><div><div class="t">17 сентября, четверг</div><span class="s">Юпитер в трине к натальному Солнцу, дневной столп в гармонии с вашим, личный день 1 (старт). Всё совпадает: вы будете собранны, убедительны и способны продавить свою позицию. Лучшее окно: с 10 до 14 часов</span></div></div><div class="sec-label">Ещё три подходящих</div><div class="cards"><div class="card-it"><div><div class="t">4 сентября, пятница</div><span class="s">Венера в секстиле к Меркурию. Хорош для переговоров, где важен контакт, а не давление</span></div><div class="chev">›</div></div><div class="card-it"><div><div class="t">22 сентября, вторник</div><span class="s">Марс в секстиле к Юпитеру. Энергия для активных действий, но меньше гибкости</span></div><div class="chev">›</div></div><div class="card-it"><div><div class="t">29 сентября, вторник</div><span class="s">Солнце в соединении с Меркурием. Ясность мысли на пике, подходит для подписания</span></div><div class="chev">›</div></div></div><div class="sec-label">Дни, которые стоит пропустить</div><div class="body-text"><p><b>11 сентября:</b> Марс в квадрате к Сатурну. Сопротивление будет сильнее обычного, а терпения меньше. <b>15 сентября:</b> Луна в оппозиции к Плутону. Эмоциональный фон нестабильный, легко сорваться. <b>26 сентября:</b> Меркурий в квадрате к Нептуну. Риск недопонимания и нечётких формулировок.</p></div><div class="calc-h">Как это посчитано</div>
@@ -9262,7 +9279,7 @@ let DOCPREVIEW = false;
 let SHOPTAB = 'list';
 let HASDOCS = true;
 
-function prodPage() { const p = PROD[CUR]; CMP_STEP = 1; CMP_DATA = {}; Object.assign(CH, CH_INIT); CH_STEP = 0; Object.assign(CN, CN_INIT); CN_STEP = 0; ccReset(); CC_STEP = 0; return `<div class="pad">
+function prodPage() { const p = PROD[CUR]; CMP_STEP = 1; CMP_DATA = {}; Object.assign(CH, CH_INIT); CH_STEP = 0; Object.assign(CN, CN_INIT); CN_STEP = 0; ccReset(); CC_STEP = 0; dateReset(); return `<div class="pad">
   <div class="dochead" data-go="${p.back || 'shop'}"><span>&lsaquo;</span><div>Назад · ${TITLES[p.back] || 'Разборы'}</div></div>
   <div class="d-crumb">${p.crumb}</div>
   <h2 class="t-title" style="font-size:21px">${p.t.replace(' · ', '<br>')}</h2>
@@ -9439,6 +9456,7 @@ function prodData() { const p = PROD[CUR]; const has = p.fields.length;
   if (CUR === 'child') return childData(p);
   if (CUR === 'childName') return childNameData(p);
   if (CUR === 'childCheck') return childCheckData(p);
+  if (CUR === 'date') return dateData(p);
   if (CUR === 'rename') {
     const nm = p.fields[0] ? p.fields[0][1] : '';
     const fm = p.fields[1] ? p.fields[1][1] : '';
@@ -9482,6 +9500,119 @@ function prodData() { const p = PROD[CUR]; const has = p.fields.length;
   <div class="cards"><div class="card-it stub"><div><div class="t">Антон Юрьевич Тыщенко</div><span class="s">4 февраля 1984, 15:00 · Волгоград</span></div><div class="chev">·</div></div></div>`}
   <div class="w-btn" data-go="prodDepth" style="margin-top:18px">Продолжить</div>
 </div>`; }
+
+/* ====== Подбор лучшего дня: свободное описание события + период из двух дат ======
+   Прототип не гоняет языковую модель: на подтверждении «суть» разбирается
+   простым делением описания по первой запятой (название / что важно) —
+   в проде это делает Лунора. */
+const DATE_TODAY = { d: 12, m: 8, y: 2026 };     /* «сегодня» прототипа (как на «Сегодня») */
+const DATE_EVT = { text: '' };
+let DATE_FROM = null, DATE_TO = null;            /* {d,m,y} */
+const DATE_UND = { title: '', matter: '' };
+const DATE_LIMIT = 300;
+const RU_MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
+const RU_MON_GEN = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
+let DP_TARGET = 'from', DP_Y = DATE_TODAY.y, DP_M = DATE_TODAY.m, DP_SEL = null;
+function dateReset() { DATE_EVT.text = ''; DATE_FROM = null; DATE_TO = null; DATE_UND.title = ''; DATE_UND.matter = ''; }
+function daysInMonth(y, m) { return new Date(y, m, 0).getDate(); }
+function fmtDate(o) { return o ? String(o.d).padStart(2, '0') + '.' + String(o.m).padStart(2, '0') + '.' + o.y : ''; }
+function dateNum(o) { return o.y * 10000 + o.m * 100 + o.d; }
+function dateReady() { return !!DATE_EVT.text.trim() && DATE_FROM && DATE_TO; }
+
+function dateData(p) {
+  const n = DATE_EVT.text.length;
+  return `<div class="pad">
+  <div class="dochead" data-go="prodPage"><span>&lsaquo;</span><div>Назад · ${p.t}</div></div>
+  <div class="stepper" style="grid-template-columns:repeat(2,1fr)">
+    <div class="now"><u>1</u><span>Ввод данных</span></div>
+    <div><i class="lin"></i><u>2</u><span>Проверка</span></div>
+  </div>
+  <h2 class="t-title" style="font-size:20px;margin-top:16px">${p.dataTitle}</h2>
+  <div class="fields" style="display:flex;flex-direction:column;gap:16px;margin-top:14px">
+    <div>
+      <div class="w-label">Расскажите о событии</div>
+      <div class="w-field" contenteditable="true" data-dateevt data-ph="Например: переговоры по сделке, важно отстоять цену" style="min-height:92px;text-align:left">${DATE_EVT.text}</div>
+      <div style="display:flex;justify-content:space-between;gap:10px;margin-top:5px">
+        <p class="obhint" style="margin:0">Чем именно важен день, то и учтём. Из описания вытащим суть и покажем на проверке.</p>
+        <span class="obhint" id="dateCount" style="margin:0;white-space:nowrap">${n}/${DATE_LIMIT}</span>
+      </div>
+    </div>
+    <div>
+      <div class="w-label">Временной период</div>
+      <div class="daterange">
+        <div class="w-field${DATE_FROM ? ' filled' : ''}" data-dp="from">${DATE_FROM ? fmtDate(DATE_FROM) : 'дд.мм.гггг'}</div>
+        <span class="drdash">–</span>
+        <div class="w-field${DATE_TO ? ' filled' : ''}" data-dp="to">${DATE_TO ? fmtDate(DATE_TO) : 'дд.мм.гггг'}</div>
+      </div>
+      <p class="obhint" style="margin:6px 0 0">Диапазон, внутри которого ищем лучший день.</p>
+    </div>
+  </div>
+  <div class="w-btn${dateReady() ? '' : ' off'}" id="dateGo" data-go="prodDepth" style="margin-top:20px">Далее</div>
+</div>`;
+}
+
+function dateDepth(p) {
+  PAYKIND = 'prod';
+  const from = DATE_FROM || { d: 1, m: 9, y: 2026 };
+  const to = DATE_TO || { d: 30, m: 9, y: 2026 };
+  const txt = DATE_EVT.text.trim() || 'Переговоры по сделке, важно отстоять цену';
+  if (!DATE_UND.title) {
+    const parts = txt.split(',');
+    DATE_UND.title = parts[0].trim();
+    DATE_UND.matter = parts.slice(1).join(',').trim();
+  }
+  const period = `${from.d} ${RU_MON_GEN[from.m - 1]} ${from.y} — ${to.d} ${RU_MON_GEN[to.m - 1]} ${to.y}`;
+  return `<div class="pad">
+  <div class="dochead" data-go="prodData"><span>&lsaquo;</span><div>Назад</div></div>
+  <h2 class="t-title" style="font-size:21px">Проверьте данные</h2>
+  <p class="d-lede" style="border:none;padding-bottom:0;margin-bottom:10px">Вот как мы поняли ваше событие. Поправьте, если не так.</p>
+  <div class="sumcard" style="margin-top:4px">
+    <div><u>Событие</u><b contenteditable="true" data-dundtitle style="border-bottom:1px dashed var(--rule)">${DATE_UND.title}</b></div>
+    ${DATE_UND.matter ? `<div><u>Что важно</u><b>${DATE_UND.matter}</b></div>` : ''}
+    <div style="border-top:1px solid var(--rule)"></div>
+    <div><u>Период</u><b>${period}</b></div>
+  </div>
+  <p class="obhint" style="margin:10px 0 0">Суть события вытащила Лунора из вашего описания. Название можно поправить прямо здесь.</p>
+  <div class="body-text" style="margin-top:16px"><p>Разбор начнёт собираться сразу после оплаты и появится в разделе «Мои разборы».</p></div>
+  <div class="docfoot boxed" style="margin-top:18px">
+    <p class="payterms">Оплачивая, вы принимаете <u data-go="doc-offer">оферту</u>.</p>
+    <div class="w-btn" data-go="payGate">Перейти к оплате · ${p.price}</div>
+  </div>
+</div>`;
+}
+
+/* нижняя шторка выбора даты: год и месяц шевронами, ниже сетка чисел */
+function dpMinNum() { return DP_TARGET === 'to' && DATE_FROM ? dateNum(DATE_FROM) : 0; }
+function openDatePicker(target) {
+  DP_TARGET = target;
+  const cur = target === 'from' ? DATE_FROM : DATE_TO;
+  let def;
+  if (cur) def = { ...cur };
+  else if (target === 'to' && DATE_FROM && dateNum(DATE_TODAY) < dateNum(DATE_FROM)) def = { ...DATE_FROM };
+  else def = { ...DATE_TODAY };
+  DP_SEL = def; DP_Y = def.y; DP_M = def.m;
+  fillDatePicker();
+  popShow('datePick');
+}
+function fillDatePicker() {
+  const head = document.getElementById('dpHead');
+  if (head) head.textContent = DP_TARGET === 'from' ? 'Начало периода' : 'Конец периода';
+  const minY = DP_TARGET === 'to' && DATE_FROM ? DATE_FROM.y : 1900;
+  const yr = document.getElementById('dpYear');
+  if (yr) yr.innerHTML = `<i class="${DP_Y > minY ? '' : 'off'}" data-dpy="prev">‹</i><b>${DP_Y}</b><i data-dpy="next">›</i>`;
+  const minM = (DP_TARGET === 'to' && DATE_FROM && DP_Y === DATE_FROM.y) ? DATE_FROM.m : 1;
+  const mo = document.getElementById('dpMonth');
+  if (mo) mo.innerHTML = `<i class="${DP_M > minM ? '' : 'off'}" data-dpm="prev">‹</i><b>${RU_MONTHS[DP_M - 1]}</b><i class="${DP_M < 12 ? '' : 'off'}" data-dpm="next">›</i>`;
+  const grid = document.getElementById('dpDays');
+  const dim = daysInMonth(DP_Y, DP_M);
+  if (grid) grid.innerHTML = Array.from({ length: dim }, (_, i) => {
+    const d = i + 1, val = DP_Y * 10000 + DP_M * 100 + d;
+    const off = val < dpMinNum();
+    const isSel = DP_SEL && DP_SEL.d === d && DP_SEL.m === DP_M && DP_SEL.y === DP_Y;
+    const isToday = d === DATE_TODAY.d && DP_M === DATE_TODAY.m && DP_Y === DATE_TODAY.y;
+    return `<div class="dgcell${isSel ? ' sel' : ''}${!isSel && isToday ? ' now' : ''}${off ? ' off' : ''}"${off ? '' : ` data-dpday="${d}"`}>${d}</div>`;
+  }).join('');
+}
 
 function compatDepth(p) {
   const f = p.fields;
@@ -9681,6 +9812,7 @@ function childData(p) {
 }
 function prodDepth() { const p = PROD[CUR];
   if (CUR.startsWith('compat')) return compatDepth(p);
+  if (CUR === 'date') return dateDepth(p);
   if (!p.access) {
     const has = p.fields.length;
     const isChild = CUR === 'child';
@@ -11525,6 +11657,46 @@ document.getElementById('balsw').addEventListener('click', e => {
 view.addEventListener('input', e => {
   const ta = e.target.closest('.cfield');
   if (ta && ta.tagName === 'TEXTAREA') chatComposerUpdate(ta);
+  /* описание события: лимит, счётчик, пересчёт кнопки «Далее» */
+  const ev = e.target.closest('[data-dateevt]');
+  if (ev) {
+    let t = ev.textContent;
+    if (t.length > DATE_LIMIT) { t = t.slice(0, DATE_LIMIT); ev.textContent = t;
+      const r = document.createRange(); r.selectNodeContents(ev); r.collapse(false);
+      const s = getSelection(); s.removeAllRanges(); s.addRange(r); }
+    DATE_EVT.text = t;
+    const c = document.getElementById('dateCount'); if (c) c.textContent = `${t.length}/${DATE_LIMIT}`;
+    const go = document.getElementById('dateGo'); if (go) go.classList.toggle('off', !dateReady());
+    return;
+  }
+  /* правка названия события на подтверждении */
+  const un = e.target.closest('[data-dundtitle]');
+  if (un) { DATE_UND.title = un.textContent.trim(); return; }
+});
+
+view.addEventListener('click', e => {
+  /* поля периода открывают шторку выбора даты */
+  const dp = e.target.closest('[data-dp]');
+  if (dp && cur === 'prodData' && CUR === 'date') { openDatePicker(dp.dataset.dp); return; }
+});
+
+/* шторка выбора даты: год и месяц шевронами, выбор числа, «Готово» фиксирует */
+document.getElementById('datePick').addEventListener('click', e => {
+  const sh = document.getElementById('datePick');
+  const yb = e.target.closest('[data-dpy]');
+  if (yb) { if (!yb.classList.contains('off')) { DP_Y += yb.dataset.dpy === 'next' ? 1 : -1; fillDatePicker(); } return; }
+  const mb = e.target.closest('[data-dpm]');
+  if (mb) { if (!mb.classList.contains('off')) { DP_M += mb.dataset.dpm === 'next' ? 1 : -1; fillDatePicker(); } return; }
+  const day = e.target.closest('[data-dpday]');
+  if (day) { DP_SEL = { d: +day.dataset.dpday, m: DP_M, y: DP_Y }; fillDatePicker(); return; }
+  if (e.target.id === 'dpDone') {
+    if (DP_SEL) {
+      if (DP_TARGET === 'from') { DATE_FROM = { ...DP_SEL }; if (DATE_TO && dateNum(DATE_TO) < dateNum(DATE_FROM)) DATE_TO = null; }
+      else DATE_TO = { ...DP_SEL };
+    }
+    sh.classList.remove('show'); render('prodData', false); return;
+  }
+  if (e.target.id === 'datePick' || e.target.closest('[data-sheet]')) sh.classList.remove('show');
 });
 
 view.addEventListener('click', e => {
