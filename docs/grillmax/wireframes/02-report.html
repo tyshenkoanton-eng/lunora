@@ -2104,7 +2104,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v725</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v726</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9848,11 +9848,17 @@ function prodDepth() { const p = PROD[CUR];
       const time = (src.h && src.i && src.prec !== 'n') ? `${src.h}:${src.i}${PREC_LABEL[src.prec] || ''}` : src.prec === 'n' ? 'время неизвестно' : 'время не указано';
       const place = src.addr ? `${src.city ? src.city + ', ' : ''}${src.addr}` : (src.city || 'место не указано');
       rows = `<div><u>Полное имя</u><b>${fio}</b></div><div><u>Дата рождения</u><b>${date}, ${time}</b></div><div><u>Место рождения</u><b>${place}</b></div>`;
+    } else if (CUR === 'rename') {
+      /* смена имени/фамилии: показываем старое → новое, только по тому, что меняется.
+         Старое берём из профиля; при прямом входе из каталога — пример (смена фамилии) */
+      const oldName = OB.name || 'Антон', oldFam = OB.fam || 'Тыщенко';
+      let newName = (p.fields[0] && p.fields[0][1]) || '';
+      let newFam = (p.fields[1] && p.fields[1][1]) || '';
+      if (!newName && !newFam) newFam = 'Стальмахов';
+      rows = (newName ? `<div><u>Имя</u><b>${oldName} → ${newName}</b></div>` : '')
+           + (newFam ? `<div><u>Фамилия</u><b>${oldFam} → ${newFam}</b></div>` : '');
     } else if (has) {
-      /* при прямом входе из каталога значений нет — показываем пример (как в совместимости) */
-      let flds = p.fields;
-      if (CUR === 'rename' && !flds.some(([l, v]) => v)) flds = [['Имя', 'Лев', 0], ['Фамилия', 'Ковалёва', 0]];
-      rows = flds.filter(([l, v]) => v).map(([l, v]) => `<div><u>${l}</u><b>${v}</b></div>`).join('');
+      rows = p.fields.filter(([l, v]) => v).map(([l, v]) => `<div><u>${l}</u><b>${v}</b></div>`).join('');
     } else {
       const fio = [OB.name, OB.pat, OB.fam].filter(Boolean).join(' ') || 'Антон Юрьевич Тыщенко';
       const date = obDateFull() ? `${OB.d} ${OB.m} ${OB.y}` : '4 февраля 1984';
