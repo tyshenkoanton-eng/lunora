@@ -2104,7 +2104,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v728</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v729</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9548,12 +9548,6 @@ function dateData(p) {
       <div style="text-align:right;margin-top:5px"><span class="obhint" id="dateCount" style="margin:0;white-space:nowrap">${n}/${DATE_LIMIT}</span></div>
     </div>
     <div>
-      <div class="w-label">Город события</div>
-      <div class="w-field${DATE_CITY.text ? ' filled' : ''}" contenteditable="true" data-datecity data-sug="city" data-ph="Город, где пройдёт событие" style="text-align:left;color:var(--ink)">${DATE_CITY.text}</div>
-      <div class="sug"></div>
-      <p class="obhint" style="margin:6px 0 0">По умолчанию из профиля. Нужен, чтобы посчитать удачные часы дня.</p>
-    </div>
-    <div>
       <div class="w-label">Временной период</div>
       <p class="obhint" style="margin:5px 0 8px">Выберите период, в котором нужно проверить наиболее благоприятные дни для вашего события. Максимум 31 день.</p>
       <div class="daterange">
@@ -9561,6 +9555,11 @@ function dateData(p) {
         <span class="drdash">–</span>
         <div class="w-field${DATE_TO ? ' filled' : ''}" data-dp="to">${DATE_TO ? fmtDate(DATE_TO) : 'дд.мм.гггг'}</div>
       </div>
+    </div>
+    <div>
+      <div class="w-label">Город события</div>
+      <div class="w-field${DATE_CITY.text ? ' filled' : ''}" contenteditable="true" data-datecity data-sug="city" data-ph="Город, где пройдёт событие" style="text-align:left;color:var(--ink)">${DATE_CITY.text}</div>
+      <div class="sug"></div>
     </div>
   </div>
   <div class="w-btn${dateReady() ? '' : ' off'}" id="dateGo" data-go="prodDepth" style="margin-top:20px">Далее</div>
