@@ -1831,6 +1831,7 @@
             font-size: 13px; cursor: pointer; background: var(--card); font-variant-numeric: tabular-nums; }
   .dgcell.now { border-color: var(--wire-line); }
   .dgcell.sel { background: var(--note); border-color: var(--note); color: #fff; font-weight: 640; }
+  .dgcell.inrange { background: var(--wire-fill-2); border-color: var(--wire-fill-2); color: var(--ink); }
   .dgcell.off { color: var(--ink-faint); opacity: .3; cursor: default; }
   .daterange { display: flex; align-items: center; gap: 10px; }
   .daterange .w-field { flex: 1; text-align: center; }
@@ -2103,7 +2104,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v718</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v719</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9619,12 +9620,19 @@ function fillDatePicker() {
   if (mo) mo.innerHTML = `<i class="${DP_M > minM ? '' : 'off'}" data-dpm="prev">‹</i><b>${RU_MONTHS[DP_M - 1]}</b><i class="${DP_M < maxM ? '' : 'off'}" data-dpm="next">›</i>`;
   const grid = document.getElementById('dpDays');
   const dim = daysInMonth(DP_Y, DP_M);
+  /* в пикере конца показываем выбранный период полосой: начало и конец — точки,
+     дни между ними заштрихованы; при выборе более раннего дня период сжимается */
+  const rangeOn = DP_TARGET === 'to' && DATE_FROM && DP_SEL;
+  const lo = rangeOn ? Math.min(dateNum(DATE_FROM), dateNum(DP_SEL)) : 0;
+  const hi = rangeOn ? Math.max(dateNum(DATE_FROM), dateNum(DP_SEL)) : 0;
   if (grid) grid.innerHTML = Array.from({ length: dim }, (_, i) => {
     const d = i + 1, val = DP_Y * 10000 + DP_M * 100 + d;
     const off = val < b.min || val > b.max;
-    const isSel = DP_SEL && DP_SEL.d === d && DP_SEL.m === DP_M && DP_SEL.y === DP_Y;
+    const isEnd = rangeOn ? (val === lo || val === hi) : (DP_SEL && DP_SEL.d === d && DP_SEL.m === DP_M && DP_SEL.y === DP_Y);
+    const inRange = rangeOn && val > lo && val < hi;
     const isToday = d === DATE_TODAY.d && DP_M === DATE_TODAY.m && DP_Y === DATE_TODAY.y;
-    return `<div class="dgcell${isSel ? ' sel' : ''}${!isSel && isToday ? ' now' : ''}${off ? ' off' : ''}"${off ? '' : ` data-dpday="${d}"`}>${d}</div>`;
+    const cls = isEnd ? ' sel' : inRange ? ' inrange' : (isToday ? ' now' : '');
+    return `<div class="dgcell${cls}${off ? ' off' : ''}"${off ? '' : ` data-dpday="${d}"`}>${d}</div>`;
   }).join('');
 }
 
