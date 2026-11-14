@@ -2104,7 +2104,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v727</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v728</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -9511,6 +9511,7 @@ const DATE_TODAY = { d: _dtNow.getDate(), m: _dtNow.getMonth() + 1, y: _dtNow.ge
 function addDays(o, n) { const dt = new Date(o.y, o.m - 1, o.d + n); return { d: dt.getDate(), m: dt.getMonth() + 1, y: dt.getFullYear() }; }
 const DATE_NAME = { text: '' };                  /* название события (вводит пользователь) */
 const DATE_EVT = { text: '' };                   /* описание события */
+const DATE_CITY = { text: '' };                  /* город события (дефолт из профиля, можно менять) */
 let DATE_FROM = null, DATE_TO = null;            /* {d,m,y} */
 const DATE_LIMIT = 300;
 const DATE_NAME_LIMIT = 80;
@@ -9519,7 +9520,7 @@ const DATE_DEFAULT_SPAN = 14;    /* конец подставляется на +
 const RU_MONTHS = ['Январь','Февраль','Март','Апрель','Май','Июнь','Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'];
 const RU_MON_GEN = ['января','февраля','марта','апреля','мая','июня','июля','августа','сентября','октября','ноября','декабря'];
 let DP_TARGET = 'from', DP_Y = DATE_TODAY.y, DP_M = DATE_TODAY.m, DP_SEL = null;
-function dateReset() { DATE_NAME.text = ''; DATE_EVT.text = ''; DATE_FROM = null; DATE_TO = null; }
+function dateReset() { DATE_NAME.text = ''; DATE_EVT.text = ''; DATE_CITY.text = OB.city || 'Волгоград'; DATE_FROM = null; DATE_TO = null; }
 function daysInMonth(y, m) { return new Date(y, m, 0).getDate(); }
 function fmtDate(o) { return o ? String(o.d).padStart(2, '0') + '.' + String(o.m).padStart(2, '0') + '.' + o.y : ''; }
 function dateNum(o) { return o.y * 10000 + o.m * 100 + o.d; }
@@ -9527,6 +9528,7 @@ function dateReady() { return !!DATE_NAME.text.trim() && !!DATE_EVT.text.trim() 
 
 function dateData(p) {
   const n = DATE_EVT.text.length;
+  if (!DATE_CITY.text) DATE_CITY.text = OB.city || 'Волгоград';
   return `<div class="pad">
   <div class="dochead" data-go="prodPage"><span>&lsaquo;</span><div>Назад · ${p.t}</div></div>
   <div class="stepper" style="grid-template-columns:repeat(2,1fr)">
@@ -9544,6 +9546,12 @@ function dateData(p) {
       <p class="obhint" style="margin:5px 0 8px">Кратко опишите, в чём состоит ваше событие и что важно учесть.</p>
       <div class="w-field" contenteditable="true" data-dateevt data-ph="Например: встреча с инвестором, важно отстоять условия" style="min-height:92px;text-align:left;color:var(--ink)">${DATE_EVT.text}</div>
       <div style="text-align:right;margin-top:5px"><span class="obhint" id="dateCount" style="margin:0;white-space:nowrap">${n}/${DATE_LIMIT}</span></div>
+    </div>
+    <div>
+      <div class="w-label">Город события</div>
+      <div class="w-field${DATE_CITY.text ? ' filled' : ''}" contenteditable="true" data-datecity data-sug="city" data-ph="Город, где пройдёт событие" style="text-align:left;color:var(--ink)">${DATE_CITY.text}</div>
+      <div class="sug"></div>
+      <p class="obhint" style="margin:6px 0 0">По умолчанию из профиля. Нужен, чтобы посчитать удачные часы дня.</p>
     </div>
     <div>
       <div class="w-label">Временной период</div>
@@ -9565,6 +9573,7 @@ function dateDepth(p) {
   const to = DATE_TO || addDays(from, DATE_DEFAULT_SPAN);
   const title = DATE_NAME.text.trim() || 'Переговоры по сделке';
   const descr = DATE_EVT.text.trim() || 'Важно отстоять цену, не поссориться со второй стороной.';
+  const city = DATE_CITY.text.trim() || OB.city || 'Волгоград';
   const period = `${from.d} ${RU_MON_GEN[from.m - 1]} ${from.y} — ${to.d} ${RU_MON_GEN[to.m - 1]} ${to.y}`;
   return `<div class="pad">
   <div class="dochead" data-go="prodData"><span>&lsaquo;</span><div>Назад</div></div>
@@ -9574,6 +9583,7 @@ function dateDepth(p) {
     <div style="border-top:1px solid var(--rule)"></div>
     <div><u>Название</u><b>${title}</b></div>
     <div><u>Описание</u><b style="font-weight:500">${descr}</b></div>
+    <div><u>Город</u><b>${city}</b></div>
     <div><u>Период</u><b>${period}</b></div>
   </div>
   <div class="w-btn ghost" data-go="prodData" style="margin-top:14px">Изменить данные</div>
@@ -13106,6 +13116,12 @@ view.addEventListener('input', e => {
   if (f.dataset.rn) { rnSync(f.closest('.pad')); return; }
   const ib = document.querySelector('#ideaForm [data-ideasend]');
   if (ib && f.closest('#ideaForm')) { ib.classList.toggle('off', f.textContent.trim() === ''); return; }
+  /* город события на форме даты: свой маркер, без адресной связки онбординга */
+  if (f.hasAttribute('data-datecity')) {
+    DATE_CITY.text = f.textContent.trim();
+    renderCitySug(f);
+    return;
+  }
   if (f.dataset.sug === 'addr') {
     const btn = view.querySelector('[data-ok="apick"]');
     if (btn) btn.classList.add('off');
@@ -13180,6 +13196,8 @@ view.addEventListener('click', e => {
     const f = box.parentElement.querySelector('[data-sug="city"]');
     if (f) { f.textContent = sc.dataset.city; f.classList.add('filled'); }
     box.classList.remove('show');
+    /* город события на форме даты: пишем в своё состояние, без адресной связки */
+    if (f && f.hasAttribute('data-datecity')) { DATE_CITY.text = sc.dataset.city; return; }
     const pc = placeCtx();
     if (pc) { pc.d.city = sc.dataset.city; pc.paint(); }
     const er = document.getElementById('obAddrErr'); if (er) er.classList.remove('show');
