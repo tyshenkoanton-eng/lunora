@@ -2086,7 +2086,7 @@
       </div>
       <h2>Экраны</h2>
       <div class="jump" id="jump"></div>
-      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v710</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
+      <div class="lockbar"><span style="display:flex;gap:10px;align-items:center;flex-wrap:wrap"><span id="protover" style="color:var(--note);font-variant-numeric:tabular-nums;font-weight:600">прототип v711</span><span id="lockcount">Проверено 0</span></span><span style="display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end"><b id="regfilter">Только непроверенные</b><b id="regexport">Экспорт</b><b id="regimport">Импорт</b><b id="lockclear">Снять все</b></span></div>
 
     </div>
   </div>
@@ -11395,7 +11395,7 @@ function render(k, push = true, restore = 0) {
   seen.add(k);
   tSync();
   document.querySelectorAll('#jump b').forEach(b => b.classList.toggle('on', b.dataset.j === k));
-  document.getElementById('tabbar').style.display = (/^s\d$/.test(k) || k.startsWith('ob') || k === 'docView' || (k === 'prodResult' && (CUR === 'child' || CUR === 'childName' || CUR === 'childCheck')) || (typeof CHILD_TDATA !== 'undefined' && CHILD_TDATA[k]) || k === 'childCalc') ? 'none' : 'flex';
+  document.getElementById('tabbar').style.display = (/^s\d$/.test(k) || k.startsWith('ob') || k === 'docView' || (k === 'prodResult' && CUR === 'child') || (typeof CHILD_TDATA !== 'undefined' && CHILD_TDATA[k]) || k === 'childCalc') ? 'none' : 'flex';
   const tab = TAB_OF[k];
   document.querySelectorAll('#tabbar i').forEach(i => i.classList.toggle('on', i.dataset.tab === tab));
   try { localStorage.setItem('lunora_screen', k); if (typeof CUR !== 'undefined') localStorage.setItem('lunora_cur', CUR); } catch (e) {}
