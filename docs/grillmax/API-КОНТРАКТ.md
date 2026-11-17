@@ -93,7 +93,7 @@ Operation:
 | `id` | string | стабильный идентификатор сигнала |
 | `system_id` | `SystemId` = `western` \| `vedic` \| `bazi` \| `numerology` (единый enum, §6) | школа-источник |
 | `frame` | enum(`tropical`,`sidereal`,`none`) | кадр (как в ENGINE-SPEC §8.4 Р-1); для Ба-Цзы/нумерологии — `none` |
-| `doctrine_family` | string | семейство доктрины — согласие засчитывается **только между разными семействами** |
+| `doctrine_family` | enum(`planetary`,`chinese`,`numerological`) | семейство доктрины — **детерминированная функция `system_id`** (western,vedic→`planetary`; bazi→`chinese`; numerology→`numerological`, `ENGINE-SPEC-РАСЧЕТ.md` §8.4 Р-1); согласие засчитывается **только между разными семействами** |
 | `value` | any \| `not_computed` | значение либо `not_computed` |
 | `reason` | string? | причина `not_computed` / воздержания |
 | `stability` | enum(`stable`,`range`,`undetermined`,`convention`) | тег интервальной неопределённости (полный объём — в `ChartSnapshot`) |
