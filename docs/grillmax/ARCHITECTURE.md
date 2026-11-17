@@ -1214,7 +1214,7 @@ sequenceDiagram
 | Чек формируется в момент расчёта; сбой чека не блокирует выдачу, статус «чек формируется» | R-42, R-66, `receipts.md` |
 | Доставка результата — ботом, независимо от того, открыт ли Mini App | `spec/payment.md` |
 
-Состояния заказа:
+Состояния заказа (упрощённый обзор):
 
 ```mermaid
 stateDiagram-v2
@@ -1233,6 +1233,15 @@ stateDiagram-v2
     expired --> [*]
     canceled --> [*]
 ```
+
+> ⚠️ **Нормативная модель — в `TRANSACTIONS-КОНТРАКТЫ.md` §2, не здесь.** Эта диаграмма — обзор одной линии «оплатил → собрали → выдали». Канонически статус заказа разведён на **четыре независимые оси**: `order_status` (намерение покупки) · `payment_status` (деньги по данным ЮKassa) · `execution_status` (исполнение услуги) · `refund_status` (возврат). Соответствие обзора нормативной модели:
+> - `paid` → `payment_status=succeeded` **и** `order_status=active`;
+> - `fulfilling`/`fulfilled` → `execution_status=running`/`fulfilled` (отдельно от денег);
+> - `expired` → `order_status=closed_unpaid` (при `payment_status ∈ {none, canceled_by_provider}`);
+> - `canceled` → `payment_status=canceled_by_provider`;
+> - `refund_pending`/`refunded` → `refund_status=requested…submitted`/`succeeded`.
+>
+> Состояния `reconcile_needed` (локальный тайм-аут — деньги не подтверждены и не отменены) и `paid_late` (оплата после закрытия заказа → авто-возврат) есть **только** в нормативной модели; в обзоре их нет. При любом расхождении действует TRANSACTIONS §2.
 
 ### 9.3 Entitlements
 
