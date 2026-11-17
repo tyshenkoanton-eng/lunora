@@ -529,7 +529,7 @@ SectionDefinition:
 
 ## Система и школа — разные поля
 
-Поле называется `system_id` (единый enum `SystemId`, канон — `API-КОНТРAКТ.md` §2.2/§6). Значения: `western` · `vedic` · `bazi` · `numerology`. Старые имена `western_astrology`/`jyotisha` сняты H11.
+Поле называется `system_id` (единый enum `SystemId`, канон — `API-КОНТРАКТ.md` §2.2/§6). Значения: `western` · `vedic` · `bazi` · `numerology`. Старые имена `western_astrology`/`jyotisha` сняты H11.
 
 ```
 system_id      = western
