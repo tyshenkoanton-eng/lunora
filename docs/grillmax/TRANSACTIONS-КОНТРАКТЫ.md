@@ -268,7 +268,7 @@ apply_verified_payment_state(provider_payment_id, snapshot: PaymentState, source
 | `amount` | `ORDER.price_snapshot` (цена в момент создания заказа, из `PRODUCT` на сервере) | недоплата — не выдавать; переплата — выдать и вернуть разницу отдельным возвратом |
 | `shop_id` / аккаунт магазина | конфигурация магазина | алерт, платёж чужого магазина игнорируется |
 | `metadata.order_id` | `ORDER.id` | алерт; платёж привязывается только по нашему `order_id`, не по присланному |
-| `Idempotence-Key`/`operation_id` | `pay:{order_id}:{attempt_key}` из записи | чужой ключ — не наш платёж |
+| внутренний `operation_id` | `pay:{order_id}:{attempt_key}` из записи; провайдеру — производный `provider_key` (§2.4a) | чужой ключ — не наш платёж |
 | статус и `paid=true` | допустимые для перехода | иначе переход запрещён |
 
 4. Побочный эффект «деньги пришли» — **одна транзакция**: `PROCESSED_EVENT` (если источник вебхук), `PAYMENT=succeeded`, `ORDER=active`, `ENTITLEMENT_GRANT` (для квоты/слота) либо `OUTBOX(build_document)`, `OUTBOX(issue_receipt)`, `OUTBOX(notify_user)`.
@@ -289,10 +289,10 @@ apply_verified_payment_state(provider_payment_id, snapshot: PaymentState, source
 | Провайдер недоступен долго (> порога T) | `reconcile_needed` | порог | алерт оператору; деньги не трогаем; выдачи нет | `reconcile_needed` + алерт |
 | **Возврат из кабинета ЮKassa** (оператор нажал там) | `succeeded`, `execution=fulfilled` | вебхук `refund.succeeded`, `refund_id` нам неизвестен | создать `REFUND(origin=provider_cabinet)`, применить **§3.6 по сумме** (полный → отзыв гранта/документа и аннулирование чека, то, чего кабинет не умеет, `ARCHITECTURE` §9.5; частичный → по правилам продукта §3.6, по умолчанию доступ остаётся), пометить «возврат вне админки» | полный → `refunded_full`, `execution=revoked`; частичный → `refunded_partial`, доступ по §3.6 |
 | **Частичный возврат** | `succeeded` | `refund.succeeded` на сумму < оплаты | запись `REFUND.amount`; **грант не отзывается автоматически**: решение по продукту (таблица §3.6) требует решения оператора; для частичного возврата квоты — пропорциональное снятие `quota_total` | `refunded_partial` |
-| **Уже выданный результат** + возврат | `execution=fulfilled` | возврат (любой источник) | результат **доступ отзывается** (`revoked`), контент остаётся в хранилище по сроку удержания для спора, пользователю он больше не отдаётся; для спорного случая — решение оператора | `execution=revoked` |
+| **Уже выданный результат** + возврат | `execution=fulfilled` | возврат (любой источник) | эффект **по сумме (§3.6)**: при ПОЛНОМ возврате доступ отзывается (`revoked`), контент остаётся в хранилище по сроку удержания для спора; при ЧАСТИЧНОМ — по умолчанию доступ к документу **сохраняется** (частичный = компенсация), отзыв — только по решению оператора. Не «любой возврат отзывает» | полный → `execution=revoked`; частичный → доступ по §3.6 |
 | Повторный платёж на тот же заказ (дубль) | `succeeded` | второй успех по тому же `order_id` | второй платёж → `paid_late`-класс «дубль», авто-возврат **второго платежа** (`refund_intent_id` на его `payment_id`, reason `duplicate`, §4.3); обеспечивающий платёж не трогаем | вторая запись `PAYMENT`: `refunded_full` |
 | Возврат вернул «ошибка» от провайдера | `refund=submitted` | `refund.canceled/failed` | `refund=failed`, повтор по политике, алерт | `failed` → повтор |
-| Ответ на возврат неизвестен | `refund=submitted` | таймаут | `refund=unknown` → `fetch` по `Idempotence-Key` → фиксировать | `succeeded/failed` |
+| Ответ на возврат неизвестен | `refund=submitted` | таймаут | `refund=unknown` → **`GET` по сохранённому refund id** → фиксировать; поиск по `Idempotence-Key` не предполагаем (§2.4a), id неизвестен → сверка/`manual_review` | `succeeded/failed` |
 
 ### 3.5 Инварианты
 
@@ -353,7 +353,7 @@ apply_verified_payment_state(provider_payment_id, snapshot: PaymentState, source
 ```mermaid
 stateDiagram-v2
     [*] --> paid_late: деньги подтверждены, выдача недопустима
-    paid_late --> refund_requested: создан OUTBOX(refund_create) по (order_id,'paid_late')
+    paid_late --> refund_requested: OUTBOX(refund_create), refund_intent_id на payment_id (reason paid_late, §4.3)
     refund_requested --> refund_submitted: вызов ЮKassa с Idempotence-Key
     refund_submitted --> refunded_full: проверенный refund.succeeded
     refund_submitted --> refund_unknown: таймаут
