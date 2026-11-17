@@ -1240,7 +1240,7 @@ stateDiagram-v2
 
 > ⚠️ **Нормативная модель — в `TRANSACTIONS-КОНТРАКТЫ.md` §3 (§3.1–§3.7), не здесь.** Эта диаграмма — обзор одной линии «оплатил → собрали → выдали». Канонически статус заказа разведён на **четыре независимые оси** (§3.1): `order_status` (намерение покупки) · `payment_status` (деньги по данным ЮKassa) · `execution_status` (исполнение услуги) · `refund_status` (возврат). Соответствие обзора нормативной модели:
 > - `paid` → `payment_status=succeeded` **и** `order_status=active`;
-> - `fulfilling`/`fulfilled` → `execution_status=running`/`fulfilled` (отдельно от денег);
+> - `fulfilling`/`fulfilled` → `execution_status=running`/`fulfilled` (отдельно от денег); момент `fulfilled` = публикация результата, серверная отметка `fulfilled_at` (§1.1 TRANSACTIONS), **не** открытие пользователем;
 > - `expired` → `order_status=closed_unpaid` (при `payment_status ∈ {none, canceled_by_provider}`);
 > - `canceled` → `payment_status=canceled_by_provider`;
 > - `refund_pending`/`refunded` → `refund_status=requested…submitted`/`succeeded`.

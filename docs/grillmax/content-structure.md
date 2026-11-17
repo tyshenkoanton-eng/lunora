@@ -2,7 +2,7 @@
 
 **Статус:** черновик к G7 · **Дата:** 2026-08-10
 
-Опорные исследования: [chart-composition.md](../../research/chart-composition.md) · [platforms-content.md](../../research/platforms-content.md)
+Опорные исследования (⚠️ папка `research/` намеренно не входит в пакет/публичный репозиторий — внешние материалы оператора): `research/chart-composition.md` · `research/platforms-content.md`
 
 ---
 

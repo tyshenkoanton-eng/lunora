@@ -1,7 +1,7 @@
 # Скелеты разборов — сводка по четырём школам
 
 **Статус:** сведено из четырёх исследований · **Дата:** 2026-08-11
-Источники: [skeleton-western.md](../../research/skeleton-western.md) · [skeleton-vedic.md](../../research/skeleton-vedic.md) · [skeleton-bazi.md](../../research/skeleton-bazi.md) · [skeleton-numerology.md](../../research/skeleton-numerology.md)
+Источники (⚠️ папка `research/` **намеренно не входит в пакет/публичный репозиторий** — копирайт, см. §ниже и `ENGINE-SOURCES.md`; ссылки указывают на внешние рабочие материалы оператора): `research/skeleton-western.md` · `research/skeleton-vedic.md` · `research/skeleton-bazi.md` · `research/skeleton-numerology.md`
 
 Назначение документа — понять, **чем наполнять карту консенсуса** и сколько это стоит.
 

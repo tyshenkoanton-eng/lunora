@@ -57,6 +57,8 @@ NarrativeRender
 
 ## Сущности
 
+> ℹ️ **Границы этого файла.** Здесь — доменная модель **расчёта и интерпретации** (Signal → Evidence → Claim → Narrative). **Транзакционные сущности** (`ORDER`, `PAYMENT`, `REFUND`, `ORDER_EXECUTION`, `ENTITLEMENT_GRANT`) и их **четыре независимые оси статуса** (`order_status` / `payment_status` / `execution_status` / `refund_status`) нормативно описаны в `TRANSACTIONS-КОНТРАКТЫ.md` §3.1 — здесь не дублируются. `ChartSnapshot` адресуется случайным `chart_id` (uuid), дедуп — `calc_fingerprint` (§9 там же).
+
 ### 1. Signal
 
 Нижний результат детерминированного расчёта.
