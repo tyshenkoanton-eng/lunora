@@ -291,7 +291,7 @@ flowchart LR
 
 ```
 class CalcEngine(Protocol):
-    system_id: SystemId                 # western_astrology | jyotisha | bazi | numerology
+    system_id: SystemId                 # western | vedic | bazi | numerology
     engine_version: str                 # semver, входит в ключ кэша
 
     def requirements(self, profile: MethodProfile) -> InputRequirements
@@ -326,7 +326,7 @@ ChartSnapshot:
   versions: { engine: {western, vedic, bazi, numerology},
               method_profiles: {...}, ephemeris, tz_build, gazetteer_build }
   resolved_moment, resolved_place                     # с провенансом из §4
-  systems: { western: SystemChart, jyotisha: ..., bazi: ..., numerology: ... }
+  systems: { western: SystemChart, vedic: ..., bazi: ..., numerology: ... }
   signals[]                                           # плоский список, контракт data-model.md
   availability: { system → AVAILABLE | INSUFFICIENT_DATA | ... , причины }
 ```
@@ -657,7 +657,7 @@ Thesis:
   themes[]                      # к каким разделам относится
   priority                      # порядок внутри темы при равенстве голосов
   needs[]                       # обязательные данные: date | time | place | name ...
-  voters: { western, jyotisha, bazi, numerology }
+  voters: { western, vedic, bazi, numerology }
      каждая: can_vote: bool
              up:   условие над сигналами   →  «подтверждает»
              down: обратное условие        →  «спорит»
@@ -871,7 +871,7 @@ flowchart LR
 
 ```
 id: west-volgograd-1984-02-04
-layer: timeplace | western | jyotisha | bazi | numerology | consensus
+layer: timeplace | western | vedic | bazi | numerology | consensus
 input:
   place_id, local_date, local_time, tolerance, sex, names
 reference:

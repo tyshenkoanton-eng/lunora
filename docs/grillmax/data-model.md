@@ -529,15 +529,17 @@ SectionDefinition:
 
 ## Система и школа — разные поля
 
+Поле называется `system_id` (единый enum `SystemId`, канон — `API-КОНТРAКТ.md` §2.2/§6). Значения: `western` · `vedic` · `bazi` · `numerology`. Старые имена `western_astrology`/`jyotisha` сняты H11.
+
 ```
-system         = western_astrology
+system_id      = western
 method_profile = traditional_whole_sign_v1
 ```
 
-| system | method_profile |
+| system_id | method_profile |
 |---|---|
-| western_astrology | traditional_whole_sign |
-| jyotisha | parashari |
+| western | traditional_whole_sign |
+| vedic | parashari |
 | bazi | zi_ping_structural |
 | numerology | pythagorean + psychomatrix_lens |
 

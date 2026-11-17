@@ -89,17 +89,17 @@
 
 | Поле `Signal` | Что кладём |
 |---|---|
-| `system_id` | `western_astrology` · `jyotisha` · `bazi` |
+| `system_id` | единый enum `SystemId` = `western` · `vedic` · `bazi` · `numerology` (канон — `API-КОНТРАКТ.md` §2.2/§6; старые имена `western_astrology`/`jyotisha` сняты H11). В этом документе формализованы `western`/`vedic`/`bazi`; `numerology` — в `NUMEROLOGY-RULES.md` |
 | `technique_id` | идентификатор величины из этого документа, например `w.dignity.essential` |
 | `signal_type` | `position` · `dignity` · `aspect` · `period` · `pillar` · `count` · `interaction` · `setting` |
 | `raw_value` | число без округления (долгота в градусах `float64`, балл, момент TT) |
 | `normalized_value` | дискретное значение (знак, дом, накшатра, столп, класс) |
 | `calculation_rule_id` / `calculation_rule_version` | идентификатор и версия правила из колонок «ID» и «Версия» ниже |
 | `input_dependencies[]` | `birth_time`, `birth_place`, `tz_hypothesis`, `sex`, `method_choice` |
-| `stability` (v3.1) | `stable` / `range` / `undetermined` по `ARCHITECTURE.md` §4.5 |
-| **`rule_origin`** (расширение, предлагается в v3.1) | `source` — правило из первоисточника · `lunora` — авторское |
-| **`frame`** (расширение) | `tropical` / `sidereal` / `none` — для всех величин, зависящих от зодиака (B2) |
-| **`can_vote`** (расширение) | `false`, если правило или таблица ниже статуса из §0.3, либо величина — `not_computed` |
+| `stability` | `stable` / `range` / `undetermined` / `convention` по `ARCHITECTURE.md` §4.5; наружу (в `Signal` DTO API §2.2) отдаётся только тег, полный интервал — в `ChartSnapshot` |
+| **`rule_origin`** | канон (`API-КОНТРАКТ.md` §2.2, `data-model.md` §1): `source` — правило из первоисточника · `lunora` — авторское |
+| **`frame`** | канон: `tropical` / `sidereal` / `none` — для всех величин, зависящих от зодиака (B2); для Ба-Цзы/нумерологии — `none` |
+| **`can_vote`** | внутреннее поле ядра (за границу API не выходит, §API 2.3): `false`, если правило или таблица ниже статуса из §0.3, либо величина — `not_computed` |
 
 `not_computed` — это тоже сигнал: `normalized_value: not_computed`, `reason`: одно из `no_birth_time`, `no_place`, `no_sex`, `not_applicable_latitude`, `rule_not_formalized`, `out_of_v1`, `table_not_verified`.
 
@@ -1525,7 +1525,7 @@ translated_by, verified_by, status: draft | verified
 | `ARCHITECTURE.md` §3.6 | «смена дня — в местную полночь» — заменено D-106 (23:00) |
 | `calc-tables.md` | «Мурманск закрывается порогом 60°» — порог 66,56°; в «Настройки» Ба-Цзы добавить смену дня, пол, две конвенции времени |
 | `skeletons.md` §3.2 | частоты йог 3,9 % / 1,8 % / 3,1 % — без источника |
-| `data-model.md` | расширения `Signal`: `rule_origin`, `frame`, `can_vote`, значение `not_computed` с причиной — оформить в v3.1 |
+| `data-model.md` | поля `Signal` `rule_origin`, `frame`, `can_vote`, `not_computed` с причиной — **канон** (H11, §1.2 выше), не «предложение» |
 
 ---
 
