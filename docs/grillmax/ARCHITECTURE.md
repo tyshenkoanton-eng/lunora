@@ -1261,7 +1261,10 @@ ENTITLEMENT_GRANT:
 
 ```
 can(account, action) -> Decision:
-    chat.send:     есть quota > 0?             → да, списать 1 (ключ = id сообщения)
+    chat.send:     есть quota > 0?             → да, РЕЗЕРВИРОВАТЬ 1 (ключ = id сообщения);
+                                                  списание 1 — только после валидации и
+                                                  атомарной публикации ответа; при ошибке
+                                                  резерв освобождается (норматив — TRANSACTIONS §5)
                    иначе                        → нет: пейвол
     document.open: есть unlock на этот документ и он не revoked
     person.add:    число активных PERSON < 1 + число unlock-слотов
