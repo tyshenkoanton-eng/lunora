@@ -28,7 +28,7 @@
 | `GET /v1/operations/{id}` | Статус долгой операции | — | `operation` (status/result_ref) | `404`, `403 not_owner` |
 | `GET /v1/charts/{id}` | Готовая карта (снимок) | — | `ChartView` | `403 not_owner`, `409 stale` |
 | `GET /v1/profile/{chart_id}/themes/{key}` | Тема профиля (бесплатный слой) | — | `ThemeView` | `403`, `404` |
-| `POST /v1/orders` | Создать заказ (покупка) | `product_id`, `params`, `Idempotency-Key` | `order` + ссылка на оплату | `409 duplicate`, `422 product_unavailable` |
+| `POST /v1/orders` | Создать заказ (покупка) | `product_id` (из реестра SKU `ПРАЙС.md §5`), `params`, `Idempotency-Key` | `order` + ссылка на оплату | `409 duplicate`, `422 product_unavailable` |
 | `GET /v1/orders/{id}` | Статус заказа/исполнения | — | `order` (payment/execution/refund) | `403` |
 | `POST /v1/chat/{thread_id}/messages` | Вопрос в чате | `text`, `Idempotency-Key` | `operation` (async) | `402 paywall`, `403` |
 | `GET /v1/entitlements` | Баланс/доступы наружу | — | `{quota_left, unlocks[]}` | — |
