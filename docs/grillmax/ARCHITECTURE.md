@@ -321,7 +321,9 @@ EngineInput:
 
 ```
 ChartSnapshot:
-  id = sha256(canonical(InputSnapshot) + версии)      # адресуется содержимым
+  chart_id = uuid v4                                  # внешний адрес, случайный, приватный (не хеш входа!)
+  calc_fingerprint = HMAC(server_pepper, canonical(InputSnapshot) ‖ версии)  # внутренний: детерминизм/кэш/дедуп; наружу НЕ выходит
+  # Голый sha256(вход) как id запрещён — раскрывает ПДн и даёт межпользовательскую дедупликацию (§4.2, TRANSACTIONS §9)
   input_snapshot_id
   versions: { engine: {western, vedic, bazi, numerology},
               method_profiles: {...}, ephemeris, tz_build, gazetteer_build }

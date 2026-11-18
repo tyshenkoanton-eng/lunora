@@ -79,7 +79,7 @@ Operation:
 | `birth_date` | date | да | **Явная дата рождения, независимо от точности времени.** При `moment=None` расчёт идёт по дате (деградация) |
 | `time` | time? | нет | местное время; отсутствие — штатный случай |
 | `time_precision` | enum(`exact`,`approx±`,`range`,`unknown`) | да | допуск времени |
-| `place` | `{geoname_id, lat, lon, historical_name}` | да | только выбор из геокодера |
+| `place` | `{place_id}` | да | **единый ключ справочника мест** (`place_id`, §4.4/§6.2 архитектуры). `lat/lon`, IANA-зона, `historical_name`, `gazetteer_build` — **выводятся сервером** из `place_id`, клиент их не передаёт (защита от подмены координат). Выбор только из справочника; точный адрес/внешний геокодер — лишь после согласия (О-9, §4.4) |
 | `sex` | enum(`f`,`m`) | да | нужен для направления да-юнь (Ба-Цзы) |
 | `names` | `{at_birth, current?, planned?, patronymic?}` | да | ФИО для нумерологии |
 | `method_profile_version` | string | да | внутренний профиль «Лунора» (§6 ENGINE-SPEC) |
