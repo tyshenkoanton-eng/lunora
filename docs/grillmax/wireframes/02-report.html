@@ -2961,7 +2961,6 @@ let CHAT_EMPTY = false;
 /* вводная шторка про механику чата: поднимается один раз при первом входе в чат, потом не повторяется */
 let CHAT_INFO_SEEN = (() => { try { return localStorage.getItem('lunora_chatinfo') === '1'; } catch (e) { return false; } })();
 const chatInfoMark = () => { CHAT_INFO_SEEN = true; try { localStorage.setItem('lunora_chatinfo', '1'); } catch (e) {} };
-const THEME_KEYS = ['tCharacter','tLove','tWork','tPurpose','tMoney','tEnergy','tFamily','tTalent'];
 /* шторка-приглашение убрана: человек видит реферальный путь, как только упирается в пустой баланс */
 document.getElementById('chatInfoSheet').addEventListener('click', e => {
   if (e.target.id === 'chatInfoSheet' || e.target.closest('[data-chatinfook]')) {
