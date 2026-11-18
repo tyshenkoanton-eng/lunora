@@ -5,6 +5,8 @@
 **Статус:** in_progress
 **Дата:** 2026-08-10
 
+> 🗄️ **Архив L0 (разведка), вытеснен каноном** (`КАНОН-И-АРХИВ.md`) — источником истины не является. В частности, ценовая модель здесь ранняя («сутки диалога / 249 ₽», «349 ₽ безлимит»); действующая модель — пакеты вопросов, единственный источник цен — `ПРАЙС.md`. Цифры и формулировки ниже сохранены как история рассуждения.
+
 Опорные данные: [economics-and-tech-base.md](../../research/economics-and-tech-base.md) · [demand-pricing-channels.md](../../research/demand-pricing-channels.md) · [competitors.md](../../research/competitors.md) · [second-person.md](../../research/second-person.md)
 
 ---
