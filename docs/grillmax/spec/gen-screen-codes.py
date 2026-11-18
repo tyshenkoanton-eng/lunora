@@ -1,17 +1,19 @@
 #!/usr/bin/env python3
 """Пересобирает docs/grillmax/screen-codes.md из реестра REG прототипа.
 
-Запуск из корня репозитория:
-    python3 docs/grillmax/spec/gen-screen-codes.py
+Запуск (из любого места — пути считаются от самого скрипта):
+    python3 spec/gen-screen-codes.py
 
 Каталог экранов — зеркало реестра, вручную не правится. После изменений
 в REG (добавили/переименовали экран) перегенерируйте этот файл.
 """
 import re, json, pathlib
 
-ROOT = pathlib.Path(__file__).resolve().parents[3]
-PROTO = ROOT / "docs/grillmax/wireframes/02-report.html"
-OUT = ROOT / "docs/grillmax/screen-codes.md"
+# Скрипт лежит в grillmax/spec/ — корень пакета это его дед.
+# Работает и в плоском пакете, и в полном репозитории.
+GRILLMAX = pathlib.Path(__file__).resolve().parents[1]
+PROTO = GRILLMAX / "wireframes/02-report.html"
+OUT = GRILLMAX / "screen-codes.md"
 
 src = PROTO.read_text(encoding="utf-8")
 m = re.search(r"const REG = (\[.*?\]);", src, re.S)
@@ -64,4 +66,4 @@ for g, rows in groups.items():
     w("")
 
 OUT.write_text("\n".join(out) + "\n", encoding="utf-8")
-print(f"{OUT.relative_to(ROOT)}: {len(REG)} экранов, {len(groups)} групп")
+print(f"{OUT.relative_to(GRILLMAX)}: {len(REG)} экранов, {len(groups)} групп")
