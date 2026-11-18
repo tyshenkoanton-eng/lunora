@@ -31,7 +31,7 @@
 | [product-flows.md](product-flows.md) | Флоу 11 продуктов от первого клика до документа |
 | [content-structure.md](content-structure.md) | 20 правил текста и тона |
 | [skeletons.md](skeletons.md) | Скелеты разборов четырёх школ |
-| [consensus-map.md](consensus-map.md) | Карта консенсуса: 18 паттернов, 62 правила |
+| [consensus-map.md](consensus-map.md) | Карта консенсуса: 18 паттернов К-01…К-18 (цель ~250), условия голоса по школам |
 | [dict-numerology.md](dict-numerology.md) | Словарь нумерологии, кириллическая таблица |
 | [engine-spec.md](engine-spec.md) | Движок написания блоков, к G10 |
 | [idempotency.md](idempotency.md) | Идемпотентность платежей |
