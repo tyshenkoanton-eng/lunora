@@ -1259,7 +1259,7 @@ ENTITLEMENT_GRANT:
   # time_window (окно времени по таймеру) СНЯТ из v1 решением B16: доступ по запросам, не по времени
   origin: welcome | purchase | referral | compensation | certificate     # наружу не показывается
   order_id | None
-  quota_total, quota_used                    # для quota
+  quota_total, quota_consumed, quota_reserved   # для quota; available = total − consumed − reserved (норматив — TRANSACTIONS §5.1); quota_used как отдельное поле не используется
   status: active | exhausted | expired | revoked
 ```
 
