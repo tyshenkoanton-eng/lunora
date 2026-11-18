@@ -25,6 +25,7 @@
 | `POST /v1/sessions` | Открыть сессию из клиента | `launch_token` (платформенный) | `session` + серверный токен | `401 invalid_launch` |
 | `POST /v1/consents` | Записать согласие категории | `kind`, `legal_version` | `consent_id` | `409 version_mismatch` |
 | `POST /v1/charts` | Запустить расчёт карты | `InputSnapshot` | `operation` (async) | `400 invalid_input`, `403 consent_required` |
+| `POST /v1/bootstrap` | **Атомарный первый запрос нового пользователя** (H12): сессия + согласие + первый расчёт одной транзакцией (не по отдельности) | `{launch_token, consent:{kind, legal_version}, InputSnapshot}` | `{session, consent_id, operation}` | `401 invalid_launch`, `409 version_mismatch`, `400 invalid_input` |
 | `GET /v1/operations/{id}` | Статус долгой операции | — | `operation` (status/result_ref) | `404`, `403 not_owner` |
 | `GET /v1/charts/{id}` | Готовая карта (снимок) | — | `ChartView` | `403 not_owner`, `409 stale` |
 | `GET /v1/profile/{chart_id}/themes/{key}` | Тема профиля (бесплатный слой) | — | `ThemeView` | `403`, `404` |
