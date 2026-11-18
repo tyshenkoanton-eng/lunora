@@ -593,10 +593,6 @@
   .why.open > span { display:block; }
   .school .ll { margin: 10px 0 12px; }
   .school .ll-rows { margin-top: 8px; }
-  .bodyzone { border:1px solid var(--rule); border-radius:12px; padding:14px; margin-top:22px; background:var(--paper); }
-  .bodyzone h3 { font-size:13.5px; margin:0 0 7px; }
-  .bodyzone .bz-lede { font-size:11.5px; color:var(--ink-soft); line-height:1.6; margin:0; }
-  .bodyzone .bz-note { font-size:10.5px; color:var(--ink-faint); line-height:1.6; margin:10px 0 0; }
   .conf { border:1px solid var(--rule); border-radius:11px; padding:12px 13px; margin-top:18px; background:var(--card); }
   .conf.warn { border-color:var(--warn-line); background:var(--warn-bg); }
   .conf b { display:block; font-size:12.5px; margin-bottom:5px; }
@@ -3373,6 +3369,7 @@ const TDATA = {
   },
   tEnergy: {
     title: 'Энергия и здоровье',
+    med: true,
     luna: [
       'Силы у вас берутся из дела и из людей, а уходят на предъявление себя. Проверить легко: после сделанной работы вы бодрее, после разговора о своих заслугах — пустой.',
       'Выносливость у вас особого рода: не рывок, а способность долго держать нагрузку без видимого напряжения. В трудные периоды вы нередко чувствуете себя устойчивее, чем в спокойные.',
@@ -3469,8 +3466,6 @@ const TH1 = {
    под своим заголовком — как культурная традиция; 2) блок выключается целиком
    одним флагом, если юрист даст отрицательный ответ по ст. 14.1 КоАП;
    3) вывод не попадает в сводку школ — усиливать телесное согласием систем нельзя. */
-const BODYZONE = {};  /* УДАЛЕНО: safety-rules §3, решение 2026-09-13 (B5) — телесные зоны не называются */
-function bodyZone(k) { return ''; }
 
 /* графика темы: там, где тема про время, одного текста мало —
    человек должен видеть, где он находится, а не вычитывать это из абзаца */
@@ -3529,12 +3524,12 @@ function themeScreen(k) {
     <p>В этой системе нет инструмента для расчёта такой темы.</p>
   </div>`).join('')}
 
-  ${BODYZONE[k] ? bodyZone(k) : ''}
-
   ${(d.todo && d.todo.length) ? `<div class="luna-block todo-block">
     <div class="lab">Что с этим делать</div>
     <ul class="todo-list">${d.todo.map(t => `<li>${t}</li>`).join('')}</ul>
   </div>` : ''}
+
+  ${d.med ? `<p class="t-para" style="margin-top:16px;font-size:12px;color:var(--ink-faint)">Это разбор про энергию и ресурс, а не медицинская оценка: он не ставит диагнозов, не говорит о болезнях и не заменяет обследование у врача.</p>` : ''}
 
   <div class="docfoot boxed"><div class="w-btn ghost" data-share="${k}">${ICO.share}Поделиться разбором</div></div>
 
