@@ -19,8 +19,10 @@
 Что проверяет:
   1. Битые относительные markdown-ссылки [..](path) на файлы внутри пакета.
   2. Casefold-коллизии имён файлов (ENGINE-SPEC.md vs engine-spec.md).
-  3. Остатки снятых моделей/терминов в ВИДИМОМ тексте (прототип + UI-спеки):
-     холд/двухстадийная оплата, «мастер-число»/«доша»/«число души», «4 из 4».
+  3. Остатки снятых моделей/терминов в ВИДИМОМ тексте: прототип .html (вся
+     строка) + UI-строки спек в «кавычках-ёлочках» (методописание не трогаем):
+     холд/двухстадийная оплата, «мастер-число»/«доша»/«число души», «4 из 4»,
+     «все направления/школы согласны».
   4. Ссылки на несуществующие каталоги плоской структуры (research/, v3-каталоги) — инфо.
   5. Число↔факт (эвристика): «маржа >85 %» без разведения gross/net.
   6. ID↔определение (эвристика, инфо): R-NN без строки-определения в RISKS.md.
@@ -94,8 +96,11 @@ STALE = [
     (r'\bдош[аеуиы]\b', 'доша (в UI запрещено)'),
     (r'число души|числа души|Число души', 'число души (термин упразднён)'),
     (r'(все )?четыре школы соглас|4 из 4 школ', '«4 из 4» как доказательство (считать по семействам)'),
+    (r'(?i)все (четыре )?направлени[яй] соглас|все (четыре )?школ[аы] соглас', '«все направления/школы согласны» = 4-из-4 как доказательство (считать по семействам, B24)'),
 ]
-NEG = re.compile(r'без холда|от холда|не.{0,3}холд|нет холда|снят|упразд|запрещ|не используетс|не выводит|ОТМЕН|устар|термин «|не применяет|→|УБРАН|старые имена|польз\. назв|в UI —|не ярлык|синоним|архив')
+NEG = re.compile(r'без холда|от холда|не.{0,3}холд|нет холда|снят|упразд|запрещ|не используетс|не выводит|ОТМЕН|устар|термин «|не применяет|УБРАН|старые имена|польз\. назв|в UI —|не ярлык|синоним|архив')
+# N2 (ревью v8): символ «→» убран из NEG — он глушил 77 строк с обычными
+# стрелками-переходами («Оплата → доступ», «56 → 5+6»), создавая слепую зону.
 # Терм-скан только там, где текст ВИДЕН пользователю: прототип + UI-спеки.
 # Канон/опора (safety-rules, NUMEROLOGY-RULES, …) легитимно определяют запретные
 # термины, поэтому в терм-скан не входят.
@@ -104,13 +109,26 @@ for x in ('02-report.html', '01-onboarding.html', '04-welcome.html', '05-bot.htm
     p = os.path.join(ROOT, 'wireframes', x)
     if os.path.exists(p):
         SCAN.append(p)
+# N1 (ревью v8): докстринг обещает «прототип + UI-спеки» — добавляем сами спеки,
+# чтобы запретный термин в видимом тексте продукта (напр. в spec/chat.md) ловился.
+spec_dir = os.path.join(ROOT, 'spec')
+if os.path.isdir(spec_dir):
+    for fn in sorted(os.listdir(spec_dir)):
+        if fn.lower().endswith('.md'):
+            SCAN.append(os.path.join(spec_dir, fn))
 for f in SCAN:
+    # В прототипе .html видимый текст — вся строка. В спеке .md видимый текст
+    # продукта — это строки в «кавычках-ёлочках»; прочее — методописание, где
+    # термин метода назвать можно (safety-rules «Область действия запрета»).
+    is_spec = f.lower().endswith('.md')
     for ln, line in enumerate(open(f, encoding='utf-8', errors='replace'), 1):
         if NEG.search(line):
             continue
-        for pat, label in STALE:          # считаем КАЖДОЕ нарушение, не одно на строку
-            if re.search(pat, line):
-                add('stale-phrase-UI', f, f'{ln}: {label}')
+        segments = re.findall(r'«([^»]*)»', line) if is_spec else [line]
+        for seg in segments:
+            for pat, label in STALE:      # считаем КАЖДОЕ нарушение, не одно на строку
+                if re.search(pat, seg):
+                    add('stale-phrase-UI', f, f'{ln}: {label}')
 
 # 5. Число↔факт (эвристика): «маржа >85 %» без разведения gross/net.
 MARGIN = re.compile(r'маржа\s*>\s*85|маржинальн\w*\s*>\s*85|маржа\s+выше\s+85')
@@ -124,19 +142,25 @@ for f in walk_files({'.md'}):
 # Определением считаем строку таблицы RISKS.md вида «| **R-NN** | …» или «| R-NN |».
 risks_path = os.path.join(ROOT, 'RISKS.md')
 defined = set()
-NONCANON = {'R-36', 'R-37'}   # объявлены неканоническими в RISKS.md §вводная
+declared_unused = set()   # N4 (ревью v8): читаем объявленный в RISKS.md диапазон «не используются», не хардкодим
 if os.path.exists(risks_path):
     for line in open(risks_path, encoding='utf-8', errors='replace'):
         for m in re.finditer(r'\|\s*\*{0,2}(R-\d+)\*{0,2}\s*\|', line):
             defined.add(m.group(1))
+        # строки-объявления «номера R-a…R-b и R-n не использованы/не заняты»
+        if re.search(r'не использ|не заняты|не занят', line):
+            for a, b in re.findall(r'R-(\d+)\s*(?:…|\.{2,}|[—–-])\s*R-(\d+)', line):
+                declared_unused |= {f'R-{n}' for n in range(int(a), int(b) + 1)}
+            for n in re.findall(r'R-(\d+)', line):
+                declared_unused.add(f'R-{n}')
 referenced = {}
 for f in walk_files({'.md'}):
     for ln, line in enumerate(open(f, encoding='utf-8', errors='replace'), 1):
         for m in re.finditer(r'\bR-\d+\b', line):
             referenced.setdefault(m.group(0), (os.path.relpath(f, ROOT), ln))
 for rid, (p, ln) in sorted(referenced.items()):
-    if rid not in defined and rid not in NONCANON:
-        add('id-undefined', os.path.join(ROOT, p), f'{ln}: {rid} не определён в RISKS.md и не помечен неканоническим')
+    if rid not in defined and rid not in declared_unused:
+        add('id-undefined', os.path.join(ROOT, p), f'{ln}: {rid} не определён в RISKS.md и не входит в объявленный диапазон неиспользуемых')
 
 # --- report
 cats = {}
