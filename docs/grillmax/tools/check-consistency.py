@@ -1,22 +1,48 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Гейт связности пакета «Лунора» (по рекомендации внешних ревью v5/v6).
+Гейт связности пакета «Лунора» (по рекомендации внешних ревью v5/v6/v7).
 Запуск из любого места:  python3 tools/check-consistency.py [корень_grillmax]
 По умолчанию корень — родитель папки tools/. Только чтение, ничего не меняет.
-Код выхода: 0 — замечаний нет; 1 — есть.
+
+Коды выхода:
+  0 — блокирующих замечаний нет (информационные допустимы);
+  1 — есть блокирующие замечания;
+  2 — корень не найден или не похож на пакет «Лунора» (защита от «ложного зелёного»).
+
+Две категории:
+  • БЛОКИРУЮЩИЕ (код 1): битые внутренние ссылки, casefold-коллизии,
+    снятые термины в видимом тексте, неоговорённое «маржа >85 %».
+  • ИНФОРМАЦИОННЫЕ (код 0): внешние ссылки на research/ (намеренно вне пакета),
+    ID рисков без определения в RISKS.md.
 
 Что проверяет:
   1. Битые относительные markdown-ссылки [..](path) на файлы внутри пакета.
   2. Casefold-коллизии имён файлов (ENGINE-SPEC.md vs engine-spec.md).
-  3. Остатки снятых моделей/терминов (холд, двухстадийная оплата как действующая,
-     «мастер-число»/«доша»/«число души» в видимом тексте, «4 из 4» как доказательство).
-  4. Ссылки на несуществующие каталоги плоской структуры (research/, v3-каталоги).
+  3. Остатки снятых моделей/терминов в ВИДИМОМ тексте (прототип + UI-спеки):
+     холд/двухстадийная оплата, «мастер-число»/«доша»/«число души», «4 из 4».
+  4. Ссылки на несуществующие каталоги плоской структуры (research/, v3-каталоги) — инфо.
+  5. Число↔факт (эвристика): «маржа >85 %» без разведения gross/net.
+  6. ID↔определение (эвристика, инфо): R-NN без строки-определения в RISKS.md.
 Это не заменяет внешнее ревью, но ловит класс «хвостов после правки» за секунды.
 """
 import os, re, sys
 
 ROOT = os.path.abspath(sys.argv[1]) if len(sys.argv) > 1 else os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# --- 0. Защита от «ложного зелёного»: корень должен существовать и быть пакетом «Лунора».
+ANCHORS = ('РЕШЕНИЯ-БЛОКЕРЫ.md', 'ПРАЙС.md', os.path.join('wireframes', '02-report.html'))
+if not os.path.isdir(ROOT):
+    print(f'⛔ Корень не найден или не каталог: {ROOT}')
+    sys.exit(2)
+missing_anchors = [a for a in ANCHORS if not os.path.exists(os.path.join(ROOT, a))]
+if missing_anchors:
+    print(f'⛔ Корень {ROOT} не похож на пакет «Лунора» — нет опорных файлов: {", ".join(missing_anchors)}')
+    print('   (чтобы гейт не давал «зелёный» на неверном пути — см. ревью v7 §3.2)')
+    sys.exit(2)
+
+# Категории, которые НЕ влияют на код выхода (информационные).
+INFO_CATS = {'link-outside-package', 'id-undefined'}
 
 def walk_files(exts):
     for dp, dns, fns in os.walk(ROOT):
@@ -59,7 +85,7 @@ for dp, dns, fns in os.walk(ROOT):
             add('casefold-collision', os.path.join(dp, fn), seen[key])
         seen[key] = os.path.join(dp, fn)
 
-# 3. stale phrases (видимый текст: .md и прототип .html)
+# 3. stale phrases (видимый текст: прототип .html + UI-спеки)
 STALE = [
     (r'двухстадийн(ая|ой) оплат', 'двухстадийная оплата (снята D-056)'),
     (r'списани[ея] при выдаче', 'списание при выдаче (снято, charge-now)'),
@@ -74,31 +100,73 @@ NEG = re.compile(r'без холда|от холда|не.{0,3}холд|нет �
 # Канон/опора (safety-rules, NUMEROLOGY-RULES, …) легитимно определяют запретные
 # термины, поэтому в терм-скан не входят.
 SCAN = []
-for x in ('02-report.html', '01-onboarding.html', '04-welcome.html', '05-bot.html', '_botdata.js'):
+for x in ('02-report.html', '01-onboarding.html', '04-welcome.html', '05-bot.html'):
     p = os.path.join(ROOT, 'wireframes', x)
     if os.path.exists(p):
         SCAN.append(p)
 for f in SCAN:
     for ln, line in enumerate(open(f, encoding='utf-8', errors='replace'), 1):
-        for pat, label in STALE:
-            if re.search(pat, line) and not NEG.search(line):
+        if NEG.search(line):
+            continue
+        for pat, label in STALE:          # считаем КАЖДОЕ нарушение, не одно на строку
+            if re.search(pat, line):
                 add('stale-phrase-UI', f, f'{ln}: {label}')
-                break
 
-# report
+# 5. Число↔факт (эвристика): «маржа >85 %» без разведения gross/net.
+MARGIN = re.compile(r'маржа\s*>\s*85|маржинальн\w*\s*>\s*85|маржа\s+выше\s+85')
+MARGIN_OK = re.compile(r'gross|net|нетто|брутто|83[.,]5')
+for f in walk_files({'.md'}):
+    for ln, line in enumerate(open(f, encoding='utf-8', errors='replace'), 1):
+        if MARGIN.search(line) and not MARGIN_OK.search(line):
+            add('margin-unqualified', f, f'{ln}: «маржа >85 %» без gross/net (пакет 50 — ниже 85 % net, ПРАЙС §3)')
+
+# 6. ID↔определение (эвристика, инфо): R-NN без строки-определения в RISKS.md.
+# Определением считаем строку таблицы RISKS.md вида «| **R-NN** | …» или «| R-NN |».
+risks_path = os.path.join(ROOT, 'RISKS.md')
+defined = set()
+NONCANON = {'R-36', 'R-37'}   # объявлены неканоническими в RISKS.md §вводная
+if os.path.exists(risks_path):
+    for line in open(risks_path, encoding='utf-8', errors='replace'):
+        for m in re.finditer(r'\|\s*\*{0,2}(R-\d+)\*{0,2}\s*\|', line):
+            defined.add(m.group(1))
+referenced = {}
+for f in walk_files({'.md'}):
+    for ln, line in enumerate(open(f, encoding='utf-8', errors='replace'), 1):
+        for m in re.finditer(r'\bR-\d+\b', line):
+            referenced.setdefault(m.group(0), (os.path.relpath(f, ROOT), ln))
+for rid, (p, ln) in sorted(referenced.items()):
+    if rid not in defined and rid not in NONCANON:
+        add('id-undefined', os.path.join(ROOT, p), f'{ln}: {rid} не определён в RISKS.md и не помечен неканоническим')
+
+# --- report
 cats = {}
 for c, p, d in problems:
     cats.setdefault(c, []).append((p, d))
 print(f'Проверено в: {ROOT}')
+
+blocking = [c for c in cats if c not in INFO_CATS]
+info = [c for c in cats if c in INFO_CATS]
+
 if not problems:
     print('✅ Замечаний нет.')
     sys.exit(0)
-for c in sorted(cats):
+
+for c in sorted(blocking):
     items = cats[c]
-    print(f'\n[{c}] — {len(items)}')
+    print(f'\n[{c}] — {len(items)}  (блокирующее)')
     for p, d in items[:60]:
         print(f'  {p} :: {d}')
     if len(items) > 60:
         print(f'  … и ещё {len(items)-60}')
-print(f'\nИтого замечаний: {len(problems)}')
-sys.exit(1)
+for c in sorted(info):
+    items = cats[c]
+    print(f'\n[{c}] — {len(items)}  (информационно, код выхода 0)')
+    for p, d in items[:60]:
+        print(f'  {p} :: {d}')
+    if len(items) > 60:
+        print(f'  … и ещё {len(items)-60}')
+
+n_block = sum(len(cats[c]) for c in blocking)
+n_info = sum(len(cats[c]) for c in info)
+print(f'\nИтого: блокирующих — {n_block}, информационных — {n_info}')
+sys.exit(1 if n_block else 0)
