@@ -1,0 +1,44 @@
+{
+  "brand": {
+    "name": "Лунора",
+    "umbrella": "Lunera",
+    "palette": "mint",
+    "reserve_palette": "indigo",
+    "color": {
+      "paper":      { "light": "#F6F2EA", "dark": "#161D1B" },
+      "card":       { "light": "#FFFCF7", "dark": "#1E2925" },
+      "ink":        { "light": "#202924", "dark": "#EFEFE5" },
+      "ink_soft":   { "light": "#56625A", "dark": "#B6C3B9" },
+      "accent":     { "light": "#28554D", "dark": "#A8CDBD" },
+      "on_accent":  { "light": "#FFFCF7", "dark": "#161D1B" },
+      "accent_bg":  { "light": "#E4EDE7", "dark": "#2B3C34" },
+      "copper":     { "light": "#965735", "dark": "#DCAE8A", "use": "decor_only" },
+      "rule":       { "light": "#D3DBD2", "dark": "#45564C" }
+    },
+    "logo": {
+      "type": "combination",
+      "monochrome": true,
+      "L_as": "equilateral_triangle (left/right edges stronger than base)",
+      "O_as": "circle",
+      "icon": "triangle_only",
+      "min_width": "80px",
+      "lang": "TBD (EN LUNORA / RU ЛУНОРА)",
+      "status": "specified_only",
+      "source": "operator will provide vector + Lunera font"
+    },
+    "font": { "family": "Lunera (от оператора)", "status": "specified_only" },
+    "voice": {
+      "person": "вы",
+      "tone": ["доказательный", "тёплый", "бережный", "ясный"],
+      "say": ["разбор", "взгляд", "что говорит карта"],
+      "avoid": ["предсказание", "прогноз событий", "магия", "эзотерика", "гадание", "гарантированный результат"]
+    },
+    "deferred_to_g9": [
+      "success distinct from brand green (+ label/icon)",
+      "split decorative copper from semantic caution",
+      "verify dark-theme success/error/caution",
+      "rule vs field-border roles",
+      "categorical palette for 4 schools (accessible, always labelled)"
+    ]
+  }
+}
