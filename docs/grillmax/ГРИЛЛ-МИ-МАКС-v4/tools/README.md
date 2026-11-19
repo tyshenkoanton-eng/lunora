@@ -40,7 +40,7 @@ python3 tools/test_check_consistency.py        # регрессионные те
 ```
 | ID | Значение | Источник | Зависимые | Версия | Статус |
 |----|----------|----------|-----------|--------|--------|
-| D-001 | Stars внутри Telegram | G5 | 11_architecture.md, 16_roadmap.md | rev-2 | active |
+| D-001 | <краткое значение решения> | G5 | 11_architecture.md, 16_roadmap.md | rev-2 | active |
 ```
 
 ### Важно
