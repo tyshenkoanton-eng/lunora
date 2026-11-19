@@ -60,7 +60,12 @@ def add(cat, path, detail):
 # 1 + 4. Markdown links
 LINK = re.compile(r'\[[^\]]*\]\(([^)]+)\)')
 OUTSIDE = ('research/', '../../research', 'docs/grillmax', 'прототип/', 'правовое/', 'ДВИЖОК/', 'исследования/', 'спека-экранов/')
+# Файлы-методология/шаблоны: содержат ПРИМЕРЫ ссылок (канон-имена 08_prototype.md …,
+# шаблон 00_SUMMARY), а не навигацию пакета. Проверять их ссылки нельзя.
+SKIP_LINKCHECK = ('ГРИЛЛ-МИ-МАКС-СКИЛЛ.md', 'ГРИЛЛ-МИ-МАКС-СВЕРКА.md')
 for f in walk_files({'.md'}):
+    if os.path.basename(f) in SKIP_LINKCHECK:
+        continue
     txt = open(f, encoding='utf-8', errors='replace').read()
     base = os.path.dirname(f)
     for m in LINK.finditer(txt):
