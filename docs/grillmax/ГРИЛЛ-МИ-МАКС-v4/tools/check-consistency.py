@@ -171,12 +171,15 @@ if MODE == 'project':
                     if not excused:
                         blk('cancelled-referenced', f'{did} упомянут как действующий в {f}'); break
 
-    # 4.5 неизвестные ID решений (встречается ID-образный токен, которого нет в реестре)
+    # 4.5 неизвестные ID решений. Блокирующе ТОЛЬКО если реестр объявлен полным
+    #     (registry_complete в конфиге) — иначе нельзя отличить висячую ссылку от
+    #     решения, которого просто нет в этом реестре. По умолчанию — информационно.
+    registry_complete = bool(cfg.get('registry_complete'))
     for f, txt in all_text.items():
         if os.path.basename(f) in {'DECISIONS.md', '_SESSION.json', 'SKILL.md'}: continue
         for tok in set(DEC_ID_RE.findall(txt)):
             if tok not in decisions and re.match(r'[DРД]-\d', tok):
-                inf('unknown-decision-id', f'{f}: {tok} не определён в реестре') if MODE != 'project' else blk('unknown-decision-id', f'{f}: {tok} не определён в реестре')
+                (blk if registry_complete else inf)('unknown-decision-id', f'{f}: {tok} не в реестре')
 
     # 4.6 устаревание артефактов по ревизиям входов
     if session:

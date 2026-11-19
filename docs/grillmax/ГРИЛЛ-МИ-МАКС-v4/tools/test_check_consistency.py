@@ -60,9 +60,10 @@ check('artifact-stale', mk({'_SESSION.json': sess({
     'G5': {'decisions': [{'id': 'D-001', 'status': 'active', 'dependents': ['dep.md']}]}}),
     'dep.md': 'D-001 тут'}), 1, 'artifact-stale')
 
-# 7. неизвестный ID решения
+# 7. неизвестный ID решения — блокирующе только при registry_complete
 check('unknown-decision-id', mk({
     '_SESSION.json': sess({'G5': {'decisions': [{'id': 'D-001', 'status': 'active', 'dependents': ['dep.md']}]}}),
+    'tools/grillmax-check.config.json': '{"registry_complete": true}',
     'dep.md': 'D-001 тут', 'notes.md': 'мы опираемся на D-999 где-то'}), 1, 'unknown-decision-id')
 
 # 8. битая markdown-ссылка
