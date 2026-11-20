@@ -1,0 +1,15 @@
+# Единственный источник правды по статусу карты (L→G→S→R).
+# ROADMAP_BOARD.md генерируется отсюда (scripts/board_gen.py → make board). Руками не вести.
+project: Лунора
+
+current:
+  level: L1                 # L0 Discovery закрыт (GO с условиями 2026-11-20)
+  gate: G17                 # первый гейт L1: корректность ядра доказана (глобальный ID)
+  slice: G17-S1             # спайк корректности ядра
+  slice_status: не начат
+  latest_review: null
+  latest_verdict: null
+  blocker: ""
+  next_action: "S1 спайк ядра: golden-наборы 4 движков, время/пояса, стоимость LLM, пробная оплата. PASS = зелёный make slice-check."
+
+next_review_number: R1

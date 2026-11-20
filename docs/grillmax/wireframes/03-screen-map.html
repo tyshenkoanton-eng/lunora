@@ -96,6 +96,9 @@
 <header>
   <p class="eyebrow">Лунора · G7 · 15 августа 2026</p>
   <h1>Карта экранов и зависимостей</h1>
+  <div style="border:2px solid #c0392b;background:#fdecea;color:#7b241c;border-radius:10px;padding:12px 14px;margin:12px 0;font-size:14px;line-height:1.5">
+    🗄️ <b>УСТАРЕЛО (ревью v9, F-05).</b> Эта схема от 15.08.2026 описывает <b>66 экранов и 8 продуктов</b> и ссылается на снятые продукты («Выбор имени», «Смена фамилии») и старую модель оплаты. В прототипе сейчас <b>310 адресуемых экранов</b>. <b>Актуальный источник каталога экранов — <code>screen-codes.md</code></b> (пересобирается <code>tools/gen-screen-codes-live.py</code> из живого реестра). Эту схему читать только как исторический набросок зависимостей.
+  </div>
   <p class="lede">Шестьдесят шесть экранов прототипа, их связи и три структурных вывода, которые видны только на схеме. Служебный документ — для того, кто будет это строить.</p>
 </header>
 
@@ -243,7 +246,7 @@
           <rect x="401" y="104" width="86" height="36" rx="7" fill="none" stroke="currentColor"/>
           <text x="444" y="120">Глубина</text><text x="444" y="133" opacity=".55">и условия</text>
           <rect x="499" y="104" width="86" height="36" rx="7" fill="none" stroke="currentColor"/>
-          <text x="542" y="120">Оплата</text><text x="542" y="133" opacity=".55">холд</text>
+          <text x="542" y="120">Оплата</text><text x="542" y="133" opacity=".55">сразу</text>
           <rect x="597" y="104" width="86" height="36" rx="7" fill="none" stroke="currentColor"/>
           <text x="640" y="120">Сборка</text><text x="640" y="133" opacity=".55">этапы</text>
           <rect x="695" y="104" width="86" height="36" rx="7" fill="none" stroke="currentColor" stroke-width="1.6"/>
@@ -270,7 +273,7 @@
         </g>
       </svg>
     </div>
-    <figcaption>Восемь входов и восемь выходов на шести общих экранах. Оплата ставит холд, списание происходит на выдаче документа — момент списания и момент оказания услуги совпадают физически.</figcaption>
+    <figcaption>Восемь входов и восемь выходов на шести общих экранах. Списание — сразу по подтверждению оплаты, без холда; если собрать разбор не удалось, деньги возвращаются автоматически и полностью.</figcaption>
   </figure>
 </section>
 
@@ -353,7 +356,7 @@
         <tr><td>Форма добавления человека</td><td>Сегодня → слот, Разборы → совместимость</td><td><span class="pill gap">нет</span></td></tr>
         <tr><td>Утренняя лента как сообщение бота</td><td>вне Mini App</td><td><span class="pill gap">нет</span></td></tr>
         <tr><td>Доставка документа в бот</td><td>вне Mini App</td><td><span class="pill gap">нет</span></td></tr>
-        <tr><td>Команды бота · <code>/paysupport</code>, <code>/delete</code>, <code>/help</code></td><td>вне Mini App</td><td><span class="pill gap">нет</span></td></tr>
+        <tr><td>Команды бота · <code>/paysupport</code>, <code>/delete</code>, <code>/terms</code>, <code>/support</code>, <code>/help</code></td><td>вне Mini App</td><td><span class="pill">есть</span></td></tr>
         <tr><td>Настройка времени ленты</td><td>Настройки → Уведомления</td><td><span class="pill gap">заглушка</span></td></tr>
         <tr><td>Пять тем из восьми</td><td>Профиль → Темы</td><td><span class="pill gap">не открываются</span></td></tr>
         <tr><td>Разделы западной, ведической, Ба-Цзы</td><td>Профиль → Школы</td><td><span class="pill gap">частично</span></td></tr>

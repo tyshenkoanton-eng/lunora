@@ -1,17 +1,23 @@
 #!/usr/bin/env python3
-"""Пересобирает docs/grillmax/screen-codes.md из реестра REG прототипа.
+"""Пересобирает docs/grillmax/screen-codes.md из ЛИТЕРАЛА `const REG` прототипа.
 
-Запуск из корня репозитория:
-    python3 docs/grillmax/spec/gen-screen-codes.py
+⚠️ УСТАРЕЛО как источник каталога (ревью v9, F-03): читает только литерал REG
+и НЕ видит 22 детальных экрана Нумерологии/Ба-Цзы, которые прототип добавляет
+в REG при загрузке (`catalogDetailScreens` → REG.splice). Канонический
+генератор — `tools/gen-screen-codes-live.py` (снимает живой реестр из браузера,
+310 экранов). Этот скрипт — быстрый фолбэк без браузера; он НЕ перезаписывает
+каталог, собранный живым генератором (защита от регрессии ниже).
 
-Каталог экранов — зеркало реестра, вручную не правится. После изменений
-в REG (добавили/переименовали экран) перегенерируйте этот файл.
+Запуск (из любого места — пути считаются от самого скрипта):
+    python3 spec/gen-screen-codes.py
 """
 import re, json, pathlib
 
-ROOT = pathlib.Path(__file__).resolve().parents[3]
-PROTO = ROOT / "docs/grillmax/wireframes/02-report.html"
-OUT = ROOT / "docs/grillmax/screen-codes.md"
+# Скрипт лежит в grillmax/spec/ — корень пакета это его дед.
+# Работает и в плоском пакете, и в полном репозитории.
+GRILLMAX = pathlib.Path(__file__).resolve().parents[1]
+PROTO = GRILLMAX / "wireframes/02-report.html"
+OUT = GRILLMAX / "screen-codes.md"
 
 src = PROTO.read_text(encoding="utf-8")
 m = re.search(r"const REG = (\[.*?\]);", src, re.S)
@@ -63,5 +69,11 @@ for g, rows in groups.items():
         w(f"| `{r['n']}` | {r['t']} | `{r['k']}` | {note(r)} |")
     w("")
 
+# Защита от регрессии: не затираем каталог, собранный живым генератором.
+if OUT.exists() and "gen-screen-codes-live.py" in OUT.read_text(encoding="utf-8"):
+    print(f"⚠️ {OUT.relative_to(GRILLMAX)} собран живым генератором (включает рантайм-экраны). "
+          f"Статический скрипт даёт {len(REG)} вместо полного набора и НЕ перезаписывает его. "
+          f"Пересобирайте через tools/gen-screen-codes-live.py.")
+    raise SystemExit(0)
 OUT.write_text("\n".join(out) + "\n", encoding="utf-8")
-print(f"{OUT.relative_to(ROOT)}: {len(REG)} экранов, {len(groups)} групп")
+print(f"{OUT.relative_to(GRILLMAX)}: {len(REG)} экранов, {len(groups)} групп (ЛИТЕРАЛ REG; детальные рантайм-экраны не включены — см. gen-screen-codes-live.py)")

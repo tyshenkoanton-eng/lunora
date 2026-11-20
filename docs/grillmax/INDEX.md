@@ -6,8 +6,10 @@
 
 | | |
 |---|---|
-| [00_SUMMARY.md](00_SUMMARY.md) | **Сводка:** что за продукт, состояние гейтов, главные решения, что открыто |
-| [RISKS.md](RISKS.md) | 18 рисков с приоритетами и мерами |
+| [ПЕРЕДАЧА-КОМАНДЕ.md](ПЕРЕДАЧА-КОМАНДЕ.md) | **Точка входа действующего пакета** — читать первым (состав, статусы, порядок, продуктовая матрица) |
+| [КАНОН-И-АРХИВ.md](КАНОН-И-АРХИВ.md) | Карта «канон / опора / архив» — какой документ действует |
+| [00_SUMMARY.md](00_SUMMARY.md) | 🗄️ **Архив L0** (вытеснен каноном) — ранняя сводка, источником истины не является |
+| [RISKS.md](RISKS.md) | 50 рисков с приоритетами и мерами (нумерация с пропусками — объявлено в `RISKS.md`) |
 | [_OPEN_ACTIONS.md](_OPEN_ACTIONS.md) | Действия, требующие стейкхолдера |
 
 ## Гейты
@@ -31,7 +33,7 @@
 | [product-flows.md](product-flows.md) | Флоу 11 продуктов от первого клика до документа |
 | [content-structure.md](content-structure.md) | 20 правил текста и тона |
 | [skeletons.md](skeletons.md) | Скелеты разборов четырёх школ |
-| [consensus-map.md](consensus-map.md) | Карта консенсуса: 18 паттернов, 62 правила |
+| [consensus-map.md](consensus-map.md) | Карта консенсуса: 18 паттернов К-01…К-18 (цель ~250), условия голоса по школам |
 | [dict-numerology.md](dict-numerology.md) | Словарь нумерологии, кириллическая таблица |
 | [engine-spec.md](engine-spec.md) | Движок написания блоков, к G10 |
 | [idempotency.md](idempotency.md) | Идемпотентность платежей |
@@ -44,7 +46,7 @@
 |---|---|
 | `wireframes/01-onboarding.html` | Вход в приложение, 6 экранов |
 | `wireframes/02-report.html` | **Основной прототип** (актуальное число экранов — в каталоге: [screen-codes.md](screen-codes.md)) |
-| `wireframes/03-screen-map.html` | Схема экранов и зависимостей |
+| `wireframes/03-screen-map.html` | 🗄️ устар. набросок зависимостей (66 экранов); актуальный каталог — `screen-codes.md` (310) |
 
 ## Первоисточники
 
@@ -61,12 +63,12 @@
 - [CHECKLIST.md](CHECKLIST.md) — что проверить в прототипе
 - [referral-decision.md](referral-decision.md) — решение по рефералке: час, зачёт по расчёту, сутки за троих
 - [screen-codes.md](screen-codes.md) — адреса всех экранов для обратной связи
-- [research/bot-communication.md](research/bot-communication.md) — исследование коммуникации в боте: частота, формат, лимиты
-- [research/competitors-run.md](research/competitors-run.md) — что и как смотреть у ботов-конкурентов (A-09)
-- [research/channel-check.md](research/channel-check.md) — живой ли канал: Mini Apps, удержание, конверсия
+- research/bot-communication.md (`research/bot-communication.md`) — исследование коммуникации в боте: частота, формат, лимиты
+- research/competitors-run.md (`research/competitors-run.md`) — что и как смотреть у ботов-конкурентов (A-09)
+- research/channel-check.md (`research/channel-check.md`) — живой ли канал: Mini Apps, удержание, конверсия
 - [TEST-PLAN.md](TEST-PLAN.md) — пошаговый план проверки прототипа, девять подходов
-- [research/first-message.md](research/first-message.md) — первое сообщение и личность Луноры
-- [research/bot-card.md](research/bot-card.md) — карточка бота: что читают, как устроена витрина
+- research/first-message.md (`research/first-message.md`) — первое сообщение и личность Луноры
+- research/bot-card.md (`research/bot-card.md`) — карточка бота: что читают, как устроена витрина
 - [depth-model.md](depth-model.md) — глубина расчёта: веса полей, опорные точки, правила показа
 - [agreement-rules.md](agreement-rules.md) — карточки показа: три состояния школ, типы карточек, запреты
 - [thesis-catalog.md](thesis-catalog.md) — каталог тезисов, отбор карточек, словарь качеств периодов
@@ -74,11 +76,11 @@
 - [recalc-flow.md](recalc-flow.md) — пересчёт после правки данных: Л-16-1…Л-18, что от чего пересчитывается, статус прототипа
 - [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md) — вопросы, отложенные до отдельного решения
 - [theme-matrix.md](theme-matrix.md) — матрица «тема × школа»: чем каждая школа считает каждую тему
-- [research/pdf-report.md](research/pdf-report.md) — PDF-отчёты конкурентов: объём, разделы, что выносят в приложение
+- research/pdf-report.md (`research/pdf-report.md`) — PDF-отчёты конкурентов: объём, разделы, что выносят в приложение
 - [payment-pdf-flow.md](payment-pdf-flow.md) — покупка PDF: подтверждение, оператор, три исхода
 - [receipts.md](receipts.md) — чеки: одна модель на самозанятого и ИП, контакт, выдача
-- [research/receipt-fields.md](research/receipt-fields.md) — обязательные реквизиты чека: НПД и ККТ
-- [research/kkt-for-ip.md](research/kkt-for-ip.md) — касса при переходе на ИП: облачная, смены, УСН и патент
+- research/receipt-fields.md (`research/receipt-fields.md`) — обязательные реквизиты чека: НПД и ККТ
+- research/kkt-for-ip.md (`research/kkt-for-ip.md`) — касса при переходе на ИП: облачная, смены, УСН и патент
 - [refunds.md](refunds.md) — возврат: через поддержку, что с чеками в двух режимах, что в истории
 - [admin-scope.md](admin-scope.md) — админка: зачем нужна, что войдёт, открытые вопросы
 - [visual-foundation.md](visual-foundation.md) — визуальный фундамент Луноры: аудитория, образ, цвет, шрифты, этика влияния, конкуренты, бриф для генерации (исследование к G7)
