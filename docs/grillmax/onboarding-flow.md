@@ -37,7 +37,7 @@
 > • **Расчёт совместимости по четырём школам:** партнёр, ребёнок, коллега, родители.
 > • **Поиск благоприятных дат:** свадьба, сделка, переезд, разговор.
 
-Разбор структуры и данные ASO — [research/bot-card.md](research/bot-card.md).
+Разбор структуры и данные ASO — research/bot-card.md (`research/bot-card.md`).
 
 ⚠️ **Короткое описание на 120 знаков не написано.** Оно показывается в поиске и в списке чатов, до карточки. Отдельная задача.
 
@@ -244,5 +244,5 @@
 - [depth-model.md](depth-model.md) — веса полей и правила показа глубины
 - [agreement-rules.md](agreement-rules.md) — три состояния школ, типы карточек
 - [thesis-catalog.md](thesis-catalog.md) — детерминированный отбор, словарь качеств периодов
-- [research/bot-card.md](research/bot-card.md) — карточка бота
+- research/bot-card.md (`research/bot-card.md`) — карточка бота
 - `screen-codes.md` — адреса всех экранов

@@ -7,7 +7,7 @@
 
 > 🗄️ **Архив L0 (разведка), вытеснен каноном** (`КАНОН-И-АРХИВ.md` §66) — источником истины не является; точка входа действующего пакета — `ПЕРЕДАЧА-КОМАНДЕ.md`. Формулировки ниже сохранены как история рассуждения и могут расходиться с каноном.
 
-Опорные исследования: [market-and-audience.md](../../research/market-and-audience.md) · [second-person.md](../../research/second-person.md) · [competitors.md](../../research/competitors.md)
+Опорные исследования: market-and-audience.md (`../../research/market-and-audience.md`) · second-person.md (`../../research/second-person.md`) · competitors.md (`../../research/competitors.md`)
 
 ---
 
@@ -143,7 +143,7 @@
 
 ## 2.4 Проверка ICP зарубежными данными
 
-Исследование [audience-global.md](../../research/audience-global.md) подтвердило выбор S1 с другой стороны — не по интересу, а по деньгам.
+Исследование audience-global.md (`../../research/audience-global.md`) подтвердило выбор S1 с другой стороны — не по интересу, а по деньгам.
 
 ### Разрыв «кто скачивает» и «кто платит»
 

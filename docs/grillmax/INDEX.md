@@ -63,12 +63,12 @@
 - [CHECKLIST.md](CHECKLIST.md) — что проверить в прототипе
 - [referral-decision.md](referral-decision.md) — решение по рефералке: час, зачёт по расчёту, сутки за троих
 - [screen-codes.md](screen-codes.md) — адреса всех экранов для обратной связи
-- [research/bot-communication.md](research/bot-communication.md) — исследование коммуникации в боте: частота, формат, лимиты
-- [research/competitors-run.md](research/competitors-run.md) — что и как смотреть у ботов-конкурентов (A-09)
-- [research/channel-check.md](research/channel-check.md) — живой ли канал: Mini Apps, удержание, конверсия
+- research/bot-communication.md (`research/bot-communication.md`) — исследование коммуникации в боте: частота, формат, лимиты
+- research/competitors-run.md (`research/competitors-run.md`) — что и как смотреть у ботов-конкурентов (A-09)
+- research/channel-check.md (`research/channel-check.md`) — живой ли канал: Mini Apps, удержание, конверсия
 - [TEST-PLAN.md](TEST-PLAN.md) — пошаговый план проверки прототипа, девять подходов
-- [research/first-message.md](research/first-message.md) — первое сообщение и личность Луноры
-- [research/bot-card.md](research/bot-card.md) — карточка бота: что читают, как устроена витрина
+- research/first-message.md (`research/first-message.md`) — первое сообщение и личность Луноры
+- research/bot-card.md (`research/bot-card.md`) — карточка бота: что читают, как устроена витрина
 - [depth-model.md](depth-model.md) — глубина расчёта: веса полей, опорные точки, правила показа
 - [agreement-rules.md](agreement-rules.md) — карточки показа: три состояния школ, типы карточек, запреты
 - [thesis-catalog.md](thesis-catalog.md) — каталог тезисов, отбор карточек, словарь качеств периодов
@@ -76,11 +76,11 @@
 - [recalc-flow.md](recalc-flow.md) — пересчёт после правки данных: Л-16-1…Л-18, что от чего пересчитывается, статус прототипа
 - [OPEN_QUESTIONS.md](OPEN_QUESTIONS.md) — вопросы, отложенные до отдельного решения
 - [theme-matrix.md](theme-matrix.md) — матрица «тема × школа»: чем каждая школа считает каждую тему
-- [research/pdf-report.md](research/pdf-report.md) — PDF-отчёты конкурентов: объём, разделы, что выносят в приложение
+- research/pdf-report.md (`research/pdf-report.md`) — PDF-отчёты конкурентов: объём, разделы, что выносят в приложение
 - [payment-pdf-flow.md](payment-pdf-flow.md) — покупка PDF: подтверждение, оператор, три исхода
 - [receipts.md](receipts.md) — чеки: одна модель на самозанятого и ИП, контакт, выдача
-- [research/receipt-fields.md](research/receipt-fields.md) — обязательные реквизиты чека: НПД и ККТ
-- [research/kkt-for-ip.md](research/kkt-for-ip.md) — касса при переходе на ИП: облачная, смены, УСН и патент
+- research/receipt-fields.md (`research/receipt-fields.md`) — обязательные реквизиты чека: НПД и ККТ
+- research/kkt-for-ip.md (`research/kkt-for-ip.md`) — касса при переходе на ИП: облачная, смены, УСН и патент
 - [refunds.md](refunds.md) — возврат: через поддержку, что с чеками в двух режимах, что в истории
 - [admin-scope.md](admin-scope.md) — админка: зачем нужна, что войдёт, открытые вопросы
 - [visual-foundation.md](visual-foundation.md) — визуальный фундамент Луноры: аудитория, образ, цвет, шрифты, этика влияния, конкуренты, бриф для генерации (исследование к G7)

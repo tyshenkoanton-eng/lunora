@@ -8,7 +8,7 @@
 > 🗄️ **Архив L0 (разведка), вытеснен каноном** (`КАНОН-И-АРХИВ.md`) — источником истины не является. В частности, ценовая модель здесь ранняя («сутки диалога / 249 ₽»); действующая модель — пакеты вопросов, единственный источник цен — `ПРАЙС.md`. Цифры и формулировки ниже сохранены как история рассуждения.
 
 Опорные исследования:
-[research/competitors.md](../../research/competitors.md) · [research/market-and-audience.md](../../research/market-and-audience.md) · [research/economics-and-tech-base.md](../../research/economics-and-tech-base.md)
+research/competitors.md (`../../research/competitors.md`) · research/market-and-audience.md (`../../research/market-and-audience.md`) · research/economics-and-tech-base.md (`../../research/economics-and-tech-base.md`)
 
 ---
 
@@ -44,7 +44,7 @@
 
 ### 1.2 Три боли, подтверждённые цитатами
 
-Все цитаты — реальные отзывы, источники в [market-and-audience.md](../../research/market-and-audience.md).
+Все цитаты — реальные отзывы, источники в market-and-audience.md (`../../research/market-and-audience.md`).
 
 | # | Боль | Формулировка пользователей | Частота |
 |---|---|---|---|
@@ -132,7 +132,7 @@
 
 ## 3. Конкурентный анализ
 
-Полные таблицы — [research/competitors.md](../../research/competitors.md). Здесь — выводы.
+Полные таблицы — research/competitors.md (`../../research/competitors.md`). Здесь — выводы.
 
 ### 3.1 Ландшафт Telegram
 
@@ -243,7 +243,7 @@
 
 ## 4.6 Второй человек: совместимость, дети, круг близких
 
-Полное исследование — [research/second-person.md](../../research/second-person.md).
+Полное исследование — research/second-person.md (`../../research/second-person.md`).
 
 ### Единица ценности
 
