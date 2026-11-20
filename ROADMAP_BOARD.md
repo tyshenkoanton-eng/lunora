@@ -8,7 +8,7 @@
 | | |
 |---|---|
 | Последнее ревью | — (—) |
-| Блокер | — |
-| Следующий шаг | S1 спайк ядра: golden-наборы 4 движков, время/пояса, стоимость LLM, пробная оплата. PASS = зелёный make slice-check. |
+| Блокер | naif.jpl.nasa.gov закрыт в облачной среде (403) — нужен для DE440s, шаг 2 |
+| Следующий шаг | G17-S1: каркас golden + slice-check, затем _ephem.py (Skyfield+DE440s) и время/пояса. Карточка docs/current/G17-S1-план.md. PASS = зелёные make slice-check и make verify. |
 
 Подробная карта — `docs/05_roadmap.md`. Источник статуса — `docs/current/ROADMAP_STATUS.yaml`.

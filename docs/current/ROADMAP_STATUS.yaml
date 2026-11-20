@@ -5,11 +5,11 @@ project: Лунора
 current:
   level: L1                 # L0 Discovery закрыт (GO с условиями 2026-11-20)
   gate: G17                 # первый гейт L1: корректность ядра доказана (глобальный ID)
-  slice: G17-S1             # спайк корректности ядра
+  slice: G17-S1             # эфемериды + время/пояса (G17 дроблён на S1→S2→S3, решение 2026-11-20)
   slice_status: не начат
   latest_review: null
   latest_verdict: null
-  blocker: ""
-  next_action: "S1 спайк ядра: golden-наборы 4 движков, время/пояса, стоимость LLM, пробная оплата. PASS = зелёный make slice-check."
+  blocker: "naif.jpl.nasa.gov закрыт в облачной среде (403) — нужен для DE440s, шаг 2"
+  next_action: "G17-S1: каркас golden + slice-check, затем _ephem.py (Skyfield+DE440s) и время/пояса. Карточка docs/current/G17-S1-план.md. PASS = зелёные make slice-check и make verify."
 
 next_review_number: R1
