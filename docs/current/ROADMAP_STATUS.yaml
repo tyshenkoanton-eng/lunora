@@ -5,7 +5,7 @@ project: Лунора
 current:
   level: L1                 # L0 Discovery закрыт (GO с условиями 2026-11-20)
   gate: G17                 # первый гейт L1: корректность ядра доказана (глобальный ID)
-  slice: G17.S1             # спайк корректности ядра
+  slice: G17-S1             # спайк корректности ядра
   slice_status: не начат
   latest_review: null
   latest_verdict: null
