@@ -6,7 +6,7 @@ current:
   level: L1                 # L0 Discovery закрыт (GO с условиями 2026-11-20)
   gate: G17                 # первый гейт L1: корректность ядра доказана (глобальный ID)
   slice: G17-S1             # эфемериды + время/пояса (G17 дроблён на S1→S2→S3, решение 2026-11-20)
-  slice_status: не начат
+  slice_status: в работе
   latest_review: null
   latest_verdict: null
   blocker: "naif.jpl.nasa.gov закрыт в облачной среде (403) — нужен для DE440s, шаг 2"

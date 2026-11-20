@@ -36,3 +36,10 @@
 - **Следующий шаг:** G17-S1, шаг 1 — каркас: формат golden-YAML, `golden_audit.py` (тесты вперёд), группа `[oracle]`, цель `slice-check`.
 - **Микрорешение:** файл карточки не переименовываю (имя задал Антон); она описывает весь G17, текущий слайс — S1.
 - **Проверки:** `make docs`.
+
+## 2026-11-20 — G17-S1, шаг 1: каркас golden + slice-check
+- **Сделал:** тесты вперёд — `tests/test_golden_audit.py` (18 тестов, сначала красные), затем `scripts/spike/golden_audit.py`: формат кейса по `ARCHITECTURE.md` §6.2 + `versions`; active требует эталон, settings, evidence-файл, версии, допуск/exact; disputed/known_gap — notes. Папка `tests/golden/` (+ `evidence/`). Цель `make slice-check` для G17-S1 — **красная** намеренно: active-кейсов ещё нет. `pyyaml` — в dev-зависимости. `slice_status` → «в работе».
+- **Следующий шаг:** шаг 2 — DE440s (ждёт открытия `naif.jpl.nasa.gov`), группа `[oracle]` и `_ephem.py` с диффом против pyswisseph; параллельно шаг 3 — время/пояса (tzdata 2026f, кейсы `timeplace`).
+- **Микрорешение:** группу `[oracle]` перенёс в шаг 2, потому что в каркасе её нечем проверить. Окружение — `.venv` на Python 3.12: под системным 3.13 pyswisseph не собирается (подтверждение риска ENGINE-SOURCES §0, находка 2).
+- **Находка:** `make verify` красный уже на `main` до моих изменений: `ruff check .` — 230 ошибок (в основном `docs/grillmax/**` инструменты Discovery и прототип `src/lunora/interpret/planets.py`). pytest на 3.12 зелёный (56 тестов), `make docs` зелёный. Нужен выбор Антона, как вернуть verify в зелёное.
+- **Проверки:** `pytest -q` — зелёный; `make slice-check` — красный (ожидаемо); `make docs` — OK.
