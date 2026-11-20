@@ -21,5 +21,5 @@
 - Навигация по справочнику: `docs/00_index.md`
 - Проработка (Discovery L0, 16 гейтов): `docs/grillmax/` → итог и порядок L1: `docs/grillmax/16_roadmap.md`
 - Дорожная карта (витрина, генерируется): `ROADMAP_BOARD.md`
-- Правила разработки агента: `CLAUDE.md`
+- Правила агента: `AGENTS.md` (через `CLAUDE.md`)
 - Общий канон: `docs/LUNERA_STANDARDS.md`
