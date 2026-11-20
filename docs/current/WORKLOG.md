@@ -43,3 +43,9 @@
 - **Микрорешение:** группу `[oracle]` перенёс в шаг 2, потому что в каркасе её нечем проверить. Окружение — `.venv` на Python 3.12: под системным 3.13 pyswisseph не собирается (подтверждение риска ENGINE-SOURCES §0, находка 2).
 - **Находка:** `make verify` красный уже на `main` до моих изменений: `ruff check .` — 230 ошибок (в основном `docs/grillmax/**` инструменты Discovery и прототип `src/lunora/interpret/planets.py`). pytest на 3.12 зелёный (56 тестов), `make docs` зелёный. Нужен выбор Антона, как вернуть verify в зелёное.
 - **Проверки:** `pytest -q` — зелёный; `make slice-check` — красный (ожидаемо); `make docs` — OK.
+
+## 2026-11-20 — make verify снова зелёный
+- **Сделал:** по решению Антона (карточка, вариант «без docs, чинить код»): `docs/` исключён из ruff (`extend-exclude` — архив Discovery); в `src/`, `tests/`, `migrations/`, `scripts/` исправлены 87 ошибок без смены поведения — `ruff --fix` (импорты, `datetime.UTC`, pep604), `ruff format` для длинных строк кода, `contextlib.suppress` в `api/app.py`, `noqa: F401` для импортов моделей в `migrations/env.py` (они регистрируют таблицы в metadata). Для текстов интерпретаций и промтов (`interpret/planets.py`, `interpret/portrait.py`, `llm/prompts.py`) — `per-file-ignores E501`.
+- **Следующий шаг:** G17-S1 шаг 2 (DE440s, ждёт хост `naif.jpl.nasa.gov`) или шаг 3 (время/пояса) — по ответу Антона.
+- **Микрорешение:** длинные тексты не резал на куски, потому что это контент, а не код; правило E501 для них отключено точечно по файлам, а не глобально.
+- **Проверки:** `make verify` — зелёный (ruff OK, pytest 56 passed, docs OK); `make slice-check` — красный (ожидаемо, нет active-кейсов).

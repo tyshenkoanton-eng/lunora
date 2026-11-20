@@ -46,27 +46,37 @@ def format_chart_data(chart_dict: dict) -> str:
             lines.append(f"- {p['name']}: {p['degree_in_sign']}° {p['sign']}{house_str}")
         if aspects := w.get("aspects", []):
             top = sorted(aspects, key=lambda a: a["orb"])[:5]
-            lines.append("- Ключевые аспекты: " + ", ".join(
-                f"{a['planet1']} {a['aspect_type']} {a['planet2']} ({a['orb']}°)"
-                for a in top
-            ))
+            lines.append(
+                "- Ключевые аспекты: "
+                + ", ".join(
+                    f"{a['planet1']} {a['aspect_type']} {a['planet2']} ({a['orb']}°)" for a in top
+                )
+            )
 
     if v := chart_dict.get("vedic"):
         lines.append("\n### Ведическая астрология (Lahiri)")
         for p in v.get("planets", []):
             lines.append(f"- {p['name']}: {p['degree_in_sign']}° {p['sign']}")
         if nak := v.get("moon_nakshatra"):
-            lines.append(f"- Накшатра Луны: {nak['name']} (pada {nak['pada']}), владыка — {nak['lord']}")
+            lines.append(
+                f"- Накшатра Луны: {nak['name']} (pada {nak['pada']}), владыка — {nak['lord']}"
+            )
         if dasha := v.get("dasha_periods"):
             current = next((d for d in dasha if d["start_year"] <= 2026 <= d["end_year"]), None)
             if current:
-                lines.append(f"- Текущая Mahadasha: {current['planet']} ({int(current['start_year'])}–{int(current['end_year'])})")
+                lines.append(
+                    f"- Текущая Mahadasha: {current['planet']} ({int(current['start_year'])}–{int(current['end_year'])})"
+                )
 
     if c := chart_dict.get("chinese"):
         lines.append("\n### Китайская астрология (Ба-Цзы)")
         if yp := c.get("year_pillar"):
-            lines.append(f"- Год: {yp['stem']}{yp['branch']} ({yp['element']} {yp['yin_yang']}, {c.get('year_animal', '')})")
-        lines.append(f"- Дневной ствол: {c.get('day_master', '')} = {c.get('day_master_element', '')} ({c.get('day_master_yin_yang', '')})")
+            lines.append(
+                f"- Год: {yp['stem']}{yp['branch']} ({yp['element']} {yp['yin_yang']}, {c.get('year_animal', '')})"
+            )
+        lines.append(
+            f"- Дневной ствол: {c.get('day_master', '')} = {c.get('day_master_element', '')} ({c.get('day_master_yin_yang', '')})"
+        )
         if bal := c.get("element_balance"):
             lines.append("- Баланс: " + ", ".join(f"{k} {v}" for k, v in bal.items()))
 

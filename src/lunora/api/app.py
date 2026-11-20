@@ -1,14 +1,14 @@
 import asyncio
 import logging
-from contextlib import asynccontextmanager
+from contextlib import asynccontextmanager, suppress
 from pathlib import Path
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 
+from lunora.api.routes import router
 from lunora.bot.setup import bot, dp
 from lunora.config import settings
-from lunora.api.routes import router
 from lunora.db import engine
 
 log = logging.getLogger(__name__)
@@ -30,10 +30,8 @@ async def lifespan(app: FastAPI):
     if polling_task is not None:
         dp.shutdown.set()
         polling_task.cancel()
-        try:
+        with suppress(asyncio.CancelledError):
             await polling_task
-        except asyncio.CancelledError:
-            pass
     if settings.bot_token:
         await bot.session.close()
     await engine.dispose()

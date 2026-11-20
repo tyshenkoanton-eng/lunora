@@ -2,7 +2,7 @@ import uuid
 from datetime import date, datetime, time
 from enum import StrEnum
 
-from sqlalchemy import BigInteger, Date, Enum, String, Time, Text
+from sqlalchemy import BigInteger, Date, Enum, String, Time
 from sqlalchemy.orm import Mapped, mapped_column
 
 from lunora.models.base import Base, TimestampMixin, UUIDPrimaryKey

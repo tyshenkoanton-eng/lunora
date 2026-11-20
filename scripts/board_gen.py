@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 board_gen — генерирует ROADMAP_BOARD.md (витрину) из docs/current/ROADMAP_STATUS.yaml.
 

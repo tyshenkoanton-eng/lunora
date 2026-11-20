@@ -30,7 +30,9 @@ def test_western_chart():
 
 def test_chinese_chart():
     c = ChineseChart(
-        year_pillar=BaziPillar(stem="庚", branch="午", element="Metal", yin_yang="Yang", animal="Horse"),
+        year_pillar=BaziPillar(
+            stem="庚", branch="午", element="Metal", yin_yang="Yang", animal="Horse"
+        ),
         element_balance={"Wood": 2, "Fire": 3},
     )
     d = chart_to_dict(c)

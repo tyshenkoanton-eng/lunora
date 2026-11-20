@@ -35,7 +35,9 @@ async def generate_response(
     if precision in ("unknown", "approximate"):
         precision_note += " Не интерпретируй дома и ASC."
 
-    user_content = f"## Данные натальной карты\n{chart_text}\n{precision_note}\n\n## Вопрос\n{question}"
+    user_content = (
+        f"## Данные натальной карты\n{chart_text}\n{precision_note}\n\n## Вопрос\n{question}"
+    )
 
     messages = [{"role": "system", "content": system}]
     if history:
@@ -51,10 +53,15 @@ async def generate_response(
 
         if attempt < MAX_RETRIES:
             messages.append({"role": "assistant", "content": raw})
-            messages.append({
-                "role": "user",
-                "content": f"Твой ответ не прошёл валидацию: {reason}. Перепиши ответ в правильном формате.",
-            })
+            messages.append(
+                {
+                    "role": "user",
+                    "content": (
+                        f"Твой ответ не прошёл валидацию: {reason}. "
+                        "Перепиши ответ в правильном формате."
+                    ),
+                }
+            )
 
     return raw, category
 

@@ -24,16 +24,18 @@ def build_interpretation_blocks(chart_data: dict) -> list[dict]:
         interps = PLANET_INTERPRETATIONS.get(name, {})
         text = interps.get(sign)
         if text:
-            blocks.append({
-                "planet": name,
-                "planet_ru": PLANET_LABELS.get(name, name),
-                "sign": sign,
-                "sign_ru": SIGN_LABELS.get(sign, sign),
-                "symbol": SIGN_SYMBOLS.get(sign, ""),
-                "house": p.get("house"),
-                "degree": round(p.get("degree_in_sign", 0), 1),
-                "text": text,
-            })
+            blocks.append(
+                {
+                    "planet": name,
+                    "planet_ru": PLANET_LABELS.get(name, name),
+                    "sign": sign,
+                    "sign_ru": SIGN_LABELS.get(sign, sign),
+                    "symbol": SIGN_SYMBOLS.get(sign, ""),
+                    "house": p.get("house"),
+                    "degree": round(p.get("degree_in_sign", 0), 1),
+                    "text": text,
+                }
+            )
     return blocks
 
 
@@ -67,7 +69,9 @@ def build_portrait_prompt(blocks: list[dict], chart_data: dict) -> str:
         animal = chinese.get("year_animal", "")
         element = chinese.get("day_master_element", "")
         if animal:
-            lines.append(f"\n**Китайская астрология**: год {animal}, стихия дневного мастера — {element}.")
+            lines.append(
+                f"\n**Китайская астрология**: год {animal}, стихия дневного мастера — {element}."
+            )
 
     numerology = chart_data.get("numerology")
     if numerology:

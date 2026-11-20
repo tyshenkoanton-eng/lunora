@@ -1,7 +1,7 @@
 import hashlib
 import secrets
 import uuid
-from datetime import datetime, timezone
+from datetime import datetime
 
 from fastapi import APIRouter, HTTPException, Query
 from sqlalchemy import select
@@ -15,23 +15,22 @@ from lunora.api.schemas import (
     OnboardResponse,
     PortraitResponse,
 )
+from lunora.calc.engine import calculate
 from lunora.calc.geocode import geocode_city
+from lunora.calc.serialize import chart_to_dict
 from lunora.calc.timezone import timezone_for
+from lunora.calc.types import BirthData
+from lunora.calc.types import BirthTimePrecision as CalcPrecision
+from lunora.db import async_session
 from lunora.interpret.portrait import (
     PORTRAIT_SYSTEM_PROMPT,
     build_interpretation_blocks,
     build_portrait_prompt,
 )
-from lunora.calc.engine import calculate
-from lunora.calc.serialize import chart_to_dict
-from lunora.calc.types import BirthData
-from lunora.calc.types import BirthTimePrecision as CalcPrecision
-from lunora.models.user import BirthTimePrecision
-from lunora.db import async_session
 from lunora.llm.client import generate_response
 from lunora.models.chart import CalculationRun, NatalChart
 from lunora.models.thread import Message, Thread
-from lunora.models.user import User
+from lunora.models.user import BirthTimePrecision, User
 
 router = APIRouter(prefix="/api")
 
@@ -39,9 +38,7 @@ router = APIRouter(prefix="/api")
 @router.post("/onboard", response_model=OnboardResponse)
 async def onboard(req: OnboardRequest):
     async with async_session() as session:
-        existing = await session.execute(
-            select(User).where(User.telegram_id == req.telegram_id)
-        )
+        existing = await session.execute(select(User).where(User.telegram_id == req.telegram_id))
         if existing.scalar_one_or_none():
             raise HTTPException(400, "User already exists")
 
@@ -143,9 +140,7 @@ async def ask(req: AskRequest):
         if not chart:
             raise HTTPException(404, "Chart not found, onboard first")
 
-        user_row = await session.execute(
-            select(User).where(User.id == user_id)
-        )
+        user_row = await session.execute(select(User).where(User.id == user_id))
         user = user_row.scalar_one_or_none()
         if not user:
             raise HTTPException(404, "User not found")
@@ -169,10 +164,7 @@ async def ask(req: AskRequest):
             .order_by(Message.created_at.asc())
             .limit(20)
         )
-        history = [
-            {"role": m.role, "content": m.content}
-            for m in msg_rows.scalars().all()
-        ]
+        history = [{"role": m.role, "content": m.content} for m in msg_rows.scalars().all()]
 
         chart_data = {
             "western": chart.western,
@@ -222,10 +214,13 @@ async def get_portrait(user_id: uuid.UUID):
         blocks = build_interpretation_blocks(chart_data)
 
         if not blocks:
-            return PortraitResponse(blocks=[], portrait="Недостаточно данных для построения портрета.")
+            return PortraitResponse(
+                blocks=[], portrait="Недостаточно данных для построения портрета."
+            )
 
         prompt = build_portrait_prompt(blocks, chart_data)
         from lunora.llm.client import _call_llm
+
         messages = [
             {"role": "system", "content": PORTRAIT_SYSTEM_PROMPT},
             {"role": "user", "content": prompt},
