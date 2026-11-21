@@ -3,7 +3,7 @@
 
 **Дата:** 2026-11-21 · **Слайс:** G17-S1 (первый гейт L1) · **Вердикт:** PASS
 **Критерий:** зелёные `make verify`, `make slice-check`, `make spike-full` (часть S1).
-Карточка слайса — [../current/G17-S1-план.md](../current/G17-S1-план.md); ход — [../current/WORKLOG.md](../current/WORKLOG.md).
+Карточка слайса — [../current/G17-S1-план.md](../current/G17-S1-план.md); ход — [G17-S1-worklog.md](G17-S1-worklog.md).
 
 ## Что доказано
 

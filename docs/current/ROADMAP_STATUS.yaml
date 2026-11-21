@@ -5,11 +5,11 @@ project: Лунора
 current:
   level: L1                 # L0 Discovery закрыт (GO с условиями 2026-11-20)
   gate: G17                 # первый гейт L1: корректность ядра доказана (глобальный ID)
-  slice: G17-S1             # эфемериды + время/пояса (G17 дроблён на S1→S2→S3, решение 2026-11-20)
-  slice_status: закрыт
+  slice: G17-S2a            # каркас движков + нумерология (G17-S2 дроблён на S2a→S2b→S2c→S2d, решение Антона 2026-11-21)
+  slice_status: в работе
   latest_review: null
-  latest_verdict: PASS      # 2026-11-21: make verify + slice-check + spike-full (часть S1) зелёные
+  latest_verdict: null      # G17-S1 — PASS 2026-11-21 (docs/gates/G17-S1-close.md)
   blocker: null
-  next_action: "G17-S1 ЗАКРЫТ (PASS, 2026-11-21), close-record docs/gates/G17-S1-close.md. Следующий слайс — G17-S2 (четыре движка) — открывает Антон: закрытие S1 следующий гейт не открывает. Открытые дата-вопросы (не блокируют): TZD-001 Джизак, TZD-002 Приднестровье. §2.7 «с нутацией» — поправлен (закрыт). План G17-S2 (S2a нумерология → S2b Ба-Цзы → S2c запад → S2d веда) — docs/current/G17-S2-план.md, на согласовании у Антона; код движков до ОК не начинать."
+  next_action: "G17-S2a в работе (план docs/current/G17-S2-план.md утверждён Антоном 2026-11-21): каркас lunora.engines → golden нумерологии §9.2 → движок → close-record. Антон параллельно снимает эталоны Ба-Цзы (S2b) и Jagannatha Hora (S2d) по чек-листам в docs/current/spike/."
 
 next_review_number: R1
