@@ -316,3 +316,9 @@
 - **Результат:** `pytest tests/test_golden_timeplace.py` — 155 passed (через справочник), `tests/test_places.py` — 4 passed. `golden_audit` — active: 111.
 - **Следующий шаг:** `make spike-full` по части S1, затем close-record.
 - **Проверки:** `golden_audit --require-active`, `pytest tests/test_places.py tests/test_golden_timeplace.py`, `ruff check .`.
+
+## 2026-11-21 — G17-S1, шаг 5з: §2.7 пояснение «с нутацией» (решение Антона, текст спеки)
+- **Сделал:** по решению Антона уточнил `docs/grillmax/ENGINE-SPEC-РАСЧЕТ.md` §2.7: значение айанамши «с нутацией» зависит от модели нутации — историческое 23°15′00,658″ отвечает Δψ = +16,64″, рантайм и оракул по ИАЮ 2000A дают 23°15′00,80″ (Δψ +16,78″); расхождение 0,14″ — разница моделей, а не ошибка, средняя айанамша (идёт в расчёт) совпадает точно. В close-record `docs/gates/G17-S1-close.md` пункт перенесён из «На будущее» в «Закрытые пункты».
+- **Микрорешение:** только текст спеки и close-record — код не трогал, поведение не меняется (GE-10 как был: средняя ≤ 0,001″, с нутацией ≤ 0,005″). Как и правка §2.11.
+- **Следующий шаг:** PR в main (хвост S1).
+- **Проверки:** `docs_discipline` OK, `pytest tests/test_golden_ephemeris.py -k "GE-10 or lahiri"` — 11 passed.
