@@ -20,7 +20,7 @@ verify:         ## полная проверка: линт + типы + тест
 
 slice-check:    ## G17-S1: эфемериды + время/пояса (карточка docs/current/G17-S1-план.md)
 	python scripts/spike/ephem_data_check.py         # DE440s на месте, SHA-256 = §0.5, Skyfield 1.55, tzdata 2026f
-	pytest -q tests/test_golden_audit.py tests/test_timeplace.py tests/test_tz_crosscheck.py tests/test_tz_disputes.py tests/test_vendor_manifest.py tests/test_geonames_vendor.py tests/test_tz_backzone.py tests/test_ephem_data.py tests/test_ephem.py tests/test_golden_ephemeris.py tests/test_golden_timeplace.py
+	pytest -q tests/test_golden_audit.py tests/test_timeplace.py tests/test_tz_crosscheck.py tests/test_tz_disputes.py tests/test_vendor_manifest.py tests/test_geonames_vendor.py tests/test_tz_backzone.py tests/test_ephem_data.py tests/test_ephem.py tests/test_golden_ephemeris.py tests/test_golden_timeplace.py tests/test_golden_time_tolerance.py tests/test_stability.py
 	pytest -q tests/diff -m "not full"                # дифф с оракулом SE на фикс. выборке (seed)
 	python scripts/spike/vendor_check.py
 	python scripts/spike/golden_audit.py tests/golden --require-active
