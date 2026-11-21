@@ -164,3 +164,10 @@
 - **Микрорешение:** Хирон с бланка и куспиды Плацидуса (даны до минуты) в кейс не взяты: Хирон вне v1 (§2.10), куспиды — GE-05, отдельный кейс с Мурманском и Норильском. В расшифровке они записаны.
 - **Следующий шаг:** `make slice-check` целиком, статус-карта, PR.
 - **Проверки:** `golden_audit --require-active` — OK (active: 3); `pytest tests/test_golden_ephemeris.py tests/test_golden_audit.py` — 28 passed; `ruff check .`.
+
+## 2026-11-21 — G17-S1, шаг 4б: golden-раннер в make slice-check — slice-check зелёный
+- **Сделал:** `tests/test_golden_ephemeris.py` добавлен в `make slice-check`. `ROADMAP_STATUS.yaml` (блокер снят, next_action), `make board`, `CURRENT_STATE.md`.
+- **Результат:** `make slice-check` — **зелёный целиком** впервые (ephem_data_check OK, 171 + 8 тестов, vendor_check OK, golden_audit OK — active: 3). `make verify` — зелёный (217 passed).
+- **Важно:** зелёный slice-check ≠ закрытый S1. `golden_audit --require-active` требует хотя бы один active-кейс, а по карточке S1 ещё нужны golden `timeplace` и GE-03/GE-04/GE-05 (съём Антона), справочник мест, §2.8–2.9 и close-record (Джизак TZD-001). Слайс не закрываю.
+- **Следующий шаг:** PR в main.
+- **Проверки:** `make slice-check`, `make verify`.

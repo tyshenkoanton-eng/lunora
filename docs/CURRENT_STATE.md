@@ -8,14 +8,14 @@
 ## Где мы сейчас
 - **Фаза:** L1 (реализация). Discovery L0 по ГРИЛЛ МИ МАКС v4 (16 гейтов) **закрыт** — вердикт **GO с условиями** (2026-11-20).
 - **Текущий слайс:** `G17-S1` (первый гейт L1) — **спайк корректности ядра** (непереносимо). Движки на golden-наборах, время/пояса, стоимость LLM, пробная оплата.
-- **Статус слайса:** в работе. Готово: каркас golden и `slice-check`; время и пояса (tzdata 2026f, GeoNames, `tz_disputes`); эфемеридный слой `lunora/calc/_ephem.py` на Skyfield 1.55 + DE440s (SHA-256 сверен, дифф с Swiss Ephemeris по §2.11 и 10 дат JPL Horizons — зелёные). `make slice-check` красный только на `golden_audit --require-active`: нужен ручной съём эталонов. Детали — `docs/current/ROADMAP_STATUS.yaml`, ход — `docs/current/WORKLOG.md`.
+- **Статус слайса:** в работе. Готово: каркас golden и `slice-check`; время и пояса (tzdata 2026f, GeoNames, `tz_disputes`); эфемеридный слой `lunora/calc/_ephem.py` на Skyfield 1.55 + DE440s (SHA-256 сверен, дифф с Swiss Ephemeris по §2.11 и 10 дат JPL Horizons — зелёные). Первые active golden — карта A по astro.com (GE-01, GE-02, GE-06), `make slice-check` и `make verify` зелёные. Слайс ещё не закрыт: не хватает golden timeplace и GE-03/04/05. Детали — `docs/current/ROADMAP_STATUS.yaml`, ход — `docs/current/WORKLOG.md`.
 
 ## Что разрешено / заблокировано
 - **Разрешено:** работать ТОЛЬКО над текущим слайсом S1 (спайк ядра).
 - **NO-GO:** строить фичи поверх, пока S1 не доказал корректность ядра. Хардкод стилей (только токены, ADR-003). Не-Stars оплата внутри Telegram (D-121). ПДн в аналитику/зарубежный LLM (152-ФЗ).
 
 ## Следующий шаг
-- S1: golden-кейсы GE/timeplace по съёму Антона; справочник мест в рантайме; истинное солнечное время и момент терминов (§2.8–2.9). PASS = зелёные `make slice-check` и `make verify`.
+- S1: golden timeplace и GE-03/04/05 по съёму Антона; справочник мест в рантайме; истинное солнечное время и момент терминов (§2.8–2.9). PASS = зелёные `make slice-check` и `make verify`.
 - Перед прогонами: `make setup` (DE440s) и `make setup-oracle` (pyswisseph + DE440 для оракула) — эфемериды в git не лежат.
 
 ## Указатели
