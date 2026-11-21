@@ -1,4 +1,4 @@
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import swisseph as swe
 
@@ -55,7 +55,7 @@ def _to_jd(data: BirthData) -> float:
         dt = datetime.combine(
             data.birth_date, datetime.min.time(), tzinfo=ZoneInfo(data.timezone)
         )
-    utc = dt.astimezone(timezone.utc)
+    utc = dt.astimezone(UTC)
     return swe.julday(utc.year, utc.month, utc.day, utc.hour + utc.minute / 60.0)
 
 

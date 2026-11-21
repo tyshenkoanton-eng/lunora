@@ -36,12 +36,14 @@ async def handle_text(message: Message):
         )
         return
 
+    from sqlalchemy import select
+
     from lunora.db import async_session
     from lunora.llm.client import generate_response
     from lunora.models.chart import NatalChart
-    from lunora.models.thread import Message as MsgModel, Thread
+    from lunora.models.thread import Message as MsgModel
+    from lunora.models.thread import Thread
     from lunora.models.user import User
-    from sqlalchemy import select
 
     async with async_session() as session:
         user_row = await session.execute(
@@ -108,5 +110,8 @@ async def handle_text(message: Message):
 
 
 def _get_user_id(telegram_id: int) -> str | None:
-    """Quick sync check — returns None if user not onboarded. Lazy import to avoid circular deps."""
+    """Quick sync check — returns None if user not onboarded.
+
+    Lazy import to avoid circular deps.
+    """
     return str(telegram_id)

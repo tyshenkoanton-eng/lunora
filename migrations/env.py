@@ -6,12 +6,11 @@ from alembic import context
 from sqlalchemy import pool
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from lunora.models.base import Base
-from lunora.models.user import User
-from lunora.models.chart import NatalChart, CalculationRun
-from lunora.models.thread import Thread, Message
-from lunora.models.payment import PaymentOrder, Entitlement, Referral
-from lunora.models.forecast import DailyForecast
+from lunora.models.base import Base  # noqa: F401  — регистрация моделей в Base.metadata для autogenerate
+from lunora.models.chart import CalculationRun, NatalChart  # noqa: F401  — регистрация моделей в Base.metadata для autogenerate
+from lunora.models.payment import Entitlement, PaymentOrder, Referral  # noqa: F401  — регистрация моделей в Base.metadata для autogenerate
+from lunora.models.thread import Message, Thread  # noqa: F401  — регистрация моделей в Base.metadata для autogenerate
+from lunora.models.user import User  # noqa: F401  — регистрация моделей в Base.metadata для autogenerate
 
 config = context.config
 if config.config_file_name is not None:

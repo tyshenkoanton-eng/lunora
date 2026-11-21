@@ -12,4 +12,5 @@ bot = Bot(token=settings.bot_token or _DUMMY_TOKEN, session=session)
 dp = Dispatcher()
 
 from lunora.bot.handlers import router  # noqa: E402
+
 dp.include_router(router)

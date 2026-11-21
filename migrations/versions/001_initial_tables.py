@@ -4,16 +4,17 @@ Revision ID: 001
 Revises:
 Create Date: 2026-08-03
 """
-from typing import Sequence, Union
 
-from alembic import op
+from collections.abc import Sequence
+
 import sqlalchemy as sa
+from alembic import op
 from sqlalchemy.dialects.postgresql import JSONB
 
 revision: str = "001"
-down_revision: Union[str, None] = None
-branch_labels: Union[str, Sequence[str], None] = None
-depends_on: Union[str, Sequence[str], None] = None
+down_revision: str | None = None
+branch_labels: str | Sequence[str] | None = None
+depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
@@ -26,8 +27,14 @@ def upgrade() -> None:
         sa.Column("birth_time", sa.Time(), nullable=True),
         sa.Column(
             "birth_time_precision",
-            sa.Enum("exact", "approximate_30", "approximate_60", "approximate", "unknown",
-                    name="birthtimeprecision"),
+            sa.Enum(
+                "exact",
+                "approximate_30",
+                "approximate_60",
+                "approximate",
+                "unknown",
+                name="birthtimeprecision",
+            ),
             nullable=False,
             server_default="unknown",
         ),
@@ -59,7 +66,9 @@ def upgrade() -> None:
     op.create_table(
         "calculation_runs",
         sa.Column("id", sa.Uuid(), primary_key=True),
-        sa.Column("chart_id", sa.Uuid(), sa.ForeignKey("natal_charts.id"), nullable=False, index=True),
+        sa.Column(
+            "chart_id", sa.Uuid(), sa.ForeignKey("natal_charts.id"), nullable=False, index=True
+        ),
         sa.Column("engine_version", sa.String(50), nullable=False),
         sa.Column("zodiac_type", sa.String(20), nullable=False),
         sa.Column("ayanamsa", sa.String(30), nullable=True),
@@ -114,7 +123,9 @@ def upgrade() -> None:
         sa.Column("starts_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("ends_at", sa.DateTime(timezone=True), nullable=False),
         sa.Column("source", sa.String(30), nullable=False),
-        sa.Column("payment_order_id", sa.Uuid(), sa.ForeignKey("payment_orders.id"), nullable=True),
+        sa.Column(
+            "payment_order_id", sa.Uuid(), sa.ForeignKey("payment_orders.id"), nullable=True
+        ),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
         sa.Column("updated_at", sa.DateTime(timezone=True), server_default=sa.func.now()),
     )
@@ -123,7 +134,9 @@ def upgrade() -> None:
         "referrals",
         sa.Column("id", sa.Uuid(), primary_key=True),
         sa.Column("referrer_id", sa.Uuid(), sa.ForeignKey("users.id"), nullable=False, index=True),
-        sa.Column("referred_id", sa.Uuid(), sa.ForeignKey("users.id"), nullable=False, unique=True),
+        sa.Column(
+            "referred_id", sa.Uuid(), sa.ForeignKey("users.id"), nullable=False, unique=True
+        ),
         sa.Column("status", sa.String(20), nullable=False, server_default="registered"),
         sa.Column("bonus_granted", sa.Boolean(), nullable=False, server_default="false"),
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=sa.func.now()),

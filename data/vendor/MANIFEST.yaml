@@ -1,0 +1,61 @@
+# Вендоренные данные Луноры (G17-S1). Источник правды по контрольным суммам.
+# Правило (ADR-001 / B12, решение Антона 2026-11-21): данные качаются один раз с первичного
+# источника, кладутся сюда и сверяются по SHA-256 — прогоны офлайн-воспроизводимы.
+# Проверка: python scripts/spike/vendor_check.py (входит в make verify через pytest и в slice-check).
+# Обновление набора = новая версия + новые суммы + отчёт влияния в WORKLOG; руками суммы не править.
+schema: 1
+sets:
+  iana-tz:
+    version: "2026f"
+    source: https://data.iana.org/time-zones/releases/
+    retrieved: "2026-11-21"
+    license: "tzdata — public domain; tzcode — public domain (часть файлов BSD-3-Clause), см. LICENSE в архиве"
+    notes: >-
+      Подпись .asc — ключ RSA 7E3792A9D8ACF7D633BC1588ED97E90E62AA7E34 (Paul Eggert).
+      Публичного ключа в среде нет и keyserver закрыт, поэтому подпись офлайн не проверена;
+      целостность закреплена SHA-256 на момент скачивания. tzcode нужен для сборки zic
+      2026f (сверка стандартной сборки с backzone, scripts/spike/tz_backzone_check.py).
+    files:
+      - path: iana/tzdata2026f.tar.gz
+        url: https://data.iana.org/time-zones/releases/tzdata2026f.tar.gz
+        bytes: 483310
+        sha256: 01b4a91cec5167ed48c11e8ab78f2048cead78ce94b0cafcad0ae8c5a3044d3d
+      - path: iana/tzdata2026f.tar.gz.asc
+        url: https://data.iana.org/time-zones/releases/tzdata2026f.tar.gz.asc
+        bytes: 833
+        sha256: 21d673c017910cf47e392e2e8e23a855ed22456da16a9a26ae714bd1e723255d
+      - path: iana/tzcode2026f.tar.gz
+        url: https://data.iana.org/time-zones/releases/tzcode2026f.tar.gz
+        bytes: 329832
+        sha256: 5a18da01393679ef2559214dc687563f7f3d05691f6f58b7fbc0166f3e796cd6
+  geonames:
+    version: "2026-11-21"
+    source: https://download.geonames.org/export/dump/
+    retrieved: "2026-11-21"
+    license: "CC BY 4.0 (GeoNames, https://www.geonames.org/) — атрибуция обязательна"
+    notes: >-
+      GeoNames не версионируется — версия = дата снимка (Last-Modified cities15000.zip:
+      2026-11-21 02:49:22 GMT). cities15000 — города от 15 000 жителей и столицы (~33 тыс.),
+      хватает для массовой сверки S1. Справочник мест рантайма (мелкие населённые пункты,
+      русские названия из alternateNames) — отдельное решение, отдельный снимок.
+    files:
+      - path: geonames/cities15000.zip
+        url: https://download.geonames.org/export/dump/cities15000.zip
+        bytes: 3368987
+        sha256: df53bb7aade75a0fa2160a98405e5e1d014fe4c6f4b0db1d6078b9fd7b50486b
+      - path: geonames/admin1CodesASCII.txt
+        url: https://download.geonames.org/export/dump/admin1CodesASCII.txt
+        bytes: 151571
+        sha256: 2e4867f5397acb056ea26377601b57af37cb4c81399770225018e9e439e91ad3
+      - path: geonames/countryInfo.txt
+        url: https://download.geonames.org/export/dump/countryInfo.txt
+        bytes: 32112
+        sha256: 79f8f59ea01cbb40438bf1856dd6c2ff201f03f8fc72d0530b2646aaf603ef04
+      - path: geonames/timeZones.txt
+        url: https://download.geonames.org/export/dump/timeZones.txt
+        bytes: 13896
+        sha256: efa95af085ea8a6d41f876c64649f6e38feda01b1e6f612d5765067f50114de2
+      - path: geonames/readme.txt
+        url: https://download.geonames.org/export/dump/readme.txt
+        bytes: 8843
+        sha256: b1957379b6c1242c700c98ac9a8aa0a09f56c3c0a50ee72175527005f48ef2c5

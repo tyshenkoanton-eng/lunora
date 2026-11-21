@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 docs_discipline — принуждение дисциплины документов Lunera.
 

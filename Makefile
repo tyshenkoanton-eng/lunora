@@ -13,8 +13,10 @@ verify:         ## полная проверка: линт + типы + тест
 	pytest -q
 	python scripts/docs_discipline.py --docs docs
 
-slice-check:    ## проверки текущего слайса (заполняется из карточки слайса)
-	@echo "TODO: подставь проверки текущего слайса (конкретные тесты/команды PASS)"
+slice-check:    ## G17-S1: эфемериды + время/пояса (карточка docs/current/G17-S1-план.md)
+	pytest -q tests/test_golden_audit.py tests/test_timeplace.py tests/test_tz_crosscheck.py tests/test_tz_disputes.py tests/test_vendor_manifest.py tests/test_geonames_vendor.py tests/test_tz_backzone.py
+	python scripts/spike/vendor_check.py
+	python scripts/spike/golden_audit.py tests/golden --require-active
 
 docs:           ## только дисциплина документов
 	python scripts/docs_discipline.py --docs docs
