@@ -179,3 +179,56 @@ def test_nodes(swe, n):
         true = _calc(swe, t, swe.TRUE_NODE)
         assert arcsec(eph.mean_node(t), mean[0]) <= TOL_MEAN_NODE, t.utc_iso()
         assert arcsec(eph.true_node(t), true[0]) <= TOL_TRUE_NODE, t.utc_iso()
+
+
+TOL_TERM = 1.0  # с, момент солнечного термина (§2.11), сравнение в TT
+TOL_EOT = 0.02  # с, уравнение времени (§2.8) 1900–2050: в §2.11 не нормировано — свой допуск
+# после 2050 SE берёт долгосрочную формулу звёздного времени (§2.11): RAMC до 1,9″ = 0,13 с
+TOL_EOT_AFTER_2050 = 0.2
+# айанамша с нутацией: Δψ у Skyfield (ИАЮ 2000A) и SE расходится до 0,0021″, поэтому
+# допуск = 0,001″ средней (§2.11) + разница моделей нутации; в §2.11 не нормировано
+TOL_AYANAMSHA_TRUE = 0.005
+
+
+def ayanamsha_lahiri_true(t) -> float:
+    return eph.ayanamsha_lahiri_mean(t) + eph.nutation(t)[0]
+
+
+@pytest.mark.parametrize("n", _sizes())
+def test_lahiri_true_ayanamsha(swe, n):
+    # GE-10 «+ нутация»: айанамша с нутацией = A_mean + Δψ против оракула без FLG_NONUT
+    swe.set_sid_mode(swe.SIDM_LAHIRI)
+    ts, _ = moments(n, 1900, 2100, salt=7)
+    for t in ts:
+        _, value = swe.get_ayanamsa_ex(t.tt, swe.FLG_JPLEPH)
+        assert arcsec(ayanamsha_lahiri_true(t), value) <= TOL_AYANAMSHA_TRUE, t.utc_iso()
+
+
+def term_moments(n: int, salt: int):
+    """n пар (долгота термина k·15°, момент-подсказка в году термина), seed фиксирован."""
+    ts, rnd = moments(n, 1900, 2100, salt=salt)
+    out = []
+    for t in ts:
+        target = 15.0 * rnd.randrange(24)
+        out.append((target, eph.sun_longitude_instant(target, t)))
+    return out
+
+
+@pytest.mark.parametrize("n", _sizes())
+def test_solar_term_instant(swe, n):
+    # §2.9: корень λ☉(t) = k·15°; оракул — swe.solcross (TT, тот же DE440)
+    for target, ours in term_moments(n // 4, salt=8):
+        theirs = swe.solcross(target, ours.tt - 5.0, swe.FLG_JPLEPH)
+        assert abs(ours.tt - theirs) * 86400.0 <= TOL_TERM, (target, ours.utc_iso())
+
+
+@pytest.mark.parametrize("n", _sizes())
+def test_equation_of_time(swe, n):
+    # §2.8: EoT = TST − LMT против swe.time_equ (сутки, тот же момент UT1)
+    ts, rnd = moments(n, 1900, 2100, salt=9)
+    for t in ts:
+        ours = eph.true_solar_time(t, rnd.uniform(-180.0, 180.0)).eot_minutes * 60.0
+        theirs = swe.time_equ(t.ut1)
+        theirs = (theirs[1] if isinstance(theirs, tuple) else theirs) * 86400.0
+        limit = TOL_EOT if float(t.J) < 2050.0 else TOL_EOT_AFTER_2050
+        assert abs(ours - theirs) <= limit, t.utc_iso()

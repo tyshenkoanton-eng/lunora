@@ -109,6 +109,23 @@ def main() -> int:
         _, v = swe.get_ayanamsa_ex(t.tt, swe.FLG_JPLEPH | swe.FLG_NONUT)
         put("айанамша Лахири (средняя)", d.arcsec(eph.ayanamsha_lahiri_mean(t), v))
 
+    ts, _ = d.moments(n, 1900, 2100, salt=7)
+    for t in ts:
+        _, v = swe.get_ayanamsa_ex(t.tt, swe.FLG_JPLEPH)
+        put("айанамша Лахири с нутацией", d.arcsec(d.ayanamsha_lahiri_true(t), v))
+
+    for target, ours in d.term_moments(n // 4, salt=8):
+        theirs = swe.solcross(target, ours.tt - 5.0, swe.FLG_JPLEPH)
+        put("момент солнечного термина, с (TT)", abs(ours.tt - theirs) * 86400.0)
+
+    ts, rnd = d.moments(n, 1900, 2100, salt=9)
+    for t in ts:
+        ours = eph.true_solar_time(t, rnd.uniform(-180.0, 180.0)).eot_minutes * 60.0
+        theirs = swe.time_equ(t.ut1)
+        theirs = (theirs[1] if isinstance(theirs, tuple) else theirs) * 86400.0
+        span = "1900–2050" if float(t.J) < 2050.0 else "2050–2100"
+        put(f"уравнение времени, с ({span})", abs(ours - theirs))
+
     ts, _ = d.moments(n, 1900, 2100, salt=6)
     for t in ts:
         put("средний узел", d.arcsec(eph.mean_node(t), d._calc(swe, t, swe.MEAN_NODE)[0]))
@@ -129,6 +146,10 @@ def main() -> int:
         "ASC abs(φ) > 66,56°, одинаковые θ, ε": d.TOL_POLAR,
         "куспиды Плацидуса": d.TOL_PLACIDUS,
         "айанамша Лахири (средняя)": d.TOL_AYANAMSHA,
+        "айанамша Лахири с нутацией": d.TOL_AYANAMSHA_TRUE,
+        "момент солнечного термина, с (TT)": d.TOL_TERM,
+        "уравнение времени, с (1900–2050)": d.TOL_EOT,
+        "уравнение времени, с (2050–2100)": d.TOL_EOT_AFTER_2050,
         "средний узел": d.TOL_MEAN_NODE,
         "истинный узел": d.TOL_TRUE_NODE,
     }
@@ -162,7 +183,8 @@ def main() -> int:
         f"| переворотов ASC на 180° (abs(φ) 66,6–89,5°, 1950–2024) | {flips} | 0 | "
         f"{'OK' if flips == 0 else '**превышен**'} |",
         "",
-        "Пояснения — в `docs/current/WORKLOG.md`, шаг 2д.",
+        "Пояснения — в `docs/current/WORKLOG.md`, шаги 2д и 5в (термины, уравнение времени, "
+        "айанамша с нутацией).",
         "",
     ]
     bad += flips != 0

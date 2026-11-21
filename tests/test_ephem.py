@@ -347,3 +347,74 @@ def test_tampered_ephemeris_is_rejected(tmp_path, monkeypatch):
 def test_runtime_does_not_import_oracle():
     src = (ROOT / "src" / "lunora" / "calc" / "_ephem.py").read_text(encoding="utf-8")
     assert "swisseph" not in src
+
+
+# --- §2.8 истинное солнечное время ----------------------------------------------------
+
+E_MOMENT = datetime(1987, 6, 14, 20, 50, tzinfo=UTC)  # карта E (§0.5), координаты как B
+
+
+@pytest.mark.parametrize(
+    ("moment", "lon", "lmt", "eot", "tst"),
+    [
+        (
+            CARD["A"][0],
+            CARD["A"][2],
+            datetime(1984, 2, 4, 13, 58, 3),
+            -13.91,
+            datetime(1984, 2, 4, 13, 44, 8),
+        ),
+        (
+            E_MOMENT,
+            CARD["B"][2],
+            datetime(1987, 6, 14, 23, 20, 28),
+            -0.20,
+            datetime(1987, 6, 14, 23, 20, 15),
+        ),
+    ],
+    ids=["A", "E"],
+)
+def test_true_solar_time_matches_spec_examples(moment, lon, lmt, eot, tst):
+    st = eph.true_solar_time(eph.instant(moment), lon)
+    assert abs((st.lmt - lmt).total_seconds()) < 1.0
+    assert st.eot_minutes == pytest.approx(eot, abs=0.005)
+    assert abs((st.tst - tst).total_seconds()) < 1.0
+
+
+def test_true_solar_time_keeps_its_own_calendar_date():
+    # карта E: на часах 00:50 15 июня, а по TST ещё 14 июня (§2.8) — дата не с часов
+    st = eph.true_solar_time(eph.instant(E_MOMENT), CARD["B"][2])
+    assert st.tst.date().isoformat() == "1987-06-14"
+
+
+# --- §2.9 момент заданной долготы Солнца -----------------------------------------------
+
+
+@pytest.mark.parametrize(
+    "expected",
+    [
+        datetime(1984, 2, 4, 15, 18, 44),
+        datetime(1987, 2, 4, 8, 51, 39),
+        datetime(2026, 2, 3, 20, 2, 8),
+    ],
+    ids=["1984", "1987", "2026"],
+)
+def test_lichun_instant_matches_spec_examples(expected):
+    near = eph.instant(expected.replace(day=1, tzinfo=UTC))
+    t = eph.sun_longitude_instant(315.0, near)
+    got = t.utc_datetime().replace(tzinfo=None)
+    assert abs((got - expected).total_seconds()) < 1.0
+    assert eph.body(t, "sun").lon == pytest.approx(315.0, abs=1e-6)
+
+
+def test_card_a_is_born_before_lichun():
+    # §2.9: карта A родилась за 4 ч 18 мин 44 с до ли-чунь 1984
+    t = eph.sun_longitude_instant(315.0, t_of("A"))
+    gap = (t.tt - t_of("A").tt) * 86400.0
+    assert gap == pytest.approx(4 * 3600 + 18 * 60 + 44, abs=1.0)
+
+
+def test_sun_longitude_instant_finds_nearest_root_from_far_hint():
+    # подсказка за полгода до термина: три шага по средней скорости + деление пополам
+    t = eph.sun_longitude_instant(345.0, eph.instant(datetime(2026, 9, 10, tzinfo=UTC)))
+    assert eph.body(t, "sun").lon == pytest.approx(345.0, abs=1e-6)

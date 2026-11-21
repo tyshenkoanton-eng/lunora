@@ -6,7 +6,8 @@ Skyfield напрямую. Сети здесь нет: нет файла или 
 
 Состав (§2.2–§2.7): момент (UT1 до 1972 / UTC с 1972), видимые геоцентрические долготы и
 скорости 10 тел в эклиптике истинного равноденствия даты, RAMC/ε/ASC/MC с полярным
-правилом, цельные знаки и Плацидус, средний и истинный узел, средняя айанамша Лахири.
+правилом, цельные знаки и Плацидус, средний и истинный узел, средняя айанамша Лахири,
+истинное солнечное время (§2.8) и момент заданной долготы Солнца (§2.9).
 Swiss Ephemeris — только тестовый оракул (tests/diff), сюда не импортируется.
 """
 
@@ -18,7 +19,7 @@ import math
 import os
 import pathlib
 from dataclasses import dataclass
-from datetime import UTC, datetime
+from datetime import UTC, datetime, timedelta
 from typing import Literal
 
 import skyfield
@@ -314,3 +315,62 @@ def ayanamsha_lahiri_mean(t: Time) -> float:
 def sidereal(lon_tropical: float, t: Time) -> float:
     """Сидерическая долгота по Лахири: λ − Δψ − A_mean (§2.7)."""
     return (lon_tropical - nutation(t)[0] - ayanamsha_lahiri_mean(t)) % 360.0
+
+
+# --- §2.8 истинное солнечное время ------------------------------------------------------
+
+_J2000_UT1 = datetime(2000, 1, 1, 12, 0)  # JD 2451545,0 в шкале UT1, без пояса
+
+
+@dataclass(frozen=True)
+class SolarTime:
+    lmt: datetime  # среднее местное время, без пояса (UT1 + λ/15)
+    tst: datetime  # истинное солнечное время места, без пояса (LMT + EoT)
+    eot_minutes: float  # уравнение времени TST − LMT
+
+
+def true_solar_time(t: Time, lon_geo: float) -> SolarTime:
+    """§2.8: TST = (LAST − α☉ + 12ч) mod 24ч; LMT = UT1 + λ/15; EoT = TST − LMT."""
+    k = _kernel()
+    ra, _, _ = k["earth"].at(t).observe(k[_TARGETS["sun"]]).apparent().radec(epoch="date")
+    last = float(t.gast) + lon_geo / 15.0
+    tst_h = (last - float(ra.hours) + 12.0) % 24.0
+    lmt = _J2000_UT1 + timedelta(days=float(t.ut1) - 2451545.0, hours=lon_geo / 15.0)
+    lmt_h = lmt.hour + lmt.minute / 60 + (lmt.second + lmt.microsecond / 1e6) / 3600
+    eot_h = (tst_h - lmt_h + 12.0) % 24.0 - 12.0
+    return SolarTime(lmt=lmt, tst=lmt + timedelta(hours=eot_h), eot_minutes=eot_h * 60.0)
+
+
+# --- §2.9 момент заданной долготы Солнца ------------------------------------------------
+
+SUN_MEAN_MOTION = 360.0 / 365.2422  # °/сутки — только для начального приближения
+_INSTANT_EPS_DAYS = 1e-8  # ≈ 0,9 мс: сходимость ≤ 1 мс (§2.9)
+
+
+def _sun_offset(jd_tt: float, target: float) -> float:
+    lon, _ = _lonlat(timescale().tt_jd(jd_tt), "sun")
+    return ((lon - target + 540.0) % 360.0) - 180.0
+
+
+def sun_longitude_instant(target: float, near: Time, window_days: float = 3.0) -> Time:
+    """§2.9: момент, когда видимая долгота Солнца (истинное равноденствие даты) = target.
+
+    Ищет ближайший к `near` корень: приближение по средней скорости (три шага), затем
+    деление пополам на интервале ±window_days вокруг него (там ровно один корень, Солнце
+    не бывает ретроградным). Сходимость ≤ 1 мс.
+    """
+    target %= 360.0
+    guess = near.tt
+    for _ in range(3):  # уточнение по средней скорости: эксцентриситет даёт до ±4 сут за полгода
+        guess -= _sun_offset(guess, target) / SUN_MEAN_MOTION
+    lo, hi = guess - window_days, guess + window_days
+    f_lo, f_hi = _sun_offset(lo, target), _sun_offset(hi, target)
+    if not (f_lo < 0.0 < f_hi):
+        raise ValueError(f"долгота {target}° не пересекается в окне ±{window_days} сут")
+    while hi - lo > _INSTANT_EPS_DAYS:
+        mid = (lo + hi) / 2.0
+        if _sun_offset(mid, target) < 0.0:
+            lo = mid
+        else:
+            hi = mid
+    return timescale().tt_jd((lo + hi) / 2.0)
