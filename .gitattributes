@@ -1,0 +1,3 @@
+data/vendor/** binary
+data/vendor/MANIFEST.yaml text
+data/vendor/README.md text

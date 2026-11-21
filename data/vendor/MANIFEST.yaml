@@ -1,0 +1,30 @@
+# Вендоренные данные Луноры (G17-S1). Источник правды по контрольным суммам.
+# Правило (ADR-001 / B12, решение Антона 2026-11-21): данные качаются один раз с первичного
+# источника, кладутся сюда и сверяются по SHA-256 — прогоны офлайн-воспроизводимы.
+# Проверка: python scripts/spike/vendor_check.py (входит в make verify через pytest и в slice-check).
+# Обновление набора = новая версия + новые суммы + отчёт влияния в WORKLOG; руками суммы не править.
+schema: 1
+sets:
+  iana-tz:
+    version: "2026f"
+    source: https://data.iana.org/time-zones/releases/
+    retrieved: "2026-11-21"
+    license: "tzdata — public domain; tzcode — public domain (часть файлов BSD-3-Clause), см. LICENSE в архиве"
+    notes: >-
+      Подпись .asc — ключ RSA 7E3792A9D8ACF7D633BC1588ED97E90E62AA7E34 (Paul Eggert).
+      Публичного ключа в среде нет и keyserver закрыт, поэтому подпись офлайн не проверена;
+      целостность закреплена SHA-256 на момент скачивания. tzcode нужен для сборки zic
+      2026f (сверка стандартной сборки с backzone, scripts/spike/tz_backzone_check.py).
+    files:
+      - path: iana/tzdata2026f.tar.gz
+        url: https://data.iana.org/time-zones/releases/tzdata2026f.tar.gz
+        bytes: 483310
+        sha256: 01b4a91cec5167ed48c11e8ab78f2048cead78ce94b0cafcad0ae8c5a3044d3d
+      - path: iana/tzdata2026f.tar.gz.asc
+        url: https://data.iana.org/time-zones/releases/tzdata2026f.tar.gz.asc
+        bytes: 833
+        sha256: 21d673c017910cf47e392e2e8e23a855ed22456da16a9a26ae714bd1e723255d
+      - path: iana/tzcode2026f.tar.gz
+        url: https://data.iana.org/time-zones/releases/tzcode2026f.tar.gz
+        bytes: 329832
+        sha256: 5a18da01393679ef2559214dc687563f7f3d05691f6f58b7fbc0166f3e796cd6
