@@ -45,3 +45,8 @@
   - рантайм `calc/numerology.py` пока не трогаю — переключение в S2d (решение №4).
 - **Следующий шаг:** close-record S2a + changelog + CURRENT_STATE, PR. Расхождение §9.2↔§4.3 про «флаг 19» в G-D08 — в close-record.
 - **Проверки:** `make verify` (652 passed, 18 skipped), `make slice-check` зелёный, `golden_audit` active 138 / known_gap 1, `ruff`.
+
+## 2026-11-21 — G17-S2a, шаг 4: close-record S2a (PASS), статус → S2b
+- **Сделал:** close-record [G17-S2a-close.md](../gates/G17-S2a-close.md), запись в changelog, CURRENT_STATE и ROADMAP_STATUS → `G17-S2b` (ждёт съёма Антона), board перегенерирован. Открытые пункты (не блокируют): расхождение §9.2↔§4.3 про «флаг 19» (G-D08), G-S04 закрытый fixture.
+- **Следующий шаг:** PR S2a в main; затем G17-S2b начинается, когда Антон пришлёт съём двух калькуляторов Ба-Цзы.
+- **Проверки:** `make verify` зелёный, `make board`, `docs_discipline` OK.
