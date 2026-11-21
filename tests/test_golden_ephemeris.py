@@ -52,7 +52,10 @@ def _chart(inp: dict, t=None) -> dict:
     first = math.floor(a.asc / 30.0)
     snap.update({f"houses.whole_sign.{k}": float((first + k - 1) % 12 * 30) for k in range(1, 13)})
     cusps = eph.placidus(a.ramc, inp["lat"], a.obliquity)
-    if not isinstance(cusps, eph.NotComputed):
+    if isinstance(cusps, eph.NotComputed):
+        snap["houses.placidus.status"] = cusps.reason
+    else:
+        snap["houses.placidus.status"] = "computed"
         snap.update({f"houses.placidus.{k + 1}": c for k, c in enumerate(cusps)})
     return snap
 
