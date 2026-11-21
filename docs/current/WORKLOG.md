@@ -17,3 +17,12 @@
   - журнал S1 не удалил, а перенёс в `docs/gates/`, потому что close-record S1 ссылается на ход работ.
 - **Следующий шаг:** каркас `lunora.engines` — контракт результата, слой `engines` в `golden_audit`, раннер, цель `slice-check` S2a.
 - **Проверки:** `docs_discipline`, `make board`.
+
+## 2026-11-21 — G17-S2a, шаг 1: каркас `lunora.engines` — контракт результата, запрет оракулов, slice-check
+- **Сделал:** тесты раньше кода (`tests/engines/test_result_contract.py` — красный, затем зелёный). Пакет `src/lunora/engines/`: `Result` (значение | `not_computed` с причиной из ENGINE-SPEC §1.2, `Rule(id, semver)`, `stability` ∈ stable/range/undetermined/convention, неизменяемый) — минимальный контракт по решению Антона №5. Статический тест `test_no_oracle_imports.py`: `lunora.engines` не импортирует swisseph, PyJHora, cnlunar, lunar-python, timezonefinder (по AST, ловит и ленивые импорты). `make slice-check` стал накопительным: `slice-check-s1` (проверки S1 без изменений) + `slice-check-s2a`; тест `test_slice_check_runs_ephemeris_checks` теперь ищет проверки S1 в `slice-check-s1` и требует, чтобы `slice-check` от него зависел.
+- **Микрорешения:**
+  - слои движков (`western`, `vedic`, `bazi`, `numerology`) в `golden_audit` уже были с S1 — новый слой не заводил;
+  - `slice-check` накопительный, а не только S2a, потому что закрытые слайсы не должны молча покраснеть;
+  - `value` и `not_computed` взаимоисключающие на уровне конструктора: частичный результат под видом полного не собрать (fail closed).
+- **Следующий шаг:** golden нумерологии `NUMEROLOGY-RULES.md` §9.2 (27 кейсов) + раннер, красные до движка.
+- **Проверки:** `pytest tests/engines` (10 passed), `make slice-check` зелёный, `ruff check`.

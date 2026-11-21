@@ -165,7 +165,10 @@ def test_ephem_data_check_reports_missing_de440s(tmp_path):
 
 def test_slice_check_runs_ephemeris_checks():
     mk = (ROOT / "Makefile").read_text(encoding="utf-8")
-    block = mk.split("slice-check:", 1)[1].split("\n\n", 1)[0]
+    # slice-check накопительный (G17-S2): проверки S1 живут в slice-check-s1 и входят в него
+    head = mk.split("\nslice-check:", 1)[1].split("\n", 1)[0]
+    assert "slice-check-s1" in head
+    block = mk.split("\nslice-check-s1:", 1)[1].split("\n\n", 1)[0]
     assert "scripts/spike/ephem_data_check.py" in block
     assert "tests/test_ephem.py" in block
     assert 'tests/diff -m "not full"' in block
