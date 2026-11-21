@@ -26,3 +26,13 @@
   - `value` и `not_computed` взаимоисключающие на уровне конструктора: частичный результат под видом полного не собрать (fail closed).
 - **Следующий шаг:** golden нумерологии `NUMEROLOGY-RULES.md` §9.2 (27 кейсов) + раннер, красные до движка.
 - **Проверки:** `pytest tests/engines` (10 passed), `make slice-check` зелёный, `ruff check`.
+
+## 2026-11-21 — G17-S2a, шаг 2: golden нумерологии §9.2 + раннер (красные до движка)
+- **Сделал:** `tests/golden/numerology/numerology-rules-9-2.yaml` — 27 кейсов §9.2 + `G-N06-space` (тот же результат через пробел), 27 active + G-S04 `known_gap`; evidence [numerology-rules-9-2.md](../../tests/golden/evidence/numerology-rules-9-2.md) с SHA-256 спеки. Раннер `tests/engines/test_golden_numerology.py`: полнота набора, сверка по путям, G-S04 — только с закрытым fixture (`LUNORA_PRIVATE_NUMEROLOGY_FIXTURE`). Сейчас красный: модуля `lunora.engines.numerology` нет.
+- **Микрорешения:**
+  - ожидания расшифрованы из таблицы §9.2 без пересчёта — эталон не должен знать о коде;
+  - G-D09/G-D10 ждут `PSYCHOMATRIX.not_computed = rule_not_formalized` + путь и число рождения (решение №2); значения «+19» из §9.2 оставил справкой в evidence;
+  - G-D08 «флаг проверки 19» → `KARMIC_DEBT_CHECK.not_computed = out_of_v1`: §4.3 выводит проверку из v1, а таблица §9.2 её упоминает — расхождение внутри спеки, вынесу в close-record;
+  - G-N11: латинская «o» на позиции 6 (как в примере 15 §1.5), а не 4.
+- **Следующий шаг:** движок `lunora.engines.numerology` до зелёного раннера + юнит-тесты по примерам §1.5, §4.1, §4.2 и property-тесты.
+- **Проверки:** `golden_audit --require-active` (active: 138, known_gap: 1).
