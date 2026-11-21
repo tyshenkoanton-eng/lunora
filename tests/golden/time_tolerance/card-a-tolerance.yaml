@@ -1,0 +1,186 @@
+# Допуск времени карты A (ARCHITECTURE §4.5): stable / range / undetermined.
+# Эталон знаков ASC — оракул SE; тег — правило §4.5. Не править руками:
+# python scripts/spike/time_tolerance_oracle.py
+id: TT-A-exact
+layer: time_tolerance
+status: active
+case: 'Допуск времени карты A: точно — t ± 0'
+input:
+  place_id: geonames:472757
+  local_date: '1984-02-04'
+  lat: 48.71378
+  lon: 44.4976
+  local_time: '15:00'
+  tolerance_minutes: 0
+reference:
+  source: Swiss Ephemeris 2.10.03 (знаки ASC) + ARCHITECTURE §4.5 (тег)
+  settings:
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    signal: знак асцендента, houses_ex(jd, φ, λ, 'W')
+    sampling: 2 мин по каждому интервалу гипотезы ResolvedMoment
+    rule: stable=1 знак, range=2, undetermined>2 (§4.5)
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/time_tolerance_oracle.py)
+  evidence_file: evidence/card-a-time-tolerance-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+expected:
+- path: stability.tag
+  value: stable
+  exact: true
+- path: stability.asc_signs
+  value:
+  - 3
+  exact: true
+---
+id: TT-A-pm30
+layer: time_tolerance
+status: active
+case: 'Допуск времени карты A: ± 30 мин'
+input:
+  place_id: geonames:472757
+  local_date: '1984-02-04'
+  lat: 48.71378
+  lon: 44.4976
+  local_time: '15:00'
+  tolerance_minutes: 30
+reference:
+  source: Swiss Ephemeris 2.10.03 (знаки ASC) + ARCHITECTURE §4.5 (тег)
+  settings:
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    signal: знак асцендента, houses_ex(jd, φ, λ, 'W')
+    sampling: 2 мин по каждому интервалу гипотезы ResolvedMoment
+    rule: stable=1 знак, range=2, undetermined>2 (§4.5)
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/time_tolerance_oracle.py)
+  evidence_file: evidence/card-a-time-tolerance-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+expected:
+- path: stability.tag
+  value: stable
+  exact: true
+- path: stability.asc_signs
+  value:
+  - 3
+  exact: true
+---
+id: TT-A-pm180
+layer: time_tolerance
+status: active
+case: 'Допуск времени карты A: ± 3 часа'
+input:
+  place_id: geonames:472757
+  local_date: '1984-02-04'
+  lat: 48.71378
+  lon: 44.4976
+  local_time: '15:00'
+  tolerance_minutes: 180
+reference:
+  source: Swiss Ephemeris 2.10.03 (знаки ASC) + ARCHITECTURE §4.5 (тег)
+  settings:
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    signal: знак асцендента, houses_ex(jd, φ, λ, 'W')
+    sampling: 2 мин по каждому интервалу гипотезы ResolvedMoment
+    rule: stable=1 знак, range=2, undetermined>2 (§4.5)
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/time_tolerance_oracle.py)
+  evidence_file: evidence/card-a-time-tolerance-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+expected:
+- path: stability.tag
+  value: undetermined
+  exact: true
+- path: stability.asc_signs
+  value:
+  - 1
+  - 2
+  - 3
+  - 4
+  exact: true
+---
+id: TT-A-unknown
+layer: time_tolerance
+status: active
+case: 'Допуск времени карты A: «не знаю» — целые сутки, опора на полдень'
+input:
+  place_id: geonames:472757
+  local_date: '1984-02-04'
+  lat: 48.71378
+  lon: 44.4976
+  local_time: null
+reference:
+  source: Swiss Ephemeris 2.10.03 (знаки ASC) + ARCHITECTURE §4.5 (тег)
+  settings:
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    signal: знак асцендента, houses_ex(jd, φ, λ, 'W')
+    sampling: 2 мин по каждому интервалу гипотезы ResolvedMoment
+    rule: stable=1 знак, range=2, undetermined>2 (§4.5)
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/time_tolerance_oracle.py)
+  evidence_file: evidence/card-a-time-tolerance-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+expected:
+- path: stability.tag
+  value: undetermined
+  exact: true
+- path: stability.asc_signs
+  value:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+  - 5
+  - 6
+  - 7
+  - 8
+  - 9
+  - 10
+  - 11
+  exact: true
+---
+id: TT-A-boundary-pm30
+layer: time_tolerance
+status: active
+case: 'Допуск времени карты A: ± 30 мин на границе знака асцендента (range)'
+input:
+  place_id: geonames:472757
+  local_date: '1984-02-04'
+  lat: 48.71378
+  lon: 44.4976
+  local_time: 04:00
+  tolerance_minutes: 30
+reference:
+  source: Swiss Ephemeris 2.10.03 (знаки ASC) + ARCHITECTURE §4.5 (тег)
+  settings:
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    signal: знак асцендента, houses_ex(jd, φ, λ, 'W')
+    sampling: 2 мин по каждому интервалу гипотезы ResolvedMoment
+    rule: stable=1 знак, range=2, undetermined>2 (§4.5)
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/time_tolerance_oracle.py)
+  evidence_file: evidence/card-a-time-tolerance-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+expected:
+- path: stability.tag
+  value: range
+  exact: true
+- path: stability.asc_signs
+  value:
+  - 7
+  - 8
+  exact: true

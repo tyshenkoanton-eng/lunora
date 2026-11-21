@@ -20,7 +20,16 @@ from dataclasses import dataclass, field
 
 import yaml
 
-LAYERS = {"timeplace", "ephemeris", "western", "vedic", "bazi", "numerology", "consensus"}
+LAYERS = {
+    "timeplace",
+    "ephemeris",
+    "time_tolerance",
+    "western",
+    "vedic",
+    "bazi",
+    "numerology",
+    "consensus",
+}
 STATUSES = {"active", "disputed", "known_gap"}
 REFERENCE_FIELDS = ("source", "settings", "captured_at", "captured_by", "evidence_file")
 VERSION_FIELDS = ("tz", "ephemeris", "reference_service")

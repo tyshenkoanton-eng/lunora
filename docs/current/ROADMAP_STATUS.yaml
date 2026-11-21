@@ -6,10 +6,10 @@ current:
   level: L1                 # L0 Discovery закрыт (GO с условиями 2026-11-20)
   gate: G17                 # первый гейт L1: корректность ядра доказана (глобальный ID)
   slice: G17-S1             # эфемериды + время/пояса (G17 дроблён на S1→S2→S3, решение 2026-11-20)
-  slice_status: в работе
+  slice_status: закрыт
   latest_review: null
-  latest_verdict: null
+  latest_verdict: PASS      # 2026-11-21: make verify + slice-check + spike-full (часть S1) зелёные
   blocker: null
-  next_action: "G17-S1: make slice-check и make verify зелёные (2026-11-21). Есть первые active golden (карта A, astro.com: GE-01, GE-02, GE-06). До закрытия S1 по карточке: golden timeplace и GE-03/GE-04/GE-05 (съём Антона), справочник мест в рантайме, истинное солнечное время и момент терминов (§2.8–2.9), close-record с Джизаком (TZD-001). Карточка docs/current/G17-S1-план.md."
+  next_action: "G17-S1 ЗАКРЫТ (PASS, 2026-11-21), close-record docs/gates/G17-S1-close.md. Следующий слайс — G17-S2 (четыре движка) — открывает Антон: закрытие S1 следующий гейт не открывает. Открытые дата-вопросы (не блокируют): TZD-001 Джизак, TZD-002 Приднестровье. Хвост: §2.7 пояснение «с нутацией» 0,14″ — решение Антона."
 
 next_review_number: R1
