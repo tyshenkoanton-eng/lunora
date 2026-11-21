@@ -59,6 +59,36 @@ sets:
         url: https://download.geonames.org/export/dump/readme.txt
         bytes: 8843
         sha256: b1957379b6c1242c700c98ac9a8aa0a09f56c3c0a50ee72175527005f48ef2c5
+  hko-solar-terms:
+    version: "2026-11-21"
+    source: https://www.hko.gov.hk/en/gts/astronomy/Solar_Term.htm
+    retrieved: "2026-11-21"
+    license: "© Hong Kong Observatory (HKSAR Government) — данные для сверки в тестах, не для рантайма и не для показа пользователю"
+    notes: >-
+      Эталон GE-07/GE-08 (момент ли-чунь и 12 цзе). Обсерватория публикует время терминов
+      до минуты только на текущий год и два следующих (24SolarTerms_YYYY.xml, время — HKT =
+      UTC+8, сказано на странице Solar_Term.htm, она вендорена ради этого примечания).
+      Для 1984 времени нет: таблица перевода календаря T1984e.txt даёт только дату термина
+      по HKT. Last-Modified: 24SolarTerms_2026.xml 2024-12-23 07:10:02 GMT, T1984e.txt
+      2019-12-12 13:44:39 GMT, T2026e.txt 2019-12-12 13:45:22 GMT, Solar_Term.htm
+      2024-08-28 07:35:02 GMT. Версия = дата снимка.
+    files:
+      - path: hko/24SolarTerms_2026.xml
+        url: https://www.hko.gov.hk/en/gts/astronomy/data/files/24SolarTerms_2026.xml
+        bytes: 1180
+        sha256: 3af98679f43d4d689941c55ba2a19f146ff111a6dff681235dc2b7110974ac74
+      - path: hko/T1984e.txt
+        url: https://www.hko.gov.hk/en/gts/time/calendar/text/files/T1984e.txt
+        bytes: 26192
+        sha256: de5c6296e4acb2b87e19a658f26f86314732b327b3aafa372f359d39035688af
+      - path: hko/T2026e.txt
+        url: https://www.hko.gov.hk/en/gts/time/calendar/text/files/T2026e.txt
+        bytes: 28621
+        sha256: 29ef9c43977a69681ef770d0c264e4226692f21f3febc3d16a4ee5c8aa06c60c
+      - path: hko/Solar_Term.htm
+        url: https://www.hko.gov.hk/en/gts/astronomy/Solar_Term.htm
+        bytes: 10734
+        sha256: 15685455578cfe925d98ed651b3deac1f0e39b5c26f19aa428392df951cff713
   jpl-de440s:
     version: "DE440s"
     source: https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/
