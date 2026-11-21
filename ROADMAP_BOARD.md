@@ -9,6 +9,6 @@
 |---|---|
 | Последнее ревью | — (—) |
 | Блокер | naif.jpl.nasa.gov закрыт в облачной среде (403) — нужен для DE440s, шаг 2 |
-| Следующий шаг | G17-S1: каркас golden + slice-check, затем _ephem.py (Skyfield+DE440s) и время/пояса. Карточка docs/current/G17-S1-план.md. PASS = зелёные make slice-check и make verify. |
+| Следующий шаг | G17-S1: tzdata 2026f и GeoNames завендорены (data/vendor, манифест SHA-256), сверка backzone сделана (TZD-002). Дальше: golden timeplace по съёму astro.com, затем _ephem.py (Skyfield+DE440s). Карточка docs/current/G17-S1-план.md. PASS = зелёные make slice-check и make verify. |
 
 Подробная карта — `docs/05_roadmap.md`. Источник статуса — `docs/current/ROADMAP_STATUS.yaml`.
