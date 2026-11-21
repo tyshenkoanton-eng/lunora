@@ -9,12 +9,13 @@ place_id GeoNames → зона из вендоренного снимка (сп�
 import importlib.util
 import pathlib
 import sys
-from datetime import date, time, timedelta
+from datetime import date, datetime, time, timedelta
 
 import pytest
 import yaml
 
-from lunora.timeplace import resolve
+from lunora.timeplace import NonexistentLocalTime, resolve
+from lunora.timeplace.resolve import _zone
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
 GOLDEN = ROOT / "tests" / "golden"
@@ -57,10 +58,23 @@ def _fmt(off: timedelta) -> str:
 def _snapshot(inp: dict, cities: dict) -> dict:
     geoid = int(inp["place_id"].split(":", 1)[1])
     zone = cities[geoid]["timezone"]
-    m = resolve(date.fromisoformat(inp["local_date"]), time.fromisoformat(inp["local_time"]), zone)
+    d, t = date.fromisoformat(inp["local_date"]), time.fromisoformat(inp["local_time"])
+    try:
+        m = resolve(d, t, zone)
+    except NonexistentLocalTime:
+        # часы перевели вперёд: наше правило — ошибка «уточните время» (план S1, «Перевод часов»).
+        # Для сверки с атласом фиксируем смещение, которое действовало до скачка (fold=0).
+        before = datetime.combine(d, t).replace(tzinfo=_zone(zone), fold=0).utcoffset()
+        return {
+            "timeplace.zone": zone,
+            "timeplace.status": "nonexistent_local_time",
+            "timeplace.offset_before_gap": _fmt(before),
+        }
     return {
         "timeplace.zone": zone,
+        "timeplace.status": "resolved",
         "timeplace.utc_offset": _fmt(m.hypotheses[0].utc_offset),
+        "timeplace.offsets": [_fmt(h.utc_offset) for h in m.hypotheses],
         "timeplace.hypotheses": len(m.hypotheses),
     }
 
@@ -84,7 +98,13 @@ def test_expected_offset_is_local_minus_univ_time(case):
     if minutes > 14 * 60:
         minutes -= 24 * 60
     expected = {e["path"]: e["value"] for e in case["expected"]}
-    assert expected["timeplace.utc_offset"] == _fmt(timedelta(minutes=minutes))
+    # для несуществующего часа атлас берёт смещение до скачка («unchanged clock assumed»)
+    key = (
+        "timeplace.utc_offset"
+        if "timeplace.utc_offset" in expected
+        else "timeplace.offset_before_gap"
+    )
+    assert expected[key] == _fmt(timedelta(minutes=minutes))
 
 
 @pytest.mark.parametrize("case", ACTIVE, ids=[c["id"] for c in ACTIVE])
@@ -96,3 +116,16 @@ def test_active_case_matches_reference(case, cities):
         if snap[e["path"]] != e["value"]
     ]
     assert not misses, misses
+
+
+def test_clock_change_cases_cover_gap_and_repeated_hour():
+    # план S1, «Перевод часов»: несуществующий час — ошибка, повторённый — две гипотезы
+    statuses = {
+        e["value"] for c in ACTIVE for e in c["expected"] if e["path"] == "timeplace.status"
+    }
+    assert "nonexistent_local_time" in statuses
+    assert any(
+        e["path"] == "timeplace.hypotheses" and e["value"] == 2
+        for c in ACTIVE
+        for e in c["expected"]
+    )

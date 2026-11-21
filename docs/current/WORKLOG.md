@@ -241,3 +241,12 @@
 - **Микрорешение:** Киров — geonames:548408 (областной центр, Europe/Kirov), а не одноимённый город Калужской области (548410, Europe/Moscow), потому что атлас astro.com дал 49e42 58n38 — это областной центр. Будущий справочник мест должен различать такие тёзки.
 - **Осталось от пачки 2:** 24 строки — перевод часов TP-DST-01/02 (2) и республики TP-EX-01…22 (22).
 - **Проверки:** `golden_audit --require-active`, `pytest tests/test_golden_timeplace.py` — 73 passed.
+
+## 2026-11-21 — G17-S1, шаг 4н: пачка 2, перевод часов — TP-DST-01/02 (Москва 1987)
+- **Сделал:** два бланка astro.com с предупреждениями атласа → `tests/golden/timeplace/astro-com-moscow-dst-1987.yaml`, active. Раннер `tests/test_golden_timeplace.py` научился несуществующему часу: путь `timeplace.status` (`resolved` | `nonexistent_local_time`), для скачка — `timeplace.offset_before_gap` (смещение до перехода, fold=0), для повторённого часа — `timeplace.offsets` (все гипотезы по порядку). Новый тест требует, чтобы среди active были оба случая. Расшифровка с текстом предупреждений и SHA-256 — [astro-com-moscow-dst-1987.md](../../tests/golden/evidence/astro-com-moscow-dst-1987.md).
+- **Результат:** 
+  - TP-DST-01, 29.03.1987 02:30: атлас пишет «Clock time was skipped over… Unchanged clock assumed» и молча считает по +03:00 (Univ.Time 23:30 накануне). У нас — `NonexistentLocalTime` с просьбой уточнить время; смещение до скачка по tzdata 2026f тоже +03:00, граница перехода совпала. Расхождение в поведении намеренное (план S1, «Перевод часов»).
+  - TP-DST-02, 27.09.1987 02:30: атлас пишет «Same hour occurs twice…» и выбирает летнее +04:00 (Univ.Time 22:30 накануне). У нас две гипотезы [+04:00 основная, +03:00 альтернативная, `repeated_hour`] — выбор атласа совпал с основной.
+  - Мутации (статус и смещение) роняют 3 теста. `golden_audit` — active: 61. Блок «Перевод часов» пачки 2 закрыт.
+- **Осталось от пачки 2:** 22 строки — республики TP-EX-01…22.
+- **Проверки:** `golden_audit --require-active`, `pytest tests/test_golden_timeplace.py` — 80 passed.
