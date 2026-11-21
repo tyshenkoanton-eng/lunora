@@ -43,3 +43,19 @@ def test_dispute_zone_must_match_resolved_zone():
     # реестр применяется только к той зоне места, для которой заведён
     m = resolve(date(1985, 7, 1), time(12), "Asia/Tashkent", place_id=JIZZAX)
     assert len(m.hypotheses) == 1
+
+
+TIRASPOL = "geonames:617239"
+
+
+def test_tiraspol_1990_moscow_time_hypothesis():
+    # TZD-002: backzone держит Europe/Tiraspol на МСК до 1991-03-31, Кишинёв ушёл на EET в мае 1990
+    m = resolve(date(1990, 7, 1), time(12), "Europe/Chisinau", place_id=TIRASPOL)
+    assert [h.utc_offset for h in m.hypotheses] == [3 * H, 4 * H]
+    assert m.provenance["dispute_id"] == "TZD-002"
+
+
+def test_tiraspol_after_1991_is_unambiguous():
+    # МСК после 1992-01-19 в backzone — по комментарию IANA (Эггерт, 2006) ошибка источника
+    m = resolve(date(1995, 7, 1), time(12), "Europe/Chisinau", place_id=TIRASPOL)
+    assert len(m.hypotheses) == 1

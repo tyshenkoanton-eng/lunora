@@ -81,6 +81,12 @@ def crosscheck(min_pop: int) -> tuple[int, list[dict]]:
     return len(cities), rows
 
 
+def _dispute_note(geonameid: int) -> str:
+    from tz_backzone_check import dispute_note
+
+    return dispute_note(geonameid)
+
+
 def _geonames_snapshot() -> str:
     from vendor_check import DEFAULT, load_manifest
 
@@ -111,7 +117,7 @@ def render(total: int, rows: list[dict], min_pop: int) -> str:
         lines.append(
             f"| {r['geonameid']} | {r['name']} | {r['country']} | {r['population']} "
             f"| {r['geonames_zone']} | {r['polygon_zone']} | {r['divergent_dates']} "
-            "| требует ручного разбора |"
+            f"| {_dispute_note(r['geonameid'])} |"
         )
     return "\n".join(lines) + "\n"
 

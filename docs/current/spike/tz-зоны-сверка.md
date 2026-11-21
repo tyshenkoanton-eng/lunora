@@ -8,4 +8,4 @@
 
 | GeoNames id | Город | Страна | Население | Зона GeoNames | Зона по полигону | Дат с расхождением (из 340) | Разбор |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1513886 | Jizzax | UZ | 179200 | Asia/Samarkand | Asia/Tashkent | 243 | требует ручного разбора |
+| 1513886 | Jizzax | UZ | 179200 | Asia/Samarkand | Asia/Tashkent | 243 | TZD-001 `disputed` (… — 1991-12-31), Asia/Samarkand / Asia/Tashkent |

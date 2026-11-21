@@ -14,3 +14,18 @@
     Требует сверки по авторитетному источнику: история зон Asia/Samarkand vs Asia/Tashkent,
     1981–1991 (нормативные акты Узбекской ССР о поясном времени). Открытый дата-вопрос,
     не known_gap в коде. Решение Антона 2026-11-21.
+- id: TZD-002
+  place_id: "geonames:617239"
+  name: Тирасполь (Tiraspol), Молдова / Приднестровье
+  primary_zone: Europe/Chisinau    # зона по GeoNames
+  alternative_zone: Europe/Moscow  # в окне совпадает с backzone Europe/Tiraspol (МСК/МСД)
+  valid_from: "1990-05-06"         # Кишинёв ушёл с московского времени
+  valid_to: "1991-03-30"           # с 1991-03-31 обе зоны на EEST
+  status: disputed
+  found_by: scripts/spike/tz_backzone_check.py (2026-11-21, тёзка из backzone)
+  source_note: >-
+    Стандартная сборка IANA склеивает Europe/Tiraspol с Europe/Chisinau; в backzone Тирасполь
+    остаётся на МСК до 1991-03-31. Требует сверки по местной прессе/нормативке 1990–1991.
+    Расхождение backzone после 1992-01-19 (МСК навсегда) сюда не включено: сам IANA
+    (комментарий П. Эггерта 2006, europe) считает его вероятной ошибкой Shanks & Pottenger —
+    пометка «ошибка источника» в отчёте tz-backzone-сверка.md.
