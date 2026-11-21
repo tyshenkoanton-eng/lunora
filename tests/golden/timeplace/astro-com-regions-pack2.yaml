@@ -1,0 +1,349 @@
+# Golden timeplace, пачка 2 — регионы (astro.com, 2026-11-21): только Univ.Time в шапке.
+# Смещение = местное время − Univ.Time. Зона — из GeoNames по place_id. 152-ФЗ: без имён.
+id: TP-REG-02-volgograd-2005
+layer: timeplace
+status: active
+case: смещение UTC на дату — Волгоград зима 2005 — UTC+3 (московское время, 1991–2011)
+input:
+  place_id: geonames:472757
+  local_date: '2005-01-15'
+  local_time: '12:00'
+  univ_time: 09:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-regions-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +03:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-REG-03-samara-1990
+layer: timeplace
+status: active
+case: смещение UTC на дату — Куйбышев (Самара) зима 1990 — UTC+3 между переходами 1989 и 1991
+input:
+  place_id: geonames:499099
+  local_date: '1990-01-15'
+  local_time: '12:00'
+  univ_time: 09:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-regions-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +03:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-REG-04-ulyanovsk-2005
+layer: timeplace
+status: active
+case: смещение UTC на дату — Ульяновск зима 2005 — UTC+3
+input:
+  place_id: geonames:479123
+  local_date: '2005-01-15'
+  local_time: '12:00'
+  univ_time: 09:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-regions-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +03:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-REG-05-saratov-1995
+layer: timeplace
+status: active
+case: смещение UTC на дату — Саратов зима 1995 — UTC+3
+input:
+  place_id: geonames:498677
+  local_date: '1995-01-15'
+  local_time: '12:00'
+  univ_time: 09:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-regions-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +03:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-REG-06-astrakhan-2005
+layer: timeplace
+status: active
+case: смещение UTC на дату — Астрахань зима 2005 — UTC+3
+input:
+  place_id: geonames:580497
+  local_date: '2005-01-15'
+  local_time: '12:00'
+  univ_time: 09:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-regions-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +03:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-REG-07-kaliningrad-1985
+layer: timeplace
+status: active
+case: смещение UTC на дату — Калининград зима 1985 — UTC+3 (московское время до 1989)
+input:
+  place_id: geonames:554234
+  local_date: '1985-01-15'
+  local_time: '12:00'
+  univ_time: 09:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-regions-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +03:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-REG-08-kirov-1985
+layer: timeplace
+status: active
+case: смещение UTC на дату — Киров зима 1985 — UTC+4 (Москва+1 до 1989)
+input:
+  place_id: geonames:548408
+  local_date: '1985-01-15'
+  local_time: '12:00'
+  univ_time: 08:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-regions-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +04:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-REG-09-tomsk-2005
+layer: timeplace
+status: active
+case: смещение UTC на дату — Томск зима 2005 — UTC+6
+input:
+  place_id: geonames:1489425
+  local_date: '2005-01-15'
+  local_time: '12:00'
+  univ_time: 06:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-regions-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +06:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-REG-10-barnaul-2005
+layer: timeplace
+status: active
+case: смещение UTC на дату — Барнаул зима 2005 — UTC+6
+input:
+  place_id: geonames:1510853
+  local_date: '2005-01-15'
+  local_time: '12:00'
+  univ_time: 06:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-regions-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +06:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-REG-11-novosibirsk-2005
+layer: timeplace
+status: active
+case: смещение UTC на дату — Новосибирск зима 2005 — UTC+6
+input:
+  place_id: geonames:1496747
+  local_date: '2005-01-15'
+  local_time: '12:00'
+  univ_time: 06:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-regions-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +06:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-REG-12-chita-2013
+layer: timeplace
+status: active
+case: смещение UTC на дату — Чита зима 2013 — UTC+10 (2011–2014)
+input:
+  place_id: geonames:2025339
+  local_date: '2013-01-15'
+  local_time: '12:00'
+  univ_time: 02:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-regions-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: '+10:00'
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-REG-13-magadan-2013
+layer: timeplace
+status: active
+case: смещение UTC на дату — Магадан зима 2013 — UTC+12 (2011–2014)
+input:
+  place_id: geonames:2123628
+  local_date: '2013-01-15'
+  local_time: '12:00'
+  univ_time: 00:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-regions-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: '+12:00'
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
