@@ -5,6 +5,7 @@
 ожидание `path` с допуском. 152-ФЗ: во входе кейса — только место, время и координаты.
 """
 
+import math
 import pathlib
 from datetime import datetime
 
@@ -48,6 +49,8 @@ def _chart(inp: dict, t=None) -> dict:
     a = eph.angles(t, inp["lat"], inp["lon"])
     snap.update({"angles.asc": a.asc, "angles.mc": a.mc, "angles.ramc": a.ramc})
     snap.update({"nodes.true": eph.true_node(t), "nodes.mean": eph.mean_node(t)})
+    first = math.floor(a.asc / 30.0)
+    snap.update({f"houses.whole_sign.{k}": float((first + k - 1) % 12 * 30) for k in range(1, 13)})
     cusps = eph.placidus(a.ramc, inp["lat"], a.obliquity)
     if not isinstance(cusps, eph.NotComputed):
         snap.update({f"houses.placidus.{k + 1}": c for k, c in enumerate(cusps)})
@@ -72,7 +75,7 @@ def _misses(case: dict, snap: dict) -> list:
 
 def test_ephemeris_has_active_cases():
     ids = {c["id"][:5] for c in ACTIVE}
-    assert {"GE-01", "GE-02", "GE-03", "GE-04", "GE-06"} <= ids
+    assert {"GE-01", "GE-02", "GE-03", "GE-04", "GE-05", "GE-06"} <= ids
 
 
 @pytest.mark.parametrize("case", CASES, ids=[c["id"] for c in CASES])

@@ -1,0 +1,202 @@
+# F-02 (чек-лист S1): Ленинград 09.08.1962 (карта D), эталон astro.com, снят Антоном 2026-11-21.
+# 152-ФЗ: только вход и координаты; скриншоты в git не кладём (см. evidence).
+# Координаты атласа astro.com 30e18 59n56. Долготы — градусы; tolerance — угловые секунды.
+id: GE-03-leningrad-1962-astro-com
+layer: ephemeris
+status: active
+case: 'GE-03 — шкала UT1 до 1972 (карта D: тела, узел, ASC/MC/RAMC)'
+input:
+  place_id: geonames:498817
+  local_date: '1962-08-09'
+  local_time: 06:15
+  utc_offset: +03:00
+  utc: '1962-08-09T03:15:00Z'
+  lat: 59.933333
+  lon: 30.3
+reference:
+  source: astro.com
+  settings:
+    chart: 'Natal Chart, Method: Web Style / Placidus, тип 2.GW, версия 0.0-1'
+    zodiac: tropical
+    node: 'true'
+    house_system: placidus
+    coordinates: 30e18, 59n56 (атлас astro.com)
+    rounding: тела и углы — до угловой секунды, куспиды — до минуты
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-leningrad-1962.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: astro.com, бланк 21-Nov-2026
+notes: Карта D (ENGINE-SPEC §0.5), до 1972 — UT1 (§2.2); тест test_pre1972_case_rejects_utc_reading проверяет, что
+  прочтение как UTC эталон отвергает.
+expected:
+- path: bodies.sun.lon
+  value: 136.066111
+  tolerance: 1.0
+  unit: arcsec
+  shown: 16 Leo 3' 58"
+- path: bodies.moon.lon
+  value: 231.416111
+  tolerance: 1.0
+  unit: arcsec
+  shown: 21 Sco 24' 58"
+- path: bodies.mercury.lon
+  value: 146.909167
+  tolerance: 1.0
+  unit: arcsec
+  shown: 26 Leo 54' 33"
+- path: bodies.venus.lon
+  value: 180.453611
+  tolerance: 1.0
+  unit: arcsec
+  shown: 0 Lib 27' 13"
+- path: bodies.mars.lon
+  value: 81.259444
+  tolerance: 1.0
+  unit: arcsec
+  shown: 21 Gem 15' 34"
+- path: bodies.jupiter.lon
+  value: 340.5
+  tolerance: 1.0
+  unit: arcsec
+  shown: 10 Pis 30' 0" r
+- path: bodies.saturn.lon
+  value: 307.449167
+  tolerance: 1.0
+  unit: arcsec
+  shown: 7 Aqu 26' 57" r
+- path: bodies.uranus.lon
+  value: 149.943889
+  tolerance: 1.0
+  unit: arcsec
+  shown: 29 Leo 56' 38"
+- path: bodies.neptune.lon
+  value: 220.792778
+  tolerance: 1.0
+  unit: arcsec
+  shown: 10 Sco 47' 34"
+- path: bodies.pluto.lon
+  value: 159.028056
+  tolerance: 1.0
+  unit: arcsec
+  shown: 9 Vir 1' 41"
+- path: bodies.sun.retrograde
+  value: false
+  exact: true
+- path: bodies.moon.retrograde
+  value: false
+  exact: true
+- path: bodies.mercury.retrograde
+  value: false
+  exact: true
+- path: bodies.venus.retrograde
+  value: false
+  exact: true
+- path: bodies.mars.retrograde
+  value: false
+  exact: true
+- path: bodies.jupiter.retrograde
+  value: true
+  exact: true
+- path: bodies.saturn.retrograde
+  value: true
+  exact: true
+- path: bodies.uranus.retrograde
+  value: false
+  exact: true
+- path: bodies.neptune.retrograde
+  value: false
+  exact: true
+- path: bodies.pluto.retrograde
+  value: false
+  exact: true
+- path: nodes.true
+  value: 128.908333
+  tolerance: 1.0
+  unit: arcsec
+  shown: 8 Leo 54' 30"
+- path: angles.asc
+  value: 146.706944
+  tolerance: 60.0
+  unit: arcsec
+  shown: AC 26 Leo 42' 25"
+- path: angles.mc
+  value: 38.571111
+  tolerance: 60.0
+  unit: arcsec
+  shown: MC 8 Tau 34' 16"
+- path: angles.ramc
+  value: 36.191667
+  tolerance: 15.0
+  unit: arcsec
+  shown: Sid. Time 2:24:46
+---
+id: GE-05-leningrad-1962-astro-com
+layer: ephemeris
+status: active
+case: GE-05 — Плацидус на 59,9° и цельные знаки (карта D)
+input:
+  place_id: geonames:498817
+  local_date: '1962-08-09'
+  local_time: 06:15
+  utc_offset: +03:00
+  utc: '1962-08-09T03:15:00Z'
+  lat: 59.933333
+  lon: 30.3
+reference:
+  source: astro.com
+  settings:
+    chart: 'Natal Chart, Method: Web Style / Placidus, тип 2.GW, версия 0.0-1'
+    zodiac: tropical
+    node: 'true'
+    house_system: placidus
+    coordinates: 30e18, 59n56 (атлас astro.com)
+    rounding: тела и углы — до угловой секунды, куспиды — до минуты
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-leningrad-1962.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: astro.com, бланк 21-Nov-2026
+notes: 'Два бланка одного входа: куспиды Плацидуса (до минуты, допуск 1′) и Whole Signs (куспид = 0° знака, точно).
+  reference.settings — бланк Placidus; бланк Whole Signs отличается только системой домов, его сумма — в evidence.'
+expected:
+- path: houses.placidus.2
+  value: 162.733333
+  tolerance: 60.0
+  unit: arcsec
+  shown: 'Placidus 2: 12 Vir 44'''
+- path: houses.placidus.3
+  value: 185.4
+  tolerance: 60.0
+  unit: arcsec
+  shown: 'Placidus 3: 5 Lib 24'''
+- path: houses.placidus.11
+  value: 82.8
+  tolerance: 60.0
+  unit: arcsec
+  shown: 'Placidus 11: 22 Gem 48'''
+- path: houses.placidus.12
+  value: 120.166667
+  tolerance: 60.0
+  unit: arcsec
+  shown: 'Placidus 12: 0 Leo 10'''
+- path: houses.whole_sign.2
+  value: 150.0
+  exact: true
+  shown: 'Whole Signs 2: 0 Vir 0'''
+- path: houses.whole_sign.3
+  value: 180.0
+  exact: true
+  shown: 'Whole Signs 3: 0 Lib 0'''
+- path: houses.whole_sign.11
+  value: 60.0
+  exact: true
+  shown: 'Whole Signs 11: 0 Gem 0'''
+- path: houses.whole_sign.12
+  value: 90.0
+  exact: true
+  shown: 'Whole Signs 12: 0 Can 0'''
