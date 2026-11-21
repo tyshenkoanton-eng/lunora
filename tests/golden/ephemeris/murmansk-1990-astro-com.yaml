@@ -1,0 +1,186 @@
+# F-03 (чек-лист S1): Мурманск 22.12.1990 (карта C), эталон astro.com, снят Антоном 2026-11-21.
+# 152-ФЗ: только вход и координаты; скриншоты в git не кладём (см. evidence).
+# Координаты атласа astro.com 33e05 68n58. Долготы — градусы; tolerance — угловые секунды.
+id: GE-02-murmansk-1990-astro-com
+layer: ephemeris
+status: active
+case: GE-02 — тела, узел, ASC/MC/RAMC на полярной широте (карта C, 68°58′ N)
+input:
+  place_id: geonames:524305
+  local_date: '1990-12-22'
+  local_time: '23:40'
+  utc_offset: +03:00
+  utc: '1990-12-22T20:40:00Z'
+  lat: 68.966667
+  lon: 33.083333
+reference:
+  source: astro.com
+  settings:
+    chart: 'Natal Chart, Method: Web Style / Whole Signs, тип 2.GW, версия 0.0-1'
+    zodiac: tropical
+    node: 'true'
+    house_system: Whole Signs
+    coordinates: 33e05, 68n58 (атлас astro.com)
+    rounding: тела и углы — до угловой секунды, куспиды — до минуты
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-murmansk-1990.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: astro.com, бланк 21-Nov-2026
+notes: Карта C (ENGINE-SPEC §0.5). ASC на 68°58′ — после полярного правила (§2.4); переворота нет.
+expected:
+- path: bodies.sun.lon
+  value: 270.745
+  tolerance: 1.0
+  unit: arcsec
+  shown: 0 Cap 44' 42"
+- path: bodies.moon.lon
+  value: 333.591667
+  tolerance: 1.0
+  unit: arcsec
+  shown: 3 Pis 35' 30"
+- path: bodies.mercury.lon
+  value: 274.208889
+  tolerance: 1.0
+  unit: arcsec
+  shown: 4 Cap 12' 32" r
+- path: bodies.venus.lon
+  value: 283.255833
+  tolerance: 1.0
+  unit: arcsec
+  shown: 13 Cap 15' 21"
+- path: bodies.mars.lon
+  value: 58.381389
+  tolerance: 1.0
+  unit: arcsec
+  shown: 28 Tau 22' 53" r
+- path: bodies.jupiter.lon
+  value: 132.760278
+  tolerance: 1.0
+  unit: arcsec
+  shown: 12 Leo 45' 37" r
+- path: bodies.saturn.lon
+  value: 294.618889
+  tolerance: 1.0
+  unit: arcsec
+  shown: 24 Cap 37' 8"
+- path: bodies.uranus.lon
+  value: 279.183333
+  tolerance: 1.0
+  unit: arcsec
+  shown: 9 Cap 11' 0"
+- path: bodies.neptune.lon
+  value: 283.773611
+  tolerance: 1.0
+  unit: arcsec
+  shown: 13 Cap 46' 25"
+- path: bodies.pluto.lon
+  value: 229.311389
+  tolerance: 1.0
+  unit: arcsec
+  shown: 19 Sco 18' 41"
+- path: bodies.sun.retrograde
+  value: false
+  exact: true
+- path: bodies.moon.retrograde
+  value: false
+  exact: true
+- path: bodies.mercury.retrograde
+  value: true
+  exact: true
+- path: bodies.venus.retrograde
+  value: false
+  exact: true
+- path: bodies.mars.retrograde
+  value: true
+  exact: true
+- path: bodies.jupiter.retrograde
+  value: true
+  exact: true
+- path: bodies.saturn.retrograde
+  value: false
+  exact: true
+- path: bodies.uranus.retrograde
+  value: false
+  exact: true
+- path: bodies.neptune.retrograde
+  value: false
+  exact: true
+- path: bodies.pluto.retrograde
+  value: false
+  exact: true
+- path: nodes.true
+  value: 298.237222
+  tolerance: 1.0
+  unit: arcsec
+  shown: 28 Cap 14' 14"
+- path: angles.asc
+  value: 171.93
+  tolerance: 60.0
+  unit: arcsec
+  shown: AC 21 Vir 55' 48"
+- path: angles.mc
+  value: 75.468889
+  tolerance: 60.0
+  unit: arcsec
+  shown: MC 15 Gem 28' 8"
+- path: angles.ramc
+  value: 74.225
+  tolerance: 15.0
+  unit: arcsec
+  shown: Sid. Time 4:56:54
+---
+id: GE-05-murmansk-1990-astro-com
+layer: ephemeris
+status: active
+case: GE-05 — цельные знаки выше полярного круга; Плацидус не считается
+input:
+  place_id: geonames:524305
+  local_date: '1990-12-22'
+  local_time: '23:40'
+  utc_offset: +03:00
+  utc: '1990-12-22T20:40:00Z'
+  lat: 68.966667
+  lon: 33.083333
+reference:
+  source: astro.com
+  settings:
+    chart: 'Natal Chart, Method: Web Style / Whole Signs, тип 2.GW, версия 0.0-1'
+    zodiac: tropical
+    node: 'true'
+    house_system: Whole Signs
+    coordinates: 33e05, 68n58 (атлас astro.com)
+    rounding: тела и углы — до угловой секунды, куспиды — до минуты
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-murmansk-1990.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: astro.com, бланк 21-Nov-2026
+notes: Цельные знаки сверены с бланком Whole Signs (точно). Для Плацидуса эталон astro.com — молчаливая подмена
+  на Porphyry; у нас по §2.5/D-105 — not_applicable_latitude без подмены, это и проверяется. Куспиды Porphyry —
+  справочно в evidence.
+expected:
+- path: houses.whole_sign.2
+  value: 180.0
+  exact: true
+  shown: 'Whole Signs 2: 0 Lib 0'''
+- path: houses.whole_sign.3
+  value: 210.0
+  exact: true
+  shown: 'Whole Signs 3: 0 Sco 0'''
+- path: houses.whole_sign.11
+  value: 90.0
+  exact: true
+  shown: 'Whole Signs 11: 0 Can 0'''
+- path: houses.whole_sign.12
+  value: 120.0
+  exact: true
+  shown: 'Whole Signs 12: 0 Leo 0'''
+- path: houses.placidus.status
+  value: not_applicable_latitude
+  exact: true
+  shown: astro.com молча подменил Placidus на Porphyry (Method в шапке)

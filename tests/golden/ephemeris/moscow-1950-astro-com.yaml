@@ -1,0 +1,154 @@
+# F-01 (чек-лист S1): Москва 15.06.1950, эталон astro.com, снят Антоном 2026-11-21.
+# 152-ФЗ: только вход и координаты; скриншот в git не кладём (см. evidence).
+# Координаты атласа astro.com 37e35 55n45. Долготы — градусы; tolerance — угловые секунды.
+id: GE-03-moscow-1950-astro-com
+layer: ephemeris
+status: active
+case: GE-03 — шкала UT1 до 1972 (тела, узел, ASC/MC/RAMC, куспиды Плацидуса)
+input:
+  place_id: geonames:524901
+  local_date: '1950-06-15'
+  local_time: '12:00'
+  utc_offset: +03:00
+  utc: '1950-06-15T09:00:00Z'
+  lat: 55.75
+  lon: 37.583333
+reference:
+  source: astro.com
+  settings:
+    chart: 'Natal Chart, Method: Web Style / Placidus, тип 2.GW, версия 0.0-1'
+    zodiac: tropical
+    node: 'true'
+    house_system: placidus
+    coordinates: 37e35, 55n45 (атлас astro.com)
+    rounding: тела и углы — до угловой секунды, куспиды — до минуты
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-moscow-1950.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: astro.com, бланк 21-Nov-2026
+notes: До 1972 гражданское время минус пояс трактуется как UT1 (§2.2). Тот же вход как UTC сдвигает ASC на 2,2′,
+  MC на 3,0′, Луну на 6″ — допуски кейса это ловят (тест test_pre1972_case_rejects_utc_reading).
+expected:
+- path: bodies.sun.lon
+  value: 83.690278
+  tolerance: 1.0
+  unit: arcsec
+  shown: 23 Gem 41' 25"
+- path: bodies.moon.lon
+  value: 80.482222
+  tolerance: 1.0
+  unit: arcsec
+  shown: 20 Gem 28' 56"
+- path: bodies.mercury.lon
+  value: 60.940833
+  tolerance: 1.0
+  unit: arcsec
+  shown: 0 Gem 56' 27"
+- path: bodies.venus.lon
+  value: 45.895556
+  tolerance: 1.0
+  unit: arcsec
+  shown: 15 Tau 53' 44"
+- path: bodies.mars.lon
+  value: 181.325556
+  tolerance: 1.0
+  unit: arcsec
+  shown: 1 Lib 19' 32"
+- path: bodies.jupiter.lon
+  value: 337.235556
+  tolerance: 1.0
+  unit: arcsec
+  shown: 7 Pis 14' 8"
+- path: bodies.saturn.lon
+  value: 163.396944
+  tolerance: 1.0
+  unit: arcsec
+  shown: 13 Vir 23' 49"
+- path: bodies.uranus.lon
+  value: 94.471389
+  tolerance: 1.0
+  unit: arcsec
+  shown: 4 Can 28' 17"
+- path: bodies.neptune.lon
+  value: 194.608333
+  tolerance: 1.0
+  unit: arcsec
+  shown: 14 Lib 36' 30" r
+- path: bodies.pluto.lon
+  value: 136.281667
+  tolerance: 1.0
+  unit: arcsec
+  shown: 16 Leo 16' 54"
+- path: bodies.sun.retrograde
+  value: false
+  exact: true
+- path: bodies.moon.retrograde
+  value: false
+  exact: true
+- path: bodies.mercury.retrograde
+  value: false
+  exact: true
+- path: bodies.venus.retrograde
+  value: false
+  exact: true
+- path: bodies.mars.retrograde
+  value: false
+  exact: true
+- path: bodies.jupiter.retrograde
+  value: false
+  exact: true
+- path: bodies.saturn.retrograde
+  value: false
+  exact: true
+- path: bodies.uranus.retrograde
+  value: false
+  exact: true
+- path: bodies.neptune.retrograde
+  value: true
+  exact: true
+- path: bodies.pluto.retrograde
+  value: false
+  exact: true
+- path: nodes.true
+  value: 3.943056
+  tolerance: 1.0
+  unit: arcsec
+  shown: 3 Ari 56' 35"
+- path: angles.asc
+  value: 170.457222
+  tolerance: 60.0
+  unit: arcsec
+  shown: AC 20 Vir 27' 26"
+- path: angles.mc
+  value: 76.801111
+  tolerance: 60.0
+  unit: arcsec
+  shown: MC 16 Gem 48' 4"
+- path: angles.ramc
+  value: 75.658333
+  tolerance: 15.0
+  unit: arcsec
+  shown: Sid. Time 5:02:38
+- path: houses.placidus.2
+  value: 191.966667
+  tolerance: 60.0
+  unit: arcsec
+  shown: '2: 11 Lib 58'''
+- path: houses.placidus.3
+  value: 220.383333
+  tolerance: 60.0
+  unit: arcsec
+  shown: '3: 10 Sco 23'''
+- path: houses.placidus.11
+  value: 115.216667
+  tolerance: 60.0
+  unit: arcsec
+  shown: '11: 25 Can 13'''
+- path: houses.placidus.12
+  value: 146.35
+  tolerance: 60.0
+  unit: arcsec
+  shown: '12: 26 Leo 21'''
