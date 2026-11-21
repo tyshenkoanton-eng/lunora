@@ -33,9 +33,13 @@ CASES = _cases()
 ACTIVE = [c for c in CASES if c["status"] == "active"]
 
 
-def _chart(inp: dict) -> dict:
+def _moment(inp: dict) -> datetime:
+    return datetime.fromisoformat(inp["utc"].replace("Z", "+00:00"))
+
+
+def _chart(inp: dict, t=None) -> dict:
     """Плоский снимок карты: путь → значение (пути как в expected)."""
-    t = eph.instant(datetime.fromisoformat(inp["utc"].replace("Z", "+00:00")))
+    t = t if t is not None else eph.instant(_moment(inp))
     snap: dict = {}
     for name, p in eph.bodies(t).items():
         snap[f"bodies.{name}.lon"] = p.lon
@@ -44,12 +48,31 @@ def _chart(inp: dict) -> dict:
     a = eph.angles(t, inp["lat"], inp["lon"])
     snap.update({"angles.asc": a.asc, "angles.mc": a.mc, "angles.ramc": a.ramc})
     snap.update({"nodes.true": eph.true_node(t), "nodes.mean": eph.mean_node(t)})
+    cusps = eph.placidus(a.ramc, inp["lat"], a.obliquity)
+    if not isinstance(cusps, eph.NotComputed):
+        snap.update({f"houses.placidus.{k + 1}": c for k, c in enumerate(cusps)})
     return snap
+
+
+def _misses(case: dict, snap: dict) -> list:
+    misses = []
+    for exp in case["expected"]:
+        got = snap[exp["path"]]
+        if exp.get("exact"):
+            ok = got == exp["value"]
+            diff = None
+        else:
+            assert exp.get("unit") == "arcsec", exp["path"]
+            diff = abs((got - exp["value"] + 180.0) % 360.0 - 180.0) * 3600.0
+            ok = diff <= exp["tolerance"]
+        if not ok:
+            misses.append((exp["path"], exp.get("shown"), got, diff))
+    return misses
 
 
 def test_ephemeris_has_active_cases():
     ids = {c["id"][:5] for c in ACTIVE}
-    assert {"GE-01", "GE-02", "GE-04", "GE-06"} <= ids
+    assert {"GE-01", "GE-02", "GE-03", "GE-04", "GE-06"} <= ids
 
 
 @pytest.mark.parametrize("case", CASES, ids=[c["id"] for c in CASES])
@@ -68,17 +91,20 @@ def test_input_local_time_matches_utc(case):
 
 @pytest.mark.parametrize("case", ACTIVE, ids=[c["id"] for c in ACTIVE])
 def test_active_case_matches_reference(case):
-    snap = _chart(case["input"])
-    misses = []
-    for exp in case["expected"]:
-        got = snap[exp["path"]]
-        if exp.get("exact"):
-            ok = got == exp["value"]
-            diff = None
-        else:
-            assert exp.get("unit") == "arcsec", exp["path"]
-            diff = abs((got - exp["value"] + 180.0) % 360.0 - 180.0) * 3600.0
-            ok = diff <= exp["tolerance"]
-        if not ok:
-            misses.append((exp["path"], exp.get("shown"), got, diff))
-    assert not misses, misses
+    assert not _misses(case, _chart(case["input"]))
+
+
+PRE_1972 = [c for c in ACTIVE if _moment(c["input"]).year < 1972 and c["id"].startswith("GE-03")]
+
+
+def test_ge03_cases_exist():
+    assert PRE_1972, "нет active GE-03 — шкала UT1 до 1972 не проверена эталоном"
+
+
+@pytest.mark.parametrize("case", PRE_1972, ids=[c["id"] for c in PRE_1972])
+def test_pre1972_case_rejects_utc_reading(case):
+    # GE-03: тот же вход, прочитанный как UTC, а не UT1 (§2.2), эталон должен отвергнуть
+    m = _moment(case["input"])
+    as_utc = eph.timescale().utc(m.year, m.month, m.day, m.hour, m.minute, m.second)
+    paths = {p for p, *_ in _misses(case, _chart(case["input"], as_utc))}
+    assert {"angles.asc", "angles.mc"} <= paths
