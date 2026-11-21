@@ -18,6 +18,7 @@ dependencies = [
     "cnlunar>=0.2",
     "httpx>=0.28",
     "timezonefinder>=6.5",
+    "pyyaml>=6.0",  # реестры timeplace (tz_disputes)
     "tzdata==2026.6",  # IANA 2026f — закреплено (R-52); смена только с отчётом влияния
     "aiohttp-socks>=0.9",
 ]

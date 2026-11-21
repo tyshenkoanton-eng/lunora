@@ -14,7 +14,7 @@ verify:         ## полная проверка: линт + типы + тест
 	python scripts/docs_discipline.py --docs docs
 
 slice-check:    ## G17-S1: эфемериды + время/пояса (карточка docs/current/G17-S1-план.md)
-	pytest -q tests/test_golden_audit.py tests/test_timeplace.py tests/test_tz_crosscheck.py
+	pytest -q tests/test_golden_audit.py tests/test_timeplace.py tests/test_tz_crosscheck.py tests/test_tz_disputes.py
 	python scripts/spike/golden_audit.py tests/golden --require-active
 
 docs:           ## только дисциплина документов

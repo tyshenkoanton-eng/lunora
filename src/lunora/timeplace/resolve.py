@@ -9,6 +9,8 @@ from functools import cache
 from importlib import resources
 from zoneinfo import ZoneInfo
 
+from lunora.timeplace.disputes import find_dispute
+
 
 class NonexistentLocalTime(ValueError):
     """Местного времени не было: часы перевели вперёд."""
@@ -76,6 +78,7 @@ def resolve(
     local_time: time | None,
     zone_id: str,
     tolerance_minutes: int | None = 0,
+    place_id: str | None = None,
 ) -> ResolvedMoment:
     tz = _zone(zone_id)
     if local_time is None:
@@ -116,10 +119,21 @@ def resolve(
         for off, abbr in _offsets_at(edge, tz):
             add(off, abbr, "interval_crosses_transition")
 
+    provenance = {"tz_build": tz_build(), "zone_id": zone_id}
+    dispute = find_dispute(place_id, zone_id, local_date)
+    if dispute is not None:
+        alt = _zone(dispute.alternative_zone)
+        before = len(hyps)
+        for edge in (center, start, end):
+            for off, abbr in _offsets_at(edge, alt):
+                add(off, abbr, "tz_dispute")
+        if len(hyps) > before:
+            provenance["dispute_id"] = dispute.id
+
     return ResolvedMoment(
         local_date=local_date,
         local_time=local_time,
         tolerance_minutes=tolerance_minutes if local_time is not None else None,
         hypotheses=tuple(hyps),
-        provenance={"tz_build": tz_build(), "zone_id": zone_id},
+        provenance=provenance,
     )

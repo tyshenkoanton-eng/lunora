@@ -1,0 +1,16 @@
+# tz_disputes — спорные случаи часового пояса (ARCHITECTURE.md §4.3, слой 3).
+# Рантайм считает обе гипотезы и показывает развилку человеку. Запись удаляется
+# или переводится в tz_overrides только после сверки по авторитетному источнику.
+- id: TZD-001
+  place_id: "geonames:1513886"
+  name: Джизак (Jizzax), Узбекистан
+  primary_zone: Asia/Samarkand     # зона по GeoNames
+  alternative_zone: Asia/Tashkent  # зона по полигонам timezonefinder
+  valid_from: null                 # гипотезы расходятся до 1991-04; дальше совпадают
+  valid_to: "1991-12-31"
+  status: disputed
+  found_by: scripts/spike/tz_zone_crosscheck.py (2026-11-20, 243 из 340 дат сетки)
+  source_note: >-
+    Требует сверки по авторитетному источнику: история зон Asia/Samarkand vs Asia/Tashkent,
+    1981–1991 (нормативные акты Узбекской ССР о поясном времени). Открытый дата-вопрос,
+    не known_gap в коде. Решение Антона 2026-11-21.
