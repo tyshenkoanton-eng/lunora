@@ -15,6 +15,7 @@ import pytest
 import yaml
 
 from lunora.timeplace import NonexistentLocalTime, resolve
+from lunora.timeplace.places import lookup
 from lunora.timeplace.resolve import _zone
 
 ROOT = pathlib.Path(__file__).resolve().parents[1]
@@ -56,11 +57,12 @@ def _fmt(off: timedelta) -> str:
 
 
 def _snapshot(inp: dict, cities: dict) -> dict:
-    geoid = int(inp["place_id"].split(":", 1)[1])
-    zone = cities[geoid]["timezone"]
+    # конвейер как в продукте: place_id → минимальный справочник мест S1 → зона и регион
+    place = lookup(inp["place_id"])
+    zone = place.timezone
     d, t = date.fromisoformat(inp["local_date"]), time.fromisoformat(inp["local_time"])
     try:
-        m = resolve(d, t, zone)
+        m = resolve(d, t, zone, place_id=inp["place_id"], region=place.region)
     except NonexistentLocalTime:
         # часы перевели вперёд: наше правило — ошибка «уточните время» (план S1, «Перевод часов»).
         # Для сверки с атласом фиксируем смещение, которое действовало до скачка (fold=0).

@@ -1,0 +1,32 @@
+# Различение тёзок через минимальный справочник мест S1 (карточка G17-S1).
+# Эталон зоны — вендоренный GeoNames, смещения — tzdata 2026f. Пара к TP-REG-08 (Киров 548408).
+---
+id: TP-NAME-01-kirov-kaluga
+layer: timeplace
+status: active
+case: тёзка — Киров Калужской обл. (548410) → Europe/Moscow, в отличие от областного (548408)
+input:
+  place_id: geonames:548410
+  local_date: '1985-01-15'
+  local_time: '12:00'
+  univ_time: 09:00
+reference:
+  source: GeoNames (зона по geonameid) + IANA tzdata 2026f (смещение)
+  settings:
+    atlas: вендоренный снимок GeoNames cities15000 (data/vendor/geonames)
+    zone: Europe/Moscow
+    contrast: geonames:548408 (Киров областной) → Europe/Kirov, UTC+4 (кейс TP-REG-08)
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/build_places_min.py + ручная сверка)
+  evidence_file: evidence/places-namesakes-kirov.md
+versions:
+  tz: 2026f
+  ephemeris: не применимо (слой timeplace)
+  reference_service: GeoNames cities15000 (снимок 2026-11-21)
+expected:
+- path: timeplace.zone
+  value: Europe/Moscow
+  exact: true
+- path: timeplace.utc_offset
+  value: '+03:00'
+  exact: true

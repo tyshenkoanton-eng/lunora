@@ -309,3 +309,10 @@
   - «range» отдельным кейсом (04:00 местного): в 15:00 ±30 мин знак не меняют, ветка range без граничного клок-тайма не покрывалась (как синтетика ±78° в GE-04).
 - **Следующий шаг:** минимальный справочник мест (различение тёзок — два Кирова).
 - **Проверки:** `golden_audit --require-active` (110), `pytest tests/test_stability.py tests/test_golden_time_tolerance.py`, `ruff check .`.
+
+## 2026-11-21 — G17-S1, шаг 5е: минимальный справочник мест S1 (различение тёзок)
+- **Сделал:** `lunora.timeplace.places` — рантайм-справочник из данных `data/places_min.yaml` (собран из вендоренного снимка GeoNames генератором `scripts/spike/build_places_min.py`: 28 мест — ровно все place_id golden-кейсов плюс оба Кирова). `lookup(place_id) -> Place(lat, lon, timezone, region=admin1)`. Регион (`geonames-admin1:RU.NN`) идёт в правило `tz_disputes`. Golden `tests/golden/timeplace/places-namesakes.yaml` (TP-NAME-01): Киров Калужской обл. `geonames:548410` → `Europe/Moscow` (+03:00) против областного `geonames:548408` → `Europe/Kirov` (+04:00, TP-REG-08) — доказательство различения тёзок, evidence [places-namesakes-kirov.md](../../tests/golden/evidence/places-namesakes-kirov.md). Раннер timeplace теперь берёт зону и регион **из справочника** (`places.lookup`), а не из GeoNames в тесте, — конвейер как в продукте. Юнит-тесты `tests/test_places.py`: два Кирова, покрытие всех golden-мест, регион, ошибка на неизвестном. В `make slice-check`.
+- **Границы по решению Антона:** справочник минимальный — только тёзки и места кейсов. Полный продуктовый (мелкие НП, русские названия из alternateNames, разрешение по имени) — фаза стройки, не S1. Не раздуваю.
+- **Результат:** `pytest tests/test_golden_timeplace.py` — 155 passed (через справочник), `tests/test_places.py` — 4 passed. `golden_audit` — active: 111.
+- **Следующий шаг:** `make spike-full` по части S1, затем close-record.
+- **Проверки:** `golden_audit --require-active`, `pytest tests/test_places.py tests/test_golden_timeplace.py`, `ruff check .`.
