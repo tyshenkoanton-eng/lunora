@@ -1,0 +1,1252 @@
+# Golden нумерологии G17-S2a — NUMEROLOGY-RULES.md §9.2 (27 кейсов + вариант G-N06 через пробел).
+# Эталон — сама спека: значения расшифрованы из таблицы §9.2 без пересчёта. Не подгонять под код.
+# G-D09/G-D10: эра post2000 — fail closed по решению Антона №2 (квадрат не выдаётся);
+# значения квадрата из §9.2 сохранены в evidence как справка.
+id: G-N01
+layer: numerology
+status: active
+case: эталон, цепочка 95→14→5
+input:
+  name_birth:
+    surname: Соколова
+    given: Марина
+    patronymic: Антоновна
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: name.sum.all
+  value: 95
+  exact: true
+- path: name.sum.vowels
+  value: 41
+  exact: true
+- path: name.sum.consonants
+  value: 54
+  exact: true
+- path: EXPRESSION
+  value: 5
+  exact: true
+- path: HEART
+  value: 5
+  exact: true
+- path: PERSONA
+  value: 9
+  exact: true
+- path: EXPRESSION.chain
+  value:
+  - 95
+  - 14
+  - 5
+  exact: true
+- path: name.warnings
+  value: []
+  exact: true
+- path: name.flags
+  value: []
+  exact: true
+---
+id: G-N02
+layer: numerology
+status: active
+case: совпадение с dict-numerology §9; Облик 56→11 не сворачивается
+input:
+  name_birth:
+    surname: Куликов
+    given: Роман
+    patronymic: Николаевич
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: name.sum.all
+  value: 91
+  exact: true
+- path: name.sum.vowels
+  value: 35
+  exact: true
+- path: name.sum.consonants
+  value: 56
+  exact: true
+- path: EXPRESSION
+  value: 1
+  exact: true
+- path: HEART
+  value: 8
+  exact: true
+- path: PERSONA
+  value: 11
+  exact: true
+- path: PERSONA.chain
+  value:
+  - 56
+  - 11
+  exact: true
+- path: PERSONA.is_master
+  value: true
+  exact: true
+---
+id: G-N03
+layer: numerology
+status: active
+case: сплошь против «по частям» (было бы 2)
+input:
+  name_birth:
+    surname: Соловьёв
+    given: Илья
+    patronymic: Юрьевич
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: name.sum.all
+  value: 83
+  exact: true
+- path: name.sum.vowels
+  value: 40
+  exact: true
+- path: name.sum.consonants
+  value: 43
+  exact: true
+- path: EXPRESSION
+  value: 11
+  exact: true
+- path: HEART
+  value: 4
+  exact: true
+- path: PERSONA
+  value: 7
+  exact: true
+- path: EXPRESSION.chain
+  value:
+  - 83
+  - 11
+  exact: true
+---
+id: G-N04
+layer: numerology
+status: active
+case: 'Е≠Ё: 11 → 1 от одной буквы'
+input:
+  name_birth:
+    surname: Соловьев
+    given: Илья
+    patronymic: Юрьевич
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: name.sum.all
+  value: 82
+  exact: true
+- path: name.sum.vowels
+  value: 39
+  exact: true
+- path: name.sum.consonants
+  value: 43
+  exact: true
+- path: EXPRESSION
+  value: 1
+  exact: true
+- path: HEART
+  value: 3
+  exact: true
+- path: PERSONA
+  value: 7
+  exact: true
+---
+id: G-N05
+layer: numerology
+status: active
+case: падеж + предупреждение oblique_case_suspected
+input:
+  name_birth:
+    surname: Соколовой
+    given: Марины
+    patronymic: Антоновны
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: name.sum.all
+  value: 105
+  exact: true
+- path: name.sum.vowels
+  value: 49
+  exact: true
+- path: name.sum.consonants
+  value: 56
+  exact: true
+- path: EXPRESSION
+  value: 6
+  exact: true
+- path: HEART
+  value: 4
+  exact: true
+- path: PERSONA
+  value: 11
+  exact: true
+- path: name.warnings
+  value:
+  - oblique_case_suspected
+  exact: true
+---
+id: G-N06
+layer: numerology
+status: active
+case: двойная фамилия через дефис
+input:
+  name_birth:
+    surname: Римская-Корсакова
+    given: Анна
+    patronymic: Сергеевна
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: name.sum.all
+  value: 117
+  exact: true
+- path: name.sum.vowels
+  value: 45
+  exact: true
+- path: name.sum.consonants
+  value: 72
+  exact: true
+- path: EXPRESSION
+  value: 9
+  exact: true
+- path: HEART
+  value: 9
+  exact: true
+- path: PERSONA
+  value: 9
+  exact: true
+- path: name.working
+  value: РИМСКАЯКОРСАКОВААННАСЕРГЕЕВНА
+  exact: true
+---
+id: G-N06-space
+layer: numerology
+status: active
+case: двойная фамилия через пробел — тот же результат, что G-N06
+input:
+  name_birth:
+    surname: Римская Корсакова
+    given: Анна
+    patronymic: Сергеевна
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: name.sum.all
+  value: 117
+  exact: true
+- path: name.sum.vowels
+  value: 45
+  exact: true
+- path: name.sum.consonants
+  value: 72
+  exact: true
+- path: EXPRESSION
+  value: 9
+  exact: true
+- path: HEART
+  value: 9
+  exact: true
+- path: PERSONA
+  value: 9
+  exact: true
+- path: name.working
+  value: РИМСКАЯКОРСАКОВААННАСЕРГЕЕВНА
+  exact: true
+---
+id: G-N07
+layer: numerology
+status: active
+case: флаг no_patronymic
+input:
+  name_birth:
+    surname: Ким
+    given: Виктория
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: name.sum.all
+  value: 41
+  exact: true
+- path: name.sum.vowels
+  value: 16
+  exact: true
+- path: name.sum.consonants
+  value: 25
+  exact: true
+- path: EXPRESSION
+  value: 5
+  exact: true
+- path: HEART
+  value: 7
+  exact: true
+- path: PERSONA
+  value: 7
+  exact: true
+- path: name.flags
+  value:
+  - no_patronymic
+  exact: true
+---
+id: G-N08
+layer: numerology
+status: active
+case: Ъ=1, Ь=3 в «остальных»
+input:
+  name_birth:
+    surname: Подъячева
+    given: Наталья
+    patronymic: Игоревна
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: name.sum.all
+  value: 104
+  exact: true
+- path: name.sum.vowels
+  value: 43
+  exact: true
+- path: name.sum.consonants
+  value: 61
+  exact: true
+- path: EXPRESSION
+  value: 5
+  exact: true
+- path: HEART
+  value: 7
+  exact: true
+- path: PERSONA
+  value: 7
+  exact: true
+---
+id: G-N09
+layer: numerology
+status: active
+case: 38→11 остановка; 57→12→3
+input:
+  name_birth:
+    surname: Лебедева
+    given: Марина
+    patronymic: Антоновна
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: name.sum.all
+  value: 95
+  exact: true
+- path: name.sum.vowels
+  value: 38
+  exact: true
+- path: name.sum.consonants
+  value: 57
+  exact: true
+- path: EXPRESSION
+  value: 5
+  exact: true
+- path: HEART
+  value: 11
+  exact: true
+- path: PERSONA
+  value: 3
+  exact: true
+- path: HEART.chain
+  value:
+  - 38
+  - 11
+  exact: true
+- path: PERSONA.chain
+  value:
+  - 57
+  - 12
+  - 3
+  exact: true
+---
+id: G-N10
+layer: numerology
+status: active
+case: латиница целиком — fail closed
+input:
+  name_birth:
+    surname: Sokolova
+    given: Marina
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: error.code
+  value: latin_not_supported
+  exact: true
+- path: error.field
+  value: surname
+  exact: true
+---
+id: G-N11
+layer: numerology
+status: active
+case: латинская «o» в кириллице — fail closed с позицией
+input:
+  name_birth:
+    surname: Соколoва
+    given: Марина
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: error.code
+  value: mixed_script
+  exact: true
+- path: error.field
+  value: surname
+  exact: true
+- path: error.position
+  value: 6
+  exact: true
+---
+id: G-D01
+layer: numerology
+status: active
+case: эталон; вершины 11·5·7·9, вызовы 5·2·3·3, границы 2014/2023/2032
+input:
+  birth_date: 17.03.1986
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: WORK
+  value:
+  - 35
+  - 8
+  - 33
+  - 6
+  exact: true
+- path: CELLS
+  value:
+  - 2
+  - 0
+  - 4
+  - 0
+  - 1
+  - 2
+  - 1
+  - 2
+  - 1
+  exact: true
+- path: LIFE_PATH
+  value: 8
+  exact: true
+- path: BIRTHDAY
+  value: 8
+  exact: true
+- path: PINNACLES
+  value:
+  - 11
+  - 5
+  - 7
+  - 9
+  exact: true
+- path: CHALLENGES
+  value:
+  - 5
+  - 2
+  - 3
+  - 3
+  exact: true
+- path: PERIODS.ends
+  value:
+  - 2014
+  - 2023
+  - 2032
+  exact: true
+---
+id: G-D02
+layer: numerology
+status: active
+case: 33 → 6; день 22 остаётся 22; WORK_4 = 11 не мастер; вершины 8·11·1·11
+input:
+  birth_date: 22.04.1978
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: WORK
+  value:
+  - 33
+  - 6
+  - 29
+  - 11
+  exact: true
+- path: CELLS
+  value:
+  - 3
+  - 3
+  - 2
+  - 1
+  - 0
+  - 1
+  - 1
+  - 1
+  - 2
+  exact: true
+- path: LIFE_PATH
+  value: 6
+  exact: true
+- path: BIRTHDAY
+  value: 22
+  exact: true
+- path: LIFE_PATH.chain
+  value:
+  - 33
+  - 6
+  exact: true
+- path: PINNACLES
+  value:
+  - 8
+  - 11
+  - 1
+  - 11
+  exact: true
+---
+id: G-D03
+layer: numerology
+status: active
+case: день 29 → 11
+input:
+  birth_date: 29.11.1975
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: WORK
+  value:
+  - 35
+  - 8
+  - 31
+  - 4
+  exact: true
+- path: CELLS
+  value:
+  - 4
+  - 1
+  - 2
+  - 1
+  - 2
+  - 0
+  - 1
+  - 1
+  - 2
+  exact: true
+- path: LIFE_PATH
+  value: 8
+  exact: true
+- path: BIRTHDAY
+  value: 11
+  exact: true
+---
+id: G-D04
+layer: numerology
+status: active
+case: путь 29→11; «по частям» дало бы 2
+input:
+  birth_date: 11.04.1976
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: WORK
+  value:
+  - 29
+  - 11
+  - 27
+  - 9
+  exact: true
+- path: LIFE_PATH
+  value: 11
+  exact: true
+- path: BIRTHDAY
+  value: 11
+  exact: true
+- path: LIFE_PATH.chain
+  value:
+  - 29
+  - 11
+  exact: true
+---
+id: G-D05
+layer: numerology
+status: active
+case: путь 4; «по частям» дало бы 22
+input:
+  birth_date: 11.06.1976
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: WORK
+  value:
+  - 31
+  - 4
+  - 29
+  - 11
+  exact: true
+- path: LIFE_PATH
+  value: 4
+  exact: true
+- path: BIRTHDAY
+  value: 11
+  exact: true
+- path: LIFE_PATH.chain
+  value:
+  - 31
+  - 4
+  exact: true
+---
+id: G-D06
+layer: numerology
+status: active
+case: последний день эры classic; f = 3
+input:
+  birth_date: 31.12.1999
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: WORK
+  value:
+  - 35
+  - 8
+  - 29
+  - 11
+  exact: true
+- path: CELLS
+  value:
+  - 5
+  - 2
+  - 2
+  - 0
+  - 1
+  - 0
+  - 0
+  - 1
+  - 4
+  exact: true
+- path: LIFE_PATH
+  value: 8
+  exact: true
+- path: BIRTHDAY
+  value: 4
+  exact: true
+---
+id: G-D07
+layer: numerology
+status: active
+case: 'ведущий ноль дня: f = 9; ячейка 9 = OVERLOAD; все вызовы 0'
+input:
+  birth_date: 09.09.1989
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: WORK
+  value:
+  - 45
+  - 9
+  - 27
+  - 9
+  exact: true
+- path: CELLS
+  value:
+  - 1
+  - 1
+  - 0
+  - 1
+  - 1
+  - 0
+  - 1
+  - 1
+  - 6
+  exact: true
+- path: LIFE_PATH
+  value: 9
+  exact: true
+- path: BIRTHDAY
+  value: 9
+  exact: true
+- path: LEVELS.CELL_9
+  value: OVERLOAD
+  exact: true
+- path: CHALLENGES
+  value:
+  - 0
+  - 0
+  - 0
+  - 0
+  exact: true
+---
+id: G-D08
+layer: numerology
+status: active
+case: день 19→10→1; ячейка 1 = OVERLOAD
+input:
+  birth_date: 19.10.1982
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: WORK
+  value:
+  - 31
+  - 4
+  - 29
+  - 11
+  exact: true
+- path: CELLS
+  value:
+  - 6
+  - 2
+  - 1
+  - 1
+  - 0
+  - 0
+  - 0
+  - 1
+  - 3
+  exact: true
+- path: LIFE_PATH
+  value: 4
+  exact: true
+- path: BIRTHDAY
+  value: 1
+  exact: true
+- path: BIRTHDAY.chain
+  value:
+  - 19
+  - 10
+  - 1
+  exact: true
+- path: LEVELS.CELL_1
+  value: OVERLOAD
+  exact: true
+- path: KARMIC_DEBT_CHECK.not_computed
+  value: out_of_v1
+  exact: true
+---
+id: G-D09
+layer: numerology
+status: active
+case: 'первый день эры post2000: квадрат fail closed, числа даты считаются'
+input:
+  birth_date: 01.01.2000
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: LIFE_PATH
+  value: 4
+  exact: true
+- path: BIRTHDAY
+  value: 1
+  exact: true
+- path: PSYCHOMATRIX.not_computed
+  value: rule_not_formalized
+  exact: true
+---
+id: G-D10
+layer: numerology
+status: active
+case: 'post2000: квадрат fail closed, числа даты считаются'
+input:
+  birth_date: 14.07.2015
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: LIFE_PATH
+  value: 2
+  exact: true
+- path: BIRTHDAY
+  value: 5
+  exact: true
+- path: PSYCHOMATRIX.not_computed
+  value: rule_not_formalized
+  exact: true
+---
+id: G-D11
+layer: numerology
+status: active
+case: несуществующая дата
+input:
+  birth_date: 30.02.1990
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: error.code
+  value: invalid_date
+  exact: true
+---
+id: G-D12
+layer: numerology
+status: active
+case: дата раньше 01.01.1900
+input:
+  birth_date: 15.06.1899
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: error.code
+  value: date_out_of_range
+  exact: true
+---
+id: G-S01
+layer: numerology
+status: active
+case: MATURITY = 8+5 = 13 → 4 (сложение итогов)
+input:
+  birth_date: 17.03.1986
+  name_birth:
+    surname: Соколова
+    given: Марина
+    patronymic: Антоновна
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: MATURITY
+  value: 4
+  exact: true
+- path: MATURITY.chain
+  value:
+  - 13
+  - 4
+  exact: true
+---
+id: G-S02
+layer: numerology
+status: active
+case: личные циклы на 16.11.2026
+input:
+  birth_date: 17.03.1986
+  calc_date: 16.11.2026
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: PERSONAL_YEAR
+  value: 3
+  exact: true
+- path: PERSONAL_MONTH
+  value: 5
+  exact: true
+- path: PERSONAL_DAY
+  value: 3
+  exact: true
+---
+id: G-S03
+layer: numerology
+status: active
+case: влияние линий как в примере 12 §9.1; базовые ячейки не изменены
+input:
+  birth_date: 17.03.1986
+reference:
+  source: NUMEROLOGY-RULES.md §9.2 (эталон — сама спека; метод — Баллиетт 1908, Александров)
+  settings:
+    letter_table_id: balliett_ru_33/1
+    vowel_set_id: ru_10/1
+    normalization_version: norm/1
+    summation: сплошь (M-11)
+    post2000: fail closed (решение Антона №2, 2026-11-21; ENGINE-SPEC §8.4)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка таблицы §9.2 без пересчёта)
+  evidence_file: evidence/numerology-rules-9-2.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: NUMEROLOGY-RULES.md sha256 bb98394d…458d (git 55ea562)
+expected:
+- path: CELLS
+  value:
+  - 2
+  - 0
+  - 4
+  - 0
+  - 1
+  - 2
+  - 1
+  - 2
+  - 1
+  exact: true
+- path: LINES
+  value:
+    LINE_ROW_1: 3
+    LINE_ROW_2: 3
+    LINE_ROW_3: 7
+    LINE_COL_1: 6
+    LINE_COL_2: 3
+    LINE_COL_3: 4
+    LINE_DIAG_UP: 6
+    LINE_DIAG_DOWN: 4
+  exact: true
+- path: INFLUENCE.dominant
+  value:
+  - LINE_ROW_3
+  - LINE_COL_1
+  - LINE_DIAG_UP
+  exact: true
+- path: INFLUENCE.captured
+  value:
+    1: LINE_COL_1
+    3: LINE_ROW_3
+    6: LINE_ROW_3
+  exact: true
+- path: INFLUENCE.effective
+  value:
+    LINE_COL_1: 2
+    LINE_DIAG_UP: 2
+    LINE_COL_2: 1
+    LINE_ROW_1: 1
+    LINE_DIAG_DOWN: 2
+  exact: true
+- path: INFLUENCE.boosted
+  value: {}
+  exact: true
+- path: TRANSITIONS
+  value:
+    TRANSITION_8_TO_11:
+      '8': 1
+      '1': 4
+    TRANSITION_6_TO_7:
+      '6': 1
+      '7': 2
+  exact: true
+---
+id: G-S04
+layer: numerology
+status: known_gap
+case: профиль стейкхолдера — регрессия к dict-numerology.md §10
+input:
+  fixture: закрытый, вне репозитория (дата рождения — ПДн)
+notes: Дата стейкхолдера в репозиторий не кладётся (152-ФЗ). Кейс гоняется только при наличии закрытого fixture
+  (переменная окружения LUNORA_PRIVATE_NUMEROLOGY_FIXTURE); без него тест пропускается, это не блокирует S2a.

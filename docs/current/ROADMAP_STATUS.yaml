@@ -5,11 +5,11 @@ project: Лунора
 current:
   level: L1                 # L0 Discovery закрыт (GO с условиями 2026-11-20)
   gate: G17                 # первый гейт L1: корректность ядра доказана (глобальный ID)
-  slice: G17-S1             # эфемериды + время/пояса (G17 дроблён на S1→S2→S3, решение 2026-11-20)
-  slice_status: закрыт
+  slice: G17-S2b            # Ба-Цзы (G17-S2a закрыт PASS 2026-11-21; дроблён на S2a→S2b→S2c→S2d)
+  slice_status: ждёт съёма эталонов (Ба-Цзы)
   latest_review: null
-  latest_verdict: PASS      # 2026-11-21: make verify + slice-check + spike-full (часть S1) зелёные
+  latest_verdict: null      # G17-S1 — PASS 2026-11-21 (docs/gates/G17-S1-close.md)
   blocker: null
-  next_action: "G17-S1 ЗАКРЫТ (PASS, 2026-11-21), close-record docs/gates/G17-S1-close.md. Следующий слайс — G17-S2 (четыре движка) — открывает Антон: закрытие S1 следующий гейт не открывает. Открытые дата-вопросы (не блокируют): TZD-001 Джизак, TZD-002 Приднестровье. §2.7 «с нутацией» — поправлен (закрыт). План G17-S2 (S2a нумерология → S2b Ба-Цзы → S2c запад → S2d веда) — docs/current/G17-S2-план.md, на согласовании у Антона; код движков до ОК не начинать."
+  next_action: "G17-S2a ЗАКРЫТ (PASS 2026-11-21, docs/gates/G17-S2a-close.md): каркас lunora.engines + нумерология (27 golden §9.2). Следующий — G17-S2b (Ба-Цзы): ждёт ручного съёма двух калькуляторов Антоном (docs/current/spike/съём-бацзы-чек-лист-S2b.md). Открыто: расхождение §9.2↔§4.3 G-D08 (флаг 19) — решение Антона."
 
 next_review_number: R1
