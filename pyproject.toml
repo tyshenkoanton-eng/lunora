@@ -14,7 +14,8 @@ dependencies = [
     "redis>=5.2",
     "pydantic>=2.10",
     "pydantic-settings>=2.7",
-    "pyswisseph>=2.10",
+    "pyswisseph>=2.10",  # прототип calc/*; уходит из рантайма вместе с заменой на _ephem (S2)
+    "skyfield==1.55",  # эфемериды ADR-001; закреплено: builtin ΔT/секунды координации = детерминизм
     "cnlunar>=0.2",
     "httpx>=0.28",
     "timezonefinder>=6.5",
@@ -36,6 +37,7 @@ dev = [
 ]
 # оракулы и эталонные данные — только тесты и спайки, не рантайм (ENGINE-SOURCES §6)
 oracle = [
+    "pyswisseph==2.10.3.2",  # Swiss Ephemeris 2.10.03 — оракул дифф-тестов эфемерид (tests/diff)
     # geonamescache снят: GeoNames — вендоренный снимок data/vendor/geonames (2026-11-21)
 ]
 

@@ -132,3 +132,10 @@
 - **Следующий шаг:** `src/lunora/calc/_ephem.py`.
 - **Микрорешение:** модуль кладу в `lunora/calc/_ephem.py` (имя из задачи и карточки; в ENGINE-SPEC §2 он назван `_eph.py` — это одна и та же единственная точка доступа к астрономии), потому что движки живут в `lunora/calc`.
 - **Проверки:** `ruff check tests/test_ephem.py`; тесты красные (модуля нет).
+
+## 2026-11-21 — G17-S1, шаг 2г: эфемеридный слой `_ephem.py` на Skyfield + DE440s
+- **Сделал:** `src/lunora/calc/_ephem.py` — единственная точка доступа к астрономии: `instant` (§2.2), `body`/`bodies` для 10 тел (видимое геоцентрическое место, эклиптика истинного равноденствия даты, скорость центральной разностью ±0,01 сут TT), `nutation`/`mean_obliquity`/`true_obliquity`, `ramc`, `angles` (ASC/MC/DC/IC с полярным правилом), `whole_sign_house`, `placidus` (итерация по полудугам, `NotComputed("not_applicable_latitude")` выше 66,56° и вне области `asin`), `mean_node`/`true_node`/`south_node`, `ayanamsha_lahiri_mean`/`sidereal`, `versions()`. Файл DE440s читается только из `data/vendor/jpl` (или `LUNORA_EPHEMERIS_DIR`), SHA-256 сверяется при загрузке; нет файла или подмена — `EphemerisDataError`. Шкала — `load.timescale(builtin=True)`. В `pyproject.toml`: `skyfield==1.55` в рантайм, `pyswisseph==2.10.3.2` в группу `[oracle]` (из рантайма уйдёт вместе с заменой прототипа `calc/*` в S2).
+- **Результат:** `tests/test_ephem.py` — 73 passed с первого прогона: примеры §2.3–§2.7 совпали в пределах округления спеки, Horizons (DE441) — в пределах 0,3″ по долготам и 0,03″ по разностям с Солнцем.
+- **Следующий шаг:** дифф против pyswisseph (оракул на DE440) по допускам §2.11, `tests/diff`.
+- **Микрорешение:** Skyfield закрепляю `==1.55`, а не `>=`, потому что встроенные таблицы ΔT и секунд координации — часть версии библиотеки: другая версия = другой момент для будущих дат, это как смена tzdata.
+- **Проверки:** `make verify` (ruff + 196 тестов).
