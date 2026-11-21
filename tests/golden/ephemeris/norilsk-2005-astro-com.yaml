@@ -1,0 +1,186 @@
+# F-04 (чек-лист S1): Норильск 15.01.2005, эталон astro.com, снят Антоном 2026-11-21.
+# 152-ФЗ: только вход и координаты; скриншоты в git не кладём (см. evidence).
+# Координаты атласа astro.com 88e06 69n20. Долготы — градусы; tolerance — угловые секунды.
+id: GE-02-norilsk-2005-astro-com
+layer: ephemeris
+status: active
+case: GE-02 — тела, узел, ASC/MC/RAMC на полярной широте (69°20′ N)
+input:
+  place_id: geonames:1497337
+  local_date: '2005-01-15'
+  local_time: '12:00'
+  utc_offset: +07:00
+  utc: '2005-01-15T05:00:00Z'
+  lat: 69.333333
+  lon: 88.1
+reference:
+  source: astro.com
+  settings:
+    chart: 'Natal Chart, Method: Web Style / Whole Signs, тип 2.GW, версия 0.0-1'
+    zodiac: tropical
+    node: 'true'
+    house_system: Whole Signs
+    coordinates: 88e06, 69n20 (атлас astro.com)
+    rounding: тела и углы — до угловой секунды, куспиды — до минуты
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-norilsk-2005.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: astro.com, бланк 21-Nov-2026
+notes: Норильск, карты в спеке нет (дата выбрана в чек-листе S1). MC под горизонтом, ASC — после полярного правила
+  (§2.4), переворота нет.
+expected:
+- path: bodies.sun.lon
+  value: 295.148611
+  tolerance: 1.0
+  unit: arcsec
+  shown: 25 Cap 8' 55"
+- path: bodies.moon.lon
+  value: 359.745278
+  tolerance: 1.0
+  unit: arcsec
+  shown: 29 Pis 44' 43"
+- path: bodies.mercury.lon
+  value: 277.095556
+  tolerance: 1.0
+  unit: arcsec
+  shown: 7 Cap 5' 44"
+- path: bodies.venus.lon
+  value: 276.893889
+  tolerance: 1.0
+  unit: arcsec
+  shown: 6 Cap 53' 38"
+- path: bodies.mars.lon
+  value: 254.185556
+  tolerance: 1.0
+  unit: arcsec
+  shown: 14 Sag 11' 8"
+- path: bodies.jupiter.lon
+  value: 198.362222
+  tolerance: 1.0
+  unit: arcsec
+  shown: 18 Lib 21' 44"
+- path: bodies.saturn.lon
+  value: 113.776389
+  tolerance: 1.0
+  unit: arcsec
+  shown: 23 Can 46' 35" r
+- path: bodies.uranus.lon
+  value: 334.531389
+  tolerance: 1.0
+  unit: arcsec
+  shown: 4 Pis 31' 53"
+- path: bodies.neptune.lon
+  value: 314.340833
+  tolerance: 1.0
+  unit: arcsec
+  shown: 14 Aqu 20' 27"
+- path: bodies.pluto.lon
+  value: 263.219722
+  tolerance: 1.0
+  unit: arcsec
+  shown: 23 Sag 13' 11"
+- path: bodies.sun.retrograde
+  value: false
+  exact: true
+- path: bodies.moon.retrograde
+  value: false
+  exact: true
+- path: bodies.mercury.retrograde
+  value: false
+  exact: true
+- path: bodies.venus.retrograde
+  value: false
+  exact: true
+- path: bodies.mars.retrograde
+  value: false
+  exact: true
+- path: bodies.jupiter.retrograde
+  value: false
+  exact: true
+- path: bodies.saturn.retrograde
+  value: true
+  exact: true
+- path: bodies.uranus.retrograde
+  value: false
+  exact: true
+- path: bodies.neptune.retrograde
+  value: false
+  exact: true
+- path: bodies.pluto.retrograde
+  value: false
+  exact: true
+- path: nodes.true
+  value: 27.601111
+  tolerance: 1.0
+  unit: arcsec
+  shown: 27 Ari 36' 4"
+- path: angles.asc
+  value: 316.8625
+  tolerance: 60.0
+  unit: arcsec
+  shown: AC 16 Aqu 51' 45"
+- path: angles.mc
+  value: 277.207778
+  tolerance: 60.0
+  unit: arcsec
+  shown: MC 7 Cap 12' 28"
+- path: angles.ramc
+  value: 277.85
+  tolerance: 15.0
+  unit: arcsec
+  shown: Sid. Time 18:31:24
+---
+id: GE-05-norilsk-2005-astro-com
+layer: ephemeris
+status: active
+case: GE-05 — цельные знаки выше полярного круга; Плацидус не считается
+input:
+  place_id: geonames:1497337
+  local_date: '2005-01-15'
+  local_time: '12:00'
+  utc_offset: +07:00
+  utc: '2005-01-15T05:00:00Z'
+  lat: 69.333333
+  lon: 88.1
+reference:
+  source: astro.com
+  settings:
+    chart: 'Natal Chart, Method: Web Style / Whole Signs, тип 2.GW, версия 0.0-1'
+    zodiac: tropical
+    node: 'true'
+    house_system: Whole Signs
+    coordinates: 88e06, 69n20 (атлас astro.com)
+    rounding: тела и углы — до угловой секунды, куспиды — до минуты
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-norilsk-2005.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: astro.com, бланк 21-Nov-2026
+notes: Цельные знаки сверены с бланком Whole Signs (точно). Для Плацидуса у astro.com подмена на Porphyry; у нас
+  по §2.5/D-105 — not_applicable_latitude. Куспиды Porphyry — справочно в evidence.
+expected:
+- path: houses.whole_sign.2
+  value: 330.0
+  exact: true
+  shown: 'Whole Signs 2: 0 Pis 0'''
+- path: houses.whole_sign.3
+  value: 0.0
+  exact: true
+  shown: 'Whole Signs 3: 0 Ari 0'''
+- path: houses.whole_sign.11
+  value: 240.0
+  exact: true
+  shown: 'Whole Signs 11: 0 Sag 0'''
+- path: houses.whole_sign.12
+  value: 270.0
+  exact: true
+  shown: 'Whole Signs 12: 0 Cap 0'''
+- path: houses.placidus.status
+  value: not_applicable_latitude
+  exact: true
+  shown: astro.com молча подменил Placidus на Porphyry (Method в шапке)
