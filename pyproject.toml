@@ -63,3 +63,8 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
 testpaths = ["tests"]
+# full — длинные дифф-прогоны (make spike-full); по умолчанию не идут. Явный -m full перекрывает.
+addopts = "-m 'not full'"
+markers = [
+    "full: длинный дифф-прогон против оракула (make spike-full)",
+]
