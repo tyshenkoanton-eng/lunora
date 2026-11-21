@@ -190,10 +190,6 @@ TOL_EOT_AFTER_2050 = 0.2
 TOL_AYANAMSHA_TRUE = 0.005
 
 
-def ayanamsha_lahiri_true(t) -> float:
-    return eph.ayanamsha_lahiri_mean(t) + eph.nutation(t)[0]
-
-
 @pytest.mark.parametrize("n", _sizes())
 def test_lahiri_true_ayanamsha(swe, n):
     # GE-10 «+ нутация»: айанамша с нутацией = A_mean + Δψ против оракула без FLG_NONUT
@@ -201,7 +197,7 @@ def test_lahiri_true_ayanamsha(swe, n):
     ts, _ = moments(n, 1900, 2100, salt=7)
     for t in ts:
         _, value = swe.get_ayanamsa_ex(t.tt, swe.FLG_JPLEPH)
-        assert arcsec(ayanamsha_lahiri_true(t), value) <= TOL_AYANAMSHA_TRUE, t.utc_iso()
+        assert arcsec(eph.ayanamsha_lahiri_true(t), value) <= TOL_AYANAMSHA_TRUE, t.utc_iso()
 
 
 def term_moments(n: int, salt: int):

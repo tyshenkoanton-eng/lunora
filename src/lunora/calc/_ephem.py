@@ -312,6 +312,11 @@ def ayanamsha_lahiri_mean(t: Time) -> float:
     return _LAHIRI_ANCHOR + _precession_pa(T) - _precession_pa(_LAHIRI_T0)
 
 
+def ayanamsha_lahiri_true(t: Time) -> float:
+    """Айанамша с нутацией: A_mean + Δψ (её и показывают сервисы как «Лахири на дату»)."""
+    return ayanamsha_lahiri_mean(t) + nutation(t)[0]
+
+
 def sidereal(lon_tropical: float, t: Time) -> float:
     """Сидерическая долгота по Лахири: λ − Δψ − A_mean (§2.7)."""
     return (lon_tropical - nutation(t)[0] - ayanamsha_lahiri_mean(t)) % 360.0

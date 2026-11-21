@@ -1,0 +1,750 @@
+# GE-07…GE-10: моменты терминов, истинное солнечное время, айанамша Лахири.
+# Эталон — вендоренные таблицы Гонконгской обсерватории + оракул SE.
+# Не править руками: python scripts/spike/ge07_10_oracle.py
+id: GE-07-lichun-1984
+layer: ephemeris
+status: active
+case: GE-07 — момент ли-чунь 1984 (Солнце 315°)
+input:
+  place_id: synthetic:geocenter
+  target_lon: 315.0
+  hint_utc: '1984-02-03T16:00:00Z'
+reference:
+  source: Гонконгская обсерватория (data/vendor/hko) + Swiss Ephemeris 2.10.03 (оракул)
+  settings:
+    observatory: HKO, время терминов HKT = UTC+8; за этот год — только дата
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    call: swe.solcross(L, jd_tt, FLG_JPLEPH) — момент в TT
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/ge07_10_oracle.py)
+  evidence_file: evidence/ge07-10-hko-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+  observatory: hko-solar-terms 2026-11-21
+expected:
+- path: sun_term.tt
+  value: '1984-02-04T15:19:38.471'
+  tolerance: 1.0
+  unit: s
+  against: oracle
+- path: sun_term.date_hkt
+  value: '1984-02-04'
+  exact: true
+  against: hko
+---
+id: GE-08-jie-2026-285
+layer: ephemeris
+status: active
+case: 'GE-08 — цзе 2026: Moderate Cold (Солнце 285°)'
+input:
+  place_id: synthetic:geocenter
+  target_lon: 285.0
+  hint_utc: '2026-01-04T16:00:00Z'
+reference:
+  source: Гонконгская обсерватория (data/vendor/hko) + Swiss Ephemeris 2.10.03 (оракул)
+  settings:
+    observatory: HKO, время терминов HKT = UTC+8, до минуты
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    call: swe.solcross(L, jd_tt, FLG_JPLEPH) — момент в TT
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/ge07_10_oracle.py)
+  evidence_file: evidence/ge07-10-hko-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+  observatory: hko-solar-terms 2026-11-21
+expected:
+- path: sun_term.tt
+  value: '2026-01-05T08:24:18.635'
+  tolerance: 1.0
+  unit: s
+  against: oracle
+- path: sun_term.utc
+  value: '2026-01-05T08:23:00.000'
+  shown: 05.01.2026 16:23 HKT
+  tolerance: 60.0
+  unit: s
+  against: hko
+- path: sun_term.date_hkt
+  value: '2026-01-05'
+  exact: true
+  against: hko
+---
+id: GE-08-jie-2026-315
+layer: ephemeris
+status: active
+case: 'GE-08 — цзе 2026: Spring Commences (Солнце 315°)'
+input:
+  place_id: synthetic:geocenter
+  target_lon: 315.0
+  hint_utc: '2026-02-03T16:00:00Z'
+reference:
+  source: Гонконгская обсерватория (data/vendor/hko) + Swiss Ephemeris 2.10.03 (оракул)
+  settings:
+    observatory: HKO, время терминов HKT = UTC+8, до минуты
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    call: swe.solcross(L, jd_tt, FLG_JPLEPH) — момент в TT
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/ge07_10_oracle.py)
+  evidence_file: evidence/ge07-10-hko-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+  observatory: hko-solar-terms 2026-11-21
+expected:
+- path: sun_term.tt
+  value: '2026-02-03T20:03:17.113'
+  tolerance: 1.0
+  unit: s
+  against: oracle
+- path: sun_term.utc
+  value: '2026-02-03T20:02:00.000'
+  shown: 04.02.2026 04:02 HKT
+  tolerance: 60.0
+  unit: s
+  against: hko
+- path: sun_term.date_hkt
+  value: '2026-02-04'
+  exact: true
+  against: hko
+---
+id: GE-08-jie-2026-345
+layer: ephemeris
+status: active
+case: 'GE-08 — цзе 2026: Insects Waken (Солнце 345°)'
+input:
+  place_id: synthetic:geocenter
+  target_lon: 345.0
+  hint_utc: '2026-03-04T16:00:00Z'
+reference:
+  source: Гонконгская обсерватория (data/vendor/hko) + Swiss Ephemeris 2.10.03 (оракул)
+  settings:
+    observatory: HKO, время терминов HKT = UTC+8, до минуты
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    call: swe.solcross(L, jd_tt, FLG_JPLEPH) — момент в TT
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/ge07_10_oracle.py)
+  evidence_file: evidence/ge07-10-hko-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+  observatory: hko-solar-terms 2026-11-21
+expected:
+- path: sun_term.tt
+  value: '2026-03-05T14:00:08.284'
+  tolerance: 1.0
+  unit: s
+  against: oracle
+- path: sun_term.utc
+  value: '2026-03-05T13:59:00.000'
+  shown: 05.03.2026 21:59 HKT
+  tolerance: 60.0
+  unit: s
+  against: hko
+- path: sun_term.date_hkt
+  value: '2026-03-05'
+  exact: true
+  against: hko
+---
+id: GE-08-jie-2026-015
+layer: ephemeris
+status: active
+case: 'GE-08 — цзе 2026: Bright & Clear (Солнце 15°)'
+input:
+  place_id: synthetic:geocenter
+  target_lon: 15.0
+  hint_utc: '2026-04-04T16:00:00Z'
+reference:
+  source: Гонконгская обсерватория (data/vendor/hko) + Swiss Ephemeris 2.10.03 (оракул)
+  settings:
+    observatory: HKO, время терминов HKT = UTC+8, до минуты
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    call: swe.solcross(L, jd_tt, FLG_JPLEPH) — момент в TT
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/ge07_10_oracle.py)
+  evidence_file: evidence/ge07-10-hko-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+  observatory: hko-solar-terms 2026-11-21
+expected:
+- path: sun_term.tt
+  value: '2026-04-04T18:41:08.369'
+  tolerance: 1.0
+  unit: s
+  against: oracle
+- path: sun_term.utc
+  value: '2026-04-04T18:40:00.000'
+  shown: 05.04.2026 02:40 HKT
+  tolerance: 60.0
+  unit: s
+  against: hko
+- path: sun_term.date_hkt
+  value: '2026-04-05'
+  exact: true
+  against: hko
+---
+id: GE-08-jie-2026-045
+layer: ephemeris
+status: active
+case: 'GE-08 — цзе 2026: Summer Commences (Солнце 45°)'
+input:
+  place_id: synthetic:geocenter
+  target_lon: 45.0
+  hint_utc: '2026-05-04T16:00:00Z'
+reference:
+  source: Гонконгская обсерватория (data/vendor/hko) + Swiss Ephemeris 2.10.03 (оракул)
+  settings:
+    observatory: HKO, время терминов HKT = UTC+8, до минуты
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    call: swe.solcross(L, jd_tt, FLG_JPLEPH) — момент в TT
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/ge07_10_oracle.py)
+  evidence_file: evidence/ge07-10-hko-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+  observatory: hko-solar-terms 2026-11-21
+expected:
+- path: sun_term.tt
+  value: '2026-05-05T11:49:52.848'
+  tolerance: 1.0
+  unit: s
+  against: oracle
+- path: sun_term.utc
+  value: '2026-05-05T11:49:00.000'
+  shown: 05.05.2026 19:49 HKT
+  tolerance: 60.0
+  unit: s
+  against: hko
+- path: sun_term.date_hkt
+  value: '2026-05-05'
+  exact: true
+  against: hko
+---
+id: GE-08-jie-2026-075
+layer: ephemeris
+status: active
+case: 'GE-08 — цзе 2026: Corn on Ear (Солнце 75°)'
+input:
+  place_id: synthetic:geocenter
+  target_lon: 75.0
+  hint_utc: '2026-06-04T16:00:00Z'
+reference:
+  source: Гонконгская обсерватория (data/vendor/hko) + Swiss Ephemeris 2.10.03 (оракул)
+  settings:
+    observatory: HKO, время терминов HKT = UTC+8, до минуты
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    call: swe.solcross(L, jd_tt, FLG_JPLEPH) — момент в TT
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/ge07_10_oracle.py)
+  evidence_file: evidence/ge07-10-hko-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+  observatory: hko-solar-terms 2026-11-21
+expected:
+- path: sun_term.tt
+  value: '2026-06-05T15:49:31.072'
+  tolerance: 1.0
+  unit: s
+  against: oracle
+- path: sun_term.utc
+  value: '2026-06-05T15:48:00.000'
+  shown: 05.06.2026 23:48 HKT
+  tolerance: 60.0
+  unit: s
+  against: hko
+- path: sun_term.date_hkt
+  value: '2026-06-05'
+  exact: true
+  against: hko
+---
+id: GE-08-jie-2026-105
+layer: ephemeris
+status: active
+case: 'GE-08 — цзе 2026: Moderate Heat (Солнце 105°)'
+input:
+  place_id: synthetic:geocenter
+  target_lon: 105.0
+  hint_utc: '2026-07-06T16:00:00Z'
+reference:
+  source: Гонконгская обсерватория (data/vendor/hko) + Swiss Ephemeris 2.10.03 (оракул)
+  settings:
+    observatory: HKO, время терминов HKT = UTC+8, до минуты
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    call: swe.solcross(L, jd_tt, FLG_JPLEPH) — момент в TT
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/ge07_10_oracle.py)
+  evidence_file: evidence/ge07-10-hko-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+  observatory: hko-solar-terms 2026-11-21
+expected:
+- path: sun_term.tt
+  value: '2026-07-07T01:58:06.550'
+  tolerance: 1.0
+  unit: s
+  against: oracle
+- path: sun_term.utc
+  value: '2026-07-07T01:57:00.000'
+  shown: 07.07.2026 09:57 HKT
+  tolerance: 60.0
+  unit: s
+  against: hko
+- path: sun_term.date_hkt
+  value: '2026-07-07'
+  exact: true
+  against: hko
+---
+id: GE-08-jie-2026-135
+layer: ephemeris
+status: active
+case: 'GE-08 — цзе 2026: Autumn Commences (Солнце 135°)'
+input:
+  place_id: synthetic:geocenter
+  target_lon: 135.0
+  hint_utc: '2026-08-06T16:00:00Z'
+reference:
+  source: Гонконгская обсерватория (data/vendor/hko) + Swiss Ephemeris 2.10.03 (оракул)
+  settings:
+    observatory: HKO, время терминов HKT = UTC+8, до минуты
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    call: swe.solcross(L, jd_tt, FLG_JPLEPH) — момент в TT
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/ge07_10_oracle.py)
+  evidence_file: evidence/ge07-10-hko-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+  observatory: hko-solar-terms 2026-11-21
+expected:
+- path: sun_term.tt
+  value: '2026-08-07T11:43:53.718'
+  tolerance: 1.0
+  unit: s
+  against: oracle
+- path: sun_term.utc
+  value: '2026-08-07T11:43:00.000'
+  shown: 07.08.2026 19:43 HKT
+  tolerance: 60.0
+  unit: s
+  against: hko
+- path: sun_term.date_hkt
+  value: '2026-08-07'
+  exact: true
+  against: hko
+---
+id: GE-08-jie-2026-165
+layer: ephemeris
+status: active
+case: 'GE-08 — цзе 2026: White Dew (Солнце 165°)'
+input:
+  place_id: synthetic:geocenter
+  target_lon: 165.0
+  hint_utc: '2026-09-06T16:00:00Z'
+reference:
+  source: Гонконгская обсерватория (data/vendor/hko) + Swiss Ephemeris 2.10.03 (оракул)
+  settings:
+    observatory: HKO, время терминов HKT = UTC+8, до минуты
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    call: swe.solcross(L, jd_tt, FLG_JPLEPH) — момент в TT
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/ge07_10_oracle.py)
+  evidence_file: evidence/ge07-10-hko-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+  observatory: hko-solar-terms 2026-11-21
+expected:
+- path: sun_term.tt
+  value: '2026-09-07T14:42:26.421'
+  tolerance: 1.0
+  unit: s
+  against: oracle
+- path: sun_term.utc
+  value: '2026-09-07T14:41:00.000'
+  shown: 07.09.2026 22:41 HKT
+  tolerance: 60.0
+  unit: s
+  against: hko
+- path: sun_term.date_hkt
+  value: '2026-09-07'
+  exact: true
+  against: hko
+---
+id: GE-08-jie-2026-195
+layer: ephemeris
+status: active
+case: 'GE-08 — цзе 2026: Cold Dew (Солнце 195°)'
+input:
+  place_id: synthetic:geocenter
+  target_lon: 195.0
+  hint_utc: '2026-10-07T16:00:00Z'
+reference:
+  source: Гонконгская обсерватория (data/vendor/hko) + Swiss Ephemeris 2.10.03 (оракул)
+  settings:
+    observatory: HKO, время терминов HKT = UTC+8, до минуты
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    call: swe.solcross(L, jd_tt, FLG_JPLEPH) — момент в TT
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/ge07_10_oracle.py)
+  evidence_file: evidence/ge07-10-hko-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+  observatory: hko-solar-terms 2026-11-21
+expected:
+- path: sun_term.tt
+  value: '2026-10-08T06:30:26.677'
+  tolerance: 1.0
+  unit: s
+  against: oracle
+- path: sun_term.utc
+  value: '2026-10-08T06:29:00.000'
+  shown: 08.10.2026 14:29 HKT
+  tolerance: 60.0
+  unit: s
+  against: hko
+- path: sun_term.date_hkt
+  value: '2026-10-08'
+  exact: true
+  against: hko
+---
+id: GE-08-jie-2026-225
+layer: ephemeris
+status: active
+case: 'GE-08 — цзе 2026: Winter Commences (Солнце 225°)'
+input:
+  place_id: synthetic:geocenter
+  target_lon: 225.0
+  hint_utc: '2026-11-06T16:00:00Z'
+reference:
+  source: Гонконгская обсерватория (data/vendor/hko) + Swiss Ephemeris 2.10.03 (оракул)
+  settings:
+    observatory: HKO, время терминов HKT = UTC+8, до минуты
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    call: swe.solcross(L, jd_tt, FLG_JPLEPH) — момент в TT
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/ge07_10_oracle.py)
+  evidence_file: evidence/ge07-10-hko-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+  observatory: hko-solar-terms 2026-11-21
+expected:
+- path: sun_term.tt
+  value: '2026-11-07T09:53:13.519'
+  tolerance: 1.0
+  unit: s
+  against: oracle
+- path: sun_term.utc
+  value: '2026-11-07T09:52:00.000'
+  shown: 07.11.2026 17:52 HKT
+  tolerance: 60.0
+  unit: s
+  against: hko
+- path: sun_term.date_hkt
+  value: '2026-11-07'
+  exact: true
+  against: hko
+---
+id: GE-08-jie-2026-255
+layer: ephemeris
+status: active
+case: 'GE-08 — цзе 2026: Heavy Snow (Солнце 255°)'
+input:
+  place_id: synthetic:geocenter
+  target_lon: 255.0
+  hint_utc: '2026-12-06T16:00:00Z'
+reference:
+  source: Гонконгская обсерватория (data/vendor/hko) + Swiss Ephemeris 2.10.03 (оракул)
+  settings:
+    observatory: HKO, время терминов HKT = UTC+8, до минуты
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    call: swe.solcross(L, jd_tt, FLG_JPLEPH) — момент в TT
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/ge07_10_oracle.py)
+  evidence_file: evidence/ge07-10-hko-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+  observatory: hko-solar-terms 2026-11-21
+expected:
+- path: sun_term.tt
+  value: '2026-12-07T02:53:40.649'
+  tolerance: 1.0
+  unit: s
+  against: oracle
+- path: sun_term.utc
+  value: '2026-12-07T02:53:00.000'
+  shown: 07.12.2026 10:53 HKT
+  tolerance: 60.0
+  unit: s
+  against: hko
+- path: sun_term.date_hkt
+  value: '2026-12-07'
+  exact: true
+  against: hko
+---
+id: GE-09-tst-card-A
+layer: ephemeris
+status: active
+case: GE-09 — истинное солнечное время карты A (§2.8)
+input:
+  place_id: geonames:472757
+  local_date: '1984-02-04'
+  local_time: '15:00'
+  utc_offset: +04:00
+  utc: '1984-02-04T11:00:00Z'
+  lat: 48.71378
+  lon: 44.4976
+reference:
+  source: Swiss Ephemeris 2.10.03 (тестовый оракул)
+  settings:
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    call: swe.time_equ(jd_ut1) — EoT = TST − LMT, сутки
+    lmt: UT1 + λ/15 (UT1 = Skyfield builtin от UTC, как рантайм)
+    coordinates: GeoNames по place_id (вендоренный снимок 2026-11-21)
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/ge07_10_oracle.py)
+  evidence_file: evidence/ge07-10-hko-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+expected:
+- path: solar_time.lmt
+  value: '1984-02-04T13:57:59.767'
+  tolerance: 0.1
+  unit: s
+- path: solar_time.eot
+  value: -834.8565
+  tolerance: 0.02
+  unit: s
+- path: solar_time.tst
+  value: '1984-02-04T13:44:04.910'
+  tolerance: 0.1
+  unit: s
+- path: solar_time.tst_date
+  value: '1984-02-04'
+  exact: true
+---
+id: GE-09-tst-card-E
+layer: ephemeris
+status: active
+case: GE-09 — истинное солнечное время карты E (§2.8)
+input:
+  place_id: geonames:524901
+  local_date: '1987-06-15'
+  local_time: 00:50
+  utc_offset: +04:00
+  utc: '1987-06-14T20:50:00Z'
+  lat: 55.75204
+  lon: 37.61781
+reference:
+  source: Swiss Ephemeris 2.10.03 (тестовый оракул)
+  settings:
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    call: swe.time_equ(jd_ut1) — EoT = TST − LMT, сутки
+    lmt: UT1 + λ/15 (UT1 = Skyfield builtin от UTC, как рантайм)
+    coordinates: GeoNames по place_id (вендоренный снимок 2026-11-21)
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/ge07_10_oracle.py)
+  evidence_file: evidence/ge07-10-hko-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+expected:
+- path: solar_time.lmt
+  value: '1987-06-14T23:20:27.890'
+  tolerance: 0.1
+  unit: s
+- path: solar_time.eot
+  value: -11.8373
+  tolerance: 0.02
+  unit: s
+- path: solar_time.tst
+  value: '1987-06-14T23:20:16.053'
+  tolerance: 0.1
+  unit: s
+- path: solar_time.tst_date
+  value: '1987-06-14'
+  exact: true
+---
+id: GE-10-lahiri-anchor-1900
+layer: ephemeris
+status: active
+case: GE-10 — айанамша Лахири, якорь 1900-01-01 0h TT (§2.7) и нутация
+input:
+  place_id: synthetic:geocenter
+  tt: '1900-01-01T00:00:00'
+reference:
+  source: Swiss Ephemeris 2.10.03 (тестовый оракул)
+  settings:
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    call: swe.get_ayanamsa_ex(jd_tt, FLG_JPLEPH[|FLG_NONUT]), SIDM_LAHIRI
+    variant: Лахири, SE SIDM_LAHIRI (ENGINE-SOURCES §3.2, вариант № 1)
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/ge07_10_oracle.py)
+  evidence_file: evidence/ge07-10-hko-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+expected:
+- path: ayanamsha.lahiri_mean
+  value: 22.4605305933
+  shown: 22°27′37,9″
+  tolerance: 0.001
+  unit: arcsec
+- path: ayanamsha.lahiri_true
+  value: 22.4653732256
+  tolerance: 0.005
+  unit: arcsec
+---
+id: GE-10-lahiri-anchor-1956
+layer: ephemeris
+status: active
+case: GE-10 — айанамша Лахири, якорь 1956-03-21 0h TT (§2.7) и нутация
+input:
+  place_id: synthetic:geocenter
+  tt: '1956-03-21T00:00:00'
+reference:
+  source: Swiss Ephemeris 2.10.03 (тестовый оракул)
+  settings:
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    call: swe.get_ayanamsa_ex(jd_tt, FLG_JPLEPH[|FLG_NONUT]), SIDM_LAHIRI
+    variant: Лахири, SE SIDM_LAHIRI (ENGINE-SOURCES §3.2, вариант № 1)
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/ge07_10_oracle.py)
+  evidence_file: evidence/ge07-10-hko-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+expected:
+- path: ayanamsha.lahiri_mean
+  value: 23.2455609546
+  shown: 23°14′44,0″
+  tolerance: 0.001
+  unit: arcsec
+- path: ayanamsha.lahiri_true
+  value: 23.2502211994
+  tolerance: 0.005
+  unit: arcsec
+---
+id: GE-10-lahiri-anchor-2000
+layer: ephemeris
+status: active
+case: GE-10 — айанамша Лахири, якорь 2000-01-01 0h TT (§2.7) и нутация
+input:
+  place_id: synthetic:geocenter
+  tt: '2000-01-01T00:00:00'
+reference:
+  source: Swiss Ephemeris 2.10.03 (тестовый оракул)
+  settings:
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    call: swe.get_ayanamsa_ex(jd_tt, FLG_JPLEPH[|FLG_NONUT]), SIDM_LAHIRI
+    variant: Лахири, SE SIDM_LAHIRI (ENGINE-SOURCES §3.2, вариант № 1)
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/ge07_10_oracle.py)
+  evidence_file: evidence/ge07-10-hko-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+expected:
+- path: ayanamsha.lahiri_mean
+  value: 23.8570732031
+  shown: 23°51′25,5″
+  tolerance: 0.001
+  unit: arcsec
+- path: ayanamsha.lahiri_true
+  value: 23.8532034666
+  tolerance: 0.005
+  unit: arcsec
+---
+id: GE-10-lahiri-anchor-2026
+layer: ephemeris
+status: active
+case: GE-10 — айанамша Лахири, якорь 2026-01-01 0h TT (§2.7) и нутация
+input:
+  place_id: synthetic:geocenter
+  tt: '2026-01-01T00:00:00'
+reference:
+  source: Swiss Ephemeris 2.10.03 (тестовый оракул)
+  settings:
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    call: swe.get_ayanamsa_ex(jd_tt, FLG_JPLEPH[|FLG_NONUT]), SIDM_LAHIRI
+    variant: Лахири, SE SIDM_LAHIRI (ENGINE-SOURCES §3.2, вариант № 1)
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/ge07_10_oracle.py)
+  evidence_file: evidence/ge07-10-hko-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+expected:
+- path: ayanamsha.lahiri_mean
+  value: 24.2203039494
+  shown: 24°13′13,1″
+  tolerance: 0.001
+  unit: arcsec
+- path: ayanamsha.lahiri_true
+  value: 24.2218098314
+  tolerance: 0.005
+  unit: arcsec
+---
+id: GE-10-lahiri-card-A-moon
+layer: ephemeris
+status: active
+case: 'GE-10 — сидерическая Луна карты A: λ − Δψ − A_mean (§2.7)'
+input:
+  place_id: geonames:472757
+  local_date: '1984-02-04'
+  local_time: '15:00'
+  utc_offset: +04:00
+  utc: '1984-02-04T11:00:00Z'
+  lat: 48.71378
+  lon: 44.4976
+reference:
+  source: Swiss Ephemeris 2.10.03 (тестовый оракул)
+  settings:
+    ephemeris: DE440 linux_p1550p2650.440, FLG_JPLEPH
+    call: swe.get_ayanamsa_ex(jd_tt, FLG_JPLEPH[|FLG_NONUT]), SIDM_LAHIRI
+    variant: Лахири, SE SIDM_LAHIRI (ENGINE-SOURCES §3.2, вариант № 1)
+    moon: swe.calc(jd_tt, MOON, FLG_JPLEPH | FLG_SIDEREAL)
+  captured_at: '2026-11-21'
+  captured_by: Claude (scripts/spike/ge07_10_oracle.py)
+  evidence_file: evidence/ge07-10-hko-oracle.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: pyswisseph 2.10.3.2 / SE 2.10.03
+expected:
+- path: ayanamsha.lahiri_true
+  value: 23.6307972989
+  tolerance: 0.005
+  unit: arcsec
+- path: bodies.moon.sidereal
+  value: 318.0581165941
+  shown: 18°03′29″ Кумбхи
+  tolerance: 0.1
+  unit: arcsec

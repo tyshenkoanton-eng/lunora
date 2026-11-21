@@ -112,7 +112,7 @@ def main() -> int:
     ts, _ = d.moments(n, 1900, 2100, salt=7)
     for t in ts:
         _, v = swe.get_ayanamsa_ex(t.tt, swe.FLG_JPLEPH)
-        put("айанамша Лахири с нутацией", d.arcsec(d.ayanamsha_lahiri_true(t), v))
+        put("айанамша Лахири с нутацией", d.arcsec(eph.ayanamsha_lahiri_true(t), v))
 
     for target, ours in d.term_moments(n // 4, salt=8):
         theirs = swe.solcross(target, ours.tt - 5.0, swe.FLG_JPLEPH)
