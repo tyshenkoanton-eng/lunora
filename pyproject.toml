@@ -36,7 +36,7 @@ dev = [
 ]
 # оракулы и эталонные данные — только тесты и спайки, не рантайм (ENGINE-SOURCES §6)
 oracle = [
-    "geonamescache>=3.0",  # GeoNames (CC BY 4.0) — сверка зоны места
+    # geonamescache снят: GeoNames — вендоренный снимок data/vendor/geonames (2026-11-21)
 ]
 
 [build-system]

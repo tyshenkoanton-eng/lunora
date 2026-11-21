@@ -6,7 +6,8 @@
 расходятся (ARCHITECTURE.md §6.4). Расхождение > 0 — кандидат в tz_disputes, ручной разбор.
 
 Запуск:  python scripts/spike/tz_zone_crosscheck.py [--min-pop 100000] [--write REPORT.md]
-Нужно:   pip install -e ".[dev,oracle]"  (geonamescache, timezonefinder)
+Нужно:   pip install -e ".[dev,oracle]"  (timezonefinder); GeoNames — вендоренный снимок
+         data/vendor/geonames (scripts/spike/geonames_vendor.py), офлайн
 """
 
 from __future__ import annotations
@@ -17,6 +18,8 @@ import sys
 from datetime import datetime
 
 from lunora.timeplace.resolve import _zone, tz_build
+
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
 
 EX_USSR = {
     "RU",
@@ -49,13 +52,13 @@ def offset_divergence(zone_a: str, zone_b: str) -> int:
 
 
 def crosscheck(min_pop: int) -> tuple[int, list[dict]]:
-    import geonamescache
+    from geonames_vendor import load_cities
     from timezonefinder import TimezoneFinder
 
     tf = TimezoneFinder()
     cities = [
         c
-        for c in geonamescache.GeonamesCache().get_cities().values()
+        for c in load_cities().values()
         if c["countrycode"] in EX_USSR and c["population"] >= min_pop
     ]
     rows = []
@@ -78,6 +81,12 @@ def crosscheck(min_pop: int) -> tuple[int, list[dict]]:
     return len(cities), rows
 
 
+def _geonames_snapshot() -> str:
+    from vendor_check import DEFAULT, load_manifest
+
+    return load_manifest(DEFAULT)["sets"]["geonames"]["version"]
+
+
 def render(total: int, rows: list[dict], min_pop: int) -> str:
     import importlib.metadata as md
 
@@ -91,7 +100,7 @@ def render(total: int, rows: list[dict], min_pop: int) -> str:
         + f"Разные зоны: **{len(rows)}**, из них кандидатов в `tz_disputes` "
         f"(смещения расходятся хотя бы на одной дате сетки 1930–2014 × 4): **{len(cand)}**.",
         "",
-        f"Версии: tzdata {tz_build()}, geonamescache {md.version('geonamescache')}, "
+        f"Версии: tzdata {tz_build()}, GeoNames — снимок {_geonames_snapshot()} (data/vendor), "
         f"timezonefinder {md.version('timezonefinder')}. Данные мест — GeoNames, CC BY 4.0.",
         "",
         "| GeoNames id | Город | Страна | Население | Зона GeoNames | Зона по полигону "
