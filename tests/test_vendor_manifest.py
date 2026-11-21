@@ -75,7 +75,8 @@ def test_every_entry_has_source_and_license():
 def test_pinned_tzdata_package_is_vendored_iana_version():
     import tzdata
 
-    assert tzdata.IANA_VERSION == vc.load_manifest(VENDOR)["sets"]["iana-tz"]["version"]
+    vendored = vc.load_manifest(VENDOR)["sets"]["iana-tz"]["version"]
+    assert vendored == tzdata.IANA_VERSION
 
 
 @pytest.mark.parametrize("name", ["tzdata", "tzcode"])
