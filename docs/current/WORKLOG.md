@@ -30,3 +30,8 @@
   - порядок внутри пары аспекта — по порядку планет (септенер → высшие), как в эталоне.
 - **Следующий шаг:** close-record S2c + changelog + статус, PR.
 - **Проверки:** `make verify` (681 passed, 18 skipped), `make slice-check` зелёный (29), `golden_audit` active 144 / known_gap 1, `ruff`.
+
+## 2026-11-21 — G17-S2c, шаг 3: close-record S2c (PASS), статус
+- **Сделал:** close-record [G17-S2c-close.md](../gates/G17-S2c-close.md), changelog, CURRENT_STATE и ROADMAP_STATUS. Остались S2b и S2d — оба ждут съёма Антона. Board перегенерирован.
+- **Следующий шаг:** PR S2c в main. Как придёт съём — S2b (Ба-Цзы) и S2d (ведическая + переключение рантайма).
+- **Проверки:** `make verify` зелёный, `make board`, `docs_discipline`.

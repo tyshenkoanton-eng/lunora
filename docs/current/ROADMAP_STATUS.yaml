@@ -5,11 +5,11 @@ project: Лунора
 current:
   level: L1                 # L0 Discovery закрыт (GO с условиями 2026-11-20)
   gate: G17                 # первый гейт L1: корректность ядра доказана (глобальный ID)
-  slice: G17-S2c            # Западный движок (S2b ждёт съёма Антона, делаем S2c параллельно — решение Антона 2026-11-21)
-  slice_status: в работе
+  slice: G17-S2d            # Ведическая + переключение рантайма (S2a, S2c закрыты PASS; S2b и S2d ждут съёма Антона)
+  slice_status: ждёт съёма эталонов (Ба-Цзы S2b, Jagannatha Hora S2d)
   latest_review: null
   latest_verdict: null      # G17-S1 — PASS 2026-11-21 (docs/gates/G17-S1-close.md)
   blocker: null
-  next_action: "G17-S2c (западный движок) в работе параллельно с ожиданием съёма Ба-Цзы (S2b). Эталон аспектов GW-05 — бланки A/D из S1 + §3.7, нового съёма не нужно. S2b ждёт двух калькуляторов Антона (docs/current/spike/съём-бацзы-чек-лист-S2b.md). S2a закрыт PASS (PR #13 в main)."
+  next_action: "G17-S2a и G17-S2c ЗАКРЫТЫ (PASS, docs/gates/G17-S2a-close.md, G17-S2c-close.md). Остались S2b (Ба-Цзы) и S2d (ведическая + переключение рантайма) — оба ждут ручного съёма Антона: калькуляторы Ба-Цзы и Jagannatha Hora (docs/current/spike/). Точка P3 закроется после S2d."
 
 next_review_number: R1
