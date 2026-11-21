@@ -48,8 +48,8 @@ def _chart(inp: dict) -> dict:
 
 
 def test_ephemeris_has_active_cases():
-    ids = {c["id"].split("-card")[0] for c in ACTIVE}
-    assert {"GE-01", "GE-02", "GE-06"} <= ids
+    ids = {c["id"][:5] for c in ACTIVE}
+    assert {"GE-01", "GE-02", "GE-04", "GE-06"} <= ids
 
 
 @pytest.mark.parametrize("case", CASES, ids=[c["id"] for c in CASES])

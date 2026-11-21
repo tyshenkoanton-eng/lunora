@@ -1,0 +1,9 @@
+# Артефакты спайка G17-S1 — карта папки
+
+| Файл | Что это |
+| --- | --- |
+| [съём-astro-чек-лист-S1.md](съём-astro-чек-лист-S1.md) | чек-лист ручного съёма astro.com: пачка «полная карта» и пачка «только Univ.Time» |
+| [съём-astro-пояса.md](съём-astro-пояса.md) | исходная форма съёма поясов (45 строк timeplace) |
+| [ephem-oracle-дифф.md](ephem-oracle-дифф.md) | дифф `_ephem` с Swiss Ephemeris по допускам §2.11 (3000 моментов) |
+| [tz-зоны-сверка.md](tz-зоны-сверка.md) | сверка зон GeoNames с timezonefinder |
+| [tz-backzone-сверка.md](tz-backzone-сверка.md) | сверка стандартной сборки IANA с backzone |
