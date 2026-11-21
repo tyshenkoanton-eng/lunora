@@ -1,0 +1,204 @@
+# Golden timeplace, пачка 2 — Москва (astro.com, 2026-11-21): только Univ.Time в шапке.
+# Смещение = местное время − Univ.Time. Зона — из GeoNames по place_id. 152-ФЗ: без имён.
+id: TP-MSK-01-moscow-1987-07
+layer: timeplace
+status: active
+case: смещение UTC на дату — Москва лето 1987 — летнее время СССР (UTC+4)
+input:
+  place_id: geonames:524901
+  local_date: '1987-07-01'
+  local_time: '12:00'
+  univ_time: 08:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-moscow-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +04:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-MSK-02-moscow-1987-01
+layer: timeplace
+status: active
+case: смещение UTC на дату — Москва зима 1987 — UTC+3
+input:
+  place_id: geonames:524901
+  local_date: '1987-01-15'
+  local_time: '12:00'
+  univ_time: 09:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-moscow-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +03:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-MSK-03-moscow-1991-07
+layer: timeplace
+status: active
+case: смещение UTC на дату — Москва лето 1991 — отмена декретного часа, UTC+3 летом
+input:
+  place_id: geonames:524901
+  local_date: '1991-07-01'
+  local_time: '12:00'
+  univ_time: 09:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-moscow-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +03:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-MSK-04-moscow-1992-01
+layer: timeplace
+status: active
+case: смещение UTC на дату — Москва январь 1992 — UTC+2 до возврата декретного часа 19.01.1992
+input:
+  place_id: geonames:524901
+  local_date: '1992-01-10'
+  local_time: '12:00'
+  univ_time: '10:00'
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-moscow-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +02:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-MSK-05-moscow-2010-07
+layer: timeplace
+status: active
+case: смещение UTC на дату — Москва лето 2010 — летнее время (UTC+4)
+input:
+  place_id: geonames:524901
+  local_date: '2010-07-01'
+  local_time: '12:00'
+  univ_time: 08:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-moscow-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +04:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-MSK-06-moscow-2012-07
+layer: timeplace
+status: active
+case: смещение UTC на дату — Москва лето 2012 — «вечное летнее» UTC+4 (2011–2014)
+input:
+  place_id: geonames:524901
+  local_date: '2012-07-01'
+  local_time: '12:00'
+  univ_time: 08:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-moscow-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +04:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-MSK-07-moscow-2015-01
+layer: timeplace
+status: active
+case: смещение UTC на дату — Москва зима 2015 — UTC+3 после 26.10.2014
+input:
+  place_id: geonames:524901
+  local_date: '2015-01-15'
+  local_time: '12:00'
+  univ_time: 09:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-moscow-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +03:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true

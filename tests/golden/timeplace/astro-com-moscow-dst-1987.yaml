@@ -1,0 +1,74 @@
+# Golden timeplace, пачка 2 — перевод часов, Москва 1987 (astro.com, 2026-11-21).
+# Смещение = местное время − Univ.Time (через полночь). Зона — из GeoNames по place_id. 152-ФЗ: без имён.
+id: TP-DST-01-moscow-1987-03-29
+layer: timeplace
+status: active
+case: перевод часов — несуществующий час, Москва 29.03.1987 02:30 (переход на летнее)
+input:
+  place_id: geonames:524901
+  local_date: '1987-03-29'
+  local_time: 02:30
+  univ_time: '23:30'
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка и предупреждение атласа
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-moscow-dst-1987.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+notes: 'astro.com: «Clock time was skipped over by shifting time meridian to the east. Unchanged clock assumed»
+  — считает по смещению до скачка (+03:00). Наше правило (план S1, «Перевод часов»): ошибка с просьбой уточнить
+  время, без молчаливого выбора. Сверяем, что час действительно не существует и что смещение до скачка совпадает
+  с атласом.'
+expected:
+- path: timeplace.status
+  value: nonexistent_local_time
+  exact: true
+- path: timeplace.offset_before_gap
+  value: +03:00
+  exact: true
+---
+id: TP-DST-02-moscow-1987-09-27
+layer: timeplace
+status: active
+case: перевод часов — повторённый час, Москва 27.09.1987 02:30 (возврат на зимнее)
+input:
+  place_id: geonames:524901
+  local_date: '1987-09-27'
+  local_time: 02:30
+  univ_time: '22:30'
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка и предупреждение атласа
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-moscow-dst-1987.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+notes: 'astro.com: «Same hour occurs twice, could be daylight time or standard time» — выбирает летнее (+04:00),
+  то есть первое прохождение часа. Наше правило: две гипотезы, основная — первое прохождение (+04:00), альтернативная
+  — +03:00 (repeated_hour). Выбор атласа совпадает с нашей основной гипотезой.'
+expected:
+- path: timeplace.status
+  value: resolved
+  exact: true
+- path: timeplace.utc_offset
+  value: +04:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 2
+  exact: true
+- path: timeplace.offsets
+  value:
+  - +04:00
+  - +03:00
+  exact: true

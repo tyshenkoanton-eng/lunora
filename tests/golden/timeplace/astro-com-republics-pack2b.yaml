@@ -1,0 +1,349 @@
+# Golden timeplace, пачка 2 — республики бывшего СССР, часть 2 (astro.com, 2026-11-21): только Univ.Time.
+# Смещение = местное время − Univ.Time. Зона — из GeoNames по place_id. 152-ФЗ: без имён.
+id: TP-EX-13-yerevan-1985
+layer: timeplace
+status: active
+case: смещение UTC на дату — Ереван 1985, летнее время СССР
+input:
+  place_id: geonames:616052
+  local_date: '1985-07-01'
+  local_time: '12:00'
+  univ_time: 07:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2b.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +05:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-14-yerevan-2005
+layer: timeplace
+status: active
+case: смещение UTC на дату — Ереван 2005, +04 зимой
+input:
+  place_id: geonames:616052
+  local_date: '2005-01-15'
+  local_time: '12:00'
+  univ_time: 08:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2b.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +04:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-15-chisinau-1985
+layer: timeplace
+status: active
+case: смещение UTC на дату — Кишинёв 1985, летнее время СССР
+input:
+  place_id: geonames:618426
+  local_date: '1985-07-01'
+  local_time: '12:00'
+  univ_time: 08:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2b.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +04:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-16-chisinau-2005
+layer: timeplace
+status: active
+case: смещение UTC на дату — Кишинёв 2005, EET
+input:
+  place_id: geonames:618426
+  local_date: '2005-01-15'
+  local_time: '12:00'
+  univ_time: '10:00'
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2b.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +02:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-17-riga-1985
+layer: timeplace
+status: active
+case: смещение UTC на дату — Рига 1985, летнее время СССР
+input:
+  place_id: geonames:456172
+  local_date: '1985-07-01'
+  local_time: '12:00'
+  univ_time: 08:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2b.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +04:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-18-riga-2005
+layer: timeplace
+status: active
+case: смещение UTC на дату — Рига 2005, EET
+input:
+  place_id: geonames:456172
+  local_date: '2005-01-15'
+  local_time: '12:00'
+  univ_time: '10:00'
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2b.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +02:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-19-vilnius-1985
+layer: timeplace
+status: active
+case: смещение UTC на дату — Вильнюс 1985, летнее время СССР
+input:
+  place_id: geonames:593116
+  local_date: '1985-07-01'
+  local_time: '12:00'
+  univ_time: 08:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2b.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +04:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-20-vilnius-2005
+layer: timeplace
+status: active
+case: смещение UTC на дату — Вильнюс 2005, EET
+input:
+  place_id: geonames:593116
+  local_date: '2005-01-15'
+  local_time: '12:00'
+  univ_time: '10:00'
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2b.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +02:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-21-tallinn-1985
+layer: timeplace
+status: active
+case: смещение UTC на дату — Таллинн 1985, летнее время СССР
+input:
+  place_id: geonames:588409
+  local_date: '1985-07-01'
+  local_time: '12:00'
+  univ_time: 08:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2b.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +04:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-22-tallinn-2005
+layer: timeplace
+status: active
+case: смещение UTC на дату — Таллинн 2005, EET
+input:
+  place_id: geonames:588409
+  local_date: '2005-01-15'
+  local_time: '12:00'
+  univ_time: '10:00'
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2b.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +02:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-23-chisinau-1987
+layer: timeplace
+status: active
+case: смещение UTC на дату — Кишинёв 1987, летнее время СССР (дополнительный бланк)
+input:
+  place_id: geonames:618426
+  local_date: '1987-07-01'
+  local_time: '12:00'
+  univ_time: 08:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2b.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +04:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-24-riga-1987
+layer: timeplace
+status: active
+case: смещение UTC на дату — Рига 1987, летнее время СССР (дополнительный бланк)
+input:
+  place_id: geonames:456172
+  local_date: '1987-07-01'
+  local_time: '12:00'
+  univ_time: 08:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2b.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +04:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true

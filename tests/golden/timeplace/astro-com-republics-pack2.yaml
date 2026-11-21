@@ -1,0 +1,349 @@
+# Golden timeplace, пачка 2 — республики бывшего СССР (astro.com, 2026-11-21): только Univ.Time в шапке.
+# Смещение = местное время − Univ.Time. Зона — из GeoNames по place_id. 152-ФЗ: без имён.
+id: TP-EX-01-kyiv-1985
+layer: timeplace
+status: active
+case: смещение UTC на дату — Киев 1985, летнее время СССР
+input:
+  place_id: geonames:703448
+  local_date: '1985-07-01'
+  local_time: '12:00'
+  univ_time: 08:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +04:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-02-kyiv-2005
+layer: timeplace
+status: active
+case: смещение UTC на дату — Киев 2005, EET после 1990
+input:
+  place_id: geonames:703448
+  local_date: '2005-01-15'
+  local_time: '12:00'
+  univ_time: '10:00'
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +02:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-03-minsk-1985
+layer: timeplace
+status: active
+case: смещение UTC на дату — Минск 1985, летнее время СССР
+input:
+  place_id: geonames:625144
+  local_date: '1985-07-01'
+  local_time: '12:00'
+  univ_time: 08:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +04:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-04-minsk-2005
+layer: timeplace
+status: active
+case: смещение UTC на дату — Минск 2005, EET до перехода на +03 в 2011
+input:
+  place_id: geonames:625144
+  local_date: '2005-01-15'
+  local_time: '12:00'
+  univ_time: '10:00'
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +02:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-05-almaty-1985
+layer: timeplace
+status: active
+case: смещение UTC на дату — Алматы 1985, летнее время СССР
+input:
+  place_id: geonames:1526384
+  local_date: '1985-07-01'
+  local_time: '12:00'
+  univ_time: 05:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +07:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-06-almaty-2005
+layer: timeplace
+status: active
+case: смещение UTC на дату — Алматы 2005, +06 без летнего с 2005
+input:
+  place_id: geonames:1526384
+  local_date: '2005-01-15'
+  local_time: '12:00'
+  univ_time: 06:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +06:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-07-tashkent-1985
+layer: timeplace
+status: active
+case: смещение UTC на дату — Ташкент 1985, летнее время СССР
+input:
+  place_id: geonames:1512569
+  local_date: '1985-07-01'
+  local_time: '12:00'
+  univ_time: 05:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +07:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-08-tashkent-2005
+layer: timeplace
+status: active
+case: смещение UTC на дату — Ташкент 2005, +05 после 1992
+input:
+  place_id: geonames:1512569
+  local_date: '2005-01-15'
+  local_time: '12:00'
+  univ_time: 07:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +05:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-09-tbilisi-1985
+layer: timeplace
+status: active
+case: смещение UTC на дату — Тбилиси 1985, летнее время СССР
+input:
+  place_id: geonames:611717
+  local_date: '1985-07-01'
+  local_time: '12:00'
+  univ_time: 07:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +05:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-10-tbilisi-2005
+layer: timeplace
+status: active
+case: смещение UTC на дату — Тбилиси 2005, +03 зимой
+input:
+  place_id: geonames:611717
+  local_date: '2005-01-15'
+  local_time: '12:00'
+  univ_time: 09:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +03:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-11-baku-1985
+layer: timeplace
+status: active
+case: смещение UTC на дату — Баку 1985, летнее время СССР
+input:
+  place_id: geonames:587084
+  local_date: '1985-07-01'
+  local_time: '12:00'
+  univ_time: 07:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +05:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
+---
+id: TP-EX-12-baku-2005
+layer: timeplace
+status: active
+case: смещение UTC на дату — Баку 2005, +04 зимой
+input:
+  place_id: geonames:587084
+  local_date: '2005-01-15'
+  local_time: '12:00'
+  univ_time: 08:00
+reference:
+  source: astro.com
+  settings:
+    atlas: astro.com (пояс определён сайтом автоматически)
+    field: Univ.Time в шапке бланка
+  captured_at: '2026-11-21'
+  captured_by: Антон
+  evidence_file: evidence/astro-com-republics-pack2.md
+versions:
+  tz: 2026f
+  ephemeris: не используется
+  reference_service: astro.com, бланк 21-Nov-2026
+expected:
+- path: timeplace.utc_offset
+  value: +04:00
+  exact: true
+- path: timeplace.hypotheses
+  value: 1
+  exact: true
