@@ -1,0 +1,37 @@
+# F-05 (чек-лист S1): карта A, бланк Mean Node, эталон astro.com, снят Антоном 2026-11-21.
+# 152-ФЗ: только вход и координаты; скриншоты в git не кладём (см. evidence).
+# Вход и координаты — как card-a-astro-com.yaml (атлас 44e25 48n44).
+id: GE-06-card-A-mean-node-astro-com
+layer: ephemeris
+status: active
+case: GE-06 — средний узел (и истинный с повторного бланка)
+input:
+  place_id: "geonames:472757"
+  local_date: "1984-02-04"
+  local_time: "15:00"
+  utc_offset: "+04:00"
+  utc: "1984-02-04T11:00:00Z"
+  lat: 48.733333
+  lon: 44.416667
+reference:
+  source: astro.com
+  settings:
+    chart: "Natal Chart, Method: Web Style / Placidus, тип 2.GW, версия 0.0-1"
+    zodiac: tropical
+    node: mean
+    house_system: placidus
+    coordinates: "44e25, 48n44 (атлас astro.com)"
+    rounding: "до угловой секунды"
+  captured_at: "2026-11-21"
+  captured_by: Антон
+  evidence_file: evidence/astro-com-card-A-mean-node.md
+versions:
+  tz: "2026f"
+  ephemeris: "DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55"
+  reference_service: "astro.com, бланк 21-Nov-2026"
+notes: >-
+  Средний узел — §2.6: формула Meeus/Chapront + Δψ (тропическая видимая долгота).
+  Тип узла различает значения на 1°07′, поэтому оба узла в одном кейсе.
+expected:
+  - {path: nodes.mean, value: 72.704167, tolerance: 1.0, unit: arcsec, shown: "Mean Node 12 Gem 42' 15\""}
+  - {path: nodes.true, value: 73.826944, tolerance: 1.0, unit: arcsec, shown: "True Node 13 Gem 49' 37\""}
