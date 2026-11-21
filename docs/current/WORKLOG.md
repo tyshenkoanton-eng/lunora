@@ -250,3 +250,9 @@
   - Мутации (статус и смещение) роняют 3 теста. `golden_audit` — active: 61. Блок «Перевод часов» пачки 2 закрыт.
 - **Осталось от пачки 2:** 22 строки — республики TP-EX-01…22.
 - **Проверки:** `golden_audit --require-active`, `pytest tests/test_golden_timeplace.py` — 80 passed.
+
+## 2026-11-21 — G17-S1, шаг 4о: пачка 2, республики — 12 timeplace-кейсов TP-EX-01…12
+- **Сделал:** двенадцать шапок бланков astro.com (12:00 местного, лето 1985 и зима 2005) → `tests/golden/timeplace/astro-com-republics-pack2.yaml`, active: Киев и Минск (+04:00 / +02:00), Алматы (+07:00 / +06:00), Ташкент (+07:00 / +05:00), Тбилиси (+05:00 / +03:00), Баку (+05:00 / +04:00). Univ.Time сверил по каждой шапке сам. Расшифровка с координатами атласа и SHA-256 — [astro-com-republics-pack2.md](../../tests/golden/evidence/astro-com-republics-pack2.md); скриншоты в git не клал.
+- **Результат:** все 12 совпали со слоем поясов на tzdata 2026f, у каждой точки одна гипотеза. `golden_audit` — active: 73.
+- **Осталось от пачки 2:** 10 строк — TP-EX-13…22 (Ереван, Кишинёв, Рига, Вильнюс, Таллинн).
+- **Проверки:** `golden_audit --require-active`, `pytest tests/test_golden_timeplace.py` — 116 passed.
