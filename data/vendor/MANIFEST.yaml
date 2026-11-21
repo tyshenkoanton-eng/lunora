@@ -11,9 +11,9 @@ sets:
     retrieved: "2026-11-21"
     license: "tzdata — public domain; tzcode — public domain (часть файлов BSD-3-Clause), см. LICENSE в архиве"
     notes: >-
-      Подпись .asc — ключ RSA 7E3792A9D8ACF7D633BC1588ED97E90E62AA7E34 (Paul Eggert).
-      Публичного ключа в среде нет и keyserver закрыт, поэтому подпись офлайн не проверена;
-      целостность закреплена SHA-256 на момент скачивания. tzcode нужен для сборки zic
+      Подпись .asc проверена ревьюером 2026-11-21: gpg --verify против ключа Пола Эггерта →
+      Good signature, отпечаток RSA 7E3792A9D8ACF7D633BC1588ED97E90E62AA7E34 совпал (verified).
+      Целостность дальше держит SHA-256 этого манифеста. tzcode нужен для сборки zic
       2026f (сверка стандартной сборки с backzone, scripts/spike/tz_backzone_check.py).
     files:
       - path: iana/tzdata2026f.tar.gz
