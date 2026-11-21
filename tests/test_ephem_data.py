@@ -144,3 +144,28 @@ def test_fetch_respects_group(tmp_path):
 def test_makefile_setup_fetches_group(group):
     mk = (ROOT / "Makefile").read_text(encoding="utf-8")
     assert f"scripts/fetch_vendor.py --group {group}" in mk
+
+
+# --- ephem_data_check: вход slice-check (DE440s + сумма + версия tzdata) ---
+
+
+def test_ephem_data_check_passes_on_repo():
+    edc = _load_spike("ephem_data_check")
+    assert edc.check(VENDOR) == []
+
+
+def test_ephem_data_check_reports_missing_de440s(tmp_path):
+    edc = _load_spike("ephem_data_check")
+    (tmp_path / "MANIFEST.yaml").write_text(
+        (VENDOR / "MANIFEST.yaml").read_text(encoding="utf-8"), encoding="utf-8"
+    )
+    errors = edc.check(tmp_path)
+    assert any("de440s.bsp" in e and "make setup" in e for e in errors)
+
+
+def test_slice_check_runs_ephemeris_checks():
+    mk = (ROOT / "Makefile").read_text(encoding="utf-8")
+    block = mk.split("slice-check:", 1)[1].split("\n\n", 1)[0]
+    assert "scripts/spike/ephem_data_check.py" in block
+    assert "tests/test_ephem.py" in block
+    assert 'tests/diff -m "not full"' in block

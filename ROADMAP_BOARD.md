@@ -8,7 +8,7 @@
 | | |
 |---|---|
 | Последнее ревью | — (—) |
-| Блокер | naif.jpl.nasa.gov закрыт в облачной среде (403) — нужен для DE440s, шаг 2 |
-| Следующий шаг | G17-S1: tzdata 2026f и GeoNames завендорены (data/vendor, манифест SHA-256), сверка backzone сделана (TZD-002). Дальше: golden timeplace по съёму astro.com, затем _ephem.py (Skyfield+DE440s). Карточка docs/current/G17-S1-план.md. PASS = зелёные make slice-check и make verify. |
+| Блокер | нет active golden-кейсов — нужен ручной съём эталонов Антоном (astro.com, Jagannatha Hora, калькуляторы Ба-Цзы); golden_audit --require-active красный намеренно |
+| Следующий шаг | G17-S1: эфемеридный слой _ephem.py (Skyfield 1.55 + DE440s, SHA-256 сверен) готов, дифф с SE по §2.11 и 10 дат Horizons зелёные; tzdata 2026f и GeoNames завендорены. Дальше: golden-кейсы GE/timeplace по съёму Антона, справочник мест в рантайме, истинное солнечное время и момент терминов (§2.8–2.9). Карточка docs/current/G17-S1-план.md. PASS = зелёные make slice-check и make verify. |
 
 Подробная карта — `docs/05_roadmap.md`. Источник статуса — `docs/current/ROADMAP_STATUS.yaml`.

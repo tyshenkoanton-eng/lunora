@@ -149,3 +149,9 @@
 - **Микрорешение:** допуск по скоростям (2·10⁻⁴ °/сут) — свой, потому что §2.11 скорости не нормирует; измерено 7,8·10⁻⁵ (Луна).
 - **Следующий шаг:** `ephem_data_check` и эфемеридные тесты в `make slice-check`, статус-карта.
 - **Проверки:** `pytest tests/diff` (быстрая) и `pytest tests/diff -m full` — зелёные; `ruff check .`; `docs_discipline`.
+
+## 2026-11-21 — G17-S1, шаг 2е: эфемериды в make slice-check, статус-карта
+- **Сделал:** тесты вперёд — 3 в `tests/test_ephem_data.py` (`ephem_data_check` зелёный на репо, ловит отсутствие DE440s с подсказкой «make setup», `slice-check` запускает эфемеридные проверки). Затем `scripts/spike/ephem_data_check.py` (DE440s на месте, сумма = манифест = §0.5 = `_ephem`, Skyfield 1.55, tzdata 2026f). `make slice-check`: + `ephem_data_check`, `tests/test_ephem_data.py`, `tests/test_ephem.py`, `pytest tests/diff -m "not full"`. Новая цель `make spike-full` (полный дифф + отчёт). `ROADMAP_STATUS.yaml` (блокер naif снят → блокер «нет active golden-кейсов»), `make board`, `CURRENT_STATE.md`.
+- **Результат:** `make verify` — зелёный (207 passed). `make slice-check` — всё зелёное, кроме `golden_audit --require-active` (нет active-кейсов, ждёт ручного съёма Антона — так и задумано с шага 1).
+- **Следующий шаг:** PR в main; затем golden-кейсы по съёму и справочник мест.
+- **Проверки:** `make verify`, `make slice-check`.
