@@ -1,4 +1,9 @@
-"""Реестр спорных случаев tz_disputes: место + интервал дат → две зоны-гипотезы."""
+"""Реестр спорных случаев tz_disputes: место или регион + интервал дат → две зоны-гипотезы.
+
+Запись привязана либо к месту (`place_id`, точечный спор — Джизак), либо к регионам
+(`regions`, admin1 GeoNames — всё Приднестровье). `examples` — справочные места региона,
+в правиле не участвуют.
+"""
 
 from __future__ import annotations
 
@@ -13,7 +18,9 @@ import yaml
 @dataclass(frozen=True)
 class TzDispute:
     id: str
-    place_id: str
+    place_id: str | None
+    regions: tuple[str, ...]
+    examples: tuple[str, ...]
     name: str
     primary_zone: str
     alternative_zone: str
@@ -22,13 +29,23 @@ class TzDispute:
     status: str
     source_note: str
 
-    def applies(self, place_id: str | None, zone_id: str, on: date) -> bool:
+    def applies(
+        self, place_id: str | None, zone_id: str, on: date, region: str | None = None
+    ) -> bool:
+        where = (self.place_id is not None and place_id == self.place_id) or (
+            region is not None and region in self.regions
+        )
         return (
-            place_id == self.place_id
+            where
             and zone_id == self.primary_zone
             and (self.valid_from is None or on >= self.valid_from)
             and (self.valid_to is None or on <= self.valid_to)
         )
+
+
+def region_of(country_code: str, admin1_code: str) -> str:
+    """Код региона для реестра: admin1 GeoNames, например «geonames-admin1:MD.58»."""
+    return f"geonames-admin1:{country_code}.{admin1_code}"
 
 
 def _d(v: object) -> date | None:
@@ -47,7 +64,9 @@ def load_disputes() -> tuple[TzDispute, ...]:
         out.append(
             TzDispute(
                 id=r["id"],
-                place_id=r["place_id"],
+                place_id=r.get("place_id"),
+                regions=tuple(r.get("regions") or ()),
+                examples=tuple(r.get("examples") or ()),
                 name=r["name"],
                 primary_zone=r["primary_zone"],
                 alternative_zone=r["alternative_zone"],
@@ -60,7 +79,9 @@ def load_disputes() -> tuple[TzDispute, ...]:
     return tuple(out)
 
 
-def find_dispute(place_id: str | None, zone_id: str, on: date) -> TzDispute | None:
-    if place_id is None:
+def find_dispute(
+    place_id: str | None, zone_id: str, on: date, region: str | None = None
+) -> TzDispute | None:
+    if place_id is None and region is None:
         return None
-    return next((d for d in load_disputes() if d.applies(place_id, zone_id, on)), None)
+    return next((d for d in load_disputes() if d.applies(place_id, zone_id, on, region)), None)

@@ -7,7 +7,7 @@
   - повторённый час и интервал допуска через переход — несколько гипотез смещения.
 """
 
-from lunora.timeplace.disputes import TzDispute, find_dispute, load_disputes
+from lunora.timeplace.disputes import TzDispute, find_dispute, load_disputes, region_of
 from lunora.timeplace.resolve import (
     Hypothesis,
     NonexistentLocalTime,
@@ -24,6 +24,7 @@ __all__ = [
     "TzDispute",
     "find_dispute",
     "load_disputes",
+    "region_of",
     "resolve",
     "tz_build",
     "zone_source",

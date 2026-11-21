@@ -79,6 +79,7 @@ def resolve(
     zone_id: str,
     tolerance_minutes: int | None = 0,
     place_id: str | None = None,
+    region: str | None = None,
 ) -> ResolvedMoment:
     tz = _zone(zone_id)
     if local_time is None:
@@ -120,7 +121,7 @@ def resolve(
             add(off, abbr, "interval_crosses_transition")
 
     provenance = {"tz_build": tz_build(), "zone_id": zone_id}
-    dispute = find_dispute(place_id, zone_id, local_date)
+    dispute = find_dispute(place_id, zone_id, local_date, region)
     if dispute is not None:
         alt = _zone(dispute.alternative_zone)
         before = len(hyps)

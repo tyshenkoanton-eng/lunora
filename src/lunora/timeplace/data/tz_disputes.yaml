@@ -15,17 +15,24 @@
     1981–1991 (нормативные акты Узбекской ССР о поясном времени). Открытый дата-вопрос,
     не known_gap в коде. Решение Антона 2026-11-21.
 - id: TZD-002
-  place_id: "geonames:617239"
-  name: Тирасполь (Tiraspol), Молдова / Приднестровье
+  name: Приднестровье (Тирасполь, Бендеры и весь регион), Молдова
+  regions:                         # правило региональное: admin1 GeoNames, не список городов
+    - "geonames-admin1:MD.58"      # Transnistria
+    - "geonames-admin1:MD.62"      # Bender Municipality (в GeoNames отдельный admin1)
+  examples:                        # справочно, в правиле не участвуют
+    - "geonames:617239"            # Тирасполь — найден tz_backzone_check (тёзка Europe/Tiraspol)
+    - "geonames:618577"            # Бендеры — тот же регион, методом «тёзки» не ловится
   primary_zone: Europe/Chisinau    # зона по GeoNames
   alternative_zone: Europe/Moscow  # в окне совпадает с backzone Europe/Tiraspol (МСК/МСД)
   valid_from: "1990-05-06"         # Кишинёв ушёл с московского времени
   valid_to: "1991-03-30"           # с 1991-03-31 обе зоны на EEST
   status: disputed
-  found_by: scripts/spike/tz_backzone_check.py (2026-11-21, тёзка из backzone)
+  found_by: scripts/spike/tz_backzone_check.py (2026-11-21, тёзка из backzone); регион — решение Антона 2026-11-21
   source_note: >-
     Стандартная сборка IANA склеивает Europe/Tiraspol с Europe/Chisinau; в backzone Тирасполь
-    остаётся на МСК до 1991-03-31. Требует сверки по местной прессе/нормативке 1990–1991.
+    остаётся на МСК до 1991-03-31. По Антону, на московском времени оставался весь
+    Приднестровский регион, пока остальная Молдова перешла на EET, — поэтому правило по
+    admin1 GeoNames. Требует сверки по местной прессе/нормативке 1990–1991.
     Расхождение backzone после 1992-01-19 (МСК навсегда) сюда не включено: сам IANA
     (комментарий П. Эггерта 2006, europe) считает его вероятной ошибкой Shanks & Pottenger —
     пометка «ошибка источника» в отчёте tz-backzone-сверка.md.

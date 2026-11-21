@@ -248,9 +248,14 @@ def all_zone_diffs(b: Build) -> list[dict]:
 
 def dispute_note(geonameid: int) -> str:
     """Ссылка на запись реестра tz_disputes, если место уже разобрано."""
-    from lunora.timeplace import load_disputes
+    from geonames_vendor import load_cities
 
-    found = [d for d in load_disputes() if d.place_id == f"geonames:{geonameid}"]
+    from lunora.timeplace import load_disputes, region_of
+
+    place = f"geonames:{geonameid}"
+    c = load_cities().get(geonameid)
+    region = region_of(c["countrycode"], c["admin1_code"]) if c else None
+    found = [d for d in load_disputes() if d.place_id == place or region in d.regions]
     if not found:
         return "требует ручного разбора"
     return "; ".join(
