@@ -9,8 +9,8 @@
 | `CURRENT_STATE.md` | Где мы сейчас — тонкий, источник правды |
 | `current/ROADMAP_STATUS.yaml` | Статус карты L→G→S→R (источник; витрина `../ROADMAP_BOARD.md` генерируется) |
 | `current/WORKLOG.md` | Журнал текущего слайса (append-only, антидот потере контекста) |
-| `gates/` | Закрытые этапы (по одному файлу на событие) |
-| `changelog.md` | Летопись: дата · scope · SHA · verdict |
+| `gates/` | Закрытые этапы (по одному файлу на событие): [G17-S1](gates/G17-S1-close.md) |
+| [`changelog.md`](changelog.md) | Летопись: дата · scope · SHA · verdict |
 
 ## Справочник (стабильное «что и как») — ведёт в Discovery-пакет
 | Слот | Где в проекте |
