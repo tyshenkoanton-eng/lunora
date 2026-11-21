@@ -9,7 +9,7 @@ current:
   slice_status: в работе
   latest_review: null
   latest_verdict: null
-  blocker: "нет active golden-кейсов — нужен ручной съём эталонов Антоном (astro.com, Jagannatha Hora, калькуляторы Ба-Цзы); golden_audit --require-active красный намеренно"
-  next_action: "G17-S1: эфемеридный слой _ephem.py (Skyfield 1.55 + DE440s, SHA-256 сверен) готов, дифф с SE по §2.11 и 10 дат Horizons зелёные; tzdata 2026f и GeoNames завендорены. Дальше: golden-кейсы GE/timeplace по съёму Антона, справочник мест в рантайме, истинное солнечное время и момент терминов (§2.8–2.9). Карточка docs/current/G17-S1-план.md. PASS = зелёные make slice-check и make verify."
+  blocker: null
+  next_action: "G17-S1: make slice-check и make verify зелёные (2026-11-21). Есть первые active golden (карта A, astro.com: GE-01, GE-02, GE-06). До закрытия S1 по карточке: golden timeplace и GE-03/GE-04/GE-05 (съём Антона), справочник мест в рантайме, истинное солнечное время и момент терминов (§2.8–2.9), close-record с Джизаком (TZD-001). Карточка docs/current/G17-S1-план.md."
 
 next_review_number: R1

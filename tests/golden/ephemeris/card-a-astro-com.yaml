@@ -1,0 +1,121 @@
+# Карта A (ENGINE-SPEC §0.5): эталон astro.com, снят Антоном 2026-11-21.
+# 152-ФЗ: только вход и координаты, без имени; скриншот в git не кладём (см. evidence).
+# Долготы — градусы, переведены из «знак d m s» бланка; tolerance — в угловых секундах.
+# Коорд. эталона 44e25 48n44 (атлас astro.com) — именно они идут в расчёт, не §0.5.
+---
+id: GE-01-card-A-astro-com
+layer: ephemeris
+status: active
+case: GE-01 — долготы и скорости 10 тел
+input:
+  place_id: "geonames:472757"   # Волгоград
+  local_date: "1984-02-04"
+  local_time: "15:00"
+  utc_offset: "+04:00"
+  utc: "1984-02-04T11:00:00Z"
+  lat: 48.733333                # 48n44
+  lon: 44.416667                # 44e25
+reference:
+  source: astro.com
+  settings:
+    chart: "Natal Chart, Method: Web Style / Placidus, тип 2.GW, версия 0.0-1"
+    zodiac: tropical
+    node: true
+    house_system: placidus
+    coordinates: "44e25, 48n44 (атлас astro.com)"
+    rounding: "до угловой секунды"
+  captured_at: "2026-11-21"
+  captured_by: Антон
+  evidence_file: evidence/astro-com-card-A.md
+versions:
+  tz: "2026f"
+  ephemeris: "DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55"
+  reference_service: "astro.com, бланк 21-Nov-2026"
+expected:
+  - {path: bodies.sun.lon, value: 314.817778, tolerance: 1.0, unit: arcsec, shown: "14 Aqu 49' 4\""}
+  - {path: bodies.moon.lon, value: 341.688889, tolerance: 1.0, unit: arcsec, shown: "11 Pis 41' 20\""}
+  - {path: bodies.mercury.lon, value: 293.399167, tolerance: 1.0, unit: arcsec, shown: "23 Cap 23' 57\""}
+  - {path: bodies.venus.lon, value: 281.861944, tolerance: 1.0, unit: arcsec, shown: "11 Cap 51' 43\""}
+  - {path: bodies.mars.lon, value: 221.807222, tolerance: 1.0, unit: arcsec, shown: "11 Sco 48' 26\""}
+  - {path: bodies.jupiter.lon, value: 273.261944, tolerance: 1.0, unit: arcsec, shown: "3 Cap 15' 43\""}
+  - {path: bodies.saturn.lon, value: 226.035278, tolerance: 1.0, unit: arcsec, shown: "16 Sco 2' 7\""}
+  - {path: bodies.uranus.lon, value: 252.763333, tolerance: 1.0, unit: arcsec, shown: "12 Sag 45' 48\""}
+  - {path: bodies.neptune.lon, value: 270.521389, tolerance: 1.0, unit: arcsec, shown: "0 Cap 31' 17\""}
+  - {path: bodies.pluto.lon, value: 212.136389, tolerance: 1.0, unit: arcsec, shown: "2 Sco 8' 11\" r"}
+  - {path: bodies.pluto.retrograde, value: true, exact: true, shown: "r"}
+  - {path: bodies.sun.retrograde, value: false, exact: true}
+  - {path: bodies.mercury.retrograde, value: false, exact: true}
+  - {path: bodies.venus.retrograde, value: false, exact: true}
+  - {path: bodies.mars.retrograde, value: false, exact: true}
+  - {path: bodies.jupiter.retrograde, value: false, exact: true}
+  - {path: bodies.saturn.retrograde, value: false, exact: true}
+  - {path: bodies.uranus.retrograde, value: false, exact: true}
+  - {path: bodies.neptune.retrograde, value: false, exact: true}
+---
+id: GE-02-card-A-astro-com
+layer: ephemeris
+status: active
+case: GE-02 — ASC, MC, RAMC
+input:
+  place_id: "geonames:472757"   # Волгоград
+  local_date: "1984-02-04"
+  local_time: "15:00"
+  utc_offset: "+04:00"
+  utc: "1984-02-04T11:00:00Z"
+  lat: 48.733333                # 48n44
+  lon: 44.416667                # 44e25
+reference:
+  source: astro.com
+  settings:
+    chart: "Natal Chart, Method: Web Style / Placidus, тип 2.GW, версия 0.0-1"
+    zodiac: tropical
+    node: true
+    house_system: placidus
+    coordinates: "44e25, 48n44 (атлас astro.com)"
+    rounding: "до угловой секунды"
+  captured_at: "2026-11-21"
+  captured_by: Антон
+  evidence_file: evidence/astro-com-card-A.md
+versions:
+  tz: "2026f"
+  ephemeris: "DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55"
+  reference_service: "astro.com, бланк 21-Nov-2026"
+notes: >-
+  Допуск углов 1′ (ARCHITECTURE §6.3: 1–2′ — округление координат города: астро.com
+  показывает 44e25/48n44 до минуты). RAMC — из Sid. Time 22:52:53 (до секунды времени = 15″).
+expected:
+  - {path: angles.asc, value: 101.138889, tolerance: 60.0, unit: arcsec, shown: "AC 11 Can 8' 20\""}
+  - {path: angles.mc, value: 341.8075, tolerance: 60.0, unit: arcsec, shown: "MC 11 Pis 48' 27\""}
+  - {path: angles.ramc, value: 343.220833, tolerance: 15.0, unit: arcsec, shown: "Sid. Time 22:52:53"}
+---
+id: GE-06-card-A-astro-com
+layer: ephemeris
+status: active
+case: GE-06 — истинный узел
+input:
+  place_id: "geonames:472757"   # Волгоград
+  local_date: "1984-02-04"
+  local_time: "15:00"
+  utc_offset: "+04:00"
+  utc: "1984-02-04T11:00:00Z"
+  lat: 48.733333                # 48n44
+  lon: 44.416667                # 44e25
+reference:
+  source: astro.com
+  settings:
+    chart: "Natal Chart, Method: Web Style / Placidus, тип 2.GW, версия 0.0-1"
+    zodiac: tropical
+    node: true
+    house_system: placidus
+    coordinates: "44e25, 48n44 (атлас astro.com)"
+    rounding: "до угловой секунды"
+  captured_at: "2026-11-21"
+  captured_by: Антон
+  evidence_file: evidence/astro-com-card-A.md
+versions:
+  tz: "2026f"
+  ephemeris: "DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55"
+  reference_service: "astro.com, бланк 21-Nov-2026"
+notes: "На бланке только истинный узел (True Node); средний узел снимается отдельно."
+expected:
+  - {path: nodes.true, value: 73.826944, tolerance: 1.0, unit: arcsec, shown: "13 Gem 49' 37\""}
