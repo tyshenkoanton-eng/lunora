@@ -3,6 +3,8 @@
 
 Офлайн: сеть не нужна. Каждый файл в data/vendor должен быть в MANIFEST.yaml с
 совпадающими размером и SHA-256; лишние и пропавшие файлы — ошибка (ADR-001 / B12).
+Наборы с `fetch: setup` (эфемериды JPL) в git не лежат — их кладёт make setup
+(scripts/fetch_vendor.py), а проверяются они здесь так же строго.
 
 Запуск:  python scripts/spike/vendor_check.py [data/vendor]
 """
@@ -41,7 +43,8 @@ def verify(root: pathlib.Path) -> list[str]:
             listed.add(rel)
             p = root / rel
             if not p.is_file():
-                errors.append(f"{name}: нет файла {rel}")
+                hint = " — запустите make setup" if s.get("fetch") == "setup" else ""
+                errors.append(f"{name}: нет файла {rel}{hint}")
                 continue
             if p.stat().st_size != f["bytes"]:
                 errors.append(f"{name}: {rel}: размер {p.stat().st_size} ≠ {f['bytes']}")

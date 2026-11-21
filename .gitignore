@@ -13,3 +13,8 @@ build/
 # исследования лежат на Яндекс.Диске — 61 МБ мелких файлов в репозитории ни к чему
 research/
 .claude/skills/
+
+# эфемериды JPL не храним в git: качает make setup, суммы — data/vendor/MANIFEST.yaml
+data/vendor/jpl/
+data/vendor/jpl-oracle/
+*.part

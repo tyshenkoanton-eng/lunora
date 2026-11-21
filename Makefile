@@ -2,11 +2,16 @@
 # Воспроизводимость: любой в любой сессии прогоняет те же команды.
 # Рецепты — с ТАБУЛЯЦИЕЙ. Подставь реальные команды проекта под <...>.
 
-.PHONY: setup verify slice-check docs board
+.PHONY: setup setup-oracle verify slice-check docs board
 
-setup:          ## установка зависимостей/окружения
+setup:          ## установка зависимостей/окружения + эфемериды DE440s (SHA-256 из манифеста)
 	pip install -e ".[dev]"
+	python scripts/fetch_vendor.py --group runtime
 	cd frontend && npm ci
+
+setup-oracle:   ## тестовые оракулы: pyswisseph и DE440 для него (дифф-тесты, slice-check)
+	pip install -e ".[dev,oracle]"
+	python scripts/fetch_vendor.py --group oracle
 
 verify:         ## полная проверка: линт + типы + тесты + дисциплина доков
 	ruff check .

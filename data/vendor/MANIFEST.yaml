@@ -59,3 +59,40 @@ sets:
         url: https://download.geonames.org/export/dump/readme.txt
         bytes: 8843
         sha256: b1957379b6c1242c700c98ac9a8aa0a09f56c3c0a50ee72175527005f48ef2c5
+  jpl-de440s:
+    version: "DE440s"
+    source: https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/
+    retrieved: "2026-11-21"
+    license: "JPL/NAIF — общественное достояние (NASA), коммерческое использование и редистрибуция разрешены"
+    fetch: setup   # в git не лежит: качает scripts/fetch_vendor.py из make setup
+    group: runtime
+    notes: >-
+      Рантайм-эфемериды (ADR-001, ENGINE-SPEC §2.1): DE440 на интервале 1849–2150.
+      SHA-256 совпал с ENGINE-SPEC §0.5. Last-Modified на NAIF: 2020-12-21 19:39:26 GMT.
+    files:
+      - path: jpl/de440s.bsp
+        url: https://naif.jpl.nasa.gov/pub/naif/generic_kernels/spk/planets/de440s.bsp
+        bytes: 32726016
+        sha256: c1c7feeab882263fc493a9d5a5b2ddd71b54826cdf65d8d17a76126b260a49f2
+  jpl-de440-oracle:
+    version: "DE440"
+    source: https://ssd.jpl.nasa.gov/ftp/eph/planets/Linux/de440/
+    retrieved: "2026-11-21"
+    license: "JPL — общественное достояние (NASA)"
+    fetch: setup
+    group: oracle   # только дифф-тесты против Swiss Ephemeris (группа [oracle]), не рантайм
+    notes: >-
+      DE440 в двоичном формате JPL (1550–2650) для Swiss Ephemeris в режиме FLG_JPLEPH —
+      оракул читает те же данные JPL, что и рантайм, поэтому дифф проверяет нашу редукцию
+      (световое время, аберрация, нутация, углы, дома), а не разницу эфемерид.
+      Опубликованной суммы у JPL нет — SHA-256 зафиксирован при первой загрузке.
+      Last-Modified: 2021-03-04 19:26:30 GMT.
+    files:
+      - path: jpl-oracle/linux_p1550p2650.440
+        url: https://ssd.jpl.nasa.gov/ftp/eph/planets/Linux/de440/linux_p1550p2650.440
+        bytes: 102272352
+        sha256: 29915576d0a6555766b99485ac3056ee415e86df4fce282611c31afb329ad062
+      - path: jpl-oracle/header.440
+        url: https://ssd.jpl.nasa.gov/ftp/eph/planets/Linux/de440/header.440
+        bytes: 22802
+        sha256: 0f4636b663e6f00af9efa2b605ef23635489f56b23dd1a5e3821d3acc6ac3359
