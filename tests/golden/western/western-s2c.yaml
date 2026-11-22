@@ -1,0 +1,532 @@
+# Golden западного движка G17-S2c — сборка карты, аспекты (GW-05), граница знака (GW-11).
+# Эталон: бланки astro.com карт A/D/C (сняты в S1) + правила §3.7 (аспекты), §2.5 (дома), §1.4 (знаки).
+# Аспекты — по долготам astro.com; наш движок считает на _ephem (GE-01, ≤1″), орб с допуском 0.02°.
+id: GW-A-assembly
+layer: western
+status: active
+case: 'сборка карты A: знаки, дома цельные и Плацидус'
+input:
+  place_id: geonames:472757
+  local_date: '1984-02-04'
+  local_time: '15:00'
+  lat: 48.71378
+  lon: 44.4976
+  zone: Europe/Volgograd
+reference:
+  source: astro.com (бланк карты A, снят в S1) + ENGINE-SPEC §3.7 (аспекты/орбисы), §2.5 (дома)
+  settings:
+    orbs: 'меньший ряд Лилли (§3.7): Солнце 15, Луна 12, Мерк/Вен/Марс 7, Юп/Сат 9, U/N/P 5'
+    houses: цельные знаки (whole-sign) и Плацидус; куспиды Плацидуса — с бланка, противоположные реконструированы
+    aspect_rule: abs(sep−α) ≤ (orb_A+orb_B)/2 по долготам astro.com; наш движок — на _ephem (GE-01, ≤1″)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка бланков S1 + расчёт по §3.7)
+  evidence_file: evidence/astro-com-card-A.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: astro.com (бланки S1)
+expected:
+- path: planets.Солнце.sign
+  value: Водолей
+  exact: true
+- path: planets.Солнце.house_whole
+  value: 8
+  exact: true
+- path: planets.Солнце.house_placidus
+  value: 8
+  exact: true
+- path: planets.Луна.sign
+  value: Рыбы
+  exact: true
+- path: planets.Луна.house_whole
+  value: 9
+  exact: true
+- path: planets.Луна.house_placidus
+  value: 9
+  exact: true
+- path: planets.Меркурий.sign
+  value: Козерог
+  exact: true
+- path: planets.Меркурий.house_whole
+  value: 7
+  exact: true
+- path: planets.Меркурий.house_placidus
+  value: 7
+  exact: true
+- path: planets.Венера.sign
+  value: Козерог
+  exact: true
+- path: planets.Венера.house_whole
+  value: 7
+  exact: true
+- path: planets.Венера.house_placidus
+  value: 7
+  exact: true
+- path: planets.Марс.sign
+  value: Скорпион
+  exact: true
+- path: planets.Марс.house_whole
+  value: 5
+  exact: true
+- path: planets.Марс.house_placidus
+  value: 5
+  exact: true
+- path: planets.Юпитер.sign
+  value: Козерог
+  exact: true
+- path: planets.Юпитер.house_whole
+  value: 7
+  exact: true
+- path: planets.Юпитер.house_placidus
+  value: 6
+  exact: true
+- path: planets.Сатурн.sign
+  value: Скорпион
+  exact: true
+- path: planets.Сатурн.house_whole
+  value: 5
+  exact: true
+- path: planets.Сатурн.house_placidus
+  value: 5
+  exact: true
+- path: planets.Уран.sign
+  value: Стрелец
+  exact: true
+- path: planets.Уран.house_whole
+  value: 6
+  exact: true
+- path: planets.Уран.house_placidus
+  value: 6
+  exact: true
+- path: planets.Нептун.sign
+  value: Козерог
+  exact: true
+- path: planets.Нептун.house_whole
+  value: 7
+  exact: true
+- path: planets.Нептун.house_placidus
+  value: 6
+  exact: true
+- path: planets.Плутон.sign
+  value: Скорпион
+  exact: true
+- path: planets.Плутон.house_whole
+  value: 5
+  exact: true
+- path: planets.Плутон.house_placidus
+  value: 5
+  exact: true
+---
+id: GW-D-assembly
+layer: western
+status: active
+case: 'сборка карты D: знаки, дома цельные и Плацидус'
+input:
+  place_id: geonames:498817
+  local_date: '1962-08-09'
+  local_time: 06:15
+  lat: 59.93863
+  lon: 30.31413
+  zone: Europe/Moscow
+reference:
+  source: astro.com (бланк карты D, снят в S1) + ENGINE-SPEC §3.7 (аспекты/орбисы), §2.5 (дома)
+  settings:
+    orbs: 'меньший ряд Лилли (§3.7): Солнце 15, Луна 12, Мерк/Вен/Марс 7, Юп/Сат 9, U/N/P 5'
+    houses: цельные знаки (whole-sign) и Плацидус; куспиды Плацидуса — с бланка, противоположные реконструированы
+    aspect_rule: abs(sep−α) ≤ (orb_A+orb_B)/2 по долготам astro.com; наш движок — на _ephem (GE-01, ≤1″)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка бланков S1 + расчёт по §3.7)
+  evidence_file: evidence/astro-com-leningrad-1962.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: astro.com (бланки S1)
+expected:
+- path: planets.Солнце.sign
+  value: Лев
+  exact: true
+- path: planets.Солнце.house_whole
+  value: 1
+  exact: true
+- path: planets.Солнце.house_placidus
+  value: 12
+  exact: true
+- path: planets.Луна.sign
+  value: Скорпион
+  exact: true
+- path: planets.Луна.house_whole
+  value: 4
+  exact: true
+- path: planets.Луна.house_placidus
+  value: 4
+  exact: true
+- path: planets.Меркурий.sign
+  value: Лев
+  exact: true
+- path: planets.Меркурий.house_whole
+  value: 1
+  exact: true
+- path: planets.Меркурий.house_placidus
+  value: 1
+  exact: true
+- path: planets.Венера.sign
+  value: Весы
+  exact: true
+- path: planets.Венера.house_whole
+  value: 3
+  exact: true
+- path: planets.Венера.house_placidus
+  value: 2
+  exact: true
+- path: planets.Марс.sign
+  value: Близнецы
+  exact: true
+- path: planets.Марс.house_whole
+  value: 11
+  exact: true
+- path: planets.Марс.house_placidus
+  value: 10
+  exact: true
+- path: planets.Юпитер.sign
+  value: Рыбы
+  exact: true
+- path: planets.Юпитер.house_whole
+  value: 8
+  exact: true
+- path: planets.Юпитер.house_placidus
+  value: 7
+  exact: true
+- path: planets.Сатурн.sign
+  value: Водолей
+  exact: true
+- path: planets.Сатурн.house_whole
+  value: 7
+  exact: true
+- path: planets.Сатурн.house_placidus
+  value: 6
+  exact: true
+- path: planets.Уран.sign
+  value: Лев
+  exact: true
+- path: planets.Уран.house_whole
+  value: 1
+  exact: true
+- path: planets.Уран.house_placidus
+  value: 1
+  exact: true
+- path: planets.Нептун.sign
+  value: Скорпион
+  exact: true
+- path: planets.Нептун.house_whole
+  value: 4
+  exact: true
+- path: planets.Нептун.house_placidus
+  value: 4
+  exact: true
+- path: planets.Плутон.sign
+  value: Дева
+  exact: true
+- path: planets.Плутон.house_whole
+  value: 2
+  exact: true
+- path: planets.Плутон.house_placidus
+  value: 1
+  exact: true
+---
+id: GW-05-A
+layer: western
+status: active
+case: аспекты карты A (GW-05), §3.7
+input:
+  place_id: geonames:472757
+  local_date: '1984-02-04'
+  local_time: '15:00'
+  lat: 48.71378
+  lon: 44.4976
+  zone: Europe/Volgograd
+reference:
+  source: astro.com (бланк карты A, снят в S1) + ENGINE-SPEC §3.7 (аспекты/орбисы), §2.5 (дома)
+  settings:
+    orbs: 'меньший ряд Лилли (§3.7): Солнце 15, Луна 12, Мерк/Вен/Марс 7, Юп/Сат 9, U/N/P 5'
+    houses: цельные знаки (whole-sign) и Плацидус; куспиды Плацидуса — с бланка, противоположные реконструированы
+    aspect_rule: abs(sep−α) ≤ (orb_A+orb_B)/2 по долготам astro.com; наш движок — на _ephem (GE-01, ≤1″)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка бланков S1 + расчёт по §3.7)
+  evidence_file: evidence/astro-com-card-A.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: astro.com (бланки S1)
+expected:
+- path: aspects.count
+  value: 15
+  exact: true
+- path: aspects.Венера|Марс.type
+  value: секстиль
+  exact: true
+- path: aspects.Венера|Марс.orb
+  value: 0.055
+  tolerance: 0.02
+- path: aspects.Венера|Сатурн.type
+  value: секстиль
+  exact: true
+- path: aspects.Венера|Сатурн.orb
+  value: 4.173
+  tolerance: 0.02
+- path: aspects.Луна|Венера.type
+  value: секстиль
+  exact: true
+- path: aspects.Луна|Венера.orb
+  value: 0.173
+  tolerance: 0.02
+- path: aspects.Луна|Марс.type
+  value: трин
+  exact: true
+- path: aspects.Луна|Марс.orb
+  value: 0.118
+  tolerance: 0.02
+- path: aspects.Луна|Сатурн.type
+  value: трин
+  exact: true
+- path: aspects.Луна|Сатурн.orb
+  value: 4.346
+  tolerance: 0.02
+- path: aspects.Луна|Уран.type
+  value: квадратура
+  exact: true
+- path: aspects.Луна|Уран.orb
+  value: 1.074
+  tolerance: 0.02
+- path: aspects.Луна|Юпитер.type
+  value: секстиль
+  exact: true
+- path: aspects.Луна|Юпитер.orb
+  value: 8.427
+  tolerance: 0.02
+- path: aspects.Марс|Сатурн.type
+  value: соединение
+  exact: true
+- path: aspects.Марс|Сатурн.orb
+  value: 4.228
+  tolerance: 0.02
+- path: aspects.Меркурий|Сатурн.type
+  value: секстиль
+  exact: true
+- path: aspects.Меркурий|Сатурн.orb
+  value: 7.364
+  tolerance: 0.02
+- path: aspects.Нептун|Плутон.type
+  value: секстиль
+  exact: true
+- path: aspects.Нептун|Плутон.orb
+  value: 1.615
+  tolerance: 0.02
+- path: aspects.Солнце|Марс.type
+  value: квадратура
+  exact: true
+- path: aspects.Солнце|Марс.orb
+  value: 3.011
+  tolerance: 0.02
+- path: aspects.Солнце|Сатурн.type
+  value: квадратура
+  exact: true
+- path: aspects.Солнце|Сатурн.orb
+  value: 1.217
+  tolerance: 0.02
+- path: aspects.Солнце|Уран.type
+  value: секстиль
+  exact: true
+- path: aspects.Солнце|Уран.orb
+  value: 2.054
+  tolerance: 0.02
+- path: aspects.Юпитер|Нептун.type
+  value: соединение
+  exact: true
+- path: aspects.Юпитер|Нептун.orb
+  value: 2.741
+  tolerance: 0.02
+- path: aspects.Юпитер|Плутон.type
+  value: секстиль
+  exact: true
+- path: aspects.Юпитер|Плутон.orb
+  value: 1.126
+  tolerance: 0.02
+---
+id: GW-05-D
+layer: western
+status: active
+case: аспекты карты D (GW-05), §3.7
+input:
+  place_id: geonames:498817
+  local_date: '1962-08-09'
+  local_time: 06:15
+  lat: 59.93863
+  lon: 30.31413
+  zone: Europe/Moscow
+reference:
+  source: astro.com (бланк карты D, снят в S1) + ENGINE-SPEC §3.7 (аспекты/орбисы), §2.5 (дома)
+  settings:
+    orbs: 'меньший ряд Лилли (§3.7): Солнце 15, Луна 12, Мерк/Вен/Марс 7, Юп/Сат 9, U/N/P 5'
+    houses: цельные знаки (whole-sign) и Плацидус; куспиды Плацидуса — с бланка, противоположные реконструированы
+    aspect_rule: abs(sep−α) ≤ (orb_A+orb_B)/2 по долготам astro.com; наш движок — на _ephem (GE-01, ≤1″)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка бланков S1 + расчёт по §3.7)
+  evidence_file: evidence/astro-com-leningrad-1962.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: astro.com (бланки S1)
+expected:
+- path: aspects.count
+  value: 14
+  exact: true
+- path: aspects.Венера|Сатурн.type
+  value: трин
+  exact: true
+- path: aspects.Венера|Сатурн.orb
+  value: 6.996
+  tolerance: 0.02
+- path: aspects.Луна|Венера.type
+  value: секстиль
+  exact: true
+- path: aspects.Луна|Венера.orb
+  value: 9.037
+  tolerance: 0.02
+- path: aspects.Луна|Меркурий.type
+  value: квадратура
+  exact: true
+- path: aspects.Луна|Меркурий.orb
+  value: 5.493
+  tolerance: 0.02
+- path: aspects.Меркурий|Марс.type
+  value: секстиль
+  exact: true
+- path: aspects.Меркурий|Марс.orb
+  value: 5.65
+  tolerance: 0.02
+- path: aspects.Меркурий|Уран.type
+  value: соединение
+  exact: true
+- path: aspects.Меркурий|Уран.orb
+  value: 3.035
+  tolerance: 0.02
+- path: aspects.Нептун|Плутон.type
+  value: секстиль
+  exact: true
+- path: aspects.Нептун|Плутон.orb
+  value: 1.765
+  tolerance: 0.02
+- path: aspects.Сатурн|Нептун.type
+  value: квадратура
+  exact: true
+- path: aspects.Сатурн|Нептун.orb
+  value: 3.344
+  tolerance: 0.02
+- path: aspects.Солнце|Луна.type
+  value: квадратура
+  exact: true
+- path: aspects.Солнце|Луна.orb
+  value: 5.35
+  tolerance: 0.02
+- path: aspects.Солнце|Марс.type
+  value: секстиль
+  exact: true
+- path: aspects.Солнце|Марс.orb
+  value: 5.193
+  tolerance: 0.02
+- path: aspects.Солнце|Меркурий.type
+  value: соединение
+  exact: true
+- path: aspects.Солнце|Меркурий.orb
+  value: 10.843
+  tolerance: 0.02
+- path: aspects.Солнце|Нептун.type
+  value: квадратура
+  exact: true
+- path: aspects.Солнце|Нептун.orb
+  value: 5.273
+  tolerance: 0.02
+- path: aspects.Солнце|Сатурн.type
+  value: оппозиция
+  exact: true
+- path: aspects.Солнце|Сатурн.orb
+  value: 8.617
+  tolerance: 0.02
+- path: aspects.Юпитер|Нептун.type
+  value: трин
+  exact: true
+- path: aspects.Юпитер|Нептун.orb
+  value: 0.293
+  tolerance: 0.02
+- path: aspects.Юпитер|Плутон.type
+  value: оппозиция
+  exact: true
+- path: aspects.Юпитер|Плутон.orb
+  value: 1.472
+  tolerance: 0.02
+notes: 'Граница орбиса (решение Антона №3): Солнце–Меркурий соединение orb 10.843° при пределе 11.0° — проверяется ПРАВИЛОМ
+  §3.7; astro.com подтверждает только положения Солнца и Меркурия.'
+---
+id: GW-C-polar
+layer: western
+status: active
+case: 'Мурманск 68°58′ (>66.56°): Плацидус → not_applicable_latitude, цельные знаки считаются'
+input:
+  place_id: geonames:524305
+  local_date: '1990-12-22'
+  local_time: '23:40'
+  lat: 68.96778
+  lon: 33.09922
+  zone: Europe/Moscow
+reference:
+  source: astro.com (бланк карты C, снят в S1) + ENGINE-SPEC §3.7 (аспекты/орбисы), §2.5 (дома)
+  settings:
+    orbs: 'меньший ряд Лилли (§3.7): Солнце 15, Луна 12, Мерк/Вен/Марс 7, Юп/Сат 9, U/N/P 5'
+    houses: цельные знаки (whole-sign) и Плацидус; куспиды Плацидуса — с бланка, противоположные реконструированы
+    aspect_rule: abs(sep−α) ≤ (orb_A+orb_B)/2 по долготам astro.com; наш движок — на _ephem (GE-01, ≤1″)
+  captured_at: '2026-11-21'
+  captured_by: Claude (расшифровка бланков S1 + расчёт по §3.7)
+  evidence_file: evidence/astro-com-murmansk-1990.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: astro.com (бланки S1)
+expected:
+- path: placidus.not_computed
+  value: not_applicable_latitude
+  exact: true
+- path: houses_whole.count
+  value: 12
+  exact: true
+---
+id: GW-11
+layer: western
+status: active
+case: тело ровно на 6°00′00″ Овна и ровно на 30° — полуоткрытые интервалы (§1.4)
+input:
+  synthetic_longitudes:
+    T1: 6.0
+    T2: 30.0
+    T3: 29.999722
+reference:
+  source: ENGINE-SPEC §1.4 (полуоткрытые интервалы [начало, конец)) — правило, без эталона
+  settings:
+    rule: знак = floor(lon/30); 30°00′00″ — следующий знак, 29°59′59″ — предыдущий
+  captured_at: '2026-11-21'
+  captured_by: Claude (правило §1.4)
+  evidence_file: evidence/gw11-sign-boundary.md
+versions:
+  tz: not_used
+  ephemeris: not_used
+  reference_service: ENGINE-SPEC §1.4
+expected:
+- path: sign_of.T1
+  value: Овен
+  exact: true
+- path: sign_of.T2
+  value: Телец
+  exact: true
+- path: sign_of.T3
+  value: Овен
+  exact: true
+notes: 'Синтетика: граница знака не зависит от эфемерид, проверяет только правило полуоткрытого интервала.'

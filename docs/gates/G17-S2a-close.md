@@ -3,7 +3,7 @@
 
 **Дата:** 2026-11-21 · **Слайс:** G17-S2a (первый из четырёх под-слайсов G17-S2, точка P3) · **Вердикт:** PASS
 **Критерий:** зелёные `make verify` и `make slice-check` (накопительно: `slice-check-s1` + `slice-check-s2a`).
-Карточка — [../current/G17-S2-план.md](../current/G17-S2-план.md); ход — [../current/WORKLOG.md](../current/WORKLOG.md).
+Карточка — [../current/G17-S2-план.md](../current/G17-S2-план.md); ход — [G17-S2a-worklog.md](G17-S2a-worklog.md).
 
 ## Что доказано
 
