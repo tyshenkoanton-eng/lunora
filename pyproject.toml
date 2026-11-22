@@ -14,11 +14,8 @@ dependencies = [
     "redis>=5.2",
     "pydantic>=2.10",
     "pydantic-settings>=2.7",
-    "pyswisseph>=2.10",  # прототип calc/*; уходит из рантайма вместе с заменой на _ephem (S2)
     "skyfield==1.55",  # эфемериды ADR-001; закреплено: builtin ΔT/секунды координации = детерминизм
-    "cnlunar>=0.2",
     "httpx>=0.28",
-    "timezonefinder>=6.5",
     "pyyaml>=6.0",  # реестры timeplace (tz_disputes)
     "tzdata==2026.6",  # IANA 2026f — закреплено (R-52); смена только с отчётом влияния
     "aiohttp-socks>=0.9",
@@ -35,11 +32,12 @@ dev = [
     "ruff>=0.8",
     "pyyaml>=6.0",
 ]
-# оракулы и эталонные данные — только тесты и спайки, не рантайм (ENGINE-SOURCES §6)
+# оракулы и эталонные данные — только тесты и спайки, не рантайм (ENGINE-SOURCES §6, ADR-001)
 oracle = [
-    "pyswisseph==2.10.3.2",  # Swiss Ephemeris 2.10.03 — оракул дифф-тестов эфемерид (tests/diff)
+    "pyswisseph==2.10.3.2",  # Swiss Ephemeris 2.10.03 — оракул дифф-тестов эфемерид/ведики (tests/diff)
     "lunar-python>=1.3",  # оракул Ба-Цзы (tests/diff/test_bazi_oracle); рантайм не зависит
-    # cnlunar уже в рантайме (прототип calc/*); второй оракул Ба-Цзы — тот же дифф-тест
+    "cnlunar>=0.2",  # второй оракул Ба-Цзы (tests/diff/test_bazi_oracle); снят из рантайма в S2e
+    # timezonefinder снят в S2e: зона — ближайший город вендоренного GeoNames (calc/timezone.py)
     # geonamescache снят: GeoNames — вендоренный снимок data/vendor/geonames (2026-11-21)
 ]
 

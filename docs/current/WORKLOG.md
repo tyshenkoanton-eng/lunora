@@ -78,3 +78,19 @@
 - **Сделал:** close-record [G17-S2d-close.md](../gates/G17-S2d-close.md), changelog, CURRENT_STATE, ROADMAP_STATUS. **Все четыре движка построены и доказаны** — содержательный критерий P3. Переключение рантайма (уход pyswisseph/cnlunar/timezonefinder, переписывание calc.engine/test_calc) выделено в **G17-S2e** (решение №4): меняет контракт API, форму хранимого чарта, интерпретацию и бота — интеграция, не движок. Board перегенерирован.
 - **Следующий шаг:** PR S2d в main. Затем S2e (переключение рантайма) — закроет гейт P3 окончательно.
 - **Проверки:** `make verify` зелёный, `make board`, `docs_discipline`.
+
+## 2026-11-22 — G17-S2e, шаг 1: `calc.engine` на `lunora.engines.*`, перепись `test_calc`
+- **Сделал:** рантайм-сборка полной карты (`calc.engine.calculate`) переведена с прототипных `calc/{western,vedic,chinese,numerology}` (swisseph/cnlunar) на доказанные движки `lunora.engines.*` поверх `_ephem`. Адаптер: `BirthData` → `ResolvedMoment` (`timeplace.resolve`) → четыре движка → контракт `calc.types` (форма хранимого чарта / API сохранена, потребители routes/serialize/llm/portrait не трогались). `test_calc.py` переписан на новый слой (эталон 15.03.1990 14:30 Москва), значения сверены с golden S2a–S2d.
+- **Микрорешения:**
+  - **контракт `calc.types` сохранён** как форма хранимого чарта — минимальный радиус (serialize/routes/llm/portrait/test_serialize без изменений), движки маппятся в те же dataclass'ы;
+  - **ведические грахи — санскрит** (`Сурья/Чандра/Мангала`…), engine-native: аутентично для джйотиша; sidereal-shift в тесте сверяет западное `Солнце` ↔ ведическое `Сурья`;
+  - **баланс стихий** — только явные стволы столпов (как в прототипе); полный §5.7 со скрытыми стволами — S4;
+  - **даши:** 9 полных периодов Вимшоттари (сумма = 120 лет), даты даши `calc.types` хранит как год-float (`_year_frac`).
+- **Следующий шаг:** замена `calc/timezone.py` (уход `timezonefinder` → ближайший город из вендоренного GeoNames), затем уход оракулов из рантайм-зависимостей + тест импортов рантайма.
+- **Проверки:** `pytest` зелёный (756 passed, 18 skipped), `ruff` чистый по изменённым файлам.
+
+## 2026-11-22 — G17-S2e, шаг 2: `calc.timezone` без `timezonefinder`
+- **Сделал:** `timezone_for(lat, lon)` переведён с `timezonefinder` на ближайший город вендоренного снимка GeoNames `cities15000` (data/vendor/geonames, манифест+SHA-256). Равнопромежуточная метрика с поправкой cos φ, кэш на процесс, без сети. Единственный потребитель — UX `/geocode`.
+- **Микрорешение:** снимок читаем repo-relative (как `_ephem` DE440s), env-override `LUNORA_GEONAMES_DIR`; `cities15000` уже вендорен (использовался для `places_min`), новых данных не добавляем.
+- **Следующий шаг:** уход `pyswisseph/cnlunar/timezonefinder` из `[project.dependencies]` (оставить `[oracle]`), снос прототипных `calc/{western,vedic,chinese,numerology}`, тест запрета оракулов для всего рантайма.
+- **Проверки:** `test_geocode` зелёный, `ruff` чистый.
