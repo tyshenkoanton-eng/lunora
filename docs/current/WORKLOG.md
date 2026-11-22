@@ -78,3 +78,31 @@
 - **Сделал:** close-record [G17-S2d-close.md](../gates/G17-S2d-close.md), changelog, CURRENT_STATE, ROADMAP_STATUS. **Все четыре движка построены и доказаны** — содержательный критерий P3. Переключение рантайма (уход pyswisseph/cnlunar/timezonefinder, переписывание calc.engine/test_calc) выделено в **G17-S2e** (решение №4): меняет контракт API, форму хранимого чарта, интерпретацию и бота — интеграция, не движок. Board перегенерирован.
 - **Следующий шаг:** PR S2d в main. Затем S2e (переключение рантайма) — закроет гейт P3 окончательно.
 - **Проверки:** `make verify` зелёный, `make board`, `docs_discipline`.
+
+## 2026-11-22 — G17-S2e, шаг 1: `calc.engine` на `lunora.engines.*`, перепись `test_calc`
+- **Сделал:** рантайм-сборка полной карты (`calc.engine.calculate`) переведена с прототипных `calc/{western,vedic,chinese,numerology}` (swisseph/cnlunar) на доказанные движки `lunora.engines.*` поверх `_ephem`. Адаптер: `BirthData` → `ResolvedMoment` (`timeplace.resolve`) → четыре движка → контракт `calc.types` (форма хранимого чарта / API сохранена, потребители routes/serialize/llm/portrait не трогались). `test_calc.py` переписан на новый слой (эталон 15.03.1990 14:30 Москва), значения сверены с golden S2a–S2d.
+- **Микрорешения:**
+  - **контракт `calc.types` сохранён** как форма хранимого чарта — минимальный радиус (serialize/routes/llm/portrait/test_serialize без изменений), движки маппятся в те же dataclass'ы;
+  - **ведические грахи — санскрит** (`Сурья/Чандра/Мангала`…), engine-native: аутентично для джйотиша; sidereal-shift в тесте сверяет западное `Солнце` ↔ ведическое `Сурья`;
+  - **баланс стихий** — только явные стволы столпов (как в прототипе); полный §5.7 со скрытыми стволами — S4;
+  - **даши:** 9 полных периодов Вимшоттари (сумма = 120 лет), даты даши `calc.types` хранит как год-float (`_year_frac`).
+- **Следующий шаг:** замена `calc/timezone.py` (уход `timezonefinder` → ближайший город из вендоренного GeoNames), затем уход оракулов из рантайм-зависимостей + тест импортов рантайма.
+- **Проверки:** `pytest` зелёный (756 passed, 18 skipped), `ruff` чистый по изменённым файлам.
+
+## 2026-11-22 — G17-S2e, шаг 2: `calc.timezone` без `timezonefinder`
+- **Сделал:** `timezone_for(lat, lon)` переведён с `timezonefinder` на ближайший город вендоренного снимка GeoNames `cities15000` (data/vendor/geonames, манифест+SHA-256). Равнопромежуточная метрика с поправкой cos φ, кэш на процесс, без сети. Единственный потребитель — UX `/geocode`.
+- **Микрорешение:** снимок читаем repo-relative (как `_ephem` DE440s), env-override `LUNORA_GEONAMES_DIR`; `cities15000` уже вендорен (использовался для `places_min`), новых данных не добавляем.
+- **Следующий шаг:** уход `pyswisseph/cnlunar/timezonefinder` из `[project.dependencies]` (оставить `[oracle]`), снос прототипных `calc/{western,vedic,chinese,numerology}`, тест запрета оракулов для всего рантайма.
+- **Проверки:** `test_geocode` зелёный, `ruff` чистый.
+
+## 2026-11-22 — G17-S2e, шаг 3: оракулы вне рантайма + тест импортов
+- **Сделал:** `pyswisseph`/`cnlunar`/`timezonefinder` убраны из `[project.dependencies]`. `cnlunar` перенесён в `[oracle]` (оракул дифф-теста Ба-Цзы), `timezonefinder` снят совсем (зона — вендоренный GeoNames). Снесены прототипные `calc/{western,vedic,chinese,numerology}.py` (их заменили `lunora.engines.*`). Новый `tests/test_runtime_no_oracles.py` — статический (AST) запрет импорта оракулов для всего `src/lunora`, падает если рантайм потянет оракул.
+- **Микрорешение:** запрет для рантайма — тем же AST-приёмом, что и `tests/engines/test_no_oracle_imports.py` (ловит и ленивые импорты); `jhora/pyjhora` держим в списке запретов на будущее.
+- **Следующий шаг:** close-record S2e + close-record гейта P3 (все четыре движка доказаны, рантайм на них переключён, оракулы вне рантайма), changelog/статус/board, PR.
+- **Проверки:** `make verify` зелёный (757 passed, 18 skipped), `docs_discipline: OK`.
+
+## 2026-11-22 — G17-S2e, шаг 4: close-record S2e + закрытие точки P3
+- **Сделал:** close-record [G17-S2e-close.md](../gates/G17-S2e-close.md) (PASS), запись в changelog, `CURRENT_STATE`, `ROADMAP_STATUS` (latest_verdict PASS, P3 закрыта), `make board`. `make slice-check-s2e` заведён в накопительный `make slice-check`. **Точка P3 закрыта:** все четыре движка построены, доказаны и в рантайме; оракулы вне рантайма. Гейт G17 по корректности ядра закрыт.
+- **Микрорешение:** P3 — содержательная точка гейта G17, не отдельный гейт; её закрытие оформлено вердиктом внутри close-record S2e. Следующий шаг L1 (остаток спайка: платёж + LLM) не открываю — закрытие гейта не открывает следующий.
+- **Следующий шаг:** PR S2e в main, подписка на проверки.
+- **Проверки:** `make verify` зелёный (757 passed, 18 skipped), `make slice-check` зелёный (накопительно S1+S2a+S2c+S2b+S2d+S2e), `docs_discipline: OK`, `make board`.
