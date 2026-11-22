@@ -134,3 +134,9 @@
   - **`migrations/env.py` — длинные `noqa`-комментарии укорочены**, потому что ruff 0.16 (I001) валил `make verify` ещё на main; смысл комментария сохранён одной строкой.
 - **Следующий шаг:** `make slice-check` накопительно (с оракулами), close-record, PR.
 - **Проверки:** `pytest tests/payments` — 44 passed; `make verify` зелёный (773 passed, 46 skipped — пропуски: оракулы `[oracle]` не стоят в этой среде), `ruff` чистый.
+
+## 2026-11-22 — G17-S3a, шаг 4: close-record (PASS офлайн), протокол смоука
+- **Сделал:** close-record [G17-S3a-close.md](../gates/G17-S3a-close.md) (PASS офлайн), шаблон протокола смоука [spike/payment_smoke.md](spike/payment_smoke.md) (шаги + таблица без ПДн), changelog, `CURRENT_STATE`, `ROADMAP_STATUS`, `make board`.
+- **Микрорешение:** вердикт — «PASS (офлайн), смоук открыт», потому что смоук ручной и проводится с Антоном; офлайн-часть доказана полностью, а живой платёж не подделываем отметкой.
+- **Следующий шаг:** PR S3a в main; затем смоук с Антоном (сначала тестовая среда Telegram). G17-S3b — по решению Антона по модели.
+- **Проверки:** `make verify` зелёный (773 passed, 46 skipped), `make slice-check` зелёный накопительно (S3a — 44 passed на PostgreSQL; оракулы `[oracle]` в этой среде не собрались — их дифф-тесты в skip), `docs_discipline: OK`.

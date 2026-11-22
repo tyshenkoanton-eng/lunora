@@ -5,11 +5,11 @@ project: Лунора
 current:
   level: L1                 # L0 Discovery закрыт (GO с условиями 2026-11-20)
   gate: G17                 # первый гейт L1: корректность ядра доказана (глобальный ID)
-  slice: G17-S3a            # ОТКРЫТ 2026-11-22 по go Антона — адаптер оплаты Telegram Stars (S1–S5)
-  slice_status: G17-S3a открыт — офлайн-тесты S1–S5 (aiogram + PostgreSQL), затем адаптер; G17-S3b (стоимость LLM) НЕ открыт — ждёт решения Антона по модели
+  slice: G17-S3a            # ЗАКРЫТ PASS (офлайн) 2026-11-22 — адаптер Telegram Stars; живой смоук открыт
+  slice_status: G17-S3a PASS офлайн (S1–S5 на aiogram + PostgreSQL); живой смоук — ручной с Антоном; G17-S3b (стоимость LLM) НЕ открыт — ждёт решения Антона по модели
   latest_review: null
-  latest_verdict: null      # G17-S3a в работе; предыдущий — G17-S2e PASS 2026-11-22
+  latest_verdict: PASS      # G17-S3a — PASS (офлайн) 2026-11-22 (docs/gates/G17-S3a-close.md); смоук открыт
   blocker: null
-  next_action: "G17-S3a (docs/current/G17-S3-план.md): адаптер Telegram Stars по TRANSACTIONS-КОНТРАКТЫ §2.4b, правила S1–S5, тесты раньше кода; PASS = make verify + make slice-check зелёные, close-record. Живой смоук — вручную с Антоном (сначала тестовая среда Telegram). G17-S3b (стоимость LLM) не открывать без решения Антона по модели."
+  next_action: "G17-S3a ЗАКРЫТ PASS (офлайн; docs/gates/G17-S3a-close.md): адаптер Telegram Stars, S1–S5 доказаны на aiogram + PostgreSQL. Открыто: живой смоук (docs/current/spike/payment_smoke.md) — вручную с Антоном, сначала тестовая среда Telegram. G17-S3b (стоимость LLM) — по решению Антона по модели. Фичи поверх — не строить, пока остаток спайка не доказан."
 
 next_review_number: R1
