@@ -66,10 +66,14 @@ class PlanetPosition:
     longitude: float
     sign: str
     degree_in_sign: float
-    house: int | None = None
+    house: int | None = None  # дом светила (запад — Плацидус; веда — бхава)
+    house_whole: int | None = None  # дом по цельным знакам (§2.5)
     stability: str = "stable"
     values: list[Any] | None = None  # при range — варианты знака на интервале
     near_boundary: bool = False  # F11: близко к границе раши/накшатры (ведич.), отдельно от range
+    navamsa: str | None = None  # D9 (веда, §4.4)
+    dashamsa: str | None = None  # D10 (веда, §4.4)
+    retrograde: bool = False
 
 
 @dataclass
@@ -91,11 +95,23 @@ class Aspect:
 
 
 @dataclass
+class Angle:
+    sign: str
+    longitude: float
+    stability: str = "stable"
+    values: list[Any] | None = None
+
+
+@dataclass
 class WesternChart:
     planets: list[PlanetPosition] = field(default_factory=list)
     houses: list[HousePosition] = field(default_factory=list)
     aspects: list[Aspect] = field(default_factory=list)
+    asc: Angle | None = None  # §2.4
+    mc: Angle | None = None
     houses_not_computed: str | None = None  # no_birth_time | not_applicable_latitude
+    # явный манифест непосчитанных v1-величин (data-model: not_computed с причиной, не пропуск)
+    not_computed: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -122,10 +138,13 @@ class VedicChart:
     moon_nakshatra: Nakshatra | None = None
     dasha_periods: list[DashaPeriod] = field(default_factory=list)
     dasha_stability: str = "stable"
+    active_maha: str | None = None  # активная махадаша (§4.3)
+    active_antara: str | None = None  # активная антардаша
     lagna_sign: str | None = None
     lagna_stability: str = "stable"
     lagna_values: list[Any] | None = None
     dasha_not_computed: str | None = None  # no_birth_time
+    not_computed: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -162,6 +181,7 @@ class ChineseChart:
     dayun: DaYun | None = None
     dayun_not_computed: str | None = None  # no_sex | no_birth_time
     pillars_not_computed: str | None = None  # no_birth_time (день/час)
+    not_computed: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass
@@ -189,6 +209,7 @@ class NumerologyChart:
     name_numbers: dict[str, NameNumber] = field(default_factory=dict)
     # дельта «при рождении → сейчас» (§3.5): None, если name_current не задан
     name_change: dict[str, Any] | None = None
+    not_computed: dict[str, str] = field(default_factory=dict)
 
 
 @dataclass

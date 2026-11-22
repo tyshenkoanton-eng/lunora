@@ -17,6 +17,7 @@ from datetime import date as _date
 from lunora.calc import _ephem as eph
 from lunora.calc.stability import stability as _stability
 from lunora.calc.types import (
+    Angle,
     Aspect,
     BaziPillar,
     BirthData,
@@ -75,50 +76,76 @@ def _instant(dt: datetime):
 
 
 def _western(moment: ResolvedMoment, data: BirthData) -> WesternChart:
-    ch = western_engine.chart(moment, data.lat, data.lon)
+    """Продукт собирается из `western.signals()` (сигнальный слой), не ручной проекцией:
+    знак/дом тел, углы ASC/MC, куспиды Плацидуса, аспекты; непосчитанное — в `not_computed`."""
     lat, lon = data.lat, data.lon
+    ch = western_engine.chart(moment, lat, lon)
+    rows = western_engine.signals(ch)
+    arate = _asc_rate(lat, lon)
+    nc: dict[str, str] = {}
 
     planets: list[PlanetPosition] = []
-    for pv in ch.planets.values():
-        def sign_signal(dt: datetime, _k=pv.name) -> str:
-            return western_engine.sign_name(eph.body(_instant(dt), _body_key(_k)).lon) \
-                if _k not in ("Раху", "Кету") else western_engine.sign_name(_node_lon(dt, _k))
-        tag, values = _stab(moment, sign_signal)
-        planets.append(
-            PlanetPosition(
-                name=pv.name, longitude=pv.longitude, sign=pv.sign,
-                degree_in_sign=pv.degree_in_sign, house=pv.house_placidus,
-                stability=tag, values=values,
-            )
-        )
+    for r in (x for x in rows if x.rule.id == "w.position"):
+        d = r.detail
+        name = d["body"]
+        if name in ("Раху", "Кету"):
+            sig = lambda dt, _n=name: western_engine.sign_name(_node_lon(dt, _n))  # noqa: E731
+        else:
+            sig = lambda dt, _n=name: western_engine.sign_name(  # noqa: E731
+                eph.body(_instant(dt), _body_key(_n)).lon)
+        tag, values = _stab(moment, sig)
+        planets.append(PlanetPosition(
+            name=name, longitude=d["longitude"], sign=r.value,
+            degree_in_sign=round(d["longitude"] % 30.0, 4), house=d["house_placidus"],
+            house_whole=d["house_whole"], stability=tag, values=values,
+            retrograde=bool(d["retrograde"]),
+        ))
+
+    asc = mc = None
+    for rid, is_asc in (("w.angle.asc", True), ("w.angle.mc", False)):
+        rr = next(x for x in rows if x.rule.id == rid)
+        if not rr.is_computed:
+            nc[rid[2:]] = rr.not_computed
+            continue
+        sig = (lambda dt: western_engine.sign_name(eph.angles(_instant(dt), lat, lon).asc)) \
+            if is_asc else \
+            (lambda dt: western_engine.sign_name(eph.angles(_instant(dt), lat, lon).mc))
+        tag, values = _stab(moment, sig, rate=arate)
+        ang = Angle(sign=rr.value, longitude=rr.detail["longitude"], stability=tag, values=values)
+        if is_asc:
+            asc = ang
+        else:
+            mc = ang
 
     houses: list[HousePosition] = []
     houses_nc = None
-    if not ch.has_time:
-        houses_nc = "no_birth_time"
-    elif ch.placidus is None:
-        houses_nc = ch.placidus_not_computed or "not_applicable_latitude"
+    cusp_rows = [x for x in rows if x.rule.id == "w.house.cusp"]
+    if cusp_rows and cusp_rows[0].is_computed:
+        for r in cusp_rows:
+            i = r.detail["number"] - 1
+            sig = lambda dt, _i=i: _cusp_sign(dt, lat, lon, _i)  # noqa: E731
+            tag, values = _stab(moment, sig, rate=arate)
+            houses.append(HousePosition(number=r.detail["number"], longitude=r.detail["longitude"],
+                                        sign=r.value, stability=tag, values=values))
     else:
-        for i, cusp in enumerate(ch.placidus):
-            def cusp_signal(dt: datetime, _i=i) -> str:
-                ang = eph.angles(_instant(dt), lat, lon)
-                pl = eph.placidus(ang.ramc, lat, ang.obliquity)
-                c = pl[_i] if not isinstance(pl, eph.NotComputed) else ang.asc
-                return western_engine.sign_name(c)
-            tag, values = _stab(moment, cusp_signal, rate=_asc_rate(lat, lon))
-            houses.append(
-                HousePosition(number=i + 1, longitude=round(cusp, 4),
-                              sign=western_engine.sign_name(cusp),
-                              stability=tag, values=values)
-            )
+        houses_nc = cusp_rows[0].not_computed if cusp_rows else "no_birth_time"
+        nc["house.cusp"] = houses_nc
 
     aspects = [
         Aspect(planet1=a.a, planet2=a.b, aspect_type=a.type, angle=a.angle, orb=a.orb)
         for a in ch.aspects
     ]
     return WesternChart(
-        planets=planets, houses=houses, aspects=aspects, houses_not_computed=houses_nc
+        planets=planets, houses=houses, aspects=aspects, asc=asc, mc=mc,
+        houses_not_computed=houses_nc, not_computed=nc,
     )
+
+
+def _cusp_sign(dt: datetime, lat: float, lon: float, i: int) -> str:
+    ang = eph.angles(_instant(dt), lat, lon)
+    pl = eph.placidus(ang.ramc, lat, ang.obliquity)
+    c = pl[i] if not isinstance(pl, eph.NotComputed) else ang.asc
+    return western_engine.sign_name(c)
 
 
 def _body_key(ru: str) -> str:
@@ -145,40 +172,55 @@ def _asc_rate(lat: float, lon: float):
 
 
 def _vedic(moment: ResolvedMoment, data: BirthData) -> VedicChart:
+    """Продукт из `vedic.signals()`: раши/накшатра/пада грах, бхава, D9/D10, лагна, активная
+    даша; непосчитанное (нет времени) — явный `not_computed`."""
     lat, lon = data.lat, data.lon
     ch = vedic_engine.chart(moment, lat, lon)
+    rows = vedic_engine.signals(ch)
+    nc: dict[str, str] = {}
 
+    rashi_rows = [x for x in rows if x.rule.id == "v.rashi"]
     planets: list[PlanetPosition] = []
-    for g in ch.grahas.values():
-        def rashi_signal(dt: datetime, _n=g.name) -> str:
-            return vedic_engine.RASHIS[vedic_engine.rashi_index(_vedic_lon(dt, _n))]
-        tag, values = _stab(moment, rashi_signal)
-        planets.append(
-            PlanetPosition(
-                name=g.name, longitude=g.longitude, sign=g.rashi,
-                degree_in_sign=g.degree_in_rashi, house=g.bhava,
-                stability=tag, values=values, near_boundary=(g.stability == "range"),
-            )
-        )
-
-    moon = ch.grahas.get("Чандра")
     nakshatra = None
-    if moon is not None:
-        def nak_signal(dt: datetime) -> str:
-            return vedic_engine.NAKSHATRAS[vedic_engine.nakshatra_index(_vedic_lon(dt, "Чандра"))]
-        tag, values = _stab(moment, nak_signal)
-        lord = vedic_engine.nakshatra_lord(vedic_engine.nakshatra_index(moon.longitude))
-        nakshatra = Nakshatra(name=moon.nakshatra, pada=moon.pada, lord=lord,
-                              stability=tag, near_boundary=(moon.stability == "range"))
+    lagna_sign = lagna_stab = None
+    lagna_vals = None
+    lagna_stab = "stable"
+    for r in rashi_rows:
+        d = r.detail
+        body = d["body"]
+        if body == "Лагна":
+            lagna_sign = r.value
+            sig = lambda dt: vedic_engine.RASHIS[  # noqa: E731
+                vedic_engine.rashi_index(eph.sidereal(eph.angles(_instant(dt), lat, lon).asc,
+                                                       _instant(dt)))]
+            lagna_stab, lagna_vals = _stab(moment, sig, rate=_asc_rate(lat, lon))
+            continue
+        sig = lambda dt, _n=body: vedic_engine.RASHIS[  # noqa: E731
+            vedic_engine.rashi_index(_vedic_lon(dt, _n))]
+        tag, values = _stab(moment, sig)
+        planets.append(PlanetPosition(
+            name=body, longitude=d["longitude"], sign=r.value,
+            degree_in_sign=round(d["longitude"] % 30.0, 4), house=d["bhava"],
+            stability=tag, values=values, near_boundary=(r.stability == "range"),
+            navamsa=d["navamsa"], dashamsa=d["dashamsa"], retrograde=bool(d["retrograde"]),
+        ))
+        if body == "Чандра":
+            nsig = lambda dt: vedic_engine.NAKSHATRAS[  # noqa: E731
+                vedic_engine.nakshatra_index(_vedic_lon(dt, "Чандра"))]
+            ntag, _ = _stab(moment, nsig)
+            lord = vedic_engine.nakshatra_lord(vedic_engine.nakshatra_index(d["longitude"]))
+            nakshatra = Nakshatra(name=d["nakshatra"], pada=d["pada"], lord=lord,
+                                  stability=ntag, near_boundary=(r.stability == "range"))
 
-    lagna_sign = ch.lagna_rashi
-    lagna_stab, lagna_vals = "stable", None
-    if ch.lagna is not None:
-        def lagna_signal(dt: datetime) -> str:
-            t = _instant(dt)
-            sid = eph.sidereal(eph.angles(t, lat, lon).asc, t)
-            return vedic_engine.RASHIS[vedic_engine.rashi_index(sid)]
-        lagna_stab, lagna_vals = _stab(moment, lagna_signal, rate=_asc_rate(lat, lon))
+    active_maha = active_antara = None
+    dasha_nc = None
+    dasha_row = next((x for x in rows if x.rule.id == "v.dasha.vimshottari"), None)
+    if dasha_row is not None and dasha_row.is_computed:
+        active_maha = dasha_row.value
+        active_antara = dasha_row.detail.get("antara")
+    elif dasha_row is not None:
+        dasha_nc = dasha_row.not_computed
+        nc["dasha.vimshottari"] = dasha_nc
 
     dasha_periods = [
         DashaPeriod(planet=p.lord, start_year=round(_year_frac(p.start), 2),
@@ -186,15 +228,14 @@ def _vedic(moment: ResolvedMoment, data: BirthData) -> VedicChart:
                     years=round((p.end - p.start).days / 365.25, 1))
         for p in ch.mahadashas
     ]
-    dasha_nc = None if ch.has_time else "no_birth_time"
-    # активная даша зависит от накшатры Чандры: её устойчивость — устойчивость активной МД
     dasha_stab = nakshatra.stability if nakshatra is not None else "stable"
 
     return VedicChart(
         planets=planets, ayanamsha=round(ch.ayanamsha, 4), moon_nakshatra=nakshatra,
         dasha_periods=dasha_periods, dasha_stability=dasha_stab,
+        active_maha=active_maha, active_antara=active_antara,
         lagna_sign=lagna_sign, lagna_stability=lagna_stab, lagna_values=lagna_vals,
-        dasha_not_computed=dasha_nc,
+        dasha_not_computed=dasha_nc, not_computed=nc,
     )
 
 
@@ -269,12 +310,17 @@ def _chinese(moment: ResolvedMoment, data: BirthData) -> ChineseChart:
         dayun = DaYun(direction="順" if d.forward else "逆", entry_date=d.entry_date.isoformat(),
                       entry_years=d.years, decades=list(d.decades))
 
+    # явный манифест непосчитанного из сигнального слоя (день/час — no_birth_time; да-юнь —
+    # no_sex/no_birth_time), чтобы ничего не терялось молча (анти-F04)
+    nc = {r.rule.id[3:]: r.not_computed for r in bazi_engine.signals(ch) if not r.is_computed}
+
     return ChineseChart(
         year_pillar=year, month_pillar=month, day_pillar=day, hour_pillar=hour,
         day_master=day_master, day_master_element=day_master_element,
         day_master_yin_yang=day_master_yin_yang, year_animal=_ANIMALS[ch.year.branch],
         visible_stem_counts=counts, dayun=dayun,
         dayun_not_computed=ch.dayun_not_computed, pillars_not_computed=pillars_nc,
+        not_computed=nc,
     )
 
 
@@ -331,10 +377,18 @@ def _numerology(data: BirthData) -> NumerologyChart:
     if nc_res is not None and nc_res.is_computed:
         name_change = {"delta": nc_res.value, "changed": nc_res.detail.get("changed", False)}
 
+    # явный манифест непосчитанного (квадрат после 2000; числа имени без значения) — анти-F04
+    nc: dict[str, str] = {}
+    if square_nc is not None:
+        nc["square"] = square_nc
+    for store, cell in name_numbers.items():
+        if cell.not_computed is not None:
+            nc[f"name.{store}"] = cell.not_computed
+
     return NumerologyChart(
         life_path=life_path or 0, birthday_number=birthday or 0,
         pythagoras=square, square_not_computed=square_nc,
-        name_numbers=name_numbers, name_change=name_change,
+        name_numbers=name_numbers, name_change=name_change, not_computed=nc,
     )
 
 

@@ -48,7 +48,7 @@ slice-check-s2e: ## G17-S2e: рантайм на движках lunora.engines.*
 	python scripts/spike/golden_audit.py tests/golden --require-active
 
 slice-check-s2f: ## G17-S2f: доводка интеграции P3 (F01–F11) сквозь calculate/onboard (docs/gates/G17-S2f-close.md); настоящая PostgreSQL обязательна
-	pytest -q tests/integration/test_p3_sweep.py tests/test_stability.py tests/engines/test_result_contract.py
+	pytest -q tests/integration/test_p3_sweep.py tests/integration/test_product_contract.py tests/test_stability.py tests/engines/test_result_contract.py
 	LUNORA_REQUIRE_PG=1 pytest -q tests/integration/test_onboard_p3.py
 	python scripts/spike/golden_audit.py tests/golden --require-active
 

@@ -23,6 +23,9 @@ def _convert(val):
         return {k: _convert(v) for k, v in val.items()}
     if isinstance(val, tuple):
         return list(val)
+    # numpy-скаляры (np.bool_/np.float64 из эфемерид) → родной Python-тип, иначе JSONB падает
+    if not isinstance(val, (bool, int, float, str)) and hasattr(val, 'item'):
+        return val.item()
     if hasattr(val, 'value'):
         return val.value
     return val

@@ -235,7 +235,11 @@ class _Signals:
 
 
 def signals(chart: WesternChart) -> list[Result]:
-    """Минимальный контракт (решение Антона №5): знак и дом каждого тела, каждый аспект."""
+    """Контракт продукта (data-model §1, решение №5): знак и дом тел, углы ASC/MC, куспиды
+    домов (цельнознаковые — в `house_whole` тел; Плацидус — отдельные сигналы), аспекты.
+
+    Без времени ASC/MC/куспиды — `not_computed: no_birth_time`; на полярной широте куспиды
+    Плацидуса — `not_applicable_latitude` (G17-S2f: не подменяются Порфирием)."""
     rows: list[Result] = []
     for name, pv in chart.planets.items():
         rows.append(Result.computed(
@@ -248,4 +252,24 @@ def signals(chart: WesternChart) -> list[Result]:
             _rule("aspect"), a.type, stability=chart.stability,
             bodies=(a.a, a.b), orb=a.orb, applying=a.applying, partile=a.partile,
         ))
+    # углы ASC/MC (§2.4) — опоры домов и всей время-зависимой части
+    for key, value in (("asc", chart.asc), ("mc", chart.mc)):
+        if value is None:
+            rows.append(Result.missing(_rule(f"angle.{key}"), "no_birth_time"))
+        else:
+            rows.append(Result.computed(
+                _rule(f"angle.{key}"), sign_name(value), stability=chart.stability,
+                longitude=round(value, 4),
+            ))
+    # куспиды домов Плацидуса (§2.5)
+    if chart.placidus is not None:
+        for i, cusp in enumerate(chart.placidus):
+            rows.append(Result.computed(
+                _rule("house.cusp"), sign_name(cusp), stability=chart.stability,
+                number=i + 1, longitude=round(cusp, 4),
+            ))
+    else:
+        reason = "no_birth_time" if not chart.has_time else (
+            chart.placidus_not_computed or "not_applicable_latitude")
+        rows.append(Result.missing(_rule("house.cusp"), reason))
     return rows
