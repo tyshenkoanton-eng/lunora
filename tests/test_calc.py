@@ -8,6 +8,7 @@ from datetime import date, time
 
 from lunora.calc.engine import calculate
 from lunora.calc.types import BirthData, BirthTimePrecision
+from lunora.engines.numerology import FullName
 
 BIRTH = BirthData(
     birth_date=date(1990, 3, 15),
@@ -16,6 +17,8 @@ BIRTH = BirthData(
     lat=55.7558,
     lon=37.6173,
     timezone="Europe/Moscow",
+    sex="m",
+    full_name=FullName("Тестов", "Тест", "Тестович"),
     name="Test",
 )
 
@@ -109,8 +112,8 @@ class TestChinese:
 
     def test_element_balance(self):
         chart = calculate(BIRTH)
-        assert chart.chinese.element_balance["Земля"] >= 2
-        assert chart.chinese.element_balance["Металл"] >= 2
+        assert chart.chinese.visible_stem_counts["Земля"] >= 2
+        assert chart.chinese.visible_stem_counts["Металл"] >= 2
 
 
 class TestNumerology:
@@ -138,6 +141,8 @@ class TestPrecisionContract:
             lat=55.7558,
             lon=37.6173,
             timezone="Europe/Moscow",
+            sex="f",
+            full_name=FullName("Тестова", "Тест", "Тестовна"),
         )
         chart = calculate(data)
         assert len(chart.western.houses) == 0

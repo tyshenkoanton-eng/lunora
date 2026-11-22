@@ -31,6 +31,15 @@ class User(Base, UUIDPrimaryKey, TimestampMixin):
     birth_lat: Mapped[float]
     birth_lon: Mapped[float]
     timezone: Mapped[str] = mapped_column(String(50))
+    place_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    region: Mapped[str | None] = mapped_column(String(64), nullable=True)
+
+    # ПДн (152-ФЗ): пол и ФИО при рождении — вход детерминированных движков (да-юнь, числа
+    # имени). В LLM-пакет и аналитику не уходят (ARCHITECTURE §5.6).
+    sex: Mapped[str | None] = mapped_column(String(1), nullable=True)  # m | f
+    name_surname: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    name_given: Mapped[str | None] = mapped_column(String(100), nullable=True)
+    name_patronymic: Mapped[str | None] = mapped_column(String(100), nullable=True)
 
     referral_code: Mapped[str] = mapped_column(String(20), unique=True)
     referred_by: Mapped[uuid.UUID | None] = mapped_column(nullable=True)

@@ -15,6 +15,12 @@ def test_reason_and_stability_vocabularies_match_spec():
         "no_birth_time",
         "no_place",
         "no_sex",
+        # G17-S2f (F04/F09): контур имени нумерологии — обязательное ФИО, но вырожденные
+        # и неподдержанные случаи оформляются явным not_computed, не computed(None)
+        "no_name",
+        "no_vowels",
+        "no_consonants",
+        "name_not_supported",
         "not_applicable_latitude",
         "rule_not_formalized",
         "out_of_v1",

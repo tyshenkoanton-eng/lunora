@@ -102,7 +102,7 @@
 | **`frame`** | канон: `tropical` / `sidereal` / `none` — для всех величин, зависящих от зодиака (B2); для Ба-Цзы/нумерологии — `none` |
 | **`can_vote`** | внутреннее поле ядра (за границу API не выходит, §API 2.3): `false`, если правило или таблица ниже статуса из §0.3, либо величина — `not_computed` |
 
-`not_computed` — это тоже сигнал: `normalized_value: not_computed`, `reason`: одно из `no_birth_time`, `no_place`, `no_sex`, `not_applicable_latitude`, `rule_not_formalized`, `out_of_v1`, `table_not_verified`.
+`not_computed` — это тоже сигнал: `normalized_value: not_computed`, `reason`: одно из `no_birth_time`, `no_place`, `no_sex`, `no_name`, `no_vowels`, `no_consonants`, `name_not_supported`, `not_applicable_latitude`, `rule_not_formalized`, `out_of_v1`, `table_not_verified`. Причины контура имени (`no_name` — нет ФИО для числа зрелости; `no_vowels`/`no_consonants` — вырожденное имя, NUMEROLOGY-RULES §3.3; `name_not_supported` — латиница/смешанный алфавит, §1.3) добавлены в G17-S2f (F04/F09): контур имени обязателен, но непосчитанные случаи оформляются явным `not_computed`, а не `computed(None)`.
 
 ### 1.3 Версии
 

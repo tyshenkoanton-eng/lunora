@@ -27,7 +27,18 @@ class CalculationRun(Base, UUIDPrimaryKey):
     zodiac_type: Mapped[str] = mapped_column(String(20))
     ayanamsa: Mapped[str | None] = mapped_column(String(30), nullable=True)
     house_system: Mapped[str] = mapped_column(String(20))
+    # F07: полное происхождение входа (пояс, точность/допуск, place_id, UTC-гипотезы, версии).
+    # input_hash — HMAC(server_pepper, …), а не голый SHA-256 входа (ARCHITECTURE §3.2: голый
+    # хеш раскрывает ПДн и даёт межпользовательскую дедупликацию).
     input_hash: Mapped[str] = mapped_column(String(64))
+    timezone: Mapped[str | None] = mapped_column(String(50), nullable=True)
+    precision: Mapped[str | None] = mapped_column(String(20), nullable=True)
+    tolerance_minutes: Mapped[int | None] = mapped_column(nullable=True)
+    place_id: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    region: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    dispute_id: Mapped[str | None] = mapped_column(String(32), nullable=True)
+    # provenance: гипотезы UTC, версии данных/движка
+    provenance: Mapped[dict] = mapped_column(JSONB, default=dict)
     calculated_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), server_default=func.now()
     )
