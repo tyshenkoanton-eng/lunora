@@ -35,3 +35,26 @@
 - **Сделал:** close-record [G17-S2c-close.md](../gates/G17-S2c-close.md), changelog, CURRENT_STATE и ROADMAP_STATUS. Остались S2b и S2d — оба ждут съёма Антона. Board перегенерирован.
 - **Следующий шаг:** PR S2c в main. Как придёт съём — S2b (Ба-Цзы) и S2d (ведическая + переключение рантайма).
 - **Проверки:** `make verify` зелёный, `make board`, `docs_discipline`.
+
+## 2026-11-22 — G17-S2b, шаг 1: движок Ба-Цзы + golden карт A–E (зелёные)
+- **Сделал:** движок `lunora.engines.bazi` поверх `_ephem` — четыре столпа (год/месяц по 12 цзе и «пяти тиграм» §5.3; день/час по TST §2.8 со сменой дня 23:00 §5.4 и «пятью крысами» §5.5) и да-юнь (направление по секте/полу, Δ до/от цзе по TT, возраст входа «три дня — год» §5.10). Golden `tests/golden/bazi/bazi-s2b.yaml` (GB-01, GB-02, GB-03, GB-05-C, GB-05-D, GB-06, GB-07, GB-12) из ручного bazi.biz (TST-вариант) карт A–E; evidence [bazi-biz-cards.md](../../tests/golden/evidence/bazi-biz-cards.md) с SHA-256 10 скриншотов. Раннер `test_golden_bazi.py`, юнит-правила `test_bazi_rules.py`. Все пять карт совпали со спекой §5.5.
+- **Микрорешения:**
+  - эталон — bazi.biz TST-вариант, потому что движок всегда считает по истинному солнечному времени (D-106); поясной час в кейсе GB-12 только справочно (庚申);
+  - `solar_year` и `month_index` вынесены в snapshot — граница года по ли-чунь (A → 癸亥, R-53) проверяется явно, не только по имени столпа;
+  - `sexagenary_index(stem,branch) = (stem·6 − branch·5) mod 60` — обращение (n%10, n%12)→n для декад да-юнь;
+  - sex в ALLOWED golden-входа (на да-юнь влияет, ПДн не является — имени нет).
+- **Следующий шаг:** дифф против двух оракулов (lunar-python, cnlunar), slice-check-s2b.
+- **Проверки:** `golden_audit --require-active` (active: 152, known_gap: 1), 45 новых тестов зелёные.
+
+## 2026-11-22 — G17-S2b, шаг 2: дифф против двух оракулов + slice-check
+- **Сделал:** `tests/diff/test_bazi_oracle.py` — карты A–E против lunar-python (sect 2) и cnlunar, оракулам подаётся то же TST, что считает движок. B/C/D совпадают у всех трёх. Два расхождения зафиксированы как класс конвенции (словарь KNOWN), чтобы дрейф ловился: A/cnlunar (год/месяц — граница термина, суточная точность ли-чунь) и E/lunar-python (столп дня — поздний час Крысы 晚子时). Каждое подтверждено вторым оракулом + bazi.biz + спекой. `make slice-check-s2b` (накопительно в `slice-check`), lunar-python добавлен в `[oracle]` (cnlunar уже в рантайме прототипа). `test_no_oracle_imports` подтверждает: движок bazi оракулы не импортирует.
+- **Микрорешения:**
+  - второй ручной калькулятор не берём — mingli.ru оказался тем же движком, что bazi.biz (сверил Антон); независимость закрывают два оракула на разном коде;
+  - расхождения не подгоняются и не уходят в disputed: они объяснимы (конвенция) и наше значение подтверждено тремя другими источниками — фиксируем как известные в тесте и evidence.
+- **Следующий шаг:** close-record S2b + changelog + статус, PR.
+- **Проверки:** `make verify` (724 passed, 18 skipped), `make slice-check` зелёный, `ruff`, `golden_audit` active 152 / known_gap 1.
+
+## 2026-11-22 — G17-S2b, шаг 3: close-record S2b (PASS), статус
+- **Сделал:** close-record [G17-S2b-close.md](../gates/G17-S2b-close.md), changelog, CURRENT_STATE и ROADMAP_STATUS (слайс → S2d, единственный открытый под-слайс G17-S2). Board перегенерирован. Ручной съём Ба-Цзы закрыт.
+- **Следующий шаг:** PR S2b в main. Дальше S2d (ведическая + переключение рантайма) — ждёт съёма Jagannatha Hora; P3 закроется после S2d.
+- **Проверки:** `make verify` зелёный, `make board`, `docs_discipline`.

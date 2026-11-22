@@ -5,11 +5,11 @@ project: Лунора
 current:
   level: L1                 # L0 Discovery закрыт (GO с условиями 2026-11-20)
   gate: G17                 # первый гейт L1: корректность ядра доказана (глобальный ID)
-  slice: G17-S2d            # Ведическая + переключение рантайма (S2a, S2c закрыты PASS; S2b и S2d ждут съёма Антона)
-  slice_status: ждёт съёма эталонов (Ба-Цзы S2b, Jagannatha Hora S2d)
+  slice: G17-S2d            # Ведическая + переключение рантайма (S2a, S2c, S2b закрыты PASS; S2d ждёт съёма Jagannatha Hora)
+  slice_status: ждёт съёма эталонов (Jagannatha Hora S2d)
   latest_review: null
   latest_verdict: null      # G17-S1 — PASS 2026-11-21 (docs/gates/G17-S1-close.md)
   blocker: null
-  next_action: "G17-S2a и G17-S2c ЗАКРЫТЫ (PASS, docs/gates/G17-S2a-close.md, G17-S2c-close.md). Остались S2b (Ба-Цзы) и S2d (ведическая + переключение рантайма) — оба ждут ручного съёма Антона: калькуляторы Ба-Цзы и Jagannatha Hora (docs/current/spike/). Точка P3 закроется после S2d."
+  next_action: "G17-S2a, G17-S2c, G17-S2b ЗАКРЫТЫ (PASS, docs/gates/G17-S2a-close.md, G17-S2c-close.md, G17-S2b-close.md). Остался S2d (ведическая + переключение рантайма) — ждёт ручного съёма Антона в Jagannatha Hora (docs/current/spike/съём-jh-чек-лист-S2d.md). Ручной съём Ба-Цзы закрыт. Точка P3 закроется после S2d."
 
 next_review_number: R1
