@@ -106,3 +106,37 @@
 - **Микрорешение:** P3 — содержательная точка гейта G17, не отдельный гейт; её закрытие оформлено вердиктом внутри close-record S2e. Следующий шаг L1 (остаток спайка: платёж + LLM) не открываю — закрытие гейта не открывает следующий.
 - **Следующий шаг:** PR S2e в main, подписка на проверки.
 - **Проверки:** `make verify` зелёный (757 passed, 18 skipped), `make slice-check` зелёный (накопительно S1+S2a+S2c+S2b+S2d+S2e), `docs_discipline: OK`, `make board`.
+
+## 2026-11-22 — G17-S3a, шаг 1: открытие слайса, план
+- **Сделал:** по go Антона открыт G17-S3a — адаптер Telegram Stars (§2.4b, S1–S5). План — [G17-S3-план.md](G17-S3-план.md); статус/`CURRENT_STATE`/board. Проверил по Bot API возможность смоука без реальной звезды: страница payments-stars говорит, что Stars можно свободно тестировать в тестовой среде Telegram (`/bot<token>/test/…`); core.telegram.org из облачной среды закрыт — вывод по выдаче поиска и докстрингам aiogram (зеркало Bot API), отчитался Антону.
+- **Микрорешения:**
+  - **S3 разбит на S3a (оплата) и S3b (LLM)**, потому что замер LLM ждёт решения Антона по модели — открываем только S3a;
+  - **отдельные таблицы `star_*`**, потому что прототипные `payment_orders`/`entitlements` смешивают оси §3.1, а единый `PaymentPort` с ЮKassa вне scope;
+  - **схема в тестах — через `alembic upgrade head` на настоящей PostgreSQL**, потому что гарантия S1 — уникальный индекс, и доказывать её надо на той же миграции, что уйдёт в прод.
+- **Следующий шаг:** офлайн-тесты S1–S5 (красные) + фикстуры (временный кластер PG, фейковая сессия Bot API).
+- **Проверки:** `docs_discipline: OK`, `make board`.
+
+## 2026-11-22 — G17-S3a, шаг 2: офлайн-тесты S1–S5 (красные)
+- **Сделал:** `tests/payments/` — S2 (`pre_checkout_query`: ровно один `answerPreCheckoutQuery`, ok/ошибка с текстом, в т.ч. при внутреннем сбое), S1 (последовательные и параллельные дубли `successful_payment`, наличие уникальных индексов, отказ самой БД на дубль в обход кода, второй charge на тот же заказ → `paid_late`), S3 (инвойс `XTR` одной позицией, снимок цены, смена прайса после инвойса, недо/переплата, чужая валюта/пользователь, `CHECK` в БД), S4 (потерянное обновление по `getStarTransactions`, повтор сверки, пагинация >100, чужие платежи, возврат из журнала), S5 (один полный `refundStarPayment`, повтор — no-op, параллельные возвраты, сбой сети и повтор, `CHARGE_ALREADY_REFUNDED`, обновление `refunded_payment`). Фикстуры: временный кластер PostgreSQL (`initdb`/`pg_ctl`, под root — от `postgres`) или `LUNORA_TEST_PG_DSN`; схема — `alembic upgrade head`; фейковая сессия Bot API под настоящими `Bot`/`Dispatcher.feed_update`. `make slice-check-s3a` (с `LUNORA_REQUIRE_PG=1`) — в накопительном `slice-check`.
+- **Микрорешения:**
+  - **переплата в Stars не исполняется молча** (`reconcile_needed`), потому что вернуть разницу у Stars нельзя (§3.6, только полный возврат) — отличие от ЮKassa §3.3;
+  - **без PG в `make verify` — skip, в `slice-check` — fail** (`LUNORA_REQUIRE_PG=1`), потому что CI-раннер может быть без PostgreSQL, а доказательство S1 без настоящей БД не засчитывается;
+  - **`CHARGE_ALREADY_REFUNDED` = возврат состоялся**, потому что так Bot API отвечает на повтор, а падение между вызовом и записью не должно приводить к «вечному» доступу.
+- **Следующий шаг:** миграция 002 (`star_*`) и `lunora.payments` (каталог, сервис, роутер aiogram) до зелёного.
+- **Проверки:** `pytest tests/payments` — красный (нет таблиц/модуля), `ruff` чистый.
+
+## 2026-11-22 — G17-S3a, шаг 3: адаптер Stars — миграция 002, `lunora.payments`, подключение к боту
+- **Сделал:** миграция `002_star_payments` (`star_orders` с `CHECK currency='XTR'`/`price_xtr>0`, `star_processed_events UNIQUE(kind,event_key)`, `star_payments UNIQUE(telegram_payment_charge_id)`, `star_grants UNIQUE(order_id)`, `star_refunds UNIQUE(payment_id)`); `lunora.payments`: `catalog` (SKU в XTR, только `spike_smoke`=1⭐), `stars` (`StarsService`: инвойс со снимком цены, `check_pre_checkout`, единый `apply_payment` для обновления и сверки, `refund` под блокировкой строки платежа, `apply_refund_state`, `reconcile` по `getStarTransactions` от старых к новым, `has_access`; `AiogramStarsApi`), `telegram` (роутер: явный `answer()` всегда, бюджет проверки 7 с; `successful_payment`; `refunded_payment`), `smoke` (CLI ручного смоука: poll/invoice/refund/reconcile). Роутер Stars подключён в `bot/setup.py` раньше catch-all; `LUNORA_TELEGRAM_TEST_ENV` переключает бота на тестовую среду Telegram.
+- **Мутационная проверка S1:** снял уникальные индексы `processed_events`/`charge_id` в миграции — 6 из 7 тестов S1 покраснели (в т.ч. параллельные дубли). Гарантия держится индексом, не кодом. Вернул.
+- **Микрорешения:**
+  - **`refund` держит `FOR UPDATE` на платеже на время вызова `refundStarPayment`**, потому что это даёт «ровно один успешный вызов» при параллельных возвратах без отдельной очереди; операция редкая (оператор/авто-возврат);
+  - **сверка обрабатывает журнал от старых к новым**, потому что иначе возврат применился бы раньше платежа и потерянный платёж засчитался бы уже после возврата;
+  - **`migrations/env.py` — длинные `noqa`-комментарии укорочены**, потому что ruff 0.16 (I001) валил `make verify` ещё на main; смысл комментария сохранён одной строкой.
+- **Следующий шаг:** `make slice-check` накопительно (с оракулами), close-record, PR.
+- **Проверки:** `pytest tests/payments` — 44 passed; `make verify` зелёный (773 passed, 46 skipped — пропуски: оракулы `[oracle]` не стоят в этой среде), `ruff` чистый.
+
+## 2026-11-22 — G17-S3a, шаг 4: close-record (PASS офлайн), протокол смоука
+- **Сделал:** close-record [G17-S3a-close.md](../gates/G17-S3a-close.md) (PASS офлайн), шаблон протокола смоука [spike/payment_smoke.md](spike/payment_smoke.md) (шаги + таблица без ПДн), changelog, `CURRENT_STATE`, `ROADMAP_STATUS`, `make board`.
+- **Микрорешение:** вердикт — «PASS (офлайн), смоук открыт», потому что смоук ручной и проводится с Антоном; офлайн-часть доказана полностью, а живой платёж не подделываем отметкой.
+- **Следующий шаг:** PR S3a в main; затем смоук с Антоном (сначала тестовая среда Telegram). G17-S3b — по решению Антона по модели.
+- **Проверки:** `make verify` зелёный (773 passed, 46 skipped), `make slice-check` зелёный накопительно (S3a — 44 passed на PostgreSQL; оракулы `[oracle]` в этой среде не собрались — их дифф-тесты в skip), `docs_discipline: OK`.

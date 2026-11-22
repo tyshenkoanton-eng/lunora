@@ -81,3 +81,13 @@
 - **Выделено в G17-S2e (решение №4):** переключение рантайма (уход pyswisseph/cnlunar/
   timezonefinder, переписывание `calc.engine`/`test_calc`) — меняет контракт API и форму чарта,
   это интеграция, не движок. P3 закроется окончательно после S2e.
+
+## 2026-11-22 · G17-S3a закрыт (офлайн) — адаптер оплаты Telegram Stars
+- **Verdict:** PASS (офлайн) — зелёные `make verify` (773 passed) и `make slice-check`
+  (накопительно S1…S2e + S3a; `slice-check-s3a` 44 passed на настоящей PostgreSQL).
+- **Close-record:** [gates/G17-S3a-close.md](gates/G17-S3a-close.md).
+- **Scope:** миграция `002_star_payments`, `lunora.payments` (каталог XTR, `StarsService`,
+  роутер aiogram, смоук-CLI); правила S1–S5 §2.4b; идемпотентность — уникальные индексы БД
+  (мутационная проверка: без них S1 красный).
+- **Открыто:** живой смоук (ручной, с Антоном; сначала тестовая среда Telegram). G17-S3b
+  (стоимость LLM) не открыт — ждёт решения по модели.
