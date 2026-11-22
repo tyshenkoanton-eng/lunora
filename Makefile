@@ -18,7 +18,7 @@ verify:         ## полная проверка: линт + типы + тест
 	pytest -q
 	python scripts/docs_discipline.py --docs docs
 
-slice-check: slice-check-s1 slice-check-s2a slice-check-s2c slice-check-s2b  ## G17 накопительно: закрытые слайсы не должны покраснеть
+slice-check: slice-check-s1 slice-check-s2a slice-check-s2c slice-check-s2b slice-check-s2d  ## G17 накопительно: закрытые слайсы не должны покраснеть
 
 slice-check-s1: ## G17-S1: эфемериды + время/пояса (docs/gates/G17-S1-close.md)
 	python scripts/spike/ephem_data_check.py         # DE440s на месте, SHA-256 = §0.5, Skyfield 1.55, tzdata 2026f
@@ -37,6 +37,10 @@ slice-check-s2c: ## G17-S2c: западный движок (docs/current/G17-S2-
 
 slice-check-s2b: ## G17-S2b: движок Ба-Цзы (docs/current/G17-S2-план.md)
 	pytest -q tests/engines/test_golden_bazi.py tests/engines/test_bazi_rules.py tests/diff/test_bazi_oracle.py
+	python scripts/spike/golden_audit.py tests/golden --require-active
+
+slice-check-s2d: ## G17-S2d: ведический движок (docs/current/G17-S2-план.md)
+	pytest -q tests/engines/test_golden_vedic.py tests/engines/test_vedic_rules.py tests/diff/test_vedic_oracle.py
 	python scripts/spike/golden_audit.py tests/golden --require-active
 
 spike-full:     ## долгие прогоны вручную; отчёт — docs/current/spike/ephem-oracle-дифф.md
