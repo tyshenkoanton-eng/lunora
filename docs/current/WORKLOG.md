@@ -159,3 +159,10 @@
   - **ведический `near_boundary` отдельно от `range`** (F11) — «близко к границе» при точном времени ≠ «две величины на интервале».
 - **Следующий шаг:** сквозные тесты F01–F11 + property-тест F05 + сторож ПДн LLM-пакета.
 - **Проверки:** `make verify` зелёный (801 passed, 18 skipped), `ruff` чистый.
+
+## 2026-11-22 — G17-S2f, шаг 3: сквозные тесты F01–F11, property-тест F05, карта E (F08)
+- **Сделал:** `tests/integration/test_p3_sweep.py` (19) — F01 (точность→интервал, fold), F03 (ли-чунь на сутках→range), F04 (да-юнь по полу, числа имени, дельта изменения имени, полярные дома not_applicable), F06 (undetermined не в LLM-пакете, range как «A или B», ПДн не в пакете/провенансе), F09 (computed(None) падает, латиница→not_computed), F10, F11 (near_boundary при точном времени vs range при допуске) — всё через `calculate(BirthData)`. `tests/integration/test_onboard_p3.py` (5, PostgreSQL) — F02 (Джизак/Тирасполь: две гипотезы через onboard→хранимую модель), F07 (полный провенанс в calculation_runs, HMAC), В-1 (422 на латиницу, карта не сохраняется), контур имени в хранимой карте. Property-тест F05 (`tests/test_stability.py`) — на 66° рейт-поиск совпадает с плотной сеткой 1 с, а сетка 10 мин теряет смены. Общие PG-фикстуры → `tests/conftest.py`. `slice-check-s2f` в накопительный `slice-check`.
+- **F08:** происхождение дня-границы карты E (GB-03) исправлено — **rule-derived (§5.4) + cnlunar**, а не «ручная сверка bazi.biz с TST» (TST-галочку для E снять не удалось); поправлены golden `reference.source`/`reference_service` и close-record S2b.
+- **Микрорешение:** онбординг-тесты вызывают корутину `routes.onboard` с подменённым `async_session` (monkeypatch) на настоящую PG — лёгкий сквозной путь API→БД без подъёма bot/lifespan.
+- **Следующий шаг (корневая задача Антона):** продуктовый контракт карты против data-model v3, проекция через `engines.*.signals()`, golden на продукт + сторож покрытия.
+- **Проверки:** `make verify` зелёный (828 passed, 18 skipped), `golden_audit` OK (active 158).
