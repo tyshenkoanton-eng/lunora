@@ -2,7 +2,7 @@
 # Воспроизводимость: любой в любой сессии прогоняет те же команды.
 # Рецепты — с ТАБУЛЯЦИЕЙ. Подставь реальные команды проекта под <...>.
 
-.PHONY: setup setup-oracle verify slice-check slice-check-s1 slice-check-s2a slice-check-s2c spike-full docs board
+.PHONY: setup setup-oracle verify slice-check slice-check-s1 slice-check-s2a slice-check-s2c slice-check-s2b slice-check-s2d slice-check-s2e spike-full docs board
 
 setup:          ## установка зависимостей/окружения + эфемериды DE440s (SHA-256 из манифеста)
 	pip install -e ".[dev]"
@@ -18,7 +18,7 @@ verify:         ## полная проверка: линт + типы + тест
 	pytest -q
 	python scripts/docs_discipline.py --docs docs
 
-slice-check: slice-check-s1 slice-check-s2a slice-check-s2c slice-check-s2b slice-check-s2d  ## G17 накопительно: закрытые слайсы не должны покраснеть
+slice-check: slice-check-s1 slice-check-s2a slice-check-s2c slice-check-s2b slice-check-s2d slice-check-s2e  ## G17 накопительно: закрытые слайсы не должны покраснеть
 
 slice-check-s1: ## G17-S1: эфемериды + время/пояса (docs/gates/G17-S1-close.md)
 	python scripts/spike/ephem_data_check.py         # DE440s на месте, SHA-256 = §0.5, Skyfield 1.55, tzdata 2026f
@@ -41,6 +41,10 @@ slice-check-s2b: ## G17-S2b: движок Ба-Цзы (docs/current/G17-S2-пл�
 
 slice-check-s2d: ## G17-S2d: ведический движок (docs/current/G17-S2-план.md)
 	pytest -q tests/engines/test_golden_vedic.py tests/engines/test_vedic_rules.py tests/diff/test_vedic_oracle.py
+	python scripts/spike/golden_audit.py tests/golden --require-active
+
+slice-check-s2e: ## G17-S2e: рантайм на движках lunora.engines.*, оракулы вне рантайма (docs/gates/G17-S2e-close.md)
+	pytest -q tests/test_calc.py tests/test_serialize.py tests/test_geocode.py tests/test_runtime_no_oracles.py tests/engines/test_no_oracle_imports.py
 	python scripts/spike/golden_audit.py tests/golden --require-active
 
 spike-full:     ## долгие прогоны вручную; отчёт — docs/current/spike/ephem-oracle-дифф.md

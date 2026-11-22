@@ -94,3 +94,15 @@
 - **Микрорешение:** снимок читаем repo-relative (как `_ephem` DE440s), env-override `LUNORA_GEONAMES_DIR`; `cities15000` уже вендорен (использовался для `places_min`), новых данных не добавляем.
 - **Следующий шаг:** уход `pyswisseph/cnlunar/timezonefinder` из `[project.dependencies]` (оставить `[oracle]`), снос прототипных `calc/{western,vedic,chinese,numerology}`, тест запрета оракулов для всего рантайма.
 - **Проверки:** `test_geocode` зелёный, `ruff` чистый.
+
+## 2026-11-22 — G17-S2e, шаг 3: оракулы вне рантайма + тест импортов
+- **Сделал:** `pyswisseph`/`cnlunar`/`timezonefinder` убраны из `[project.dependencies]`. `cnlunar` перенесён в `[oracle]` (оракул дифф-теста Ба-Цзы), `timezonefinder` снят совсем (зона — вендоренный GeoNames). Снесены прототипные `calc/{western,vedic,chinese,numerology}.py` (их заменили `lunora.engines.*`). Новый `tests/test_runtime_no_oracles.py` — статический (AST) запрет импорта оракулов для всего `src/lunora`, падает если рантайм потянет оракул.
+- **Микрорешение:** запрет для рантайма — тем же AST-приёмом, что и `tests/engines/test_no_oracle_imports.py` (ловит и ленивые импорты); `jhora/pyjhora` держим в списке запретов на будущее.
+- **Следующий шаг:** close-record S2e + close-record гейта P3 (все четыре движка доказаны, рантайм на них переключён, оракулы вне рантайма), changelog/статус/board, PR.
+- **Проверки:** `make verify` зелёный (757 passed, 18 skipped), `docs_discipline: OK`.
+
+## 2026-11-22 — G17-S2e, шаг 4: close-record S2e + закрытие точки P3
+- **Сделал:** close-record [G17-S2e-close.md](../gates/G17-S2e-close.md) (PASS), запись в changelog, `CURRENT_STATE`, `ROADMAP_STATUS` (latest_verdict PASS, P3 закрыта), `make board`. `make slice-check-s2e` заведён в накопительный `make slice-check`. **Точка P3 закрыта:** все четыре движка построены, доказаны и в рантайме; оракулы вне рантайма. Гейт G17 по корректности ядра закрыт.
+- **Микрорешение:** P3 — содержательная точка гейта G17, не отдельный гейт; её закрытие оформлено вердиктом внутри close-record S2e. Следующий шаг L1 (остаток спайка: платёж + LLM) не открываю — закрытие гейта не открывает следующий.
+- **Следующий шаг:** PR S2e в main, подписка на проверки.
+- **Проверки:** `make verify` зелёный (757 passed, 18 skipped), `make slice-check` зелёный (накопительно S1+S2a+S2c+S2b+S2d+S2e), `docs_discipline: OK`, `make board`.

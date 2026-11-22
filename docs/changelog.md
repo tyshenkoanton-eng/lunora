@@ -51,6 +51,21 @@
 - **Следующий:** G17-S2d (ведическая + переключение рантайма) — ждёт съёма Jagannatha Hora. P3
   закроется после S2d.
 
+## 2026-11-22 · G17-S2e закрыт — переключение рантайма на движки (точка P3 закрыта)
+- **Verdict:** PASS — зелёные `make verify` (757 passed, 18 skipped) и `make slice-check`
+  (накопительно S1 + S2a + S2c + S2b + S2d + S2e).
+- **Close-record:** [gates/G17-S2e-close.md](gates/G17-S2e-close.md).
+- **Scope:** `calc.engine` переведён с прототипных `calc/{western,vedic,chinese,numerology}`
+  (swisseph/cnlunar) на доказанные `lunora.engines.*` поверх `_ephem`; форма хранимого чарта
+  (`calc.types`) сохранена — потребители routes/serialize/llm/portrait не трогались;
+  `test_calc.py` переписан на новый слой. `calc/timezone.py` — на вендоренный GeoNames вместо
+  `timezonefinder`.
+- **Оракулы вне рантайма (ADR-001):** `pyswisseph`/`cnlunar`/`timezonefinder` убраны из
+  `[project.dependencies]` (cnlunar → `[oracle]`, timezonefinder снят); новый
+  `tests/test_runtime_no_oracles.py` — AST-запрет импорта оракулов для всего `src/lunora`.
+- **Точка P3 закрыта:** все четыре движка построены, доказаны и включены в рантайм; AGPL-оракулы
+  только в `[oracle]`/`tests/diff`. Гейт G17 по корректности ядра — закрыт.
+
 ## 2026-11-22 · G17-S2d закрыт — ведический движок (все четыре движка построены)
 - **Verdict:** PASS — зелёные `make verify` (755 passed) и `make slice-check` (накопительно
   S1 + S2a + S2c + S2b + S2d).
