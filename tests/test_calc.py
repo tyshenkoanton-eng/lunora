@@ -1,4 +1,9 @@
-"""Tests against reference data: 15.03.1990 14:30 Moscow."""
+"""Контракт сборки `calc.engine.calculate` на новом слое движков (G17-S2e).
+
+Проверяется, что рантайм-адаптер отдаёт карту из доказанных движков `lunora.engines.*`
+в форме `calc.types` (хранимый чарт / API). Содержательная корректность каждого движка
+закрыта golden-наборами S2a–S2d; здесь — склейка адаптера на эталоне 15.03.1990 14:30 Москва.
+"""
 from datetime import date, time
 
 from lunora.calc.engine import calculate
@@ -29,7 +34,7 @@ class TestWestern:
 
     def test_planet_count(self):
         chart = calculate(BIRTH)
-        assert len(chart.western.planets) == 12  # 10 + Rahu + Ketu
+        assert len(chart.western.planets) == 12  # септенер + высшие + Раху/Кету
 
     def test_houses_calculated(self):
         chart = calculate(BIRTH)
@@ -37,8 +42,7 @@ class TestWestern:
 
     def test_asc_in_leo(self):
         chart = calculate(BIRTH)
-        asc = chart.western.houses[0]
-        assert asc.sign == "Лев"
+        assert chart.western.houses[0].sign == "Лев"
 
     def test_aspects_found(self):
         chart = calculate(BIRTH)
@@ -58,24 +62,31 @@ class TestVedic:
         assert 23.5 < chart.vedic.ayanamsha < 24.0
 
     def test_sidereal_shift(self):
+        # западная (тропик) − ведическая (сидерика) ≈ айанамша Лахири
         chart = calculate(BIRTH)
         sun_w = next(p for p in chart.western.planets if p.name == "Солнце")
-        sun_v = next(p for p in chart.vedic.planets if p.name == "Солнце")
+        sun_v = next(p for p in chart.vedic.planets if p.name == "Сурья")
         shift = sun_w.longitude - sun_v.longitude
         assert 23.0 < shift < 24.5
+
+    def test_graha_names_sanskrit(self):
+        chart = calculate(BIRTH)
+        names = {p.name for p in chart.vedic.planets}
+        assert {"Сурья", "Чандра", "Раху", "Кету"} <= names
 
     def test_moon_nakshatra_swati(self):
         chart = calculate(BIRTH)
         assert chart.vedic.moon_nakshatra is not None
-        assert chart.vedic.moon_nakshatra.name == "Swati"
+        assert chart.vedic.moon_nakshatra.name == "Свати"
         assert chart.vedic.moon_nakshatra.pada == 3
         assert chart.vedic.moon_nakshatra.lord == "Раху"
 
     def test_dasha_periods(self):
         chart = calculate(BIRTH)
         assert len(chart.vedic.dasha_periods) == 9
+        assert chart.vedic.dasha_periods[0].planet == "Раху"
         total = sum(p.years for p in chart.vedic.dasha_periods)
-        assert 105 < total < 121
+        assert 118 < total < 122  # полный круг Вимшоттари = 120 лет
 
 
 class TestChinese:
@@ -115,7 +126,7 @@ class TestNumerology:
         chart = calculate(BIRTH)
         sq = chart.numerology.pythagoras
         assert sq is not None
-        assert sq.cells[1] == 3  # strong character
+        assert sq.cells[1] == 3  # сильный характер (три единицы)
 
 
 class TestPrecisionContract:
