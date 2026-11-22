@@ -174,3 +174,9 @@
   - **numpy-скаляры из эфемерид (`retrograde`) → родной bool в сериализации** — иначе JSONB падает «bool is not serializable»; каст и в `serialize._convert` (устойчиво к любым np-скалярам).
 - **Следующий шаг:** честные close-records (S2b поправлен F08; S2e → пометка P3 CONDITIONAL→пересобрана), close-record S2f, вердикт P3, changelog/статус/board, PR.
 - **Проверки:** `make verify` зелёный (ниже), `ruff` чистый.
+
+## 2026-11-22 — G17-S2f, шаг 5: close-records, пересборка вердикта P3
+- **Сделал:** close-record [G17-S2f-close.md](../gates/G17-S2f-close.md) (PASS слайса; **точка P3 пересобрана и закрыта сквозь продукт**); поправка в [G17-S2e-close.md](../gates/G17-S2e-close.md) (прежняя «P3 закрыта окончательно» относится к движкам, не к сквозному продукту — ссылка на S2f); запись в changelog; `CURRENT_STATE`, `ROADMAP_STATUS` (latest_verdict PASS, P3 закрыта), `make board`.
+- **Микрорешение:** вердикт P3 — «ЗАКРЫТА (пересобрано)», а не новый гейт: ревью понизило содержательную точку гейта G17, доводка её закрыла сквозь продукт; закрытие гейта следующий не открывает.
+- **Следующий шаг:** PR G17-S2f в main, подписка на проверки. Остаток L1 (смоук Stars, S3b) — по go Антона.
+- **Проверки:** `make verify` зелёный (838 passed, 18 skipped), `make slice-check` зелёный накопительно (S1…S2f + S3a), `golden_audit` OK (active 158), `docs_discipline: OK`.
