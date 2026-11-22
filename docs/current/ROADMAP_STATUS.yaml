@@ -5,11 +5,11 @@ project: Лунора
 current:
   level: L1                 # L0 Discovery закрыт (GO с условиями 2026-11-20)
   gate: G17                 # первый гейт L1: корректность ядра доказана (глобальный ID)
-  slice: G17-S2e            # ЗАКРЫТ PASS 2026-11-22 — переключение рантайма (точка P3 закрыта)
-  slice_status: G17-S2 закрыт полностью (S2a,S2c,S2b,S2d,S2e PASS); точка P3 закрыта — движки доказаны и в рантайме
+  slice: G17-S3a            # ОТКРЫТ 2026-11-22 по go Антона — адаптер оплаты Telegram Stars (S1–S5)
+  slice_status: G17-S3a открыт — офлайн-тесты S1–S5 (aiogram + PostgreSQL), затем адаптер; G17-S3b (стоимость LLM) НЕ открыт — ждёт решения Антона по модели
   latest_review: null
-  latest_verdict: PASS      # G17-S2e — PASS 2026-11-22 (docs/gates/G17-S2e-close.md); точка P3 закрыта
+  latest_verdict: null      # G17-S3a в работе; предыдущий — G17-S2e PASS 2026-11-22
   blocker: null
-  next_action: "G17-S2 ЗАКРЫТ ПОЛНОСТЬЮ (S2a,S2c,S2b,S2d,S2e — PASS; docs/gates/G17-S2{a,c,b,d,e}-close.md). Точка P3 закрыта: все четыре движка построены, доказаны на golden против внешних эталонов и включены в рантайм (calc.engine → lunora.engines.*); AGPL-оракулы и тяжёлые пакеты выведены из рантайма (ADR-001, test_runtime_no_oracles). Гейт G17 по корректности ядра закрыт. Следующий шаг L1 — по go Антона: остаток feasibility-спайка ядра (проба оплаты Stars + стоимость LLM-синтеза vs бюджет, R-05). Закрытие гейта не открывает следующий."
+  next_action: "G17-S3a (docs/current/G17-S3-план.md): адаптер Telegram Stars по TRANSACTIONS-КОНТРАКТЫ §2.4b, правила S1–S5, тесты раньше кода; PASS = make verify + make slice-check зелёные, close-record. Живой смоук — вручную с Антоном (сначала тестовая среда Telegram). G17-S3b (стоимость LLM) не открывать без решения Антона по модели."
 
 next_review_number: R1
