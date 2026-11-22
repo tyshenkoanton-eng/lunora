@@ -1,0 +1,222 @@
+# Golden ведического движка G17-S2d — раши/лагна/бхавы, накшатры/пады, Вимшоттари, варги D9/D10.
+# Эталон: Jagannatha Hora 8.0 (карты A, B, D). Айанамша JH — True Chitrapaksha, у нас Лахири №1
+# (§2.7): постоянный сдвиг ≈56″ отнесён к «настройкам эталона», дискретные значения совпадают.
+# Положения — истинные геометрические (без аберрации), узлы — средние. 152-ФЗ: во входе только
+# место, дата, время, координаты. Даты даш — can_vote:false (§4.3), сверяем год начала МД.
+---
+id: GV-01
+layer: vedic
+status: active
+case: 'карта A: раши, лагна, бхавы, накшатры (§4.1–4.2)'
+input:
+  place_id: geonames:472757
+  local_date: '1984-02-04'
+  local_time: '15:00'
+  lat: 48.71378
+  lon: 44.4976
+  zone: Europe/Volgograd
+reference:
+  source: Jagannatha Hora 8.0 (карта A, Basics) + ENGINE-SPEC §4.1–4.2
+  settings:
+    ayanamsha: 'JH True Chitrapaksha; движок Лахири №1 (§2.7), сдвиг ≈56″ — настройки эталона'
+    positions: истинные геометрические геоцентрические, без аберрации; узлы средние
+    houses: цельнознаковые бхавы от лагны
+  captured_at: '2026-11-22'
+  captured_by: Антон (Jagannatha Hora 8.0) + Claude (расшифровка §4.1–4.2)
+  evidence_file: evidence/jagannatha-hora-cards.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: Jagannatha Hora 8.0
+expected:
+- {path: lagna.rashi, value: Митхуна, exact: true}
+- {path: lagna.nakshatra, value: Ардра, exact: true}
+- {path: lagna.pada, value: 4, exact: true}
+- {path: grahas.Сурья.rashi, value: Макара, exact: true}
+- {path: grahas.Сурья.nakshatra, value: Шравана, exact: true}
+- {path: grahas.Сурья.pada, value: 4, exact: true}
+- {path: grahas.Сурья.bhava, value: 8, exact: true}
+- {path: grahas.Чандра.rashi, value: Кумбха, exact: true}
+- {path: grahas.Чандра.nakshatra, value: Шатабхиша, exact: true}
+- {path: grahas.Чандра.bhava, value: 9, exact: true}
+- {path: grahas.Мангала.rashi, value: Тула, exact: true}
+- {path: grahas.Мангала.bhava, value: 5, exact: true}
+- {path: grahas.Гуру.rashi, value: Дхану, exact: true}
+- {path: grahas.Гуру.nakshatra, value: Мула, exact: true}
+- {path: grahas.Гуру.bhava, value: 7, exact: true}
+- {path: grahas.Шани.rashi, value: Тула, exact: true}
+- {path: grahas.Шани.nakshatra, value: Вишакха, exact: true}
+- {path: grahas.Раху.rashi, value: Вришабха, exact: true}
+- {path: grahas.Раху.nakshatra, value: Рохини, exact: true}
+- {path: grahas.Кету.rashi, value: Вришчика, exact: true}
+- {path: ayanamsha, value: 23.634897, tolerance: 0.0005}
+---
+id: GV-02
+layer: vedic
+status: active
+case: 'карта B: раши/лагна + Сурья на границе раши (обязательный stability, §4.1)'
+input:
+  place_id: geonames:524901
+  local_date: '1987-06-15'
+  local_time: '12:00'
+  lat: 55.75204
+  lon: 37.61781
+  zone: Europe/Moscow
+reference:
+  source: Jagannatha Hora 8.0 (карта B, Basics) + ENGINE-SPEC §4.1
+  settings:
+    boundary: 'Сурья 0 Ge 02′55″ — ~3′ от границы Вришабха/Митхуна: знак Митхуна, stability range'
+    ayanamsha: 'JH True Chitrapaksha; движок Лахири №1 (§2.7)'
+  captured_at: '2026-11-22'
+  captured_by: Антон (Jagannatha Hora 8.0) + Claude (§4.1)
+  evidence_file: evidence/jagannatha-hora-cards.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: Jagannatha Hora 8.0
+expected:
+- {path: lagna.rashi, value: Симха, exact: true}
+- {path: grahas.Сурья.rashi, value: Митхуна, exact: true}
+- {path: grahas.Сурья.nakshatra, value: Мригашира, exact: true}
+- {path: grahas.Сурья.pada, value: 3, exact: true}
+- {path: grahas.Сурья.stability, value: range, exact: true}
+- {path: grahas.Чандра.rashi, value: Макара, exact: true}
+- {path: grahas.Чандра.nakshatra, value: Шравана, exact: true}
+- {path: grahas.Гуру.rashi, value: Мина, exact: true}
+- {path: grahas.Гуру.nakshatra, value: Ревати, exact: true}
+- {path: grahas.Шани.rashi, value: Вришчика, exact: true}
+- {path: grahas.Шани.retrograde, value: true, exact: true}
+- {path: grahas.Раху.rashi, value: Мина, exact: true}
+- {path: grahas.Кету.rashi, value: Канья, exact: true}
+---
+id: GV-03
+layer: vedic
+status: active
+case: 'карта A: Вимшоттари — последовательность МД и год начала (§4.3)'
+input:
+  place_id: geonames:472757
+  local_date: '1984-02-04'
+  local_time: '15:00'
+  lat: 48.71378
+  lon: 44.4976
+  zone: Europe/Volgograd
+reference:
+  source: Jagannatha Hora 8.0 (карта A, Dasas Vimsottari) + ENGINE-SPEC §4.3
+  settings:
+    dasha: 'от накшатры Чандры (Шатабхиша → Раху); JH true sidereal solar years, движок Y=365,25'
+    dates: 'даты МД can_vote:false (§4.3); наши на ~4 сут позже JH — класс «длина года»; год совпадает'
+  captured_at: '2026-11-22'
+  captured_by: Антон (Jagannatha Hora 8.0) + Claude (§4.3)
+  evidence_file: evidence/jagannatha-hora-cards.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: Jagannatha Hora 8.0
+expected:
+- {path: dasha.sequence, value: [Раху, Гуру, Шани, Будха, Кету, Шукра, Сурья, Чандра, Мангала], exact: true}
+- {path: dasha.start_year.Раху, value: 1968, exact: true}
+- {path: dasha.start_year.Гуру, value: 1986, exact: true}
+- {path: dasha.start_year.Шани, value: 2002, exact: true}
+- {path: dasha.start_year.Будха, value: 2021, exact: true}
+- {path: dasha.start_year.Кету, value: 2038, exact: true}
+---
+id: GV-04
+layer: vedic
+status: active
+case: 'карта A: активная МД и АД на 16.11.2026 — Будха–Шукра (§4.3)'
+input:
+  place_id: geonames:472757
+  local_date: '1984-02-04'
+  local_time: '15:00'
+  lat: 48.71378
+  lon: 44.4976
+  zone: Europe/Volgograd
+reference:
+  source: Jagannatha Hora 8.0 (карта A, Dasas) + ENGINE-SPEC §4.3
+  settings:
+    reference_date: '16.11.2026 — МД Будха (JH 2021-09-14…2038-09-14), АД Будха–Шукра'
+  captured_at: '2026-11-22'
+  captured_by: Антон (Jagannatha Hora 8.0) + Claude (§4.3)
+  evidence_file: evidence/jagannatha-hora-cards.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: Jagannatha Hora 8.0
+expected:
+- {path: dasha.active_maha, value: Будха, exact: true}
+- {path: dasha.active_antara, value: Шукра, exact: true}
+---
+id: GV-05
+layer: vedic
+status: active
+case: 'карта A: варги D9 (навамша) и D10 (дашамша) (§4.4)'
+input:
+  place_id: geonames:472757
+  local_date: '1984-02-04'
+  local_time: '15:00'
+  lat: 48.71378
+  lon: 44.4976
+  zone: Europe/Volgograd
+reference:
+  source: Jagannatha Hora 8.0 (карта A, Navamsa D-9 / Dasamsa D-10) + ENGINE-SPEC §4.4
+  settings:
+    d9: 'знак = floor(λ_sid / 3°20′) mod 12 (сверено с колонкой Nava бланка JH)'
+    d10: 'нечётный знак — с себя; чётный — с 9-го (§4.4)'
+  captured_at: '2026-11-22'
+  captured_by: Антон (Jagannatha Hora 8.0) + Claude (§4.4)
+  evidence_file: evidence/jagannatha-hora-cards.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: Jagannatha Hora 8.0
+expected:
+- {path: grahas.Сурья.navamsa, value: Карка, exact: true}
+- {path: grahas.Сурья.dashamsa, value: Меша, exact: true}
+- {path: grahas.Чандра.navamsa, value: Мина, exact: true}
+- {path: grahas.Чандра.dashamsa, value: Симха, exact: true}
+- {path: grahas.Шани.navamsa, value: Меша, exact: true}
+- {path: grahas.Шани.dashamsa, value: Вришабха, exact: true}
+- {path: grahas.Будха.navamsa, value: Дхану, exact: true}
+- {path: grahas.Гуру.navamsa, value: Митхуна, exact: true}
+---
+id: GV-06
+layer: vedic
+status: active
+case: 'карта D: раши/лагна/накшатры + последовательность МД (§4.1–4.3)'
+input:
+  place_id: geonames:498817
+  local_date: '1962-08-09'
+  local_time: '06:15'
+  lat: 59.93863
+  lon: 30.31413
+  zone: Europe/Moscow
+reference:
+  source: Jagannatha Hora 8.0 (карта D, Basics + Dasas) + ENGINE-SPEC §4.1–4.3
+  settings:
+    ayanamsha: 'JH True Chitrapaksha; движок Лахири №1 (§2.7)'
+    dasha: 'от накшатры Чандры (Вишакха → Гуру)'
+  captured_at: '2026-11-22'
+  captured_by: Антон (Jagannatha Hora 8.0) + Claude (§4.1–4.3)
+  evidence_file: evidence/jagannatha-hora-cards.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: Jagannatha Hora 8.0
+expected:
+- {path: lagna.rashi, value: Симха, exact: true}
+- {path: lagna.nakshatra, value: Магха, exact: true}
+- {path: grahas.Сурья.rashi, value: Карка, exact: true}
+- {path: grahas.Сурья.nakshatra, value: Ашлеша, exact: true}
+- {path: grahas.Чандра.rashi, value: Тула, exact: true}
+- {path: grahas.Чандра.nakshatra, value: Вишакха, exact: true}
+- {path: grahas.Чандра.pada, value: 3, exact: true}
+- {path: grahas.Мангала.rashi, value: Вришабха, exact: true}
+- {path: grahas.Будха.rashi, value: Симха, exact: true}
+- {path: grahas.Гуру.rashi, value: Кумбха, exact: true}
+- {path: grahas.Гуру.retrograde, value: true, exact: true}
+- {path: grahas.Шани.rashi, value: Макара, exact: true}
+- {path: grahas.Шани.retrograde, value: true, exact: true}
+- {path: grahas.Раху.rashi, value: Карка, exact: true}
+- {path: grahas.Кету.rashi, value: Макара, exact: true}
+- {path: dasha.sequence, value: [Гуру, Шани, Будха, Кету, Шукра, Сурья, Чандра, Мангала, Раху], exact: true}
+- {path: ayanamsha, value: 23.334737, tolerance: 0.0005}

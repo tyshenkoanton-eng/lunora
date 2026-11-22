@@ -172,6 +172,28 @@ def body(t: Time, name: str) -> BodyPosition:
     return BodyPosition(lon=lon, lat=lat, speed=speed)
 
 
+def _geom_lonlat(t: Time, name: str) -> tuple[float, float]:
+    """Истинная геометрическая долгота/широта: мгновенный вектор (цель − Земля), БЕЗ
+    запаздывания света и БЕЗ аберрации (эклиптика и истинное равноденствие даты)."""
+    k = _kernel()
+    lat, lon, _ = (k[_TARGETS[name]] - k["earth"]).at(t).frame_latlon(ecliptic_frame)
+    return lon.degrees % 360.0, lat.degrees
+
+
+def body_geometric(t: Time, name: str) -> BodyPosition:
+    """Тело в истинных геометрических положениях (§4: ведический кадр совпадает с Jagannatha
+    Hora — True/geometric, geocentric, без аберрации). Отличие от `body` (видимые, с
+    аберрацией) — систематическое: видимое ≈ геометрическое + аберрация ≈ 20″."""
+    if name not in _TARGETS:
+        raise KeyError(f"тело {name!r} не в ядре v1 (§2.3, §2.10)")
+    lon, lat = _geom_lonlat(t, name)
+    ts = timescale()
+    before, _ = _geom_lonlat(ts.tt_jd(t.tt - SPEED_STEP_DAYS), name)
+    after, _ = _geom_lonlat(ts.tt_jd(t.tt + SPEED_STEP_DAYS), name)
+    speed = ((after - before + 180.0) % 360.0 - 180.0) / (2 * SPEED_STEP_DAYS)
+    return BodyPosition(lon=lon, lat=lat, speed=speed)
+
+
 def bodies(t: Time) -> dict[str, BodyPosition]:
     return {name: body(t, name) for name in BODIES}
 
