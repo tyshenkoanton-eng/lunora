@@ -93,6 +93,7 @@ async def test_foreign_user_payment_rejected(service, session_factory):
 
 async def test_unknown_sku_cannot_be_invoiced(service):
     import pytest
+
     from lunora.payments.catalog import UnknownProduct
 
     with pytest.raises(UnknownProduct):

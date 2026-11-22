@@ -70,6 +70,7 @@ async def test_already_paid_order_rejected(service, dp, bot, tg):
 async def test_internal_error_still_answers(bot, tg):
     """Сбой внутри проверки — всё равно явный answer(ok=False), а не тишина до таймаута."""
     from aiogram import Dispatcher
+
     from lunora.payments.telegram import build_router
 
     class Broken:
