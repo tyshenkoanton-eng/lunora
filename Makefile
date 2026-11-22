@@ -2,7 +2,7 @@
 # Воспроизводимость: любой в любой сессии прогоняет те же команды.
 # Рецепты — с ТАБУЛЯЦИЕЙ. Подставь реальные команды проекта под <...>.
 
-.PHONY: setup setup-oracle verify slice-check slice-check-s1 slice-check-s2a slice-check-s2c slice-check-s2b slice-check-s2d slice-check-s2e slice-check-s3a spike-full docs board
+.PHONY: setup setup-oracle verify slice-check slice-check-s1 slice-check-s2a slice-check-s2c slice-check-s2b slice-check-s2d slice-check-s2e slice-check-s2f slice-check-s3a spike-full docs board
 
 setup:          ## установка зависимостей/окружения + эфемериды DE440s (SHA-256 из манифеста)
 	pip install -e ".[dev]"
@@ -18,7 +18,7 @@ verify:         ## полная проверка: линт + типы + тест
 	pytest -q
 	python scripts/docs_discipline.py --docs docs
 
-slice-check: slice-check-s1 slice-check-s2a slice-check-s2c slice-check-s2b slice-check-s2d slice-check-s2e slice-check-s3a  ## G17 накопительно: закрытые слайсы не должны покраснеть
+slice-check: slice-check-s1 slice-check-s2a slice-check-s2c slice-check-s2b slice-check-s2d slice-check-s2e slice-check-s2f slice-check-s3a  ## G17 накопительно: закрытые слайсы не должны покраснеть
 
 slice-check-s1: ## G17-S1: эфемериды + время/пояса (docs/gates/G17-S1-close.md)
 	python scripts/spike/ephem_data_check.py         # DE440s на месте, SHA-256 = §0.5, Skyfield 1.55, tzdata 2026f
@@ -45,6 +45,11 @@ slice-check-s2d: ## G17-S2d: ведический движок (docs/current/G17
 
 slice-check-s2e: ## G17-S2e: рантайм на движках lunora.engines.*, оракулы вне рантайма (docs/gates/G17-S2e-close.md)
 	pytest -q tests/test_calc.py tests/test_serialize.py tests/test_geocode.py tests/test_runtime_no_oracles.py tests/engines/test_no_oracle_imports.py
+	python scripts/spike/golden_audit.py tests/golden --require-active
+
+slice-check-s2f: ## G17-S2f: доводка интеграции P3 (F01–F11) сквозь calculate/onboard (docs/gates/G17-S2f-close.md); настоящая PostgreSQL обязательна
+	pytest -q tests/integration/test_p3_sweep.py tests/test_stability.py tests/engines/test_result_contract.py
+	LUNORA_REQUIRE_PG=1 pytest -q tests/integration/test_onboard_p3.py
 	python scripts/spike/golden_audit.py tests/golden --require-active
 
 slice-check-s3a: ## G17-S3a: адаптер Telegram Stars, правила S1–S5 (docs/current/G17-S3-план.md); настоящая PostgreSQL обязательна

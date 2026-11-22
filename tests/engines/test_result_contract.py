@@ -45,6 +45,12 @@ def test_not_computed_result_has_reason_and_no_value():
     assert not r.is_computed
 
 
+def test_computed_none_is_forbidden():
+    # F09: частичный результат под видом посчитанного запрещён — только явный not_computed
+    with pytest.raises(ValueError, match="None"):
+        Result.computed(Rule("num.maturity", "0.1.0"), None)
+
+
 def test_unknown_reason_rejected():
     with pytest.raises(ValueError):
         Result.missing(Rule("x", "0.1.0"), "guessed")
