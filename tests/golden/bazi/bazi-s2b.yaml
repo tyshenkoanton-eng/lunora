@@ -1,0 +1,319 @@
+# Golden движка Ба-Цзы G17-S2b — четыре столпа + да-юнь.
+# Эталон: bazi.biz (карты A–E, TST-вариант), сверен с ENGINE-SPEC §5.3–5.5/§5.10 и двумя
+# оракулами (lunar-python, cnlunar). Столпы и да-юнь — детерминированная арифметика поверх
+# _ephem (солнечные термины доказаны в S1 против Гонконгской обсерватории). 152-ФЗ: во входе
+# только место, дата, время, координаты, пол.
+---
+id: GB-01
+layer: bazi
+status: active
+case: 'карта A: четыре столпа (год до ли-чунь, час по TST)'
+input:
+  place_id: geonames:472757
+  local_date: '1984-02-04'
+  local_time: '15:00'
+  lat: 48.71378
+  lon: 44.4976
+  zone: Europe/Volgograd
+  sex: m
+reference:
+  source: bazi.biz (карта A, TST-вариант) + ENGINE-SPEC §5.3–5.5
+  settings:
+    year: от ли-чунь (04.02.1984 15:18:44 UTC); рождение 11:00 UTC — ДО термина → 癸亥
+    day_hour: истинное солнечное время места (TST 13:44), смена дня 23:00
+    convention: 五虎遁 (ствол месяца), 五鼠遁 (ствол часа)
+  captured_at: '2026-11-22'
+  captured_by: Антон (bazi.biz) + Claude (расшифровка, §5.3–5.5)
+  evidence_file: evidence/bazi-biz-cards.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: bazi.biz (ручной) + lunar-python 1.4.9, cnlunar 0.2 (оракулы)
+expected:
+- path: pillars.year
+  value: 癸亥
+  exact: true
+- path: pillars.month
+  value: 乙丑
+  exact: true
+- path: pillars.day
+  value: 戊辰
+  exact: true
+- path: pillars.hour
+  value: 己未
+  exact: true
+- path: solar_year
+  value: 1983
+  exact: true
+- path: month_index
+  value: 11
+  exact: true
+- path: day_shifted
+  value: false
+  exact: true
+---
+id: GB-02
+layer: bazi
+status: active
+case: 'карта B: четыре столпа'
+input:
+  place_id: geonames:524901
+  local_date: '1987-06-15'
+  local_time: '12:00'
+  lat: 55.75204
+  lon: 37.61781
+  zone: Europe/Moscow
+  sex: f
+reference:
+  source: bazi.biz (карта B) + ENGINE-SPEC §5.3–5.5
+  settings:
+    year: от ли-чунь 1987 → 丁卯; месяц λ☉=83,7° → 午
+    day_hour: TST 10:30 → день 乙未, час 巳 (五鼠遁) → 辛巳
+  captured_at: '2026-11-22'
+  captured_by: Антон (bazi.biz) + Claude (§5.3–5.5)
+  evidence_file: evidence/bazi-biz-cards.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: bazi.biz (ручной) + lunar-python 1.4.9, cnlunar 0.2 (оракулы)
+expected:
+- path: pillars.year
+  value: 丁卯
+  exact: true
+- path: pillars.month
+  value: 丙午
+  exact: true
+- path: pillars.day
+  value: 乙未
+  exact: true
+- path: pillars.hour
+  value: 辛巳
+  exact: true
+---
+id: GB-03
+layer: bazi
+status: active
+case: 'карта E: день-граница (TST 14.06 23:20 ≥ 23:00 → столп дня 15.06)'
+input:
+  place_id: geonames:524901
+  local_date: '1987-06-15'
+  local_time: '00:50'
+  lat: 55.75204
+  lon: 37.61781
+  zone: Europe/Moscow
+  sex: f
+reference:
+  source: bazi.biz (карта E) + ENGINE-SPEC §5.4 (смена дня 23:00)
+  settings:
+    day_border: на часах 15.06 00:50, по TST ещё 14.06 23:20; правило 23:00 → столп дня 15.06 (乙未)
+    note: 'при смене в полночь было бы 甲午 — альтернатива только для сверки (§5.4)'
+  captured_at: '2026-11-22'
+  captured_by: Антон (bazi.biz) + Claude (§5.4); TST-вариант E выведен из карт A/C
+  evidence_file: evidence/bazi-biz-cards.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: bazi.biz (ручной) + lunar-python 1.4.9, cnlunar 0.2 (оракулы)
+expected:
+- path: pillars.year
+  value: 丁卯
+  exact: true
+- path: pillars.month
+  value: 丙午
+  exact: true
+- path: pillars.day
+  value: 乙未
+  exact: true
+- path: pillars.hour
+  value: 丙子
+  exact: true
+- path: day_shifted
+  value: true
+  exact: true
+---
+id: GB-05-C
+layer: bazi
+status: active
+case: 'карта C: четыре столпа (высокая широта, TST 22:53 < 23:00 — день не сдвигается)'
+input:
+  place_id: geonames:524305
+  local_date: '1990-12-22'
+  local_time: '23:40'
+  lat: 68.96778
+  lon: 33.09922
+  zone: Europe/Moscow
+  sex: f
+reference:
+  source: bazi.biz (карта C) + ENGINE-SPEC §5.3–5.5
+  settings:
+    day_hour: TST 22:53 (< 23:00) → столп дня = дата_TST (22.12), час 亥 → 己亥
+  captured_at: '2026-11-22'
+  captured_by: Антон (bazi.biz) + Claude (§5.3–5.5)
+  evidence_file: evidence/bazi-biz-cards.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: bazi.biz (ручной) + lunar-python 1.4.9, cnlunar 0.2 (оракулы)
+expected:
+- path: pillars.year
+  value: 庚午
+  exact: true
+- path: pillars.month
+  value: 戊子
+  exact: true
+- path: pillars.day
+  value: 辛酉
+  exact: true
+- path: pillars.hour
+  value: 己亥
+  exact: true
+- path: day_shifted
+  value: false
+  exact: true
+---
+id: GB-05-D
+layer: bazi
+status: active
+case: 'карта D: четыре столпа (рождение через ~27 ч после ли-цю)'
+input:
+  place_id: geonames:498817
+  local_date: '1962-08-09'
+  local_time: '06:15'
+  lat: 59.93863
+  lon: 30.31413
+  zone: Europe/Moscow
+  sex: f
+reference:
+  source: bazi.biz (карта D) + ENGINE-SPEC §5.3–5.5
+  settings:
+    year: ли-цю 08.08.1962 00:33:33 UTC; рождение 09.08 03:15 UTC — после → месяц 申
+    day_hour: TST 05:10 → день 己卯, час 卯 → 丁卯
+  captured_at: '2026-11-22'
+  captured_by: Антон (bazi.biz) + Claude (§5.3–5.5)
+  evidence_file: evidence/bazi-biz-cards.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: bazi.biz (ручной) + lunar-python 1.4.9, cnlunar 0.2 (оракулы)
+expected:
+- path: pillars.year
+  value: 壬寅
+  exact: true
+- path: pillars.month
+  value: 戊申
+  exact: true
+- path: pillars.day
+  value: 己卯
+  exact: true
+- path: pillars.hour
+  value: 丁卯
+  exact: true
+---
+id: GB-06
+layer: bazi
+status: active
+case: 'карта A: да-юнь — обратное, вход ≈10 лет 10.11.1993, первое десятилетие 甲子'
+input:
+  place_id: geonames:472757
+  local_date: '1984-02-04'
+  local_time: '15:00'
+  lat: 48.71378
+  lon: 44.4976
+  zone: Europe/Volgograd
+  sex: m
+reference:
+  source: bazi.biz (карта A, да-юнь) + ENGINE-SPEC §5.10
+  settings:
+    direction: 'ствол года 癸 (инь) + пол м → обратное (逆)'
+    delta: 'от сяо-хань 06.01.1984 03:40:51 UTC — Δ ≈ 29,3 сут; три дня = год → 9 л 9 мес 6 дн'
+    decades: 'столп месяца 乙丑 (n=1) − k шагов; k=1 → 甲子, k=2 → 癸亥'
+  captured_at: '2026-11-22'
+  captured_by: Антон (bazi.biz) + Claude (§5.10)
+  evidence_file: evidence/bazi-biz-cards.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: bazi.biz (ручной) + lunar-python 1.4.9, cnlunar 0.2 (оракулы)
+expected:
+- path: dayun.direction
+  value: 逆
+  exact: true
+- path: dayun.entry_date
+  value: '1993-11-10'
+  exact: true
+- path: dayun.entry_years
+  value: 9
+  exact: true
+- path: dayun.decade_1
+  value: 甲子
+  exact: true
+- path: dayun.decade_2
+  value: 癸亥
+  exact: true
+---
+id: GB-07
+layer: bazi
+status: active
+case: 'карта D: да-юнь — обратное, вход ≈0 лет 22.12.1962, первое десятилетие 丁未'
+input:
+  place_id: geonames:498817
+  local_date: '1962-08-09'
+  local_time: '06:15'
+  lat: 59.93863
+  lon: 30.31413
+  zone: Europe/Moscow
+  sex: f
+reference:
+  source: bazi.biz (карта D, да-юнь) + ENGINE-SPEC §5.10
+  settings:
+    direction: 'ствол года 壬 (ян) + пол ж → обратное (逆)'
+    delta: 'Δ ≈ 1,1 сут → 0 л 4 мес 13 дн; столп месяца 戊申 (n=44) − k; k=1 → 丁未'
+  captured_at: '2026-11-22'
+  captured_by: Антон (bazi.biz) + Claude (§5.10)
+  evidence_file: evidence/bazi-biz-cards.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: bazi.biz (ручной) + lunar-python 1.4.9, cnlunar 0.2 (оракулы)
+expected:
+- path: dayun.direction
+  value: 逆
+  exact: true
+- path: dayun.entry_date
+  value: '1962-12-22'
+  exact: true
+- path: dayun.entry_years
+  value: 0
+  exact: true
+- path: dayun.decade_1
+  value: 丁未
+  exact: true
+---
+id: GB-12
+layer: bazi
+status: active
+case: 'карта A: столп часа по TST — класс «истинное солнечное время» (己未, не поясное 庚申)'
+input:
+  place_id: geonames:472757
+  local_date: '1984-02-04'
+  local_time: '15:00'
+  lat: 48.71378
+  lon: 44.4976
+  zone: Europe/Volgograd
+  sex: m
+reference:
+  source: bazi.biz (карта A, переключатель TST) + ENGINE-SPEC §5.5
+  settings:
+    rule: 'TST 13:44 → стража 未 → 己未; по часам роддома (15:00) вышла бы 申 (庚申)'
+    class: 'расхождение с калькуляторами по поясному времени — класс «истинное солнечное время»'
+  captured_at: '2026-11-22'
+  captured_by: Антон (bazi.biz, TST вкл/выкл) + Claude (§5.5)
+  evidence_file: evidence/bazi-biz-cards.md
+versions:
+  tz: 2026f
+  ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
+  reference_service: bazi.biz (ручной) + lunar-python 1.4.9, cnlunar 0.2 (оракулы)
+expected:
+- path: pillars.hour
+  value: 己未
+  exact: true
