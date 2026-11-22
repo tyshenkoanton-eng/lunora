@@ -11,6 +11,8 @@ class Settings(BaseSettings):
     webhook_base_url: str = ""
     webapp_url: str = ""
     telegram_proxy: str = ""
+    # тестовая среда Telegram (/bot<token>/test/…) — смоук Stars без реальных звёзд (G17-S3a)
+    telegram_test_env: bool = False
 
     llm_api_key: str = ""
     llm_base_url: str = "https://openrouter.ai/api/v1"

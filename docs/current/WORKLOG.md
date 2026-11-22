@@ -124,3 +124,13 @@
   - **`CHARGE_ALREADY_REFUNDED` = возврат состоялся**, потому что так Bot API отвечает на повтор, а падение между вызовом и записью не должно приводить к «вечному» доступу.
 - **Следующий шаг:** миграция 002 (`star_*`) и `lunora.payments` (каталог, сервис, роутер aiogram) до зелёного.
 - **Проверки:** `pytest tests/payments` — красный (нет таблиц/модуля), `ruff` чистый.
+
+## 2026-11-22 — G17-S3a, шаг 3: адаптер Stars — миграция 002, `lunora.payments`, подключение к боту
+- **Сделал:** миграция `002_star_payments` (`star_orders` с `CHECK currency='XTR'`/`price_xtr>0`, `star_processed_events UNIQUE(kind,event_key)`, `star_payments UNIQUE(telegram_payment_charge_id)`, `star_grants UNIQUE(order_id)`, `star_refunds UNIQUE(payment_id)`); `lunora.payments`: `catalog` (SKU в XTR, только `spike_smoke`=1⭐), `stars` (`StarsService`: инвойс со снимком цены, `check_pre_checkout`, единый `apply_payment` для обновления и сверки, `refund` под блокировкой строки платежа, `apply_refund_state`, `reconcile` по `getStarTransactions` от старых к новым, `has_access`; `AiogramStarsApi`), `telegram` (роутер: явный `answer()` всегда, бюджет проверки 7 с; `successful_payment`; `refunded_payment`), `smoke` (CLI ручного смоука: poll/invoice/refund/reconcile). Роутер Stars подключён в `bot/setup.py` раньше catch-all; `LUNORA_TELEGRAM_TEST_ENV` переключает бота на тестовую среду Telegram.
+- **Мутационная проверка S1:** снял уникальные индексы `processed_events`/`charge_id` в миграции — 6 из 7 тестов S1 покраснели (в т.ч. параллельные дубли). Гарантия держится индексом, не кодом. Вернул.
+- **Микрорешения:**
+  - **`refund` держит `FOR UPDATE` на платеже на время вызова `refundStarPayment`**, потому что это даёт «ровно один успешный вызов» при параллельных возвратах без отдельной очереди; операция редкая (оператор/авто-возврат);
+  - **сверка обрабатывает журнал от старых к новым**, потому что иначе возврат применился бы раньше платежа и потерянный платёж засчитался бы уже после возврата;
+  - **`migrations/env.py` — длинные `noqa`-комментарии укорочены**, потому что ruff 0.16 (I001) валил `make verify` ещё на main; смысл комментария сохранён одной строкой.
+- **Следующий шаг:** `make slice-check` накопительно (с оракулами), close-record, PR.
+- **Проверки:** `pytest tests/payments` — 44 passed; `make verify` зелёный (773 passed, 46 skipped — пропуски: оракулы `[oracle]` не стоят в этой среде), `ruff` чистый.
