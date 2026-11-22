@@ -38,6 +38,8 @@ dev = [
 # оракулы и эталонные данные — только тесты и спайки, не рантайм (ENGINE-SOURCES §6)
 oracle = [
     "pyswisseph==2.10.3.2",  # Swiss Ephemeris 2.10.03 — оракул дифф-тестов эфемерид (tests/diff)
+    "lunar-python>=1.3",  # оракул Ба-Цзы (tests/diff/test_bazi_oracle); рантайм не зависит
+    # cnlunar уже в рантайме (прототип calc/*); второй оракул Ба-Цзы — тот же дифф-тест
     # geonamescache снят: GeoNames — вендоренный снимок data/vendor/geonames (2026-11-21)
 ]
 
