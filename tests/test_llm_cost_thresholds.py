@@ -1,22 +1,33 @@
 """Гард дрейфа порогов LLM: `scripts/spike/llm_cost_thresholds.json` ↔ документы-источники.
 
-Контракт задачи: `docs/current/tasks/S3b-02.md`.
+Контракт задачи: `docs/current/tasks/S3b-10.md` (гард S3b-02 доведён после ревью).
 
-Источники (перечислены в самом JSON в поле `source`):
-  * `docs/grillmax/05_business.md` §3.1 — вариант А (Haiku 4.5), §3.5 — вариант Б (топовая модель);
+Источники (объявлены в самом JSON в полях `source`; сверка — в тесте о provenance):
+  * `docs/grillmax/05_business.md` §3.1 — вариант А (Haiku 4.5), §3.5 — вариант Б (топовая модель),
+    §4 — постоянные затраты: месячный бюджет проекта, он же порог R-05 варианта А. Канон
+    величины — `docs/grillmax/01_context.md` §4.3; сам §4.3 гард не читает: JSON объявляет
+    два источника, и третий прочитанный файл развёл бы объявление с реально охраняемым;
   * `docs/current/G17-S1-план.md` § «Замер стоимости LLM» — сводка порогов.
 
 Что делает тест:
-  * сверяет каждый порог с тем, как он записан в документе, — численно, а не строкой
-    («10 000» → 10000, «3,01» → 3.01, «0,4» → 0.4, «≈ 10 ₽» → 10);
-  * `null` трактует как «не пересчитано»: в документе должно стоять «не пересчитан»
-    и не должно быть числа; `null` — это не 0 и не «порога нет»;
-  * проверяет, что ни один порог из JSON не остался без опоры в документах.
+  * сверяет каждый порог с тем, как он записан в документе, — численно, а не строкой;
+  * ожидаемое значение ВЫЧИСЛЯЕТСЯ из документа, а не хранится в тесте: согласованная правка
+    документа и JSON (в том числе переход `null` → число) оставляет гард зелёным, а рассинхрон
+    роняет его в обе стороны;
+  * `null` означает «не пересчитано» — ровно то, что говорит документ, и никаких чисел рядом;
+  * проверяет provenance: объявленные в JSON `source` и `note` не устарели и совпадают с тем,
+    что гард реально читает.
 
-Чего тест не делает: не правит дрейф и не подгоняет пороги под документ — он только
-краснеет. Ни JSON, ни документы он не меняет.
+Принимаемые форматы записи чисел (разбор — свой, на стандартной библиотеке):
+  * «10 000», «1 490» — с пробелом-разделителем (в том числе неразрывным);
+  * «10000» — без разделителей;
+  * «3,01», «0,4» — с запятой вместо точки;
+  * «≈ 10 ₽», «~10 ₽», «**~1 ₽/мес**», «24 500 ₽/мес», «55 000 ₽/год» — с валютой;
+  * «≤ 3,01 ₽ за вопрос» — со знаком и валютой;
+  * «R-05» — НЕ число: идентификатор риска.
 
-Разбор чисел — только стандартная библиотека.
+Чего тест не делает: не правит дрейф и не подгоняет пороги под документ — он только краснеет.
+Ни JSON, ни документы он не меняет.
 """
 
 from __future__ import annotations
@@ -34,11 +45,26 @@ THRESHOLDS_PATH = ROOT / "scripts" / "spike" / "llm_cost_thresholds.json"
 BUSINESS_PATH = ROOT / "docs" / "grillmax" / "05_business.md"
 PLAN_PATH = ROOT / "docs" / "current" / "G17-S1-план.md"
 
+# Файлы, которые гард реально читает. Объявление `source` в JSON сверяется ровно с этим
+# списком: расхождение «заявлено ↔ охраняется» падает (тест о provenance).
+GUARDED_FILES = (
+    str(BUSINESS_PATH.relative_to(ROOT)),
+    str(PLAN_PATH.relative_to(ROOT)),
+)
+
+# Канонический раздел 05_business.md для каждого варианта: обязан совпасть с тем, что
+# объявлено в JSON в поле `source` варианта.
+CANON_SECTION = {"A": "3.1", "B": "3.5"}
+
 # Число в тексте документа: «10 000», «3,01», «0,4», «10000».
 # Перед цифрой не может стоять буква, дефис или подчёркивание — иначе «R-05» прочиталось бы как 5.
 _NUMBER_RE = re.compile(
     r"(?<![\w\-])\d{1,3}(?:[ \u00a0\u202f]\d{3})+(?:[.,]\d+)?"
     r"|(?<![\w\-])\d+(?:[.,]\d+)?"
+)
+# То же число вместе с валютой: «10 000 ₽», «0,4 ₽/мес», «24 500 ₽/мес».
+_MONEY_RE = re.compile(
+    r"(?<![\w\-])(\d{1,3}(?:[ \u00a0\u202f]\d{3})+(?:[.,]\d+)?|\d+(?:[.,]\d+)?)\s*₽"
 )
 _NOT_RECALCULATED = "не пересчит"
 _INHERITED = "то же"
@@ -129,21 +155,34 @@ def _cell(header: list[str], body: list[list[str]], row_marker: str, column_mark
     return row[index]
 
 
-def _sentence_with(text: str, marker: str) -> str:
-    """Предложение текста, в котором встретился маркер."""
-    for sentence in re.split(r"(?<=[.!?])\s+", text):
-        if marker in sentence:
-            return sentence
-    raise AssertionError(f"в тексте нет предложения с {marker!r}")
+def _to_float(raw: str) -> float:
+    """«10 000» → 10000.0, «3,01» → 3.01."""
+    compact = re.sub(r"[\s\u00a0\u202f]+", "", raw)
+    return float(compact.replace(",", "."))
 
 
 def _numbers(text: str) -> list[float]:
     """Числа текста: «10 000» → 10000, «3,01» → 3.01, «0,4» → 0.4, «≈ 10 ₽» → 10."""
-    found: list[float] = []
-    for match in _NUMBER_RE.finditer(text):
-        raw = re.sub(r"[\s\u00a0\u202f]+", "", match.group(0))
-        found.append(float(raw.replace(",", ".")))
-    return found
+    return [_to_float(match.group(0)) for match in _NUMBER_RE.finditer(text)]
+
+
+def _money_numbers(text: str) -> list[float]:
+    """Числа, записанные с валютой: «10 000 ₽» → 10000, «0,4 ₽» → 0.4.
+
+    Число без валюты сюда не попадает: «25 вопросов» — не рубли.
+    """
+    return [_to_float(match.group(1)) for match in _MONEY_RE.finditer(text)]
+
+
+def _marker_window(text: str, marker: str, width: int) -> str | None:
+    """Кусок текста от маркера и на `width` символов; None — маркера нет.
+
+    Маркер ищется как отдельное слово: «документ» не ловит «документацию».
+    """
+    match = re.search(rf"(?<!\w){re.escape(marker)}(?!\w)", text, flags=re.IGNORECASE)
+    if match is None:
+        return None
+    return text[match.start() : match.start() + width]
 
 
 # --- вырезки из источников --------------------------------------------------------
@@ -190,18 +229,31 @@ def _plan_dialog_parts(variant: str) -> tuple[str, str]:
     return day, question
 
 
+def _budget_phrase() -> str:
+    """Месячный бюджет проекта из §4 — конкретная величина, а не «число среди чисел».
+
+    Опора R-05 варианта А: «месячный бюджет в 10 000 ₽». Читается только она — соседние
+    числа раздела («3–8 раз», «55 000 ₽/год», «73 500 ₽/мес») к бюджету не относятся и
+    приниматься не должны.
+    """
+    window = _marker_window(_business_section("4. Постоянные затраты"), "месячный бюджет", 60)
+    assert window is not None, "в §4 05_business.md нет «месячный бюджет»"
+    return window
+
+
 # --- модель гарда -----------------------------------------------------------------
 
 
 @dataclass(frozen=True)
 class Anchor:
-    """Опора гарда: кусок документа, где записан порог.
+    """Опора гарда: кусок документа, по которому читается величина порога.
 
     kind:
-      * ``stated`` — порог записан числом; значение обязано совпасть с JSON;
-      * ``recalculated`` — порог не пересчитан: в куске нет «не пересчитан» и нет числа;
-      * ``inherited`` — порог унаследован («то же»);
-      * ``absent`` — в куске не должно быть marker'а (в разделе не пересчитали).
+      * ``cell``    — ячейка таблицы или сводки: величина читается из неё;
+      * ``phrase``  — узкое окно текста после маркера: величина читается из окна;
+      * ``inherit`` — в куске написано «то же»: величина берётся у другого порога;
+      * ``section`` — раздел называет сценарий (маркер): пока сценарий не назван, раздел
+        молчит; назван — величина читается, если записана с валютой.
     """
 
     label: str
@@ -214,30 +266,48 @@ class Anchor:
 class Threshold:
     """Порог из JSON и его опоры в документах-источниках.
 
-    kind:
-      * ``number`` — в документе записано число;
-      * ``null`` — в документе «не пересчитан», в JSON стоит null;
-      * ``inherited`` — в документе «то же», значение наследуется у inherits.
+    Состояние порога («число» / «не пересчитано» / «то же») в тесте не зашито: оно
+    вычисляется по документам.
     """
 
     variant: str
     group: str
     field: str
-    kind: str
     anchors: tuple[Anchor, ...]
     inherits: tuple[str, str, str] | None = None
 
+    @property
+    def key(self) -> tuple[str, str, str]:
+        return (self.variant, self.group, self.field)
+
+
+@dataclass(frozen=True)
+class Reading:
+    """Что источник говорит о пороге.
+
+    kind:
+      * ``number``     — величина названа числом (values — это число);
+      * ``ambiguous``  — в куске несколько чисел с валютой, какое именно — неясно;
+      * ``not_stated`` — источник прямо говорит «не пересчитано»;
+      * ``mentioned``  — источник называет сценарий, но величину в нём прочитать нельзя;
+      * ``inherited``  — источник говорит «то же» (величина — у другого порога);
+      * ``silent``     — источник о пороге молчит.
+    """
+
+    kind: str
+    values: frozenset[float] = frozenset()
+
 
 EXPECTATIONS: tuple[Threshold, ...] = (
+    # --- вариант А: канон 05_business.md §3.1 ---
     Threshold(
         variant="A",
         group="dialog",
         field="max_rub_per_day",
-        kind="number",
         anchors=(
             Anchor(
                 label="05_business.md §3.1: «Сутки диалога» → «Себестоимость»",
-                kind="stated",
+                kind="cell",
                 extract=lambda: _business_cell(
                     "3.1 Себестоимость",
                     ("Продукт", "Себестоимость"),
@@ -247,7 +317,7 @@ EXPECTATIONS: tuple[Threshold, ...] = (
             ),
             Anchor(
                 label="сводка G17-S1-план.md: «Вопрос в диалоге», вариант А",
-                kind="stated",
+                kind="cell",
                 extract=lambda: _plan_dialog_parts("A")[0],
             ),
         ),
@@ -256,12 +326,11 @@ EXPECTATIONS: tuple[Threshold, ...] = (
         variant="A",
         group="dialog",
         field="max_rub_per_question",
-        kind="number",
         anchors=(
             # В §3.1 цены вопроса нет: порог 0,4 ₽ записан только в сводке.
             Anchor(
                 label="сводка G17-S1-план.md: «Вопрос в диалоге», вариант А",
-                kind="stated",
+                kind="cell",
                 extract=lambda: _plan_dialog_parts("A")[1],
             ),
         ),
@@ -270,11 +339,10 @@ EXPECTATIONS: tuple[Threshold, ...] = (
         variant="A",
         group="document",
         field="max_rub",
-        kind="number",
         anchors=(
             Anchor(
                 label="05_business.md §3.1: «Документ» → «Себестоимость»",
-                kind="stated",
+                kind="cell",
                 extract=lambda: _business_cell(
                     "3.1 Себестоимость",
                     ("Продукт", "Себестоимость"),
@@ -284,7 +352,7 @@ EXPECTATIONS: tuple[Threshold, ...] = (
             ),
             Anchor(
                 label="сводка G17-S1-план.md: «Документ-синтез», вариант А",
-                kind="stated",
+                kind="cell",
                 extract=lambda: _plan_cell("Документ-синтез", "вариант А"),
             ),
         ),
@@ -293,11 +361,10 @@ EXPECTATIONS: tuple[Threshold, ...] = (
         variant="A",
         group="forecast",
         field="max_rub_per_user_month",
-        kind="number",
         anchors=(
             Anchor(
                 label="05_business.md §3.1: «Бесплатный слой» → «Себестоимость»",
-                kind="stated",
+                kind="cell",
                 extract=lambda: _business_cell(
                     "3.1 Себестоимость",
                     ("Продукт", "Себестоимость"),
@@ -307,7 +374,7 @@ EXPECTATIONS: tuple[Threshold, ...] = (
             ),
             Anchor(
                 label="сводка G17-S1-план.md: «Утренний прогноз», вариант А",
-                kind="stated",
+                kind="cell",
                 extract=lambda: _plan_cell("Утренний прогноз", "вариант А"),
             ),
         ),
@@ -316,31 +383,28 @@ EXPECTATIONS: tuple[Threshold, ...] = (
         variant="A",
         group="r05",
         field="max_rub_per_month_5000_mau",
-        kind="number",
         anchors=(
             Anchor(
                 label="сводка G17-S1-план.md: «Итог R-05», вариант А",
-                kind="stated",
+                kind="cell",
                 extract=lambda: _plan_cell("Итог R-05", "вариант А"),
             ),
             Anchor(
-                label="05_business.md §4: «месячный бюджет»",
-                kind="stated",
-                extract=lambda: _sentence_with(
-                    _business_section("4. Постоянные затраты"), "месячный бюджет"
-                ),
+                label="05_business.md §4: «месячный бюджет в N ₽»",
+                kind="phrase",
+                extract=_budget_phrase,
             ),
         ),
     ),
+    # --- вариант Б: канон 05_business.md §3.5 ---
     Threshold(
         variant="B",
         group="dialog",
         field="max_rub_per_question",
-        kind="number",
         anchors=(
             Anchor(
                 label="05_business.md §3.5: «Opus 5» → «₽ за вопрос»",
-                kind="stated",
+                kind="cell",
                 extract=lambda: _business_cell(
                     "3.5 Пересчёт себестоимости под Opus 5",
                     ("Модель", "₽ за вопрос"),
@@ -350,7 +414,7 @@ EXPECTATIONS: tuple[Threshold, ...] = (
             ),
             Anchor(
                 label="сводка G17-S1-план.md: «Вопрос в диалоге», вариант Б",
-                kind="stated",
+                kind="cell",
                 extract=lambda: _plan_dialog_parts("B")[1],
             ),
         ),
@@ -359,11 +423,10 @@ EXPECTATIONS: tuple[Threshold, ...] = (
         variant="B",
         group="dialog",
         field="max_rub_per_day",
-        kind="number",
         anchors=(
             Anchor(
                 label="05_business.md §3.5: «25 (средний)» → «Себестоимость»",
-                kind="stated",
+                kind="cell",
                 extract=lambda: _business_cell(
                     "3.5 Пересчёт себестоимости под Opus 5",
                     ("Вопросов за сутки", "Себестоимость"),
@@ -373,7 +436,7 @@ EXPECTATIONS: tuple[Threshold, ...] = (
             ),
             Anchor(
                 label="сводка G17-S1-план.md: «Вопрос в диалоге», вариант Б",
-                kind="stated",
+                kind="cell",
                 extract=lambda: _plan_dialog_parts("B")[0],
             ),
         ),
@@ -382,16 +445,15 @@ EXPECTATIONS: tuple[Threshold, ...] = (
         variant="B",
         group="document",
         field="max_rub",
-        kind="null",
         anchors=(
             Anchor(
                 label="сводка G17-S1-план.md: «Документ-синтез», вариант Б",
-                kind="recalculated",
+                kind="cell",
                 extract=lambda: _plan_cell("Документ-синтез", "вариант Б"),
             ),
             Anchor(
-                label="05_business.md §3.5: нет «документ»",
-                kind="absent",
+                label="05_business.md §3.5: сценарий «документ» не назван",
+                kind="section",
                 extract=lambda: _business_section("3.5 Пересчёт себестоимости под Opus 5"),
                 marker="документ",
             ),
@@ -401,17 +463,16 @@ EXPECTATIONS: tuple[Threshold, ...] = (
         variant="B",
         group="forecast",
         field="max_rub_per_user_month",
-        kind="inherited",
         inherits=("A", "forecast", "max_rub_per_user_month"),
         anchors=(
             Anchor(
                 label="сводка G17-S1-план.md: «Утренний прогноз», вариант Б",
-                kind="inherited",
+                kind="inherit",
                 extract=lambda: _plan_cell("Утренний прогноз", "вариант Б"),
             ),
             Anchor(
-                label="05_business.md §3.5: нет «прогноз»",
-                kind="absent",
+                label="05_business.md §3.5: сценарий «прогноз» не назван",
+                kind="section",
                 extract=lambda: _business_section("3.5 Пересчёт себестоимости под Opus 5"),
                 marker="прогноз",
             ),
@@ -421,22 +482,124 @@ EXPECTATIONS: tuple[Threshold, ...] = (
         variant="B",
         group="r05",
         field="max_rub_per_month_5000_mau",
-        kind="null",
         anchors=(
             Anchor(
                 label="сводка G17-S1-план.md: «Итог R-05», вариант Б",
-                kind="recalculated",
+                kind="cell",
                 extract=lambda: _plan_cell("Итог R-05", "вариант Б"),
             ),
             Anchor(
-                label="05_business.md §3.5: нет «R-05»",
-                kind="absent",
+                label="05_business.md §3.5: риск «R-05» не назван",
+                kind="section",
                 extract=lambda: _business_section("3.5 Пересчёт себестоимости под Opus 5"),
-                marker="r-05",
+                marker="R-05",
             ),
         ),
     ),
 )
+
+BY_KEY: dict[tuple[str, str, str], Threshold] = {t.key: t for t in EXPECTATIONS}
+
+
+# --- чтение величины и ожидаемое значение -----------------------------------------
+
+
+def _read_anchor(anchor: Anchor) -> Reading:
+    """Что источник говорит о пороге (см. Reading)."""
+    fragment = anchor.extract()
+    if anchor.kind == "inherit":
+        return Reading("inherited") if _INHERITED in fragment.lower() else Reading("silent")
+    if anchor.kind == "section":
+        window = _marker_window(fragment, anchor.marker, 120)
+        if window is None:
+            return Reading("silent")
+        money = _money_numbers(window)
+        if len(money) == 1:
+            return Reading("number", frozenset(money))
+        if len(money) > 1:
+            return Reading("ambiguous", frozenset(money))
+        return Reading("mentioned")
+    money = _money_numbers(fragment)
+    if len(money) == 1:
+        return Reading("number", frozenset(money))
+    if len(money) > 1:
+        return Reading("ambiguous", frozenset(money))
+    if _NOT_RECALCULATED in fragment.lower():
+        return Reading("not_stated")
+    numbers = _numbers(fragment)
+    if len(numbers) == 1:
+        return Reading("number", frozenset(numbers))
+    if len(numbers) > 1:
+        return Reading("ambiguous", frozenset(numbers))
+    return Reading("silent")
+
+
+def _collect(
+    threshold: Threshold,
+    stack: tuple[tuple[str, str, str], ...] = (),
+) -> tuple[str, frozenset[float], list[str]]:
+    """Что документы говорят о пороге.
+
+    Возвращает (режим, значения, ошибки):
+      * ``null``   — документ говорит «не пересчитано», ожидается null;
+      * ``number`` — ожидается одно из значений;
+      * ``any``    — величина названа, но прочитать её нельзя: ожидается любое число.
+    """
+    assert threshold.key not in stack, f"цикл наследования: {threshold.key}"
+    readings: list[tuple[str, Reading]] = []
+    for anchor in threshold.anchors:
+        reading = _read_anchor(anchor)
+        if reading.kind == "inherited":
+            assert threshold.inherits is not None, (
+                f"{threshold.key}: в источнике «то же», но не сказано, от какого порога"
+            )
+            parent = BY_KEY[threshold.inherits]
+            mode, values, errors = _collect(parent, stack + (threshold.key,))
+            assert not errors, f"{threshold.key}: не разобрался источник «то же» — {errors}"
+            if mode == "null":
+                readings.append((anchor.label, Reading("not_stated")))
+            else:
+                readings.append((anchor.label, Reading("number", values)))
+        else:
+            readings.append((anchor.label, reading))
+
+    numbers = [
+        (label, next(iter(reading.values)))
+        for label, reading in readings
+        if reading.kind == "number"
+    ]
+    ambiguous = [
+        (label, reading.values) for label, reading in readings if reading.kind == "ambiguous"
+    ]
+    not_stated = [label for label, reading in readings if reading.kind == "not_stated"]
+    mentioned = [label for label, reading in readings if reading.kind == "mentioned"]
+
+    errors: list[str] = []
+    if len({value for _, value in numbers}) > 1:
+        errors.append(
+            "источники называют разные величины: "
+            + ", ".join(f"{label} — {value:g}" for label, value in numbers)
+        )
+    for label, values in ambiguous:
+        for other_label, value in numbers:
+            if value not in values:
+                errors.append(
+                    f"{label}: величина {value:g} из «{other_label}» не входит в {sorted(values)}"
+                )
+    if not_stated and (numbers or ambiguous or mentioned):
+        errors.append(
+            "источник говорит «не пересчитан», а другой называет величину: "
+            + ", ".join(not_stated)
+        )
+
+    if numbers:
+        return "number", frozenset(value for _, value in numbers), errors
+    if ambiguous:
+        common = set.intersection(*(set(values) for _, values in ambiguous))
+        return "number", frozenset(common), errors
+    if mentioned:
+        return "any", frozenset(), errors
+    return "null", frozenset(), errors
 
 
 # --- helpers проверки --------------------------------------------------------------
@@ -451,39 +614,15 @@ def _json_value(variant: str, group: str, field: str):
     return _thresholds()["variants"][variant]["thresholds"][group][field]
 
 
-def _assert_stated(fragment: str, value: float, label: str) -> None:
-    """Порог должен совпасть с числом в документе — численно, а не строкой."""
-    numbers = _numbers(fragment)
-    assert numbers, f"{label}: в куске {fragment!r} нет ни одного числа"
-    if len(numbers) == 1:
-        assert numbers[0] == value, f"{label}: в документе {numbers[0]}, в порогах {value}"
-    else:
-        assert value in numbers, f"{label}: в документе {numbers}, в порогах {value}"
+def _declared_files(text: str) -> set[str]:
+    """Пути к документам, названные в объявлении `source`."""
+    return set(re.findall(r"docs/[\w\-/]+\.md", text))
 
 
-def _check_anchor(anchor: Anchor, value) -> None:
-    fragment = anchor.extract()
-    if anchor.kind == "stated":
-        assert value is not None, f"{anchor.label}: в порогах null, а в документе {fragment!r}"
-        _assert_stated(fragment, float(value), anchor.label)
-    elif anchor.kind == "recalculated":
-        assert _NOT_RECALCULATED in fragment.lower(), (
-            f"{anchor.label}: в документе нет «не пересчитан»: {fragment!r}"
-        )
-        assert not _numbers(fragment), (
-            f"{anchor.label}: в документе стоит число, "
-            f"а порог помечен «не пересчитан»: {fragment!r}"
-        )
-    elif anchor.kind == "inherited":
-        assert _INHERITED in fragment.lower(), (
-            f"{anchor.label}: в документе нет «то же»: {fragment!r}"
-        )
-    elif anchor.kind == "absent":
-        assert anchor.marker not in fragment.lower(), (
-            f"{anchor.label}: в документе появилось «{anchor.marker}» — порог надо пересчитать"
-        )
-    else:  # pragma: no cover - защита от опечатки в описании опоры
-        raise AssertionError(f"неизвестный вид опоры {anchor.kind!r}")
+def _declared_section(text: str) -> str | None:
+    """Номер раздела, названный в объявлении `source`: «§3.1» → «3.1»."""
+    match = re.search(r"§\s*(\d+(?:\.\d+)*)", text)
+    return match.group(1) if match else None
 
 
 # --- проверки ----------------------------------------------------------------------
@@ -510,25 +649,28 @@ def test_thresholds_file_shape():
     ids=lambda t: f"{t.variant}.{t.group}.{t.field}",
 )
 def test_threshold_matches_document_sources(порог: Threshold):
-    """Каждый порог из JSON совпадает с тем, как он записан в документах-источниках."""
-    value = _json_value(порог.variant, порог.group, порог.field)
-    inherits_value = None
-    if порог.inherits is not None:
-        inherits_value = _json_value(*порог.inherits)
-    if порог.kind == "null":
+    """Каждый порог из JSON совпадает с тем, как он записан в документах-источниках.
+
+    Ожидаемое значение вычисляется по документам: правка документа вместе с JSON (в том числе
+    переход `null` → число) — зелёный, рассинхрон — красный в обе стороны.
+    """
+    mode, values, errors = _collect(порог)
+    assert not errors, f"{порог.key}: " + "; ".join(errors)
+    value = _json_value(*порог.key)
+    if mode == "null":
         assert value is None, (
-            f"{порог.variant}.{порог.group}.{порог.field}: в документе «не пересчичено», "
-            f"а в порогах {value!r} (null — это «не пересчитано», а не 0)"
+            f"{порог.key}: в документе «не пересчитано», а в порогах {value!r} "
+            f"(null — это «не пересчитано», а не 0)"
         )
-    elif порог.kind == "inherited":
-        assert value == inherits_value, (
-            f"{порог.variant}.{порог.group}.{порог.field}: в документе «то же», "
-            f"в порогах {value!r} против {inherits_value!r} у {порог.inherits}"
+        return
+    assert value is not None, (
+        f"{порог.key}: в документе названа величина, а в порогах null — "
+        f"порог надо пересчитать в JSON"
+    )
+    if mode == "number":
+        assert float(value) in values, (
+            f"{порог.key}: в документе {sorted(values)}, в порогах {value}"
         )
-    else:
-        assert value is not None, f"{порог.variant}.{порог.group}.{порог.field}: порог не задан"
-    for anchor in порог.anchors:
-        _check_anchor(anchor, value)
 
 
 def test_every_threshold_in_json_has_an_anchor():
@@ -540,24 +682,82 @@ def test_every_threshold_in_json_has_an_anchor():
         for group, fields in body["thresholds"].items()
         for field in fields
     }
-    covered = {(t.variant, t.group, t.field) for t in EXPECTATIONS}
+    covered = {t.key for t in EXPECTATIONS}
     assert declared - covered == set(), (
         "пороги без опоры в гарде: "
         + ", ".join(f"{v}.{g}.{f}" for v, g, f in sorted(declared - covered))
     )
 
 
-def test_null_thresholds_are_null_not_zero():
+def test_null_thresholds_follow_the_document():
+    """Набор «не пересчитанных» порогов берётся из документов, а не зашит в тест.
+
+    null в JSON стоит ровно у тех порогов, документ которых говорит «не пересчитано».
+    """
+    data = _thresholds()
+    nulls = {
+        (variant, group, field)
+        for variant, body in data["variants"].items()
+        for group, fields in body["thresholds"].items()
+        for field, value in fields.items()
+        if value is None
+    }
+    from_documents = {t.key for t in EXPECTATIONS if _collect(t)[0] == "null"}
+    assert nulls == from_documents, (
+        f"null в JSON: {sorted(nulls)}; по документам «не пересчитано»: {sorted(from_documents)}"
+    )
+
+
+def test_null_is_not_zero():
     """null = «не пересчитано»: не 0 и не «порога нет»."""
     data = _thresholds()
-    nulls = (("B", "document", "max_rub"), ("B", "r05", "max_rub_per_month_5000_mau"))
-    for variant, group, field in nulls:
-        assert field in data["variants"][variant]["thresholds"][group], (
-            f"{variant}.{group}.{field}: порога нет в JSON, а должен быть null"
+    for variant, body in data["variants"].items():
+        for group, fields in body["thresholds"].items():
+            for field, value in fields.items():
+                if value is None:
+                    continue
+                assert value != 0, f"{variant}.{group}.{field}: 0 — не то же, что null"
+
+
+def test_declared_sources_match_guarded_sources():
+    """Объявленный в JSON `source` совпадает с тем, что гард реально охраняет.
+
+    Расхождение в любую сторону — красный: JSON не должен называть источник, которого
+    гард не читает, и гард не должен читать источник, который JSON не объявил.
+    """
+    data = _thresholds()
+    declared = _declared_files(data["source"])
+    for variant, body in data["variants"].items():
+        declared |= _declared_files(body["source"])
+        assert _declared_section(body["source"]) == CANON_SECTION[variant], (
+            f"вариант {variant}: в JSON объявлен раздел "
+            f"{_declared_section(body['source'])!r}, гард охраняет {CANON_SECTION[variant]!r}"
         )
-        value = _json_value(variant, group, field)
-        assert value is None, f"{variant}.{group}.{field}: ожидался null, получено {value!r}"
-        assert value != 0, f"{variant}.{group}.{field}: null не должен читаться как 0"
+    assert declared == set(GUARDED_FILES), (
+        f"объявлено в JSON: {sorted(declared)}; охраняет гард: {sorted(GUARDED_FILES)}"
+    )
+
+
+def test_declared_note_is_not_stale():
+    """`note` в JSON не устарела: гард на месте, семантика null — та же."""
+    note = _thresholds()["note"]
+    assert "tests/test_llm_cost_thresholds.py" in note, (
+        f"note не называет гард, который ловит дрейф: {note!r}"
+    )
+    assert (ROOT / "tests" / "test_llm_cost_thresholds.py").exists(), (
+        "note называет несуществующий файл гарда"
+    )
+    assert _NOT_RECALCULATED in note.lower(), (
+        f"note не объясняет, что значит null: {note!r}"
+    )
+
+
+def test_budget_anchor_reads_one_value():
+    """§4-опора читает конкретную величину бюджета, а не «число среди чисел раздела»."""
+    section = _business_section("4. Постоянные затраты")
+    assert len(_numbers(section)) > 10, "в §4 много чисел — опора обязана быть узкой"
+    money = _money_numbers(_budget_phrase())
+    assert len(money) == 1, f"§4-опора читает {len(money)} чисел, а должна — одно: {money}"
 
 
 @pytest.mark.parametrize(
@@ -575,11 +775,29 @@ def test_null_thresholds_are_null_not_zero():
         ("**3,01**", 3.01),
         ("≤ 3,01 ₽ за вопрос", 3.01),
         ("75 ₽", 75.0),
+        ("24 500 ₽/мес", 24500.0),
+        ("55 000 ₽/год", 55000.0),
+        ("**~1 ₽/мес**", 1.0),
     ],
 )
 def test_number_formats_are_read_numerically(текст: str, ожидаемое: float):
     """Допустимые форматы записи числа читаются численно — ложной тревоги быть не должно."""
     assert _numbers(текст) == [ожидаемое]
+
+
+@pytest.mark.parametrize(
+    ("текст", "ожидаемое"),
+    [
+        ("10 000 ₽", 10000.0),
+        ("24 500 ₽/мес", 24500.0),
+        ("**~1 ₽/мес**", 1.0),
+        ("≤ 3,01 ₽ за вопрос", 3.01),
+        ("75 ₽", 75.0),
+    ],
+)
+def test_money_formats_are_read_numerically(текст: str, ожидаемое: float):
+    """Число с валютой читается численно — «10 000 ₽» → 10000."""
+    assert _money_numbers(текст) == [ожидаемое]
 
 
 def test_same_value_in_different_formats_is_equal():
@@ -590,3 +808,8 @@ def test_same_value_in_different_formats_is_equal():
 def test_risk_id_is_not_read_as_a_number():
     """«R-05» — идентификатор риска, а не число."""
     assert _numbers("R-05 на топовую модель не пересчитан") == []
+
+
+def test_question_count_is_not_a_money_value():
+    """«25 вопросов» — не рубли: число без валюты в опору не попадает."""
+    assert _money_numbers("сутки из 25 вопросов ≈ 10 ₽") == [10.0]
