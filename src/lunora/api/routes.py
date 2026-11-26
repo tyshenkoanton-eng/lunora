@@ -38,6 +38,39 @@ from lunora.models.user import BirthTimePrecision, User
 
 router = APIRouter(prefix="/api")
 
+# F04/F09/В-1: движок нумерологии кириллический. Отказ онбординга по ФИО должен нести
+# человекочитаемое предупреждение, привязанное к полю ввода, а не только машинный код.
+_NAME_FIELD_RU = {
+    "surname": "фамилия",
+    "given": "имя",
+    "patronymic": "отчество",
+}
+
+
+def _name_reject_detail(exc: "NumerologyInputError") -> dict:
+    field_ru = _NAME_FIELD_RU.get(exc.field or "", "ФИО")
+    base = "Введите ФИО кириллицей, как в русскоязычном документе."
+    if exc.code == "latin_not_supported":
+        message = f"Поле «{field_ru}» заполнено латиницей. {base}"
+    elif exc.code == "mixed_script":
+        message = (
+            f"В поле «{field_ru}» смешаны кириллица и латиница. {base}"
+        )
+    elif exc.code in ("unsupported_letter", "invalid_character"):
+        message = (
+            f"В поле «{field_ru}» есть символ, который движок не принимает. {base}"
+        )
+    elif exc.code == "empty_name_part":
+        message = f"Заполните поле «{field_ru}»."
+    else:
+        message = base
+    return {
+        "error": "name_rejected",
+        "code": exc.code,
+        "field": exc.field,
+        "message": message,
+    }
+
 
 @router.post("/onboard", response_model=OnboardResponse)
 async def onboard(req: OnboardRequest):
@@ -94,7 +127,7 @@ async def onboard(req: OnboardRequest):
             if birth.name_current is not None:
                 normalize_name(birth.name_current)
         except NumerologyInputError as exc:
-            raise HTTPException(422, f"name_rejected:{exc.code}") from exc
+            raise HTTPException(422, _name_reject_detail(exc)) from exc
 
         moment = resolve_moment(birth)
         full = calculate(birth, moment)

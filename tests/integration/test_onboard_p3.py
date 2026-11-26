@@ -98,7 +98,14 @@ async def test_v1_latin_name_onboard_rejected_and_chart_not_saved(session_factor
             name_birth=NamePayload(surname="Smith", given="John", patronymic=None),
         ))
     assert exc.value.status_code == 422
-    assert "name_rejected" in exc.value.detail
+    detail = exc.value.detail
+    # В-1: отказ несёт человекочитаемое предупреждение, привязанное к полю ввода,
+    # а не только машинный код — «введите ФИО кириллицей».
+    assert detail["error"] == "name_rejected"
+    assert detail["code"] == "latin_not_supported"
+    assert detail["field"] == "surname"
+    assert "кириллиц" in detail["message"].lower()
+    assert "фамилия" in detail["message"].lower()
     async with session_factory() as s:
         q = select(User).where(User.telegram_id == 700_100_003)
         users = (await s.execute(q)).scalars().all()
