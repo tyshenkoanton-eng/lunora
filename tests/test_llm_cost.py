@@ -390,3 +390,212 @@ def _make(root: pathlib.Path) -> subprocess.CompletedProcess:
         env=env,
         check=False,
     )
+
+
+# ── политика additionalProperties: fail-closed (задача S3b-11) ──────────────
+#
+# Валидатор объявляет политику и держит её:
+#   false — «лишние поля запрещены»;
+#   true  — «ограничений нет» (легальная форма спецификации, отвергать нельзя);
+#   подсхема (dict) — неподдерживаемая форма → ошибка;
+#   объектный узел без additionalProperties — неподдерживаемая форма → ошибка.
+# Копии схемы — вымышленные структуры без ключей и реальных данных.
+
+
+def test_additional_properties_true_lets_extra_fields_pass():
+    """Критерий (а): true — «ограничений нет», лишние поля проходят."""
+    schema = {
+        "type": "object",
+        "additionalProperties": True,
+        "properties": {"a": {"type": "string"}},
+    }
+    assert llm_cost.validate({"a": "x", "b": 1}, schema) == []
+
+
+def test_additional_properties_false_forbids_extra_fields():
+    """Критерий (а), обратная сторона: false — «лишние поля запрещены»."""
+    schema = {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": {"a": {"type": "string"}},
+    }
+    errors = llm_cost.validate({"a": "x", "b": 1}, schema)
+    assert any("лишнее поле" in error for error in errors), errors
+
+
+def test_additional_properties_as_subschema_is_rejected():
+    """Критерий (б): подсхема — неподдерживаемая форма, ошибка, а не молчаливый пропуск."""
+    schema = {
+        "type": "object",
+        "additionalProperties": {"type": "string"},
+        "properties": {"a": {"type": "string"}},
+    }
+    errors = llm_cost.validate({"a": "x"}, schema)
+    assert errors, "подсхема в additionalProperties обязана давать ошибку"
+    assert any("additionalProperties" in error for error in errors), errors
+
+
+def test_object_node_without_additional_properties_is_rejected():
+    """Критерий (в): объектный узел без additionalProperties — неподдерживаемая форма."""
+    schema = {"type": "object", "properties": {"a": {"type": "string"}}}
+    errors = llm_cost.validate({"a": "x"}, schema)
+    assert errors, "объектный узел без additionalProperties обязан давать ошибку"
+    assert any("additionalProperties" in error for error in errors), errors
+
+
+def test_unknown_keyword_in_reachable_node_is_rejected():
+    """Критерий (г): неизвестное ключевое слово в достижимом узле → ошибка."""
+    schema = {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": {"a": {"type": "string", "unevaluatedProperties": False}},
+    }
+    errors = llm_cost.validate({"a": "x"}, schema)
+    assert any("неподдерживаемое ключевое слово" in error for error in errors), errors
+
+
+# Проба на каждое ключевое слово: схема, нарушающая именно это слово, и ожидаемый
+# текст ошибки. Слово, добавленное в список «известных» без реализации, пробы не
+# имеет — тест ниже на этом и падает.
+CONSTRAINT_PROBES: dict[str, tuple[dict, object, str]] = {
+    "$defs": (
+        {"$defs": {"s": {"type": "string"}}, "$ref": "#/$defs/s"},
+        5,
+        "не соответствует",
+    ),
+    "$ref": (
+        {"$defs": {"s": {"type": "string"}}, "$ref": "#/$defs/s"},
+        5,
+        "не соответствует",
+    ),
+    "additionalProperties": (
+        {"type": "object", "additionalProperties": False, "properties": {"a": {}}},
+        {"b": 1},
+        "лишнее поле",
+    ),
+    "const": ({"const": 1}, 2, "const"),
+    "enum": ({"enum": ["a", "b"]}, "c", "не входит"),
+    "exclusiveMaximum": ({"exclusiveMaximum": 5}, 5, "exclusiveMaximum"),
+    "exclusiveMinimum": ({"exclusiveMinimum": 5}, 5, "exclusiveMinimum"),
+    "items": ({"type": "array", "items": {"type": "string"}}, [1], "не соответствует"),
+    "maxItems": ({"type": "array", "maxItems": 1}, [1, 2], "maxItems"),
+    "maxLength": ({"type": "string", "maxLength": 1}, "ab", "maxLength"),
+    "maximum": ({"type": "number", "maximum": 1}, 2, "maximum"),
+    "minItems": ({"type": "array", "minItems": 2}, [1], "minItems"),
+    "minLength": ({"type": "string", "minLength": 3}, "ab", "minLength"),
+    "minimum": ({"type": "number", "minimum": 1}, 0, "minimum"),
+    "pattern": ({"type": "string", "pattern": "^a$"}, "b", "шаблон"),
+    "properties": (
+        {
+            "type": "object",
+            "additionalProperties": False,
+            "properties": {"a": {"type": "string"}},
+        },
+        {"a": 1},
+        "не соответствует",
+    ),
+    "required": (
+        {
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["a"],
+            "properties": {"a": {"type": "string"}},
+        },
+        {},
+        "обязательного поля",
+    ),
+    "type": ({"type": "string"}, 5, "не соответствует"),
+}
+
+# Аннотация реализована, если валидатор её знает и молча пропускает.
+ANNOTATION_PROBES: dict[str, object] = {
+    "$comment": "текст",
+    "$id": "https://example.test/schema.json",
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "default": 1,
+    "deprecated": True,
+    "description": "описание",
+    "examples": [1, 2],
+    "readOnly": True,
+    "title": "Заголовок",
+    "writeOnly": False,
+}
+
+
+def test_known_constraint_keywords_are_implemented():
+    """Критерий (д): инвариант «слова из списка известных ⊆ реализованные».
+
+    Слово, добавленное в CONSTRAINT_KEYWORDS без реализации, пробы не имеет —
+    тест падает. Слово с пробой, но без проверки, тоже падает: нарушение не поймано.
+    """
+    missing = sorted(llm_cost.CONSTRAINT_KEYWORDS - set(CONSTRAINT_PROBES))
+    assert not missing, f"для ключевых слов нет проверки реализации: {missing}"
+    stale = sorted(set(CONSTRAINT_PROBES) - llm_cost.CONSTRAINT_KEYWORDS)
+    assert not stale, f"в пробах есть слова, которых нет в списке известных: {stale}"
+    for keyword, (schema, instance, needle) in CONSTRAINT_PROBES.items():
+        errors = llm_cost.validate(instance, schema)
+        assert errors, f"ключевое слово {keyword!r} не реализовано: нарушение не поймано"
+        assert any(needle in error for error in errors), (
+            f"ключевое слово {keyword!r} реализовано неверно: {errors}"
+        )
+
+
+def test_known_annotation_keywords_are_ignored():
+    """Критерий (д), вторая половина: аннотация без реализации — тоже падение."""
+    missing = sorted(llm_cost.ANNOTATION_KEYWORDS - set(ANNOTATION_PROBES))
+    assert not missing, f"для аннотаций нет проверки: {missing}"
+    for keyword, value in ANNOTATION_PROBES.items():
+        errors = llm_cost.validate("x", {keyword: value})
+        assert not errors, f"аннотация {keyword!r} не проигнорирована: {errors}"
+
+
+# ── критерий (е): зафиксированные мутации копии схемы ───────────────────────
+
+
+def _mutate_additional_properties_subschema(schema: dict) -> None:
+    schema["properties"]["verdict"]["additionalProperties"] = {"type": "string"}
+
+
+def _mutate_object_node_without_additional_properties(schema: dict) -> None:
+    del schema["properties"]["pricing"]["additionalProperties"]
+
+
+def _mutate_unknown_keyword(schema: dict) -> None:
+    schema["properties"]["verdict"]["unevaluatedProperties"] = False
+
+
+SCHEMA_MUTATIONS = [
+    (
+        "additionalProperties-подсхема",
+        _mutate_additional_properties_subschema,
+        "additionalProperties",
+    ),
+    (
+        "объектный узел без additionalProperties",
+        _mutate_object_node_without_additional_properties,
+        "additionalProperties",
+    ),
+    (
+        "неизвестное ключевое слово",
+        _mutate_unknown_keyword,
+        "неподдерживаемое ключевое слово",
+    ),
+]
+
+
+@pytest.mark.parametrize(
+    ("name", "mutate", "needle"),
+    SCHEMA_MUTATIONS,
+    ids=[mutation[0] for mutation in SCHEMA_MUTATIONS],
+)
+def test_mutated_schema_copy_fails_closed(repo, name, mutate, needle):
+    """Критерий (е): каждая зафиксированная мутация копии схемы роняет проверку."""
+    schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
+    mutate(schema)
+    (repo / "scripts" / "spike" / "llm_cost.schema.json").write_text(
+        json.dumps(schema, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    _write_artifact(repo, _artifact())
+    result = _run(repo)
+    assert result.returncode == 1, result.stdout
+    assert needle in result.stdout
