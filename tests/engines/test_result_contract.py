@@ -15,6 +15,12 @@ def test_reason_and_stability_vocabularies_match_spec():
         "no_birth_time",
         "no_place",
         "no_sex",
+        # G17-S2f (F04/F09): контур имени нумерологии — обязательное ФИО, но вырожденные
+        # и неподдержанные случаи оформляются явным not_computed, не computed(None)
+        "no_name",
+        "no_vowels",
+        "no_consonants",
+        "name_not_supported",
         "not_applicable_latitude",
         "rule_not_formalized",
         "out_of_v1",
@@ -37,6 +43,12 @@ def test_not_computed_result_has_reason_and_no_value():
     assert r.value is None
     assert r.not_computed == "rule_not_formalized"
     assert not r.is_computed
+
+
+def test_computed_none_is_forbidden():
+    # F09: частичный результат под видом посчитанного запрещён — только явный not_computed
+    with pytest.raises(ValueError, match="None"):
+        Result.computed(Rule("num.maturity", "0.1.0"), None)
 
 
 def test_unknown_reason_rejected():

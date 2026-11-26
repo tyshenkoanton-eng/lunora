@@ -33,11 +33,11 @@ def test_chinese_chart():
         year_pillar=BaziPillar(
             stem="庚", branch="午", element="Metal", yin_yang="Yang", animal="Horse"
         ),
-        element_balance={"Wood": 2, "Fire": 3},
+        visible_stem_counts={"Wood": 2, "Fire": 3},
     )
     d = chart_to_dict(c)
     assert d["year_pillar"]["stem"] == "庚"
-    assert d["element_balance"]["Fire"] == 3
+    assert d["visible_stem_counts"]["Fire"] == 3
 
 
 def test_numerology_pythagoras():

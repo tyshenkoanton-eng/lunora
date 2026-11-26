@@ -103,17 +103,21 @@ input:
   zone: Europe/Moscow
   sex: f
 reference:
-  source: bazi.biz (карта E) + ENGINE-SPEC §5.4 (смена дня 23:00)
+  # F08 (G17-S2f): происхождение дня-границы E — ПРАВИЛО §5.4, а не ручная сверка bazi.biz с TST.
+  # TST-галочку для E снять не удалось (см. evidence), поэтому день-граница выведена из правила
+  # 23:00 и подтверждена оракулом cnlunar (совпал: столп дня 乙未). Нетст-строка bazi.biz даёт
+  # те же столпы, но она НЕ о поведении TST на границе.
+  source: ENGINE-SPEC §5.4 (правило 23:00) + cnlunar (оракул, подтверждает) [rule-derived]
   settings:
     day_border: на часах 15.06 00:50, по TST ещё 14.06 23:20; правило 23:00 → столп дня 15.06 (乙未)
     note: 'при смене в полночь было бы 甲午 — альтернатива только для сверки (§5.4)'
   captured_at: '2026-11-22'
-  captured_by: Антон (bazi.biz) + Claude (§5.4); TST-вариант E выведен из карт A/C
+  captured_by: Claude (правило §5.4) + cnlunar (оракул); bazi.biz TST-вариант E НЕ снимался
   evidence_file: evidence/bazi-biz-cards.md
 versions:
   tz: 2026f
   ephemeris: DE440s (SHA-256 c1c7feea…49f2), Skyfield 1.55
-  reference_service: bazi.biz (ручной) + lunar-python 1.4.9, cnlunar 0.2 (оракулы)
+  reference_service: правило §5.4 (rule-derived) + cnlunar 0.2 (оракул, подтверждает день E)
 expected:
 - path: pillars.year
   value: 丁卯

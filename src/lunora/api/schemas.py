@@ -3,9 +3,15 @@ from datetime import date, time
 from pydantic import BaseModel, Field
 
 
+class NamePayload(BaseModel):
+    surname: str = Field(max_length=100)
+    given: str = Field(max_length=100)
+    patronymic: str | None = Field(default=None, max_length=100)
+
+
 class OnboardRequest(BaseModel):
     telegram_id: int
-    name: str = Field(max_length=100)
+    name: str = Field(max_length=100)  # форма обращения (салютация)
     birth_date: date
     birth_time: time | None = None
     birth_time_precision: str = "unknown"
@@ -13,6 +19,11 @@ class OnboardRequest(BaseModel):
     birth_lat: float
     birth_lon: float
     timezone: str
+    sex: str = Field(pattern="^[mf]$")  # F04: пол обязателен (да-юнь Ба-Цзы)
+    name_birth: NamePayload  # F04: ФИО при рождении (контур имени нумерологии)
+    name_current: NamePayload | None = None  # §3.5: дельта «при рождении → сейчас»
+    place_id: str | None = None  # F02: реестр спорных поясов
+    region: str | None = None
     init_data: str
 
 

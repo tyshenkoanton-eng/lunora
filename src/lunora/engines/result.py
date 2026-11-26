@@ -21,6 +21,10 @@ NOT_COMPUTED_REASONS = frozenset(
         "no_birth_time",
         "no_place",
         "no_sex",
+        "no_name",
+        "no_vowels",
+        "no_consonants",
+        "name_not_supported",
         "not_applicable_latitude",
         "rule_not_formalized",
         "out_of_v1",
@@ -68,6 +72,13 @@ class Result:
     def computed(
         cls, rule: Rule, value: Any, *, stability: str = "stable", **detail: Any
     ) -> Result:
+        # F09: computed(None) запрещён — частичный результат под видом посчитанного.
+        # Непосчитанная величина оформляется только через `missing(...)` с причиной.
+        if value is None:
+            raise ValueError(
+                f"Result.computed({rule.id}) со значением None запрещён (F09): "
+                "используйте Result.missing(rule, reason)"
+            )
         return cls(rule=rule, value=value, stability=stability, detail=dict(detail))
 
     @classmethod

@@ -206,8 +206,8 @@ class NameNumbers:
 
 def _name_number(key: str, raw: int, empty_code: str | None = None) -> Result:
     if raw == 0 and empty_code:
-        # §3.3 вырожденный случай: ноль числом имени не является
-        return Result.computed(_rule(key), None, code=empty_code)
+        # §3.3 вырожденный случай: ноль числом имени не является (fail closed, F09)
+        return Result.missing(_rule(key), empty_code)
     return _number(key, raw)
 
 
@@ -404,6 +404,7 @@ def calculate(
     birth_date: str | date | None = None,
     name_birth: FullName | None = None,
     calc_date: str | date | None = None,
+    name_current: FullName | None = None,
 ) -> NumerologyResult:
     """Полный расчёт по §7.3. Дата — «ДД.ММ.ГГГГ» или `date`; «сегодня» приходит параметром."""
     values: dict[str, Result] = {}
@@ -424,15 +425,52 @@ def calculate(
         nn = name_numbers(norm)
         sums = nn.sums
         values |= {"EXPRESSION": nn.expression, "HEART": nn.heart, "PERSONA": nn.persona}
+        if name_current is not None:
+            values |= _name_change(norm, name_current)
     if "LIFE_PATH" in values:
         expr = values.get("EXPRESSION")
-        if expr is not None and expr.value:
+        if expr is not None and expr.is_computed:
             # §4.3: складываются итоговые значения, мастер-числа как есть
             values["MATURITY"] = _number("MATURITY", values["LIFE_PATH"].value + expr.value)
         else:
-            # §4.3: без ФИО число зрелости не определено (null)
-            values["MATURITY"] = Result.computed(_rule("MATURITY"), None)
+            # §4.3: число зрелости требует ФИО; без него — непосчитано (F09, не null)
+            values["MATURITY"] = Result.missing(_rule("MATURITY"), "no_name")
     return NumerologyResult(values=values, name=norm, name_sums=sums)
+
+
+def _name_change(birth: NormalizedName, current: FullName) -> dict[str, Result]:
+    """Второй набор чисел имени по `name_current` и дельта «при рождении → сейчас» (§3.5).
+
+    Движок не выводит «лучше/хуже» (§8): только пара значений по каждому из трёх чисел и
+    признак «изменилось/нет». Если после нормализации текущее ФИО совпало с ФИО при рождении —
+    дельта не строится (`name_equals_current`).
+    """
+    cur = normalize(current)
+    cur_nn = name_numbers(cur)
+    out: dict[str, Result] = {
+        "EXPRESSION_CURRENT": cur_nn.expression,
+        "HEART_CURRENT": cur_nn.heart,
+        "PERSONA_CURRENT": cur_nn.persona,
+    }
+    if cur.working == birth.working:
+        out["NAME_CHANGE"] = Result.missing(
+            _rule("NAME_CHANGE"), "out_of_v1", flag="name_equals_current"
+        )
+        return out
+    birth_nn = name_numbers(birth)
+    delta: dict[str, Any] = {}
+    for key, b, c in (
+        ("EXPRESSION", birth_nn.expression, cur_nn.expression),
+        ("HEART", birth_nn.heart, cur_nn.heart),
+        ("PERSONA", birth_nn.persona, cur_nn.persona),
+    ):
+        bv = b.value if b.is_computed else None
+        cv = c.value if c.is_computed else None
+        delta[key] = {"birth": bv, "current": cv, "changed": bv != cv}
+    out["NAME_CHANGE"] = Result.computed(
+        _rule("NAME_CHANGE"), delta, changed=any(d["changed"] for d in delta.values())
+    )
+    return out
 
 
 def snapshot(r: NumerologyResult) -> dict[str, Any]:

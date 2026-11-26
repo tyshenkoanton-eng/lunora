@@ -18,6 +18,9 @@ class Settings(BaseSettings):
     llm_base_url: str = "https://openrouter.ai/api/v1"
     llm_model: str = "openai/gpt-4o-mini"
 
+    # серверный перец для input_hash карты: HMAC, а не голый SHA-256 входа (ARCHITECTURE §3.2)
+    calc_server_pepper: str = "lunora-dev-pepper-change-me"
+
     debug: bool = False
 
 

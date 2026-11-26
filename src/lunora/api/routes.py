@@ -1,4 +1,5 @@
 import hashlib
+import hmac
 import secrets
 import uuid
 from datetime import datetime
@@ -15,13 +16,16 @@ from lunora.api.schemas import (
     OnboardResponse,
     PortraitResponse,
 )
-from lunora.calc.engine import calculate
+from lunora.calc.engine import calculate, provenance, resolve_moment
 from lunora.calc.geocode import geocode_city
 from lunora.calc.serialize import chart_to_dict
 from lunora.calc.timezone import timezone_for
 from lunora.calc.types import BirthData
 from lunora.calc.types import BirthTimePrecision as CalcPrecision
+from lunora.config import settings
 from lunora.db import async_session
+from lunora.engines.numerology import FullName, NumerologyInputError
+from lunora.engines.numerology import normalize as normalize_name
 from lunora.interpret.portrait import (
     PORTRAIT_SYSTEM_PROMPT,
     build_interpretation_blocks,
@@ -33,6 +37,39 @@ from lunora.models.thread import Message, Thread
 from lunora.models.user import BirthTimePrecision, User
 
 router = APIRouter(prefix="/api")
+
+# F04/F09/В-1: движок нумерологии кириллический. Отказ онбординга по ФИО должен нести
+# человекочитаемое предупреждение, привязанное к полю ввода, а не только машинный код.
+_NAME_FIELD_RU = {
+    "surname": "фамилия",
+    "given": "имя",
+    "patronymic": "отчество",
+}
+
+
+def _name_reject_detail(exc: "NumerologyInputError") -> dict:
+    field_ru = _NAME_FIELD_RU.get(exc.field or "", "ФИО")
+    base = "Введите ФИО кириллицей, как в русскоязычном документе."
+    if exc.code == "latin_not_supported":
+        message = f"Поле «{field_ru}» заполнено латиницей. {base}"
+    elif exc.code == "mixed_script":
+        message = (
+            f"В поле «{field_ru}» смешаны кириллица и латиница. {base}"
+        )
+    elif exc.code in ("unsupported_letter", "invalid_character"):
+        message = (
+            f"В поле «{field_ru}» есть символ, который движок не принимает. {base}"
+        )
+    elif exc.code == "empty_name_part":
+        message = f"Заполните поле «{field_ru}»."
+    else:
+        message = base
+    return {
+        "error": "name_rejected",
+        "code": exc.code,
+        "field": exc.field,
+        "message": message,
+    }
 
 
 @router.post("/onboard", response_model=OnboardResponse)
@@ -52,6 +89,12 @@ async def onboard(req: OnboardRequest):
             birth_lat=req.birth_lat,
             birth_lon=req.birth_lon,
             timezone=req.timezone,
+            place_id=req.place_id,
+            region=req.region,
+            sex=req.sex,
+            name_surname=req.name_birth.surname,
+            name_given=req.name_birth.given,
+            name_patronymic=req.name_birth.patronymic,
             referral_code=secrets.token_urlsafe(12),
             consent_given_at=datetime.utcnow(),
         )
@@ -65,9 +108,29 @@ async def onboard(req: OnboardRequest):
             lat=req.birth_lat,
             lon=req.birth_lon,
             timezone=req.timezone,
+            sex=req.sex,
+            full_name=FullName(req.name_birth.surname, req.name_birth.given,
+                               req.name_birth.patronymic),
             name=req.name,
+            name_current=(
+                FullName(req.name_current.surname, req.name_current.given,
+                         req.name_current.patronymic)
+                if req.name_current else None
+            ),
+            place_id=req.place_id,
+            region=req.region,
         )
-        full = calculate(birth)
+        # F04/F09 (В-1): ФИО латиницей/смешанным алфавитом на онбординге — отказ 422, карта
+        # не сохраняется (§1.3). Движок вне API (пересчёты) считает контур имени not_computed.
+        try:
+            normalize_name(birth.full_name)
+            if birth.name_current is not None:
+                normalize_name(birth.name_current)
+        except NumerologyInputError as exc:
+            raise HTTPException(422, _name_reject_detail(exc)) from exc
+
+        moment = resolve_moment(birth)
+        full = calculate(birth, moment)
 
         w = chart_to_dict(full.western)
         v = chart_to_dict(full.vedic)
@@ -85,14 +148,29 @@ async def onboard(req: OnboardRequest):
         session.add(chart)
         await session.flush()
 
-        input_str = f"{req.birth_date}|{req.birth_time}|{req.birth_lat}|{req.birth_lon}"
+        prov = provenance(birth, moment)
+        input_str = (
+            f"{req.birth_date}|{req.birth_time}|{req.birth_lat}|{req.birth_lon}|"
+            f"{req.timezone}|{req.birth_time_precision}|{req.place_id}|{req.sex}"
+        )
+        # F07/ARCHITECTURE §3.2: HMAC с серверным перцем, а не голый SHA-256 входа
+        input_hash = hmac.new(
+            settings.calc_server_pepper.encode(), input_str.encode(), hashlib.sha256
+        ).hexdigest()
         run = CalculationRun(
             chart_id=chart.id,
             engine_version="0.1.0",
             zodiac_type="tropical+sidereal",
             ayanamsa="lahiri",
             house_system="placidus",
-            input_hash=hashlib.sha256(input_str.encode()).hexdigest(),
+            input_hash=input_hash,
+            timezone=req.timezone,
+            precision=req.birth_time_precision.lower(),
+            tolerance_minutes=birth.tolerance_minutes,
+            place_id=req.place_id,
+            region=req.region,
+            dispute_id=prov.get("dispute_id"),
+            provenance=prov,
         )
         session.add(run)
         await session.commit()

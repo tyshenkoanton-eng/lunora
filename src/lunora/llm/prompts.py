@@ -36,14 +36,27 @@ SAFETY_ADDENDUM_FINANCIAL = """
 со специалистом — астрология показывает тенденции, а не гарантии.»"""
 
 
+def _sign_text(p: dict) -> str | None:
+    """Знак для LLM-пакета с учётом §4.5 (F06): undetermined — не показываем; range — «A или B»."""
+    stab = p.get("stability", "stable")
+    if stab == "undetermined":
+        return None
+    if stab == "range" and p.get("values"):
+        return " или ".join(str(v) for v in p["values"])
+    return p.get("sign")
+
+
 def format_chart_data(chart_dict: dict) -> str:
     lines = []
 
     if w := chart_dict.get("western"):
         lines.append("### Западная астрология")
         for p in w.get("planets", []):
+            sign = _sign_text(p)
+            if sign is None:  # undetermined — вывод не опирается на непосчитанное (§4.6)
+                continue
             house_str = f" ({p['house']} дом)" if p.get("house") else ""
-            lines.append(f"- {p['name']}: {p['degree_in_sign']}° {p['sign']}{house_str}")
+            lines.append(f"- {p['name']}: {p['degree_in_sign']}° {sign}{house_str}")
         if aspects := w.get("aspects", []):
             top = sorted(aspects, key=lambda a: a["orb"])[:5]
             lines.append(
@@ -56,7 +69,10 @@ def format_chart_data(chart_dict: dict) -> str:
     if v := chart_dict.get("vedic"):
         lines.append("\n### Ведическая астрология (Lahiri)")
         for p in v.get("planets", []):
-            lines.append(f"- {p['name']}: {p['degree_in_sign']}° {p['sign']}")
+            sign = _sign_text(p)
+            if sign is None:
+                continue
+            lines.append(f"- {p['name']}: {p['degree_in_sign']}° {sign}")
         if nak := v.get("moon_nakshatra"):
             lines.append(
                 f"- Накшатра Луны: {nak['name']} (pada {nak['pada']}), владыка — {nak['lord']}"
@@ -77,8 +93,8 @@ def format_chart_data(chart_dict: dict) -> str:
         lines.append(
             f"- Дневной ствол: {c.get('day_master', '')} = {c.get('day_master_element', '')} ({c.get('day_master_yin_yang', '')})"
         )
-        if bal := c.get("element_balance"):
-            lines.append("- Баланс: " + ", ".join(f"{k} {v}" for k, v in bal.items()))
+        if bal := c.get("visible_stem_counts"):
+            lines.append("- Видимые стволы: " + ", ".join(f"{k} {v}" for k, v in bal.items()))
 
     if n := chart_dict.get("numerology"):
         lines.append("\n### Нумерология")

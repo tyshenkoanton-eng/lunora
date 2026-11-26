@@ -28,6 +28,9 @@ import geonames_vendor as gv  # noqa: E402
 OUT = ROOT / "src" / "lunora" / "timeplace" / "data" / "places_min.yaml"
 GOLDEN = ROOT / "tests" / "golden"
 NAMESAKES = (548408, 548410)  # Киров областной (Europe/Kirov) и Калужской обл. (Europe/Moscow)
+# G17-S2f (F02): места спорных поясов из tz_disputes — Джизак (TZD-001), Тирасполь и Бендеры
+# (TZD-002), чтобы сквозной onboard давал обе гипотезы. Полный справочник — фаза стройки.
+DISPUTE_PLACES = (1513886, 617239, 618577)
 
 
 def golden_ids() -> set[int]:
@@ -42,7 +45,7 @@ def golden_ids() -> set[int]:
 
 def main() -> int:
     cities = gv.load_cities()
-    wanted = sorted(golden_ids() | set(NAMESAKES))
+    wanted = sorted(golden_ids() | set(NAMESAKES) | set(DISPUTE_PLACES))
     records = []
     for gid in wanted:
         c = cities.get(gid)

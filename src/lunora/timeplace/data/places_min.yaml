@@ -120,12 +120,26 @@
   lat: 40.17765
   lon: 44.5126
   timezone: Asia/Yerevan
+- place_id: geonames:617239
+  name: Tiraspol
+  country: MD
+  admin1: '58'
+  lat: 46.84275
+  lon: 29.6284
+  timezone: Europe/Chisinau
 - place_id: geonames:618426
   name: Chisinau
   country: MD
   admin1: '57'
   lat: 47.00902
   lon: 28.85938
+  timezone: Europe/Chisinau
+- place_id: geonames:618577
+  name: Bender
+  country: MD
+  admin1: '62'
+  lat: 46.83158
+  lon: 29.47671
   timezone: Europe/Chisinau
 - place_id: geonames:625144
   name: Minsk
@@ -176,6 +190,13 @@
   lat: 41.26465
   lon: 69.21627
   timezone: Asia/Tashkent
+- place_id: geonames:1513886
+  name: Jizzax
+  country: UZ
+  admin1: '15'
+  lat: 40.13351
+  lon: 67.82956
+  timezone: Asia/Samarkand
 - place_id: geonames:1526384
   name: Almaty
   country: KZ
