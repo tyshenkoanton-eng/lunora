@@ -4,9 +4,10 @@ import secrets
 import uuid
 from datetime import datetime
 
-from fastapi import APIRouter, HTTPException, Query
+from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import select
 
+from lunora.api.auth import require_telegram_id
 from lunora.api.schemas import (
     AskRequest,
     AskResponse,
@@ -72,15 +73,38 @@ def _name_reject_detail(exc: "NumerologyInputError") -> dict:
     }
 
 
+async def _authorized_user(session, telegram_id: int, requested_user_id) -> User:
+    """Владелец = telegram_id из подписанной initData. user_id из пути/тела должен совпасть,
+    иначе 403 (IDOR-защита). Несуществующий telegram_id → 404; чужой user_id → 403, без
+    различения «нет карты»/«чужая карта» наружу."""
+    row = await session.execute(select(User).where(User.telegram_id == telegram_id))
+    user = row.scalar_one_or_none()
+    if not user:
+        raise HTTPException(404, "User not found")
+    if str(user.id) != str(requested_user_id):
+        raise HTTPException(
+            403,
+            {"error": "forbidden", "code": "not_owner", "message": "доступ только к своей карте"},
+        )
+    return user
+
+
 @router.post("/onboard", response_model=OnboardResponse)
-async def onboard(req: OnboardRequest):
+async def onboard(req: OnboardRequest, telegram_id: int = Depends(require_telegram_id)):
+    # Владелец берётся из подписанной initData, а не из тела: telegram_id в теле — только сверка.
+    if req.telegram_id != telegram_id:
+        raise HTTPException(
+            403,
+            {"error": "forbidden", "code": "telegram_id_mismatch",
+             "message": "telegram_id в запросе не совпадает с подписью"},
+        )
     async with async_session() as session:
-        existing = await session.execute(select(User).where(User.telegram_id == req.telegram_id))
+        existing = await session.execute(select(User).where(User.telegram_id == telegram_id))
         if existing.scalar_one_or_none():
             raise HTTPException(400, "User already exists")
 
         user = User(
-            telegram_id=req.telegram_id,
+            telegram_id=telegram_id,
             name=req.name,
             birth_date=req.birth_date,
             birth_time=req.birth_time,
@@ -182,8 +206,9 @@ async def onboard(req: OnboardRequest):
 
 
 @router.get("/chart/{user_id}", response_model=ChartResponse)
-async def get_chart(user_id: uuid.UUID):
+async def get_chart(user_id: uuid.UUID, telegram_id: int = Depends(require_telegram_id)):
     async with async_session() as session:
+        await _authorized_user(session, telegram_id, user_id)
         result = await session.execute(
             select(NatalChart)
             .where(NatalChart.user_id == user_id)
@@ -204,10 +229,11 @@ async def get_chart(user_id: uuid.UUID):
 
 
 @router.post("/ask", response_model=AskResponse)
-async def ask(req: AskRequest):
+async def ask(req: AskRequest, telegram_id: int = Depends(require_telegram_id)):
     user_id = uuid.UUID(req.user_id)
 
     async with async_session() as session:
+        await _authorized_user(session, telegram_id, user_id)
         chart_row = await session.execute(
             select(NatalChart)
             .where(NatalChart.user_id == user_id)
@@ -271,8 +297,9 @@ async def ask(req: AskRequest):
 
 
 @router.get("/portrait/{user_id}", response_model=PortraitResponse)
-async def get_portrait(user_id: uuid.UUID):
+async def get_portrait(user_id: uuid.UUID, telegram_id: int = Depends(require_telegram_id)):
     async with async_session() as session:
+        await _authorized_user(session, telegram_id, user_id)
         chart_row = await session.execute(
             select(NatalChart)
             .where(NatalChart.user_id == user_id)
