@@ -11,4 +11,4 @@
 | Блокер | — |
 | Следующий шаг | G17-S3a ЗАКРЫТ PASS (офлайн; docs/gates/G17-S3a-close.md): адаптер Telegram Stars, S1–S5 доказаны на aiogram + PostgreSQL. Открыто: живой смоук (docs/current/spike/payment_smoke.md) — вручную с Антоном, сначала тестовая среда Telegram. G17-S3b (стоимость LLM) — по решению Антона по модели. Фичи поверх — не строить, пока остаток спайка не доказан. |
 
-Подробная карта — `docs/05_roadmap.md`. Источник статуса — `docs/current/ROADMAP_STATUS.yaml`.
+Подробная карта — `docs/grillmax/16_roadmap.md`. Источник статуса — `docs/current/ROADMAP_STATUS.yaml`.

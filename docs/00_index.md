@@ -19,8 +19,8 @@
 | Аудитория | `grillmax/03_audience.md` |
 | Экономика | `grillmax/05_business.md` |
 | Бренд | `grillmax/06_brand.md`, `grillmax/brand.tokens.json` |
-| UX / экраны | `grillmax/06_ux.md`, `grillmax/07_mockups.md`, `grillmax/09_visual.md`, `grillmax/tokens.json` |
-| Архитектура | `grillmax/ARCHITECTURE.md`, `grillmax/API-КОНТРАКТ.md`, `grillmax/ENGINE-SPEC-РАСЧЕТ.md` |
+| UX / экраны | `grillmax/07_ux.md`, `grillmax/08_proto_lo.md`, `grillmax/09_visual.md`, `grillmax/tokens.json` |
+| Архитектура | `grillmax/11_architecture.md`, `grillmax/API-КОНТРАКТ.md`, `grillmax/ENGINE-SPEC-РАСЧЕТ.md` |
 | Аналитика / запуск | `grillmax/14_analytics.md`, `grillmax/15_launch.md` |
 | Дорожная карта + вердикт | `grillmax/16_roadmap.md` |
 | Решения (ADR) | `grillmax/ADR-001-эфемериды.md`, `grillmax/ADR-002-клиенты-и-движок.md`, `grillmax/ADR-003-token-driven-frontend.md`, `grillmax/РЕШЕНИЯ-БЛОКЕРЫ.md` |

@@ -3,7 +3,7 @@
 
 Для городов бывшего СССР от N жителей сравнивает зону IANA из GeoNames с зоной по
 координатам. Если зоны разные, считает, на скольких датах сетки 1930–2014 × 4 смещения
-расходятся (ARCHITECTURE.md §6.4). Расхождение > 0 — кандидат в tz_disputes, ручной разбор.
+расходятся (11_architecture.md §6.4). Расхождение > 0 — кандидат в tz_disputes, ручной разбор.
 
 Запуск:  python scripts/spike/tz_zone_crosscheck.py [--min-pop 100000] [--write REPORT.md]
 Нужно:   pip install -e ".[dev,oracle]"  (timezonefinder); GeoNames — вендоренный снимок

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""golden_audit — проверка формата golden-кейсов (G17, ARCHITECTURE.md §6.2 + versions B12).
+"""golden_audit — проверка формата golden-кейсов (G17, 11_architecture.md §6.2 + versions B12).
 
 Не считает карты: проверяет, что каждый кейс прослеживаем до внешнего эталона.
   - active   → reference {source, settings, captured_at, captured_by, evidence_file}

@@ -1,6 +1,6 @@
 """Тесты аудитора golden-кейсов (G17-S1, каркас).
 
-Формат — ARCHITECTURE.md §6.2 + versions (B12).
+Формат — 11_architecture.md §6.2 + versions (B12).
 """
 
 import importlib.util
