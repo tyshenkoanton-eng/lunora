@@ -44,9 +44,16 @@ def _req(**kw) -> OnboardRequest:
     return OnboardRequest(**base)
 
 
+async def _onboard(**kw):
+    # Прямой вызов маршрута: подставляем доверенный telegram_id (как из подписанной initData),
+    # совпадающий с телом. Проверку самой подписи покрывает test_auth / test_api_authz.
+    req = _req(**kw)
+    return await routes.onboard(req, telegram_id=req.telegram_id)
+
+
 async def test_f02_disputed_zone_through_onboard_yields_two_hypotheses(session_factory):
     # Джизак (TZD-001): place_id ведёт к реестру спорных поясов — в провенансе две гипотезы UTC
-    resp = await routes.onboard(_req(place_id="geonames:1513886"))
+    resp = await _onboard(place_id="geonames:1513886")
     async with session_factory() as s:
         user = (await s.execute(select(User).where(User.telegram_id == 700_100_001))).scalar_one()
         assert user.place_id == "geonames:1513886"
@@ -60,11 +67,11 @@ async def test_f02_disputed_zone_through_onboard_yields_two_hypotheses(session_f
 
 async def test_f02_tiraspol_region_dispute_through_onboard(session_factory):
     # Приднестровье (TZD-002): правило по региону admin1; окно 1990-05-06…1991-03-30
-    await routes.onboard(_req(
+    await _onboard(
         telegram_id=700_100_002, birth_date="1990-09-01", birth_city="Тирасполь",
         birth_lat=46.84, birth_lon=29.61, timezone="Europe/Chisinau",
         place_id="geonames:617239", region="geonames-admin1:MD.58",
-    ))
+    )
     async with session_factory() as s:
         run = (await s.execute(select(CalculationRun))).scalars().first()
     assert run.dispute_id == "TZD-002"
@@ -72,7 +79,7 @@ async def test_f02_tiraspol_region_dispute_through_onboard(session_factory):
 
 
 async def test_f07_calculation_run_records_full_provenance(session_factory):
-    await routes.onboard(_req(birth_time_precision="approximate_60"))
+    await _onboard(birth_time_precision="approximate_60")
     async with session_factory() as s:
         run = (await s.execute(select(CalculationRun))).scalars().first()
     prov = run.provenance
@@ -93,10 +100,10 @@ async def test_f07_calculation_run_records_full_provenance(session_factory):
 async def test_v1_latin_name_onboard_rejected_and_chart_not_saved(session_factory):
     from fastapi import HTTPException
     with pytest.raises(HTTPException) as exc:
-        await routes.onboard(_req(
+        await _onboard(
             telegram_id=700_100_003,
             name_birth=NamePayload(surname="Smith", given="John", patronymic=None),
-        ))
+        )
     assert exc.value.status_code == 422
     detail = exc.value.detail
     # В-1: отказ несёт человекочитаемое предупреждение, привязанное к полю ввода,
@@ -115,9 +122,9 @@ async def test_v1_latin_name_onboard_rejected_and_chart_not_saved(session_factor
 
 
 async def test_name_contour_stored_in_chart(session_factory):
-    await routes.onboard(_req(telegram_id=700_100_004,
+    await _onboard(telegram_id=700_100_004,
                               name_birth=NamePayload(surname="Куликов", given="Роман",
-                                                     patronymic="Николаевич")))
+                                                     patronymic="Николаевич"))
     async with session_factory() as s:
         chart = (await s.execute(select(NatalChart))).scalars().first()
     nn = chart.numerology["name_numbers"]

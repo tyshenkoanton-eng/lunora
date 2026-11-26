@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 board_gen — генерирует ROADMAP_BOARD.md (витрину) из docs/current/ROADMAP_STATUS.yaml.
 
@@ -168,12 +167,16 @@ def build_board(data: dict) -> str:
         if roadmap
         else "Подробная карта — путь не указан (ключ `roadmap_doc` в ROADMAP_STATUS.yaml)."
     )
+    lvl = level or "—"
+    gt = gate or "—"
+    sl = slice_ or "—"
+    st = status or "—"
     return f"""# {project} — дорожная карта (витрина)
 
 <!-- СГЕНЕРИРОВАНО scripts/board_gen.py из docs/current/ROADMAP_STATUS.yaml.
      Руками не править: правь источник и прогони `make board`. -->
 
-**Уровень:** {level or '—'} · **Гейт:** {gate or '—'} · **Слайс:** {slice_ or '—'} ({status or '—'})
+**Уровень:** {lvl} · **Гейт:** {gt} · **Слайс:** {sl} ({st})
 
 | | |
 |---|---|
