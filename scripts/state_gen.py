@@ -1,5 +1,4 @@
 #!/usr/bin/env python3
-# -*- coding: utf-8 -*-
 """
 state_gen — генерирует управляемый блок в docs/CURRENT_STATE.md из
 docs/current/ROADMAP_STATUS.yaml.
