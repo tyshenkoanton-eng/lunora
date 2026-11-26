@@ -7,6 +7,14 @@ docs/current/spike/llm_cost.json по схеме scripts/spike/llm_cost.schema.j
 с порогами scripts/spike/llm_cost_thresholds.json. Числа порогов берутся только
 из файла порогов — в коде их нет.
 
+Политика additionalProperties, которую объявляет валидатор:
+  false — «лишние поля запрещены» (лишнее поле → ошибка);
+  true  — «ограничений нет» (легальная форма спецификации, лишние поля проходят);
+  подсхема (объект) или иное значение — неподдерживаемая форма → ошибка;
+  объектный узел без слова additionalProperties — неподдерживаемая форма → ошибка.
+Форму, которую валидатор проверить не может, он объявляет неподдерживаемой, а не
+пропускает молча: проверка, которая не выполнена, не должна выглядеть как успешная.
+
 Единица артефакта (интерфейс для живого замера, задача S3b-04):
   cost_rub — распределение (медиана и p90) себестоимости ОДНОГО вызова модели
   по сценарию; usage.input_tokens/output_tokens — то же распределение по токенам.
@@ -128,12 +136,48 @@ def _resolve_ref(ref: str, root: dict) -> Any:
     return node
 
 
+def _is_object_node(schema: dict) -> bool:
+    """Объектный узел схемы: узел, который описывает объект."""
+    types = schema.get("type")
+    names = types if isinstance(types, list) else [types]
+    if "object" in names:
+        return True
+    return any(key in schema for key in ("additionalProperties", "properties", "required"))
+
+
+def _object_policy(schema: dict, path: str, errors: list[str]) -> str:
+    """Политика лишних полей объектного узла: "forbid" или "allow".
+
+    Неподдерживаемая форма additionalProperties — это ошибка, а не «пропустить»:
+    политику, которую нельзя выполнить, выполнять нельзя. Пока форма не разобрана,
+    лишние поля считаются запрещёнными — это строже, а не мягче.
+    """
+    if not _is_object_node(schema):
+        return "allow"
+    if "additionalProperties" not in schema:
+        errors.append(
+            f"{path}: объектный узел без additionalProperties — неподдерживаемая форма "
+            "(ожидается false или true)"
+        )
+        return "forbid"
+    value = schema["additionalProperties"]
+    if isinstance(value, bool):
+        return "forbid" if value is False else "allow"
+    kind = "подсхемой" if isinstance(value, dict) else f"значением типа {type(value).__name__}"
+    errors.append(
+        f"{path}: additionalProperties задан {kind} — неподдерживаемая форма "
+        "(ожидается false или true)"
+    )
+    return "forbid"
+
+
 def _validate(instance: Any, schema: Any, root: dict, path: str, errors: list[str]) -> None:
     if not isinstance(schema, dict):
         errors.append(f"{path}: схема задана не объектом — проверка невозможна")
         return
     for keyword in sorted(set(schema) - CONSTRAINT_KEYWORDS - ANNOTATION_KEYWORDS):
         errors.append(f"{path}: неподдерживаемое ключевое слово схемы {keyword!r}")
+    policy = _object_policy(schema, path, errors)
     ref = schema.get("$ref")
     if ref is not None:
         target = _resolve_ref(str(ref), root)
@@ -177,7 +221,7 @@ def _validate(instance: Any, schema: Any, root: dict, path: str, errors: list[st
         for name in schema.get("required", []):
             if name not in instance:
                 errors.append(f"{path}: нет обязательного поля {name!r}")
-        if schema.get("additionalProperties") is False:
+        if policy == "forbid":
             for name in instance:
                 if name not in properties:
                     errors.append(f"{path}: лишнее поле {name!r}")
