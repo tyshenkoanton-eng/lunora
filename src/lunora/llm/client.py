@@ -13,39 +13,22 @@ from lunora.llm.validator import validate_output
 
 MAX_RETRIES = 2
 
-# Аддендум безопасности по категории вопроса. Порядок прежний: CRISIS приоритетнее
-# остальных — это решает classify_input, а не таблица.
-_SAFETY_ADDENDUM_BY_CATEGORY = {
-    Category.MEDICAL: SAFETY_ADDENDUM_MEDICAL,
-    Category.CRISIS: SAFETY_ADDENDUM_CRISIS,
-    Category.FINANCIAL: SAFETY_ADDENDUM_FINANCIAL,
-}
 
-
-def build_messages(
+async def generate_response(
     question: str,
     chart_data: dict,
     precision: str,
     history: list[dict] | None = None,
-    category: Category | None = None,
-) -> list[dict]:
-    """Собрать пакет сообщений, уходящий в модель.
-
-    Чистая функция: без сети, без состояния, без чтения конфига. Собранный пакет
-    можно получить офлайн и проверить, что в нём нет персональных данных
-    (152-ФЗ; проверка — tests/test_llm_privacy.py).
-
-    `category` — классификация вопроса по safety. Если не передана, определяется
-    здесь: classify_input чистая и дешёвая. `generate_response` передаёт категорию
-    явно, чтобы не классифицировать вопрос дважды.
-    """
-    if category is None:
-        category = classify_input(question)
+) -> tuple[str, Category]:
+    category = classify_input(question)
 
     system = SYSTEM_PROMPT
-    addendum = _SAFETY_ADDENDUM_BY_CATEGORY.get(category)
-    if addendum is not None:
-        system += "\n\n" + addendum
+    if category == Category.MEDICAL:
+        system += "\n\n" + SAFETY_ADDENDUM_MEDICAL
+    elif category == Category.CRISIS:
+        system += "\n\n" + SAFETY_ADDENDUM_CRISIS
+    elif category == Category.FINANCIAL:
+        system += "\n\n" + SAFETY_ADDENDUM_FINANCIAL
 
     chart_text = format_chart_data(chart_data)
     precision_note = f"\nТочность времени рождения: {precision}."
@@ -60,17 +43,6 @@ def build_messages(
     if history:
         messages.extend(history)
     messages.append({"role": "user", "content": user_content})
-    return messages
-
-
-async def generate_response(
-    question: str,
-    chart_data: dict,
-    precision: str,
-    history: list[dict] | None = None,
-) -> tuple[str, Category]:
-    category = classify_input(question)
-    messages = build_messages(question, chart_data, precision, history, category)
 
     for attempt in range(MAX_RETRIES + 1):
         raw = await _call_llm(messages)
