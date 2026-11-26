@@ -1,6 +1,7 @@
 import httpx
 
 from lunora.config import settings
+from lunora.llm.pii import guard_package
 from lunora.llm.prompts import (
     SAFETY_ADDENDUM_CRISIS,
     SAFETY_ADDENDUM_FINANCIAL,
@@ -95,6 +96,11 @@ async def generate_response(
 
 
 async def _call_llm(messages: list[dict]) -> str:
+    # Рантайм-страж ПДн (152-ФЗ): единая точка перед сетью на обоих путях (чат и
+    # портрет). Fail-closed: при ПДн в служебной части пакета он в сеть не уходит.
+    # Проверка — первой, до чтения конфига: предохранитель не зависит от настроек.
+    guard_package(messages)
+
     if not settings.llm_api_key:
         raise RuntimeError("LUNORA_LLM_API_KEY not set")
 
