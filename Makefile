@@ -2,7 +2,7 @@
 # Воспроизводимость: любой в любой сессии прогоняет те же команды.
 # Рецепты — с ТАБУЛЯЦИЕЙ. Подставь реальные команды проекта под <...>.
 
-.PHONY: setup setup-oracle verify slice-check slice-check-s1 slice-check-s2a slice-check-s2c slice-check-s2b slice-check-s2d slice-check-s2e slice-check-s2f slice-check-s3a spike-full docs board
+.PHONY: setup setup-oracle verify slice-check slice-check-s1 slice-check-s2a slice-check-s2c slice-check-s2b slice-check-s2d slice-check-s2e slice-check-s2f slice-check-s3a slice-check-s3b spike-full docs board
 
 setup:          ## установка зависимостей/окружения + эфемериды DE440s (SHA-256 из манифеста)
 	pip install -e ".[dev]"
@@ -54,6 +54,10 @@ slice-check-s2f: ## G17-S2f: доводка интеграции P3 (F01–F11) 
 
 slice-check-s3a: ## G17-S3a: адаптер Telegram Stars, правила S1–S5 (docs/current/G17-S3-план.md); настоящая PostgreSQL обязательна
 	LUNORA_REQUIRE_PG=1 pytest -q tests/payments
+
+slice-check-s3b: ## G17-S3b: офлайн-сверка замера стоимости LLM с порогами R-05 (docs/current/G17-S3b-план.md); без сети и ключей
+	python scripts/spike/llm_cost.py --check          # llm_cost.json по схеме и в бюджете R-05, без вызова API
+	pytest -q tests/test_llm_cost.py
 
 spike-full:     ## долгие прогоны вручную; отчёт — docs/current/spike/ephem-oracle-дифф.md
 	pytest -q tests/diff -m full
