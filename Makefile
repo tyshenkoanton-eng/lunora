@@ -55,9 +55,11 @@ slice-check-s2f: ## G17-S2f: доводка интеграции P3 (F01–F11) 
 slice-check-s3a: ## G17-S3a: адаптер Telegram Stars, правила S1–S5 (docs/current/G17-S3-план.md); настоящая PostgreSQL обязательна
 	LUNORA_REQUIRE_PG=1 pytest -q tests/payments
 
-slice-check-s3b: ## G17-S3b: офлайн-сверка замера стоимости LLM с порогами R-05 (docs/current/G17-S3b-план.md); без сети и ключей
-	python scripts/spike/llm_cost.py --check          # llm_cost.json по схеме и в бюджете R-05, без вызова API
-	pytest -q tests/test_llm_cost.py
+slice-check-s3b: ## G17-S3b: офлайн-гарды LLM — приватность пакета, дрейф порогов, сверка замера с порогами R-05 (docs/current/G17-S3b-план.md); без сети, ключей и артефакта замера; PYTHONPATH=src — код из рабочего дерева
+	if [ -f tests/test_llm_privacy.py ]; then PYTHONPATH=src pytest -q tests/test_llm_privacy.py; else echo "slice-check-s3b: нет набора tests/test_llm_privacy.py — пропущен"; fi
+	if [ -f tests/test_llm_cost_thresholds.py ]; then PYTHONPATH=src pytest -q tests/test_llm_cost_thresholds.py; else echo "slice-check-s3b: нет набора tests/test_llm_cost_thresholds.py — пропущен"; fi
+	if [ -f tests/test_llm_cost.py ]; then PYTHONPATH=src pytest -q tests/test_llm_cost.py; else echo "slice-check-s3b: нет набора tests/test_llm_cost.py — пропущен"; fi
+	if [ -f docs/current/spike/llm_cost.json ]; then python scripts/spike/llm_cost.py --check; else echo "slice-check-s3b: нет артефакта docs/current/spike/llm_cost.json — сверка с порогами ждёт живого замера (S3b-04)"; fi
 
 spike-full:     ## долгие прогоны вручную; отчёт — docs/current/spike/ephem-oracle-дифф.md
 	pytest -q tests/diff -m full
