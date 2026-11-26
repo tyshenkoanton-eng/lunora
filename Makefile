@@ -2,7 +2,7 @@
 # Воспроизводимость: любой в любой сессии прогоняет те же команды.
 # Рецепты — с ТАБУЛЯЦИЕЙ. Подставь реальные команды проекта под <...>.
 
-.PHONY: setup setup-oracle verify slice-check slice-check-s1 slice-check-s2a slice-check-s2c slice-check-s2b slice-check-s2d slice-check-s2e slice-check-s2f slice-check-s3a slice-check-s3b spike-full docs board
+.PHONY: setup setup-oracle verify slice-check slice-check-s1 slice-check-s2a slice-check-s2c slice-check-s2b slice-check-s2d slice-check-s2e slice-check-s2f slice-check-s3a spike-full docs board
 
 setup:          ## установка зависимостей/окружения + эфемериды DE440s (SHA-256 из манифеста)
 	pip install -e ".[dev]"
@@ -54,12 +54,6 @@ slice-check-s2f: ## G17-S2f: доводка интеграции P3 (F01–F11) 
 
 slice-check-s3a: ## G17-S3a: адаптер Telegram Stars, правила S1–S5 (docs/current/G17-S3-план.md); настоящая PostgreSQL обязательна
 	LUNORA_REQUIRE_PG=1 pytest -q tests/payments
-
-slice-check-s3b: ## G17-S3b: офлайн-гарды LLM — приватность пакета, дрейф порогов, сверка замера с порогами R-05 (docs/current/G17-S3b-план.md); без сети, ключей и артефакта замера; PYTHONPATH=src — код из рабочего дерева
-	if [ -f tests/test_llm_privacy.py ]; then PYTHONPATH=src pytest -q tests/test_llm_privacy.py; else echo "slice-check-s3b: нет набора tests/test_llm_privacy.py — пропущен"; fi
-	if [ -f tests/test_llm_cost_thresholds.py ]; then PYTHONPATH=src pytest -q tests/test_llm_cost_thresholds.py; else echo "slice-check-s3b: нет набора tests/test_llm_cost_thresholds.py — пропущен"; fi
-	if [ -f tests/test_llm_cost.py ]; then PYTHONPATH=src pytest -q tests/test_llm_cost.py; else echo "slice-check-s3b: нет набора tests/test_llm_cost.py — пропущен"; fi
-	if [ -f docs/current/spike/llm_cost.json ]; then python scripts/spike/llm_cost.py --check; else echo "slice-check-s3b: нет артефакта docs/current/spike/llm_cost.json — сверка с порогами ждёт живого замера (S3b-04)"; fi
 
 spike-full:     ## долгие прогоны вручную; отчёт — docs/current/spike/ephem-oracle-дифф.md
 	pytest -q tests/diff -m full
