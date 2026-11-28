@@ -339,40 +339,72 @@ def run(args: argparse.Namespace) -> None:
     print(f"\nСравнение → {COMPARE.relative_to(ROOT)}")
 
     if args.artifact_model:
-        if "scenarios" in compare["models"].get(args.artifact_model, {}):
-            pr_art = prices[args.artifact_model]
-            write_artifact(args.artifact_model, pr_art, compare, usd_rub, markup, args)
+        scen_models = parse_scenario_models(args.scenario_models, args.artifact_model)
+        bad = [m for m in set(scen_models.values())
+               if "scenarios" not in compare["models"].get(m, {})]
+        if bad:
+            print(f"!! артефакт НЕ записан: модели сценариев пропущены/с ошибкой: {sorted(bad)}")
         else:
-            print(f"!! артефакт НЕ записан: модель {args.artifact_model} пропущена/с ошибкой")
+            write_artifact(
+                args.artifact_model, scen_models, prices, compare, usd_rub, markup, args
+            )
 
 
-def write_artifact(model: str, pr: Prices, compare: dict, usd_rub: float,
-                   markup: float, args: argparse.Namespace) -> None:
-    src = compare["models"][model]["scenarios"]
-    scenarios = []
+def _pricing_block(pr: Prices, usd_rub: float, markup: float) -> dict:
+    return {
+        "input_usd_per_1m": round(pr.in_per_tok * 1e6, 4),
+        "output_usd_per_1m": round(pr.out_per_tok * 1e6, 4),
+        "usd_rub_rate": usd_rub,
+        "intermediary_markup": markup,
+        "priced_on": date.today().isoformat(),
+    }
+
+
+def write_artifact(primary: str, scen_models: dict, prices: dict, compare: dict,
+                   usd_rub: float, markup: float, args: argparse.Namespace) -> None:
+    """Артефакт с маршрутизацией задача→модель: каждый сценарий несёт СВОЮ модель и цены
+    (чат — Sonnet, документ — Opus, прогноз — Haiku). Верхнеуровневая model — основная (чат).
+    Вердикт within_budget выставит чекер против порогов; здесь — честный замер."""
     keep = ("runs", "cards", "calls_per_card", "usage", "cost_rub")  # схема запрещает лишние поля
+    scenarios = []
     for scen in ("dialog", "document", "forecast"):
-        s = src[scen]
-        scenarios.append({"id": scen, **{k: s[k] for k in keep}})
-    within = True  # вердикт выставит чекер против порогов; здесь — честный замер
+        m = scen_models[scen]
+        s = compare["models"][m]["scenarios"][scen]
+        scenarios.append({
+            "id": scen,
+            "model": m,
+            "pricing": _pricing_block(prices[m], usd_rub, markup),
+            **{k: s[k] for k in keep},
+        })
     art = {
         "schema_version": 1,
         "measured_at": date.today().isoformat(),
         "provider": "openrouter",
-        "model": model,
-        "pricing": {
-            "input_usd_per_1m": round(pr.in_per_tok * 1e6, 4),
-            "output_usd_per_1m": round(pr.out_per_tok * 1e6, 4),
-            "usd_rub_rate": usd_rub,
-            "intermediary_markup": markup,
-            "priced_on": date.today().isoformat(),
-        },
+        "model": primary,
+        "pricing": _pricing_block(prices[primary], usd_rub, markup),
         "scenarios": scenarios,
-        "verdict": {"within_budget": within, "threshold_variant": args.variant,
+        "verdict": {"within_budget": True, "threshold_variant": args.variant,
                     "notes": args.notes or ""},
     }
     ARTIFACT.write_text(json.dumps(art, ensure_ascii=False, indent=2), encoding="utf-8")
-    print(f"Артефакт выбранной модели → {ARTIFACT.relative_to(ROOT)}")
+    routing = ", ".join(
+        f"{s}={scen_models[s].split('/')[-1]}" for s in ("dialog", "document", "forecast")
+    )
+    print(f"Артефакт (маршрутизация: {routing}) → {ARTIFACT.relative_to(ROOT)}")
+
+
+def parse_scenario_models(spec: str, default_model: str) -> dict:
+    """'dialog=A,document=B,forecast=C' → {scen: model}. Пропущенные сценарии берут
+    default_model (основную/чат-модель артефакта). Так артефакт отражает маршрутизацию
+    задача→модель; без спецификации — одна модель на все сценарии (обратная совместимость)."""
+    scen_models = {s: default_model for s in ("dialog", "document", "forecast")}
+    for part in (p.strip() for p in spec.split(",") if p.strip()):
+        scen, _, model = part.partition("=")
+        scen, model = scen.strip(), model.strip()
+        if scen not in scen_models or not model:
+            raise ValueError(f"--scenario-models: не разобрать {part!r} (ждём scen=model)")
+        scen_models[scen] = model
+    return scen_models
 
 
 def main() -> None:
@@ -380,6 +412,8 @@ def main() -> None:
     ap.add_argument("--dry-run", action="store_true")
     ap.add_argument("--models", default="")
     ap.add_argument("--artifact-model", default="")
+    ap.add_argument("--scenario-models", default="",
+                    help="маршрутизация задача→модель, напр. dialog=...,document=...,forecast=...")
     ap.add_argument("--runs", type=int, default=3)
     ap.add_argument("--usd-rub", type=float, default=79.0)
     ap.add_argument("--markup", type=float, default=1.0)

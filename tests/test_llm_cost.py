@@ -44,11 +44,20 @@ socket.getaddrinfo = _blocked
 
 def _artifact(cost_per_call: float = 0.01, within_budget: bool = True, variant: str = "A") -> dict:
     """Вымышленный артефакт замера: цена одного вызова и единицы из методики."""
+    _pricing = {
+        "input_usd_per_1m": 1.0,
+        "output_usd_per_1m": 5.0,
+        "usd_rub_rate": 83.59,
+        "intermediary_markup": 1.5,
+        "priced_on": "2026-11-26",
+    }
     scenarios = []
     for sid, calls in (("dialog", 25), ("document", 1), ("forecast", 7)):
         scenarios.append(
             {
                 "id": sid,
+                "model": "модель-заглушка",
+                "pricing": dict(_pricing),
                 "runs": 3,
                 "cards": ["A", "B", "C", "D", "E"],
                 "calls_per_card": calls,
@@ -557,7 +566,7 @@ def _mutate_additional_properties_subschema(schema: dict) -> None:
 
 
 def _mutate_object_node_without_additional_properties(schema: dict) -> None:
-    del schema["properties"]["pricing"]["additionalProperties"]
+    del schema["$defs"]["pricing"]["additionalProperties"]
 
 
 def _mutate_unknown_keyword(schema: dict) -> None:

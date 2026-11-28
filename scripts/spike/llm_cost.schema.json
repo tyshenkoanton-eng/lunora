@@ -31,45 +31,11 @@
     "model": {
       "type": "string",
       "minLength": 1,
-      "description": "Идентификатор модели в рантайме, как в LUNORA_LLM_MODEL."
+      "description": "Основная (чат) модель артефакта, как в LUNORA_LLM_MODEL. Для прочих сценариев модель может отличаться — см. scenarios[].model (маршрутизация задача→модель)."
     },
     "pricing": {
-      "type": "object",
-      "additionalProperties": false,
-      "required": [
-        "input_usd_per_1m",
-        "output_usd_per_1m",
-        "usd_rub_rate",
-        "intermediary_markup",
-        "priced_on"
-      ],
-      "properties": {
-        "input_usd_per_1m": {
-          "type": "number",
-          "exclusiveMinimum": 0,
-          "description": "Цена входных токенов, USD за 1 000 000."
-        },
-        "output_usd_per_1m": {
-          "type": "number",
-          "exclusiveMinimum": 0,
-          "description": "Цена выходных токенов, USD за 1 000 000."
-        },
-        "usd_rub_rate": {
-          "type": "number",
-          "exclusiveMinimum": 0,
-          "description": "Курс USD→RUB на день замера."
-        },
-        "intermediary_markup": {
-          "type": "number",
-          "exclusiveMinimum": 0,
-          "description": "Наценка посредника. В бюджете 05_business.md §3.1 принято 1.5."
-        },
-        "priced_on": {
-          "type": "string",
-          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
-          "description": "Дата, на которую взяты цены и курс."
-        }
-      }
+      "$ref": "#/$defs/pricing",
+      "description": "Цены основной (чат) модели. Для сценариев с другой моделью — scenarios[].pricing."
     },
     "scenarios": {
       "type": "array",
@@ -80,6 +46,8 @@
         "additionalProperties": false,
         "required": [
           "id",
+          "model",
+          "pricing",
           "runs",
           "cards",
           "calls_per_card",
@@ -90,6 +58,15 @@
           "id": {
             "enum": ["dialog", "document", "forecast"],
             "description": "dialog — вопрос в диалоге; document — документ-синтез «Мы с ним»; forecast — утренний прогноз."
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Модель, которой посчитан ЭТОТ сценарий (маршрутизация задача→модель): чат — Sonnet, документ — Opus, прогноз — Haiku. Может совпадать с верхнеуровневой model."
+          },
+          "pricing": {
+            "$ref": "#/$defs/pricing",
+            "description": "Цены модели ЭТОГО сценария — чтобы cost_rub можно было проверить из токенов."
           },
           "runs": {
             "type": "integer",
@@ -151,6 +128,44 @@
     }
   },
   "$defs": {
+    "pricing": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "input_usd_per_1m",
+        "output_usd_per_1m",
+        "usd_rub_rate",
+        "intermediary_markup",
+        "priced_on"
+      ],
+      "properties": {
+        "input_usd_per_1m": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Цена входных токенов, USD за 1 000 000."
+        },
+        "output_usd_per_1m": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Цена выходных токенов, USD за 1 000 000."
+        },
+        "usd_rub_rate": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Курс USD→RUB на день замера."
+        },
+        "intermediary_markup": {
+          "type": "number",
+          "exclusiveMinimum": 0,
+          "description": "Наценка посредника. В бюджете 05_business.md §3.1 принято 1.5."
+        },
+        "priced_on": {
+          "type": "string",
+          "pattern": "^[0-9]{4}-[0-9]{2}-[0-9]{2}$",
+          "description": "Дата, на которую взяты цены и курс."
+        }
+      }
+    },
     "dist": {
       "type": "object",
       "additionalProperties": false,

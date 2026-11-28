@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "measured_at": "2026-11-28",
+  "provider": "openrouter",
+  "model": "anthropic/claude-sonnet-5.5",
+  "pricing": {
+    "input_usd_per_1m": 2.0,
+    "output_usd_per_1m": 10.0,
+    "usd_rub_rate": 79.0,
+    "intermediary_markup": 1.0,
+    "priced_on": "2026-11-28"
+  },
+  "scenarios": [
+    {
+      "id": "dialog",
+      "model": "anthropic/claude-sonnet-5.5",
+      "pricing": {
+        "input_usd_per_1m": 2.0,
+        "output_usd_per_1m": 10.0,
+        "usd_rub_rate": 79.0,
+        "intermediary_markup": 1.0,
+        "priced_on": "2026-11-28"
+      },
+      "runs": 3,
+      "cards": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ],
+      "calls_per_card": 25,
+      "usage": {
+        "input_tokens": {
+          "median": 1172,
+          "p90": 1320
+        },
+        "output_tokens": {
+          "median": 2408,
+          "p90": 2643
+        }
+      },
+      "cost_rub": {
+        "median": 2.11088,
+        "p90": 2.29653
+      }
+    },
+    {
+      "id": "document",
+      "model": "anthropic/claude-opus-5.5",
+      "pricing": {
+        "input_usd_per_1m": 4.0,
+        "output_usd_per_1m": 20.0,
+        "usd_rub_rate": 79.0,
+        "intermediary_markup": 1.0,
+        "priced_on": "2026-11-28"
+      },
+      "runs": 3,
+      "cards": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ],
+      "calls_per_card": 1,
+      "usage": {
+        "input_tokens": {
+          "median": 983,
+          "p90": 1017
+        },
+        "output_tokens": {
+          "median": 1234,
+          "p90": 1279
+        }
+      },
+      "cost_rub": {
+        "median": 2.260032,
+        "p90": 2.331132
+      }
+    },
+    {
+      "id": "forecast",
+      "model": "anthropic/claude-haiku-5.5",
+      "pricing": {
+        "input_usd_per_1m": 0.1,
+        "output_usd_per_1m": 0.5,
+        "usd_rub_rate": 79.0,
+        "intermediary_markup": 1.0,
+        "priced_on": "2026-11-28"
+      },
+      "runs": 3,
+      "cards": [
+        "A",
+        "B",
+        "C",
+        "D",
+        "E"
+      ],
+      "calls_per_card": 7,
+      "usage": {
+        "input_tokens": {
+          "median": 1226,
+          "p90": 1230
+        },
+        "output_tokens": {
+          "median": 1724,
+          "p90": 2144
+        }
+      },
+      "cost_rub": {
+        "median": 0.077783,
+        "p90": 0.09435
+      }
+    }
+  ],
+  "verdict": {
+    "within_budget": true,
+    "threshold_variant": "B",
+    "notes": "Синтетика A-E (без ПДн). Маршрутизация задача→модель: чат=Sonnet 5.5, документ=Opus 5.5, прогноз=Haiku 5.5. reasoning effort=low (мышление Claude 5.5 не выключить). Себестоимость=фактический usage.cost OpenRouter × курс, наценка ×1,0. Прогноз измерен чат-харнессом (верхняя оценка; боевой лёгкий промпт дешевле)."
+  }
+}

@@ -59,6 +59,8 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 "src/lunora/interpret/planets.py" = ["E501"]
 "src/lunora/interpret/portrait.py" = ["E501"]
 "src/lunora/llm/prompts.py" = ["E501"]
+# якоря промптов — дословные копии строк выше, той же природы
+"tests/test_llm_privacy.py" = ["E501"]
 
 [tool.pytest.ini_options]
 asyncio_mode = "auto"
