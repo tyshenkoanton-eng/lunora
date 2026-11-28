@@ -189,8 +189,21 @@ def est_tokens(messages: list[dict]) -> int:
 
 
 def call_model(model: str, messages: list[dict], api_key: str) -> dict:
+    # reasoning low-effort: продукт — тёплый синтез, не ризонинг. У Claude 5.5 «мышление»
+    # нельзя выключить (Opus/Sonnet 5.5 отдают 400 на reasoning.enabled=false), а по умолчанию
+    # оно съедает бюджет вывода (finish_reason=length, content=None) — ответа нет, токены
+    # тарифицируются. effort=low минимизирует ризонинг и оставляет место ответу; max_tokens с
+    # запасом, чтобы форматный ответ не обрезало (платим за фактический вывод, не за потолок).
+    # НАХОДКА: client.py рантайма (max_tokens=1000, без reasoning) этим багует чат/прогноз на
+    # Claude 5.5 — чинить отдельно (слой llm).
     body = json.dumps(
-        {"model": model, "messages": messages, "max_tokens": 1000, "temperature": 0.7}
+        {
+            "model": model,
+            "messages": messages,
+            "max_tokens": 3000,
+            "temperature": 0.7,
+            "reasoning": {"effort": "low"},
+        }
     ).encode()
     req = urllib.request.Request(
         f"{OPENROUTER}/chat/completions",
