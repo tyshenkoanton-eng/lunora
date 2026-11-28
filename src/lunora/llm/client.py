@@ -104,6 +104,17 @@ async def _call_llm(messages: list[dict]) -> str:
     if not settings.llm_api_key:
         raise RuntimeError("LUNORA_LLM_API_KEY not set")
 
+    body = {
+        "model": settings.llm_model,
+        "messages": messages,
+        "max_tokens": settings.llm_max_tokens,
+        "temperature": 0.7,
+    }
+    # Минимальный ризонинг для Claude 5.5 (мышление не выключить; по умолчанию съедает
+    # бюджет вывода → пустой ответ). Пустой effort → поле не слать. Доказано замером S3b.
+    if settings.llm_reasoning_effort:
+        body["reasoning"] = {"effort": settings.llm_reasoning_effort}
+
     async with httpx.AsyncClient(timeout=60) as client:
         resp = await client.post(
             f"{settings.llm_base_url}/chat/completions",
@@ -111,13 +122,11 @@ async def _call_llm(messages: list[dict]) -> str:
                 "Authorization": f"Bearer {settings.llm_api_key}",
                 "Content-Type": "application/json",
             },
-            json={
-                "model": settings.llm_model,
-                "messages": messages,
-                "max_tokens": 1000,
-                "temperature": 0.7,
-            },
+            json=body,
         )
         resp.raise_for_status()
         data = resp.json()
-        return data["choices"][0]["message"]["content"]
+        # content=None приходит, когда ответ обрезан на лимите (finish_reason=length) —
+        # мышление съело бюджет. Не роняем вызов TypeError'ом: пустая строка не пройдёт
+        # validate_output и уйдёт на ретрай (чат), а не обрушит путь.
+        return data["choices"][0]["message"]["content"] or ""
