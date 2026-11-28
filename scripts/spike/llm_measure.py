@@ -223,6 +223,7 @@ def dist(values: list[float]) -> dict:
 
 
 def run(args: argparse.Namespace) -> None:
+    sys.stdout.reconfigure(line_buffering=True)  # прогресс виден в фоновом логе сразу
     models = args.models.split(",") if args.models else DEFAULT_MODELS
     cards = [s[0] for s in SYNTH]
     print(f"Карты: {cards}; сценарии: dialog/document/forecast; повторов: {args.runs}")
@@ -262,7 +263,20 @@ def run(args: argparse.Namespace) -> None:
 
     compare = {"measured_at": date.today().isoformat(), "usd_rub": usd_rub,
                "markup": markup, "models": {}}
+    # Резюм: подхватываем уже посчитанные модели из checkpoint (если прогон убили раньше).
+    if COMPARE.exists():
+        prev = json.loads(COMPARE.read_text(encoding="utf-8"))
+        compare["models"] = prev.get("models", {})
+    done = {m for m, v in compare["models"].items() if "scenarios" in v}
+
+    def checkpoint() -> None:
+        COMPARE.parent.mkdir(parents=True, exist_ok=True)
+        COMPARE.write_text(json.dumps(compare, ensure_ascii=False, indent=2), encoding="utf-8")
+
     for mid in models:
+        if mid in done:
+            print(f"== {mid}: уже посчитана (checkpoint), пропускаю")
+            continue
         pr = prices[mid]
         try:
             scen_out = {}
@@ -297,6 +311,7 @@ def run(args: argparse.Namespace) -> None:
         except Exception as exc:  # одна битая модель не роняет весь прогон
             print(f"!! {mid}: ПРОПУЩЕНА ({type(exc).__name__}: {exc})")
             compare["models"][mid] = {"error": f"{type(exc).__name__}: {exc}"}
+            checkpoint()
             continue
         compare["models"][mid] = {
             "pricing_usd_per_1m": {
@@ -305,9 +320,9 @@ def run(args: argparse.Namespace) -> None:
             },
             "scenarios": scen_out,
         }
+        checkpoint()  # сохраняем после каждой модели — kill не теряет готовое
 
-    COMPARE.parent.mkdir(parents=True, exist_ok=True)
-    COMPARE.write_text(json.dumps(compare, ensure_ascii=False, indent=2), encoding="utf-8")
+    checkpoint()
     print(f"\nСравнение → {COMPARE.relative_to(ROOT)}")
 
     if args.artifact_model:
