@@ -47,9 +47,14 @@ from lunora.calc.serialize import chart_to_dict  # noqa: E402
 from lunora.calc.types import BirthData, BirthTimePrecision  # noqa: E402
 from lunora.engines.numerology import FullName  # noqa: E402
 from lunora.forecast.generate import FORECAST_QUESTION  # noqa: E402
+from lunora.interpret.planets import (  # noqa: E402
+    PLANET_INTERPRETATIONS,
+    PLANET_LABELS,
+    SIGN_LABELS,
+    SIGN_SYMBOLS,
+)
 from lunora.interpret.portrait import (  # noqa: E402
     PORTRAIT_SYSTEM_PROMPT,
-    build_interpretation_blocks,
     build_portrait_prompt,
 )
 from lunora.llm.client import build_messages  # noqa: E402
@@ -133,6 +138,33 @@ def chart_for(idx: int) -> dict:
     }
 
 
+# Обратные карты РУ→EN. Хранимый чарт — на русском (Солнце/Овен), а PLANET_INTERPRETATIONS
+# ключи на английском (Sun/Aries), поэтому штатный build_interpretation_blocks даёт 0 блоков
+# (известный баг interpret/planets.py, хвост слоя интерпретации, чинится в S3/S4). Здесь мы
+# мостим названия, чтобы ЗАМЕРИТЬ документ в ЗАДУМАННОМ виде (полный портрет), а не в текущем
+# вырожденном пустом. Это замер стоимости продукта, а не фиксация текущего бага.
+_RU_PLANET = {ru: en for en, ru in PLANET_LABELS.items()}
+_RU_SIGN = {ru: en for en, ru in SIGN_LABELS.items()}
+
+
+def repr_portrait_blocks(chart_data: dict) -> list[dict]:
+    """Представительные блоки портрета с мостом РУ→EN (см. комментарий выше)."""
+    blocks = []
+    for p in chart_data.get("western", {}).get("planets", []):
+        name_en = _RU_PLANET.get(p.get("name", ""))
+        sign_en = _RU_SIGN.get(p.get("sign", ""))
+        text = PLANET_INTERPRETATIONS.get(name_en, {}).get(sign_en)
+        if not text:
+            continue
+        blocks.append({
+            "planet_ru": p.get("name", ""),
+            "sign_ru": p.get("sign", ""),
+            "symbol": SIGN_SYMBOLS.get(sign_en, ""),
+            "text": text,
+        })
+    return blocks
+
+
 def messages_for(scenario: str, card_idx: int, chart_data: dict) -> list[dict]:
     if scenario == "dialog":
         q = DIALOG_QUESTIONS[card_idx % len(DIALOG_QUESTIONS)]
@@ -141,7 +173,7 @@ def messages_for(scenario: str, card_idx: int, chart_data: dict) -> list[dict]:
         q = FORECAST_QUESTION.format(date=date.today().isoformat())
         return build_messages(q, chart_data, "exact")
     if scenario == "document":
-        blocks = build_interpretation_blocks(chart_data)
+        blocks = repr_portrait_blocks(chart_data)
         prompt = build_portrait_prompt(blocks, chart_data)
         return [
             {"role": "system", "content": PORTRAIT_SYSTEM_PROMPT},
