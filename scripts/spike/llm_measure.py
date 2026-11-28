@@ -175,6 +175,7 @@ def call_model(model: str, messages: list[dict], api_key: str) -> dict:
     return {
         "input_tokens": int(u["prompt_tokens"]),
         "output_tokens": int(u["completion_tokens"]),
+        "text": data["choices"][0]["message"]["content"],
     }
 
 
@@ -233,6 +234,7 @@ def run(args: argparse.Namespace) -> None:
         scen_out = {}
         for scen in ("dialog", "document", "forecast"):
             costs, ins, outs = [], [], []
+            sample = None
             for _rep in range(args.runs):
                 for i in range(len(SYNTH)):
                     u = call_model(mid, messages_for(scen, i, charts[i]), api_key)
@@ -241,12 +243,15 @@ def run(args: argparse.Namespace) -> None:
                     costs.append(
                         cost_rub(u["input_tokens"], u["output_tokens"], pr, usd_rub, markup)
                     )
+                    if sample is None:  # один образец текста на модель/сценарий для слепой оценки
+                        sample = {"card": SYNTH[i][0], "text": u["text"]}
             scen_out[scen] = {
                 "runs": args.runs,
                 "cards": [s[0] for s in SYNTH],
                 "calls_per_card": CALLS_PER_CARD[scen],
                 "usage": {"input_tokens": dist(ins), "output_tokens": dist(outs)},
                 "cost_rub": dist(costs),
+                "sample": sample,
             }
             med = scen_out[scen]["cost_rub"]["median"]
             period = med * CALLS_PER_CARD[scen]
@@ -272,9 +277,10 @@ def write_artifact(model: str, pr: Prices, compare: dict, usd_rub: float,
                    markup: float, args: argparse.Namespace) -> None:
     src = compare["models"][model]["scenarios"]
     scenarios = []
+    keep = ("runs", "cards", "calls_per_card", "usage", "cost_rub")  # схема запрещает лишние поля
     for scen in ("dialog", "document", "forecast"):
         s = src[scen]
-        scenarios.append({"id": scen, **s})
+        scenarios.append({"id": scen, **{k: s[k] for k in keep}})
     within = True  # вердикт выставит чекер против порогов; здесь — честный замер
     art = {
         "schema_version": 1,
